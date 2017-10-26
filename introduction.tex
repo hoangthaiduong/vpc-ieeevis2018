@@ -8,4 +8,14 @@ paper. In this case we encourage you to also read the \LaTeX\ comments
 embedded in the document.
 
 
+The list of our contributions:
 
+\begin{itemize}
+        \item We show that traditional multi-resolution data streaming schemes that group bits either in the same coefficient or in the same bit plane result in suboptimal errors. We reduce error significantly using the same number of bits by allowing bits belonging to the same bit plane or the same coefficient to be streamed separately.
+
+        \item We devise a greedy method to approximate an optimal bit ordering for several quantities of interest, namely RMSE, Histogram, Gradient, Laplacian, Isocontour, Volume rendering. Based on these orderings, we observe that there are more than one optimal ordering for Gradient/Laplacian/Histogram, in particular, the RMSE ordering is also nearly optimal for these quantities.
+
+        \item We show that locally the optimal bit orderings for all tested quantities are just slight variations of the optimal RMSE ordering. Furthermore, locally the (data-dependent) RMSE ordering is approximately the same as a data-independent ordering that can be computed using only the norms of the wavelet basis functions.
+
+        \item We describe a practical algorithm to realize the aforementioned data-independent optimal ordering, taking advantage of an encoding scheme that compress the leading zero bits. We also note that this ordering is globally (as opposed to locally) near optimal in terms of RMSE. 
+\end{itemize}

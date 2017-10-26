@@ -4,7 +4,7 @@
 
 
 \title[EG \LaTeX\ Author Guidelines]%
-      {\LaTeX\ Author Guidelines for EUROGRAPHICS Proceedings Manuscripts}
+      {Data Streaming in Resolution and Precision Domains}
 
 % for anonymous conference submission please enter your SUBMISSION ID
 % instead of the author's name (and leave the affiliation blank) !!
