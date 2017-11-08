@@ -1,21 +1,21 @@
 \section{Introduction}
 
-Please follow the steps outlined in this document very carefully when
-submitting your manuscript to Eurographics.
+Compute bandwidth has been growing at a fast pace in recent years thanks to advances in chip design and parallel computing, allowing a typical massively parallel simulation to produce several terabytes of data on a regular basis. In contrast, data movement latency at all levels of the memory hierarchy has been improving at much lower speeds, making data movement the bottleneck of most workflows that involve data processing. This bottleneck prevents scientists from efficiently studying data of very large sizes to gain scientific insights. One promising approach to handle large data is data compression. Traditionally, the compression can happen in either resolution domain (e.g., using multi-resolution representations such as sparse octrees, or wavelets), or in precision domain (e.g., with quantization).
 
-You may as well use the \LaTeX\ source as a template to typeset your own
-paper. In this case we encourage you to also read the \LaTeX\ comments
-embedded in the document.
+Another direction to reduce the amount of data needed for an analysis task is to take advantage of the output-sensitive nature of the analysis task at hand. For example, many volume rendering systems based on ray marching read data samples at coarser resolutions as the rays travel further from the view point. It is possible, however, in this example to also read data samples at low precision, taking advantage of the fact that the typical transfer function quantizes the output image to only 8 bits in each color channel. In general, as we will show, reducing data only in resolution or only in precision, as typically done in existing techniques, is often not flexible enough. Much better gain is possible through combining these two dimensions of data reductions. 
 
+Here we concern with data reduction in a progressive setting, in which a server repeatedly reads a chunk of bits from a some representation the data either on disk or in DRAM, and stream the chunk (possibly through a network) to a client that runs some analysis task, potentially improving the analysis result each time. This setting appeals to us because the amount of data streamed can vary to cater for a wide range of conditions (e.g., slow/fast network) and requirements (e.g., cursory or thorough analysis), effectively achieving compression when reading data.
 
-The list of our contributions:
+We assume data is given in the form of a regular Cartesian grid, which remains a popular choice in practice. For this kind of data, the popular row-major ordering of samples (also known as ``raw'' representation) is far from ideal for progressive streaming in either resolution or precision: the consecutive samples do not form a level of detail, and consecutive bits span multiple precision thresholds. This paper is a step toward a data representation that is fit for progressive streaming: bits pertaining to any given analysis task can be read efficiently with minimal amount of unnecessary bits, and each read bit potentially improves the resolution and/or the precision of the reconstructed data. In particular, for a wide range of data sets, we construct and study the characteristics of different bit streams each optimized for a common analysis task, in hope that such a study would guide us in designing such an ideal data representation. 
+
+Our contributions are, in detail:
 
 \begin{itemize}
-        \item We show that traditional multi-resolution data streaming schemes that group bits either in the same coefficient or in the same bit plane result in suboptimal errors. We reduce error significantly using the same number of bits by allowing bits belonging to the same bit plane or the same coefficient to be streamed separately.
-
-        \item We devise a greedy method to approximate an optimal bit ordering for several quantities of interest, namely RMSE, Histogram, Gradient, Laplacian, Isocontour, Volume rendering. Based on these orderings, we observe that there are more than one optimal ordering for Gradient/Laplacian/Histogram, in particular, the RMSE ordering is also nearly optimal for these quantities.
-
-        \item We show that locally the optimal bit orderings for all tested quantities are just slight variations of the optimal RMSE ordering. Furthermore, locally the (data-dependent) RMSE ordering is approximately the same as a data-independent ordering that can be computed using only the norms of the wavelet basis functions.
-
-        \item We describe a practical algorithm to realize the aforementioned data-independent optimal ordering, taking advantage of an encoding scheme that compress the leading zero bits. We also note that this ordering is globally (as opposed to locally) near optimal in terms of RMSE. 
+  \item For common analysis tasks: data reconstruction, gradient and Lapalacian computation, iso-contour extraction, and histogram computation, we introduce a framework in which progressive and spatially adaptive streams of bits in resolution and precision can be formed and compared. We also devise an optimization algorithm, that, for each task, approximates the optimal bit stream which, while not realizable in practice, provides both a ``theoretical'' limit and insights into designing an efficient, practical stream.
+  \item We propose practical and efficient bit streaming schemes for:
+  \begin{itemize}
+    \item Reconstructing the data (by minimizing the error in L2 norm), as well as its first and second derivatives (gradient and Laplacian).
+    \item Extracting an iso-contour given an iso-value from the data, taking advantage of the observation that when confined to a small region in space, extracting an accurate iso-contour approximately amounts to reconstructing an accurate function.
+    \item Computing a histogram of the data, using a novel piece of ``metadata'' information called \emph{stream signature}.
+  \end{itemize}
 \end{itemize}
