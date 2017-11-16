@@ -1,0 +1,19 @@
+\section{Data-dependent task-optimized streams}
+Here we discuss the problem of finding the ``best'' stream for the analysis task at hand. This problem is hard because it is hard to define the notion of ``best''. We will attempt at defining ``best'' in terms of minimizing the error with each bit read. However actually programming the optimization this way will result in a sub-optimal stream because it is necessary to sometimes lose in the short term to then gain more later on. This fact means that we can't optimize for bit budget A and then claim that that solution is also an optimal sub-solution for budget B > A.
+
+Then our next attempt is another $O(n^2)$ scheme where we attempt to maximize the error difference with each bit (Scheme1)
+
+Detail Algorithm for Scheme1.
+
+Yet another way to optimize is the $O(n)$ scheme where we start with every bit and then turn each off and measure the impact on error. Then we sort every bit by its impact (Scheme2).
+
+Detail Algorithm for Scheme2.
+
+We show a figure comparing Scheme1 and Scheme2 on PSNR, histogram, and isocontour for two datasets.
+
+\subsection{Error metrics}
+\subsubsection{Function difference}
+\subsubsection{Gradient and Laplacian difference}
+\subsubsection{Isocontour difference}
+\subsubsection{Histogram difference}
+Figure 1: show the different histogram metrics
