@@ -1,6 +1,28 @@
-\section{The need for fine-granularity streams}
+\section{The need for fine-granularity streams (existing techniques)}
 Here we argue that streaming by bit planes or streaming by levels result in sub-optimal PSNR.
 List of experiments to run:
+
+We compare data-independent streams. Figure 1: PSNR comparison for a data set (Miranda viscosity?)
+    \begin{enumerate}
+      \item Data-independent, by-bit-plane stream (truncation stream)
+      \item Data-independent, by-level stream (idx style, mipmap)
+      \item Data-independent, by-bit-importance stream
+    \end{enumerate}
+
+
+Datasets:
+
+\begin{enumerate}
+        \item Miranda viscosity (smooth and uniform)
+        \item Kingsnake (noisy and sparse)
+        \item Magnetic (tiny narrow lines)
+        \item Euler 2D (sharp front)
+        \item Enzo u (wide range)
+\end{enumerate}
+
+
+
+\section{Data-dependent streams}
 
 \begin{enumerate}
     \item First we compare data-dependent streams. Figure 2: PSNR comparison for the same data set
@@ -12,15 +34,7 @@ List of experiments to run:
     \item Data-dependent, by-level stream with skip leading zeros
     \item Data-dependent stream with skip leading zeros
   \end{enumerate}
-  \item We compare data-independent streams. Figure 1: PSNR comparison for a data set (Miranda viscosity?)
-    \begin{enumerate}
-      \item Data-independent, by-bit-plane stream
-      \item Data-independent, by-level stream
-      \item Data-independent, by-bit-importance stream
-      \item Data-independent, by-bit-importance, skip leading zeros
-      \item Data-independent, by-bit-plane, normalized, skip leading zeros (typical compression scheme)      
-      \item Data-dependent stream with skip leading zeros
-    \end{enumerate}
+
   \item The reader may ask: if I already have a good, practical PSNR stream (the data-independent, by bit plane, skip leading zeros), why do I need other streams? Here we show that for isocontour extraction, and for histogram computation, we are better off with other streams.
   
   Figure 3: isocontour error for the same data set
