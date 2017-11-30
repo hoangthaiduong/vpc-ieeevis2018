@@ -1,4 +1,4 @@
-\section{The need for fine-granularity streams (existing techniques)}
+\section{The need for fine-granularity streams}
 Here we argue that streaming by bit planes or streaming by levels result in sub-optimal PSNR (figure \ref{fig:psnr_traditional_vs_by_norm_viscosity}a)
 
 \begin{figure}[t]
@@ -25,20 +25,19 @@ Datasets:
 
 The reader may ask: if I already have a good, practical PSNR stream (the data-independent, by bit plane, skip leading zeros), why do I need other streams? Here we show that for isocontour extraction, and for histogram computation, we are better off with other streams.
   
+Figure: isocontour error for the same data set (Figure \ref{fig:by_bit_plane_isocontour})
 \begin{enumerate}
-  \item Figure 3: isocontour error for the same data set (Figure \ref{fig:by_bit_plane_isocontour})
-  \begin{enumerate}
-    \item Data-dependent stream for isocontour with skip leading zeros
-    \item Data-dependent stream for isocontour with skip leading zeros, also with by-bit-plane constraint
-  \end{enumerate}
-  We also need to show a rendering of the two isocontours for these streams at some low bit rate.
-  Figure 4: histogram error for the same data set
-  \begin{enumerate}
-    \item Data-dependent stream for histogram with skip leading zeros
-    \item Data-dependent stream for histogram with skip leading zeros, also with by-bit-plane constraint
+  \item Data-dependent stream for isocontour with skip leading zeros
+  \item Data-dependent stream for isocontour with skip leading zeros, also with by-bit-plane constraint
+\end{enumerate}
+
+We also need to show a rendering of the two isocontours for these streams at some low bit rate.
+Figure: histogram error for the same data set
+\begin{enumerate}
+  \item Data-dependent stream for histogram with skip leading zeros
+  \item Data-dependent stream for histogram with skip leading zeros, also with by-bit-plane constraint
 \end{enumerate}  
   Here we also show renderings of different histograms corresponding to the different streams at some low bit rate.
-\end{enumerate}
 
 \begin{figure}
   \centering

@@ -1,5 +1,9 @@
 \section{Data dependent task-optimized streams}
 
+\subsection{The need for task-specified streams}
+From the above two figures we have shown that it is worthwhile to look into streams that are not either simply by bit-plane or by levels. But it is also important that we look into the metric (or the analysis task) at hand to decide what bits to stream. We have shown one example where a stream that works well for one metric (PSNR) does not work well for other metrics (isocontour and histogram) in the previous section. Here we show an example where a PSNR-optimized stream performs poorly compared to an isocontour stream and histogram stream in respective metrics.
+
+\subsection{Optimization}
 Here we discuss the problem of finding the ``best'' stream for the analysis task at hand. This problem is hard because it is hard to define the notion of ``best''. We will attempt at defining ``best'' in terms of minimizing the error with each bit read. However actually programming the optimization this way will result in a sub-optimal stream because it is necessary to sometimes lose in the short term to then gain more later on. This fact means that we can't optimize for bit budget A and then claim that that solution is also an optimal sub-solution for budget B > A.
 
 Then our next attempt is another $O(n^2)$ scheme where we attempt to maximize the error difference with each bit (Scheme1)
