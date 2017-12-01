@@ -8,10 +8,14 @@ Here we discuss the problem of finding the ``best'' stream for the analysis task
 
 Then our next attempt is another $O(n^2)$ scheme where we attempt to maximize the error difference with each bit (Scheme1)
 
-Detail Algorithm for Scheme1.
+Detailed Algorithm for Scheme1.
 
-Yet another way to optimize is the $O(n)$ scheme where we start with every bit and then turn each off and measure the impact on error. Then we sort every bit by its impact (Scheme2).
+Another way to optimize is the $O(n)$ scheme where we start with every bit and then turn each off and measure the impact on error. Then we sort every bit by its impact (Scheme2).
 
-Detail Algorithm for Scheme2.
+Detailed Algorithm for Scheme2.
 
-We show a figure comparing Scheme1 and Scheme2 on PSNR, histogram, and isocontour for two datasets.
+A supposedly better scheme is $O(n^2)$ but going from fine to coarse. We start with everything, then turn one chunk off at a time, pick the most important chunk and remove it, then repeat the process for the rest (Scheme3).
+
+Detailed Algorithm for Scheme3.
+
+We show a figure comparing Scheme1, Scheme2, and Scheme3 on PSNR, histogram, and isocontour for two datasets.
