@@ -1,11 +1,21 @@
+\section{Data dependent task-optimized streams}
+
+\subsection{The need for task-specific streams}
+From the above two figures we have shown that it is worthwhile to look into streams that are not either simply by bit-plane or by levels. But it is also important that we look into the metric (or the analysis task) at hand to decide what bits to stream. We have shown one example where a stream that works well for one metric (PSNR) does not work well for other metrics (isocontour and histogram) in the previous section. Here we show an example where a PSNR-optimized stream performs poorly compared to an isocontour stream and histogram stream in respective metrics.
+
+\subsection{Optimization}
 Here we discuss the problem of finding the ``best'' stream for the analysis task at hand. This problem is hard because it is hard to define the notion of ``best''. We will attempt at defining ``best'' in terms of minimizing the error with each bit read. However actually programming the optimization this way will result in a sub-optimal stream because it is necessary to sometimes lose in the short term to then gain more later on. This fact means that we can't optimize for bit budget A and then claim that that solution is also an optimal sub-solution for budget B > A.
 
 Then our next attempt is another $O(n^2)$ scheme where we attempt to maximize the error difference with each bit (Scheme1)
 
-Detail Algorithm for Scheme1.
+Detailed Algorithm for Scheme1.
 
-Yet another way to optimize is the $O(n)$ scheme where we start with every bit and then turn each off and measure the impact on error. Then we sort every bit by its impact (Scheme2).
+Another way to optimize is the $O(n)$ scheme where we start with every bit and then turn each off and measure the impact on error. Then we sort every bit by its impact (Scheme2).
 
-Detail Algorithm for Scheme2.
+Detailed Algorithm for Scheme2.
 
-We show a figure comparing Scheme1 and Scheme2 on PSNR, histogram, and isocontour for two datasets.
+A supposedly better scheme is $O(n^2)$ but going from fine to coarse. We start with everything, then turn one chunk off at a time, pick the most important chunk and remove it, then repeat the process for the rest (Scheme3).
+
+Detailed Algorithm for Scheme3.
+
+We show a figure comparing Scheme1, Scheme2, and Scheme3 on PSNR, histogram, and isocontour for two datasets.
