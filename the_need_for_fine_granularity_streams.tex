@@ -1,13 +1,24 @@
-\section{The need for fine-granularity streams}
+\section{The need for spatially adaptive streams in both resolution and precision}
 We begin by defining what we mean by resolution and precision. Things to touch on here:
 \begin{enumerate}
-  \item that we use the (cdf5/3) wavelet transform to generate levels of resolution (subbands)
-  \item that due to computational contraint, and also because of practical reasons, we group wavelet coefficients into groups of 4x4 (and in some cases 8x8 or 16x16 if the data is large).
+  \item that we use the (cdf5/3) wavelet transform to generate levels of resolution (subbands) from 2D data
+  \item that due to computational contraint, and also because of practical reasons, we group wavelet coefficients into groups of 4x4 pixels
   \item we quantize the data to 16 bits by extracting the maximum exponent
   \item we use negabinary to avoid having to deal with the sign bit in a special way
 \end{enumerate}
 
-Here we argue that streaming by bit planes or streaming by levels result in sub-optimal PSNR (figure \ref{fig:psnr_traditional_vs_by_norm_viscosity}a)
+\textbf{Define} the following streams
+\begin{enumerate}
+  \item S1: static order, from high to low-order bit planes. Within each bit plane, follow the subband order. This corresponds to simply truncation in practice.
+  \item S2: static order, from coarse to fine subbands. Within each subband, each coefficient is streamed in whole. This corresponds to level-of-detail techniques in practice.
+  \item S3: static order, but the bits are not coupled in either resolution or precision. The order is determined by the product of $2^i$ (i is the bit plane) and the wavelet basis norm.
+  \item S4: greedily-optimized uniform resolution, adaptive precision (i.e all chunks within a subband are streamed together)
+  \item S5: uniform precision, adaptive resolution (i.e, all chunks within a bit plane are streamed together)
+  \item S6: greedily-optimized, adaptive resolution and adaptive precision 
+  \item S7: greedily-optimized, adaptive resolution and adaptive precision, also skip the leading zeros (or equivalently, move the leading zeros to the end of the stream)
+\end{enumerate}
+
+\textbf{Figure}: Compare S1, S2, S3, S4, S5, and S6 in PSNR for miranda, viscosity. This figure shows that, first of all (and non-surprisingly) the adaptive streams perform much better than the static ones. Second, it shows among the adaptive ones, except for S7, S6 performs best. Finally S7 gives an empirical bound on the best possible stream for PSNR. (placeholder figure \ref{fig:psnr_traditional_vs_by_norm_viscosity}a)
 
 \begin{figure}[t]
 	\centering
@@ -31,8 +42,16 @@ Datasets:
   \item Enzo u (wide range)
 \end{enumerate}
 
-The reader may ask: if I already have a good, practical PSNR stream (the data-independent, by bit plane, skip leading zeros), why do I need other streams? Here we show that for isocontour extraction, and for histogram computation, we are better off with other streams.
-  
+\section{The need for task-specific streams}
+From the above two figures we have shown that it is worthwhile to look into streams that are not either simply by bit-plane or by levels. But it is also important that we look into the metric (or the analysis task) at hand to decide what bits to stream. We have shown one example where a stream that works well for one metric (PSNR) does not work well for other metrics (isocontour and histogram) in the previous section. Here we show an example where a PSNR-optimized stream performs poorly compared to an isocontour stream and histogram stream in respective metrics.
+
+Here we show that for isocontour extraction, and for histogram computation, we are better off with other streams.
+
+\textbf{Define} Stream S8 = greedily-optimized for histogram
+Figure: histogram error for the following streams: S1, S2, S3, S6, and S8. This figure shows that among the static streams (S1, S2 and S3), the S2 stream performs the best for histogram, in contrast to the case for PSNR above. Comparing the two data-dependent streams S6 and S8, we note that S8 performs better than S6, implying that simply optimizing for PSNR does not result in the best stream for histogram.
+
+TODO: the rest of the chapter's outline is to be revised
+
 Figure: isocontour error for the same data set (Figure \ref{fig:by_bit_plane_isocontour})
 \begin{enumerate}
   \item Data-dependent stream for isocontour with skip leading zeros
