@@ -6,7 +6,7 @@
         \label{fig:datasets}
 \end{figure*}
 
-\section{The need for fine-granularity streams (existing techniques)}
+\section{The need for fine-granularity streams}
 Multiresolution data structures or value quantization are commmonly used for data size
 reduction.
 
@@ -15,44 +15,11 @@ than by limiting the reduction only to resolution or only to precision. For our 
 we use wavelets, where the resolution corresponds to levels, and precision to bitplanes.
 
 For example, we can compute {\em PSNR} for a relatively smooth and uniform dataset, such as Miranda
-viscosity field, and vary only resolution, only precision, or both (\Cref{fig:viscosity-psnr}). Miranda
+viscosity field, and vary only resolution, only precision, or both (\Cref{fig:psnr_traditional_vs_by_norm_viscosity}). Miranda
 dataset is especially useful as the independent stream order does not exhibit any spatial adaptivity and
 this particular datasets is fairly uniform.
 
-The resolution stream loads level-by-level data with full precision resulting in notable flat regions. These
-regions are coused by the doubling of the samples at each refinement step. Similarly, the precision stream
-shows the similar staircase pattern, but in this case the flat regions are smaller as the bitplane granularity
-is finer than in the resolution stream case. The combination of both these approaches outperform precision
-stream at all times and its finer granularity.
-
-
-Here we argue that streaming by bit planes or streaming by levels result in sub-optimal PSNR.
-List of experiments to run:
-
-We compare data-independent streams. Figure 1: PSNR comparison for a data set (Miranda viscosity?)
-    \begin{enumerate}
-      \item Data-independent, by-bit-plane stream (truncation stream)
-      \item Data-independent, by-level stream (idx style, mipmap)
-      \item Data-independent, by-bit-importance stream
-    \end{enumerate}
-
-
-\section{The need for fine-granularity streams}
-
-
-
-We begin by defining what we mean by resolution and precision. Things to touch on here:
-
-\begin{enumerate}
-  \item that we use the (cdf5/3) wavelet transform to generate levels of resolution (subbands)
-  \item that due to computational contraint, and also because of practical reasons, we group wavelet coefficients into groups of 4x4 (and in some cases 8x8 or 16x16 if the data is large).
-  \item we quantize the data to 16 bits by extracting the maximum exponent
-  \item we use negabinary to avoid having to deal with the sign bit in a special way
-\end{enumerate}
-
-Here we argue that streaming by bit planes or streaming by levels result in sub-optimal PSNR (figure \ref{fig:psnr_traditional_vs_by_norm_viscosity}a)
-
-\begin{figure}[t]
+\begin{figure}[htb!]
 	\centering
 	\subcaptionbox{without skip leading zeros}
 	{\includegraphics[width=0.4\linewidth]{img/independent/rmse-miranda-viscosity}}
@@ -63,10 +30,28 @@ Here we argue that streaming by bit planes or streaming by levels result in sub-
 \end{figure}
 
 
+
+The resolution stream loads level-by-level data with full precision resulting in notable flat regions. These
+regions are coused by the doubling of the samples at each refinement step. Similarly, the precision stream
+shows the similar staircase pattern, but in this case the flat regions are smaller as the bitplane granularity
+is finer than in the resolution stream case. The combination of both these approaches outperform precision
+stream at all times and its finer granularity.
+
+We begin by defining what we mean by resolution and precision. Things to touch on here:
+
+\begin{enumerate}
+  \item that we use the (cdf5/3) wavelet transform to generate levels of resolution (subbands)
+  \item that due to computational contraint, and also because of practical reasons, we group wavelet coefficients into groups of 4x4 (and in some cases 8x8 or 16x16 if the data is large).
+  \item we quantize the data to 16 bits by extracting the maximum exponent
+  \item we use negabinary to avoid having to deal with the sign bit in a special way
+\end{enumerate}
+
+Here we argue that streaming by bit planes or streaming by levels result in sub-optimal PSNR (\Cref{fig:psnr_traditional_vs_by_norm_viscosity}a)
+
+
 When compression is used, it avoids streaming the leading zero bits of the wavelet coefficients (figure \ref{fig:psnr_traditional_vs_by_norm_viscosity}b).
 
 In the supplement materials, we show the same plot for the following datasets:
-Datasets:
 \begin{enumerate}
   \item Miranda viscosity (smooth and uniform)
   \item Kingsnake (noisy and sparse)
@@ -85,7 +70,7 @@ Figure: isocontour error for the same data set (Figure \ref{fig:by_bit_plane_iso
 
 We also need to show a rendering of the two isocontours for these streams at some low bit rate.
 
-\begin{figure}[t]
+\begin{figure}[htb!]
 	\centering
 	\subcaptionbox{without skip leading zeros}
 	{\includegraphics[width=0.4\linewidth]{img/independent/histogram-miranda-viscosity}}
