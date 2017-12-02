@@ -7,16 +7,16 @@
 \end{figure*}
 
 \section{The need for fine-granularity streams}
-Multiresolution data structures or value quantization are commmonly used for data size
-reduction.
-
-However, we show that by both reducing resolution and precision we can achieve lower error
-than by limiting the reduction only to resolution or only to precision. For our experiments
-we use wavelets, where the resolution corresponds to levels, and precision to bitplanes.
-
-For example, we can compute {\em PSNR} for a relatively smooth and uniform dataset, such as Miranda
-viscosity field, and vary only resolution, only precision, or both (\Cref{fig:psnr_traditional_vs_by_norm_viscosity}). Miranda
-dataset is especially useful as the independent stream order does not exhibit any spatial adaptivity and
+%Multiresolution data structures or value quantization are commmonly used for data size
+%reduction.
+%
+%However, we show that by both reducing resolution and precision we can achieve lower error
+%than by limiting the reduction only to resolution or only to precision. For our experiments
+%we use wavelets, where the resolution corresponds to levels, and precision to bitplanes.
+%
+%For example, we can compute {\em PSNR} for a relatively smooth and uniform dataset, such as Miranda
+%viscosity field, and vary only resolution, only precision, or both (\Cref{fig:psnr_traditional_vs_by_norm_viscosity}). Miranda
+%dataset is especially useful as the independent stream order does not exhibit any spatial adaptivity and
 this particular datasets is fairly uniform.
 
 \begin{figure}[htb!]
@@ -29,13 +29,11 @@ this particular datasets is fairly uniform.
 	\label{fig:psnr_traditional_vs_by_norm_viscosity}
 \end{figure}
 
-
-
-The resolution stream loads level-by-level data with full precision resulting in notable flat regions. These
-regions are coused by the doubling of the samples at each refinement step. Similarly, the precision stream
-shows the similar staircase pattern, but in this case the flat regions are smaller as the bitplane granularity
-is finer than in the resolution stream case. The combination of both these approaches outperform precision
-stream at all times and its finer granularity.
+%The resolution stream loads level-by-level data with full precision resulting in notable flat regions. These
+%regions are coused by the doubling of the samples at each refinement step. Similarly, the precision stream
+%shows the similar staircase pattern, but in this case the flat regions are smaller as the bitplane granularity
+%is finer than in the resolution stream case. The combination of both these approaches outperform precision
+%stream at all times and its finer granularity.
 
 We begin by defining what we mean by resolution and precision. Things to touch on here:
 
@@ -88,16 +86,6 @@ Here we show that for isocontour extraction, and for histogram computation, we a
 \textbf{Define} Stream S8 = greedily-optimized for histogram
 Figure: histogram error for the following streams: S1, S2, S3, S6, and S8. This figure shows that among the static streams (S1, S2 and S3), the S2 stream performs the best for histogram, in contrast to the case for PSNR above. Comparing the two data-dependent streams S6 and S8, we note that S8 performs better than S6, implying that simply optimizing for PSNR does not result in the best stream for histogram.
 
-TODO: the rest of the chapter's outline is to be revised
-
-Figure: isocontour error for the same data set (Figure \ref{fig:by_bit_plane_isocontour})
-\begin{enumerate}
-  \item Data-dependent stream for isocontour with skip leading zeros
-  \item Data-dependent stream for isocontour with skip leading zeros, also with by-bit-plane constraint
-\end{enumerate}
-
-We also need to show a rendering of the two isocontours for these streams at some low bit rate.
-
 \begin{figure}[htb!]
 	\centering
 	\subcaptionbox{without skip leading zeros}
@@ -108,7 +96,6 @@ We also need to show a rendering of the two isocontours for these streams at som
 	\label{fig:histogram_traditional_vs_by_norm_viscosity}
 \end{figure}
 
-
 \begin{figure}[htb!]
 	\centering
 	\subcaptionbox{without skip leading zeros}
@@ -118,15 +105,6 @@ We also need to show a rendering of the two isocontours for these streams at som
 	\caption {Isocontour ($h = 0.0634$) comparison between three streams: by bit-plane, by level, and by wavelet norm}
 	\label{fig:isocontour_traditional_vs_by_norm_viscosity}
 \end{figure}
-
-
-
-
-\begin{enumerate}
-  \item Data-dependent stream for histogram with skip leading zeros
-  \item Data-dependent stream for histogram with skip leading zeros, also with by-bit-plane constraint
-\end{enumerate}  
-  Here we also show renderings of different histograms corresponding to the different streams at some low bit rate.
 
 \begin{figure}
   \centering
