@@ -26,16 +26,6 @@ is finer than in the resolution stream case. The combination of both these appro
 stream at all times and its finer granularity.
 
 
-\begin{figure}
-        \centering
-        \includegraphics[width=\linewidth]{img/data-independent/miranda-viscosity}
-        \caption{Miranda viscosity field PSNR errors for loading the data by increasing resolution,
-                 precision, and both resolution and precision.}
-        \label{fig:viscosity-psnr}
-\end{figure}
-
-
-
 Here we argue that streaming by bit planes or streaming by levels result in sub-optimal PSNR.
 List of experiments to run:
 
@@ -47,10 +37,10 @@ We compare data-independent streams. Figure 1: PSNR comparison for a data set (M
     \end{enumerate}
 
 
-Datasets:
-
-=======
 \section{The need for fine-granularity streams}
+
+
+
 We begin by defining what we mean by resolution and precision. Things to touch on here:
 
 \begin{enumerate}
@@ -65,12 +55,13 @@ Here we argue that streaming by bit planes or streaming by levels result in sub-
 \begin{figure}[t]
 	\centering
 	\subcaptionbox{without skip leading zeros}
-	{\includegraphics[width=0.4\linewidth]{resources/rmse-miranda-viscosity.png}}
+	{\includegraphics[width=0.4\linewidth]{img/independent/rmse-miranda-viscosity}}
 	\subcaptionbox{with skip leading zeros}
-	{\includegraphics[width=0.4\linewidth]{resources/rmse-miranda-viscosity_slz.png}}
+	{\includegraphics[width=0.4\linewidth]{img/skip-zeros/rmse-miranda-viscosity}}
 	\caption {PSNR comparison between three streams: by bit-plane, by level, and by wavelet norm}
 	\label{fig:psnr_traditional_vs_by_norm_viscosity}
 \end{figure}
+
 
 When compression is used, it avoids streaming the leading zero bits of the wavelet coefficients (figure \ref{fig:psnr_traditional_vs_by_norm_viscosity}b).
 
@@ -93,7 +84,19 @@ Figure: isocontour error for the same data set (Figure \ref{fig:by_bit_plane_iso
 \end{enumerate}
 
 We also need to show a rendering of the two isocontours for these streams at some low bit rate.
-Figure: histogram error for the same data set
+
+\begin{figure}[t]
+	\centering
+	\subcaptionbox{without skip leading zeros}
+	{\includegraphics[width=0.4\linewidth]{img/independent/histogram-miranda-viscosity}}
+	\subcaptionbox{with skip leading zeros}
+	{\includegraphics[width=0.4\linewidth]{img/skip-zeros/histogram-miranda-viscosity}}
+	\caption {Histogram with earth mover distance (EMD) comparison between three streams: by bit-plane, by level, and by wavelet norm}
+	\label{fig:histogram_traditional_vs_by_norm_viscosity}
+\end{figure}
+
+
+
 \begin{enumerate}
   \item Data-dependent stream for histogram with skip leading zeros
   \item Data-dependent stream for histogram with skip leading zeros, also with by-bit-plane constraint
