@@ -1,5 +1,29 @@
 \section{Data dependent task-optimized streams}
 
+In previous section we demonstrated that different tasks may need a different stream. To perform any comparison
+we have to define metric and establish baseline.
+
+We chose a integral under the error curve as our metric, where smaller area implies better stream. (TODO: spiky
+stream may not work well).
+
+
+Given the error metric we can now construct a baseline stream. Unfortunately, the streamed chunks are unlikely
+to be disjoint and thus affect later chunks' errors. This dependency requires to find permutation with the smallest
+total error, a problem that is exponential in number of chunks. We thus use a greedy scheme that at each step picks
+the chunk that if removed would result in biggest change in the error.
+
+\paragraph*{Fine-to-coarse Algorithm}
+
+As optimization, we perform the error computation for each chunk only {\em once} and then sort these chunks
+by the error. This approximation reduces the running time to $O(n \log n)$ and thus makes it more practical if
+the stream order needs to be computed for a dataset, for example before the data is streamed over network.
+
+
+\paragraph*{Coarse-to-fine Algorithm}
+
+Scheme3 - coarse-to-fine, greedy optimal (more realistic approach)
+
+
 Here we discuss the problem of finding the ``best'' stream for the analysis task at hand. This problem is hard because it is hard to define the notion of ``best''. We will attempt at defining ``best'' in terms of minimizing the error with each bit read. However actually programming the optimization this way will result in a sub-optimal stream because it is necessary to sometimes lose in the short term to then gain more later on. This fact means that we can't optimize for bit budget A and then claim that that solution is also an optimal sub-solution for budget B > A.
 
 Then our next attempt is another $O(n^2)$ scheme where we attempt to maximize the error difference with each bit (Scheme1)
