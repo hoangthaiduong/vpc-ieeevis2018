@@ -27,14 +27,6 @@ of more data meaning better result. The running time of this algorithm is $O(n^3
 and at each streaming step decrease the chunk count by one. The cube factor comes from the need to perform inverse
 wavelet transform and compute the error for each chunk.
 
-
-
-
-
-Given the error metric we can now construct a baseline stream. Unfortunately, the streamed chunks are unlikely
-to be disjoint and thus affect later chunks' errors. This dependency requires to find permutation with the smallest
-total error, a problem that is exponential in number of chunks. 
-
 \paragraph*{Fine-to-coarse Algorithm}
 
 As optimization, we perform the error computation for each chunk only {\em once} and then sort these chunks
