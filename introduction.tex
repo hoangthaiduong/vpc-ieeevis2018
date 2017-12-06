@@ -1,10 +1,31 @@
 \section{Introduction}
 
-In recent years, compute bandwidth has been greatly outpacing the latency of data movement across all levels of the memory hierarchy, making data movement the bottleneck in almost all workflows that involve data creation or processing. When it comes to analysing the terabytes of data produced by massively parallel simulation, this bottleneck prevents scientists from studying the data to gain scientific insights. Several data reduction techniques have been proposed to reduce the amount of data for storage and analysis, and they mainly fall into two categories: techniques that reduce data's resolution (e.g., octrees, wavelets), and techniques that reduce data's precision (e.g., quantization and truncation). As we will show in this paper, however, reducing data only in resolution or only in precision is not flexible enough. Much larger gain can be achieved by combining these two dimensions of data reductions. 
+In recent years, compute bandwidth has been greatly outpacing the latency of data movement across
+all levels of the memory hierarchy, making data movement the bottleneck in almost all workflows that
+involve data creation or processing. When it comes to analysing the terabytes of data produced by
+massively parallel simulation, this bottleneck prevents scientists from studying the data to gain
+scientific insights. Several data reduction techniques have been proposed to reduce the amount of
+data for storage and analysis, and they mainly fall into two categories: techniques that reduce
+data's resolution (e.g., octrees, wavelets), and techniques that reduce data's precision (e.g.,
+quantization and truncation). As we will show in this paper, however, reducing data only in
+resolution or only in precision is not flexible enough. Much larger gain can be achieved by
+combining these two dimensions of data reductions. 
 
-There exists data reduction techniques that combine resolution and precision, of which perhaps the most well known is JPEG2000. The specifications for JPEG2000 however do not handle high-precision 3D data commonly found in scientific applications. But more importantly, JPEG2000 data streams do not adapt to the analysis task at hand. We will show in this paper that a data reduction scheme should be task-dependent to maximize the reducibility potential, as different analysis tasks have different preferences in terms of the resolution and precision of data. These preferences possibly also change across the whole domain. It is therefore important to understand the characteristics of the analysis tasks to avoid reading and transmitting unimportant data bits.
+There exists data reduction techniques that combine resolution and precision, of which perhaps the
+most well known is JPEG2000. The specifications for JPEG2000 however do not handle high-precision 3D
+data commonly found in scientific applications. But more importantly, JPEG2000 data streams do not
+adapt to the analysis task at hand. We will show in this paper that a data reduction scheme should
+be task-dependent to maximize the reducibility potential, as different analysis tasks have different
+preferences in terms of the resolution and precision of data. These preferences possibly also change
+across the whole domain. It is therefore important to understand the characteristics of the analysis
+tasks to avoid reading and transmitting unimportant data bits.
 
-For a wide range of data sets, we construct different bit streams, each optimized for a common analysis task, and study their characteristics. The study presented in this paper is a step toward a data representation that allows bits pertaining to a given analysis task to be read efficiently, with minimal amount of unnecessary bits. Such a data representation would enable interactive exploration as well as cursory analysis of enormous, possibly remote data sets, without waiting for days of data transmission before figuring out what regions of the data to focus on.
+For a wide range of data sets, we construct different bit streams, each optimized for a common
+analysis task, and study their characteristics. The study presented in this paper is a step toward a
+data representation that allows bits pertaining to a given analysis task to be read efficiently,
+with minimal amount of unnecessary bits. Such a data representation would enable interactive
+exploration as well as cursory analysis of enormous, possibly remote data sets, without waiting for
+days of data transmission before figuring out what regions of the data to focus on.
 
 Our contributions are, in detail:
 
