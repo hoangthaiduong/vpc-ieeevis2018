@@ -1,12 +1,30 @@
 \begin{figure*}[!htb]
-        \includegraphics[width=0.33\linewidth]{img/dataset/miranda-viscosity.png}
-        \includegraphics[width=0.33\linewidth]{img/dataset/magnetic.png}
-        \includegraphics[width=0.33\linewidth]{img/dataset/euler2d.png}
-        \caption{Left to right: miranda viscosity field, magnetic reconnection, euler 2d sharp front}
-        \label{fig:datasets}
+	\includegraphics[width=0.33\linewidth]{img/dataset/miranda-viscosity.png}
+	\includegraphics[width=0.33\linewidth]{img/dataset/magnetic.png}
+	\includegraphics[width=0.33\linewidth]{img/dataset/euler2d.png}
+	\caption{Left to right: Miranda viscosity field, magnetic reconnection, Euler 2d sharp front}
+	\label{fig:datasets}
 \end{figure*}
 
-\section{The need for fine-granularity streams}
+\section{The need for adaptive-precision and adaptive-resolution data representation}
+
+Traditional data reduction techniques work in either resolution space or precision space exclusively. That is, data is typically reduced by truncation of the last few levels in a multi-resolution hierarchy, or by truncation of lower-ordered bits, but rarely by a mixture of both. It is beneficial, however, to 
+
+\begin{figure}[htb!]
+	\centering
+	\subcaptionbox{PSNR comparison}
+	{\includegraphics[width=0.8\linewidth]{img/motivation/kflame-oh-motivation.pdf}}
+	\subcaptionbox{by bit plane}
+	{\includegraphics[width=0.21\linewidth]{img/motivation/ERROR-(rmse)-GREEDY-BY-BIT-PLANE-(rmse).png}}
+	\subcaptionbox{by level}
+	{\includegraphics[width=0.21\linewidth]{img/motivation/ERROR-(rmse)-GREEDY-BY-LEVEL-(rmse).png}}
+	\subcaptionbox{no constraint}
+	{\includegraphics[width=0.21\linewidth]{img/motivation/ERROR-(rmse)-GREEDY-(rmse).png}}
+	\subcaptionbox{original}
+	{\includegraphics[width=0.21\linewidth]{img/motivation/original.png}}
+	\caption {(a) PSNR comparison for three L2 norm-optimized streams: by bit plane, by level, and no constraints. (b, c, d) reconstructed data at 6528 bytes. (e) original data.}
+	\label{fig:motivation}
+\end{figure}
 %Multiresolution data structures or value quantization are commmonly used for data size
 %reduction.
 %
@@ -16,8 +34,7 @@
 %
 %For example, we can compute {\em PSNR} for a relatively smooth and uniform dataset, such as Miranda
 %viscosity field, and vary only resolution, only precision, or both (\Cref{fig:psnr_traditional_vs_by_norm_viscosity}). Miranda
-%dataset is especially useful as the independent stream order does not exhibit any spatial adaptivity and
-this particular datasets is fairly uniform.
+%dataset is especially useful as the independent stream order does not exhibit any spatial adaptivity and this particular datasets is fairly uniform.
 
 \begin{figure}[htb!]
 	\centering
