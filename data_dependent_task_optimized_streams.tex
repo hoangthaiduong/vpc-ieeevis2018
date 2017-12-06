@@ -27,15 +27,33 @@ of more data meaning better result. The running time of this algorithm is $O(n^3
 and at each streaming step decrease the chunk count by one. The cube factor comes from the need to perform inverse
 wavelet transform and compute the error for each chunk.
 
-\paragraph*{Fine-to-coarse Algorithm}
+\paragraph*{Fine-to-coarse algorithm} is more practical as it utilizes full dataset to construct the stream.
+This stream outperforms the coarse-to-fine greedy stream as it has access to more knowledge. Moreover,
+if we wanted to precompute stream order which could be utilized during query, we would have access to whole
+data set and could compute this stream. The algorithm is in principle a reverse of the previous approach, the
+stream is constructed by starting with full data set and one by one disabling the chunks. At each step, a chunk
+with smallest errorr impact is disabled (TODO: more detail). This algorithm is still of greedy nature as it
+makes only locally optimal choice. Similarl to the coarse-to-fine algorithm, the running time is still $O(n^3)$.
 
-As optimization, we perform the error computation for each chunk only {\em once} and then sort these chunks
-by the error. This approximation reduces the running time to $O(n \log n)$ and thus makes it more practical if
+As an optimization, we perform the error computation for each chunk only {\em once} and then sort these chunks
+by the error. This approximation reduces the running time to $O(n^2)$ and thus makes it more practical (still
+slow as hell) if
 the stream order needs to be computed for a dataset, for example before the data is streamed over network.
 
 
+\begin{figure}
+        \centering
+        \caption{Compare the greedy coarse-to-fine with skip leading zeros}
+\end{figure}
 
-Scheme3 - coarse-to-fine, greedy optimal (more realistic approach)
+
+\begin{figure}
+        \centering
+        \caption{all three greedy schemes, the point to show here that $O(n^2)$
+                 algorithm's results are close to the more expensive algorithm}
+\end{figure}
+
+
 
 
 Here we discuss the problem of finding the ``best'' stream for the analysis task at hand. This problem is hard because it is hard to define the notion of ``best''. We will attempt at defining ``best'' in terms of minimizing the error with each bit read. However actually programming the optimization this way will result in a sub-optimal stream because it is necessary to sometimes lose in the short term to then gain more later on. This fact means that we can't optimize for bit budget A and then claim that that solution is also an optimal sub-solution for budget B > A.
