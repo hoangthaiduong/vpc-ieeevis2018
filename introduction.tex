@@ -1,43 +1,122 @@
 \section{Introduction}
 
-In recent years, compute bandwidth has been greatly outpacing the latency of data movement across
-all levels of the memory hierarchy, making data movement the bottleneck in almost all workflows that
-involve data creation or processing. When it comes to analysing the terabytes of data produced by
-massively parallel simulation, this bottleneck prevents scientists from studying the data to gain
-scientific insights. Several data reduction techniques have been proposed to reduce the amount of
-data for storage and analysis, and they mainly fall into two categories: techniques that reduce
-data's resolution (e.g., octrees, wavelets), and techniques that reduce data's precision (e.g.,
-quantization and truncation). As we will show in this paper, however, reducing data only in
-resolution or only in precision is not flexible enough. Much larger gain can be achieved by
-combining these two dimensions of data reductions. 
+As the gap between the available compute power and the cost of data
+movement increases, data transfer, whether from caches, main memory,
+or disk is becoming the major bottleneck of many workflows. However,
+it is well known that often not all data is necessary to produce a
+valid result. In particular, for techniques at the end of scientific
+workflow like visualization and data analysis often much coarser
+approximations of the data provide adequate approximations~\cite{?}
+and even during a simulations some loss in precision is often
+acceptable~\cite{PetersSCPaper}. As a result a host of different
+techniques have been proposed to reduce the size of data. Generically,
+these can be classified into approaches that reduce the data
+resolution, i.e. the number of data points stored, and techniques that
+reduce the precision of each data point. Examples of the former are
+adaptive~\cite{AMR}, octrees~\cite{?}, or other tree
+structures~\cite{?} and of the latter compression~\cite{?},
+quantization~\cite{?}, or truncation~\cite{?}. Traditionally,
+multi-resolution structures have often been used to accelerate dynamic
+queries, for example, in rendering~\cite{?}, since ignoring points
+based on the view point or data complexity can result in significant
+speed-ups. Uniform compression on the other hand is more common in
+storage type situations where in the absence of other information
+treating each sample as equally important is the
+null-hypothesis. However, in many situations a combination of both
+concepts would be ideal. For example, we may need a certain minimal
+spatial resolution to adequately resolve an isosurface, yet if the
+underlying function is smooth we likely will not need all values at
+full precisions. Similarly, we may need high precision values to
+accumulate accurate statistics, yet a small subsample of points may be
+sufficient to do so. Some file formats like JPEG2000~\cite{?} do
+provide per-block compression and thus allow at least some flexibility
+in adjusting both resolution and precision simultaneously. But we are
+not aware of any analysis pipeline that uses these capabilities beyond
+simple region-of-interest based queries. In fact, while intuitive it
+is unclear whether in practice combining both concepts provides any
+advantage, how big the potential savings could be and how flexible a
+given solution would have to be.
 
-There exists data reduction techniques that combine resolution and precision, of which perhaps the
-most well known is JPEG2000. The specifications for JPEG2000 however do not handle high-precision 3D
-data commonly found in scientific applications. But more importantly, JPEG2000 data streams do not
-adapt to the analysis task at hand. We will show in this paper that a data reduction scheme should
-be task-dependent to maximize the reducibility potential, as different analysis tasks have different
-preferences in terms of the resolution and precision of data. These preferences possibly also change
-across the whole domain. It is therefore important to understand the characteristics of the analysis
-tasks to avoid reading and transmitting unimportant data bits.
-
-For a wide range of data sets, we construct different bit streams, each optimized for a common
-analysis task, and study their characteristics. The study presented in this paper is a step toward a
-data representation that allows bits pertaining to a given analysis task to be read efficiently,
-with minimal amount of unnecessary bits. Such a data representation would enable interactive
-exploration as well as cursory analysis of enormous, possibly remote data sets, without waiting for
-days of data transmission before figuring out what regions of the data to focus on.
-
-Our contributions are, in detail:
+Using a wide range of data sets and a suit of different analysis tasks
+we show that selectively adjusting both resolution and precision can
+provide significant advantages over adjust only one of them. In
+particular, given an analysis tasks, we consider progressive
+bitstreams that optimally order the bits (or small chunks bits) of all
+samples to minimize the error of the result. Note that this includes
+interleaving bits of different samples potentially across the entire
+data set. We show that not only can optimal streams provide,
+sometimes drastically, improved results, but that different types of
+analysis require substantially different bitstreams. This means, that
+there exists no universally good ordering to replace the
+multi-resolution or precision based streams used today. Instead, an
+ideal system should support adaptively and dynamically changing the
+bit-ordering dependent on the task. While creating such a system is
+beyond the scope of this paper we demonstrate heuristics that provide
+good approximations to the theoretical ideal, which is unachievable in
+practice. Our contributions is detail are
 
 \begin{itemize}
-  \item For fundamental analysis tasks, namely data reconstruction, gradient and Lapalacian computation, iso-contour extraction, and histogram computation, we introduce a framework in which spatially adaptive data streams in both resolution and precision can be formed and compared. We also devise an optimization algorithm that approximates the optimal bit stream for each task. These streams serve as both empirical limits and sources of insights to designing heuristics to task-dependent .
-  \item Based on observations on the aforemention task-optimized streams, we propose practical heuristics for:
-  \begin{itemize}
-    \item Reconstruction the function data accurately in the L2 norm, as well as its first and second derivatives (gradient and Laplacian).
-    \item Extraction of an iso-contour given the iso-value, by localizing the contour spatially, and applying the heuristic for minimizing the L2 norm of function error locally.
-    \item Computation of histograms, using a novel piece of ``metadata'' information called \emph{stream signature}.
-  \end{itemize}
+
+\item Using a suite of data sets and analysis tasks, we demonstrate
+  that jointly optimizing both resolution and precision provides
+  significant data reductions above and beyond  adjusting each
+  separately;
+
+\item An optimization algorithm approximates the ideal
+  bitstream for large data and thus enables extensive, empirical
+  experiments; and
+
+\item A practical heuristic to dynamically create
+  high-quality bitstreams for different analysis tasks.
+
 \end{itemize}
+
+ 
+
+
+
+% In recent years, compute bandwidth has been greatly outpacing the
+% latency of data movement across all levels of the memory hierarchy,
+% making data movement the bottleneck in almost all workflows that
+% involve data creation or processing. When it comes to analyzing the
+% terabytes of data produced by massively parallel simulation, this
+% bottleneck prevents scientists from studying the data to gain
+% scientific insights. Several data reduction techniques have been
+% proposed to reduce the amount of data for storage and analysis, and
+% they mainly fall into two categories: techniques that reduce data's
+% resolution (e.g., octrees, wavelets), and techniques that reduce
+% data's precision (e.g., quantization and truncation). As we will show
+% in this paper, however, reducing data only in resolution or only in
+% precision is not flexible enough. Much larger gain can be achieved by
+% combining these two dimensions of data reductions.
+
+% There exists data reduction techniques that combine resolution and precision, of which perhaps the
+% most well known is JPEG2000. The specifications for JPEG2000 however do not handle high-precision 3D
+% data commonly found in scientific applications. But more importantly, JPEG2000 data streams do not
+% adapt to the analysis task at hand. We will show in this paper that a data reduction scheme should
+% be task-dependent to maximize the reducibility potential, as different analysis tasks have different
+% preferences in terms of the resolution and precision of data. These preferences possibly also change
+% across the whole domain. It is therefore important to understand the characteristics of the analysis
+% tasks to avoid reading and transmitting unimportant data bits.
+
+% For a wide range of data sets, we construct different bit streams, each optimized for a common
+% analysis task, and study their characteristics. The study presented in this paper is a step toward a
+% data representation that allows bits pertaining to a given analysis task to be read efficiently,
+% with minimal amount of unnecessary bits. Such a data representation would enable interactive
+% exploration as well as cursory analysis of enormous, possibly remote data sets, without waiting for
+% days of data transmission before figuring out what regions of the data to focus on.
+
+% Our contributions are, in detail:
+
+% \begin{itemize}
+%   \item For fundamental analysis tasks, namely data reconstruction, gradient and Laplacian computation, iso-contour extraction, and histogram computation, we introduce a framework in which spatially adaptive data streams in both resolution and precision can be formed and compared. We also devise an optimization algorithm that approximates the optimal bit stream for each task. These streams serve as both empirical limits and sources of insights to designing heuristics to task-dependent .
+%   \item Based on observations on the aforementioned task-optimized streams, we propose practical heuristics for:
+%   \begin{itemize}
+%     \item Reconstruction the function data accurately in the L2 norm, as well as its first and second derivatives (gradient and Laplacian).
+%     \item Extraction of an iso-contour given the iso-value, by localizing the contour spatially, and applying the heuristic for minimizing the L2 norm of function error locally.
+%     \item Computation of histograms, using a novel piece of ``metadata'' information called \emph{stream signature}.
+%   \end{itemize}
+% \end{itemize}
 
 
 %%% Local Variables:
