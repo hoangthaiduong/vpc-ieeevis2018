@@ -47,6 +47,8 @@
 \usepackage{egweblnk}
 \usepackage{cite}
 \usepackage{cleveref}
+\usepackage{amsmath}
+
 
 % For backwards compatibility to old LaTeX type font selection.
 % Uncomment if your document adheres to LaTeX2e recommendations.
@@ -95,6 +97,7 @@
 
 \maketitle
 
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \begin{abstract}
 Performing scientific analysis on the petabytes of data commonly found nowadays is an onerous task
 due to the prohibitive cost of data transfer. Currently this issue is alleviated by working with
@@ -117,7 +120,7 @@ exploration as well as cursory analysis of enormous data.
 %\input{EGauthorGuidelines-body.inc}
 \input{introduction.tex}
 \input{related_work.tex}
-\input{the_need_for_fine_granularity_streams.tex}
+\input{the_need_to_combine_resolution_and_precision.tex}
 \input{data_dependent_task_optimized_streams.tex}
 \input{queries.tex}
 \input{conclusions.tex}
