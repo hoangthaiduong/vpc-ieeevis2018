@@ -101,42 +101,80 @@ when it comes to computing an accurate histogram.
 %   \item Enzo u (wide range)
 % \end{enumerate}
 
-\section{The need for task-specific streams}
-From the above two figures we have shown that it is worthwhile to look into streams that are not
-either simply by bit-plane or by levels. But it is also important that we look into the metric (or
-the analysis task) at hand to decide what bits to stream. We have shown one example where a stream
-that works well for one metric (PSNR) does not work well for other metrics (isocontour and
-histogram) in the previous section. Here we show an example where a PSNR-optimized stream performs
-poorly compared to an isocontour stream and histogram stream in respective metrics.
-
-Here we show that for isocontour extraction, and for histogram computation, we are better off with other streams.
-
-\textbf{Define} Stream S8 = greedily-optimized for histogram
-Figure: histogram error for the following streams: S1, S2, S3, S6, and S8. This figure shows that among the static streams (S1, S2 and S3), the S2 stream performs the best for histogram, in contrast to the case for PSNR above. Comparing the two data-dependent streams S6 and S8, we note that S8 performs better than S6, implying that simply optimizing for PSNR does not result in the best stream for histogram.
-
-\begin{figure}[htb!]
-	\centering
-	\subcaptionbox{without skip leading zeros}
-	{\includegraphics[width=0.4\linewidth]{img/independent/normalized/histogram-miranda-viscosity}}
-	\subcaptionbox{with skip leading zeros}
-	{\includegraphics[width=0.4\linewidth]{img/skip-zeros/histogram-miranda-viscosity}}
-	\caption {Histogram with earth mover distance (EMD) comparison between three streams: by bit-plane, by level, and by wavelet norm}
-	\label{fig:histogram_traditional_vs_by_norm_viscosity}
-\end{figure}
-
-\begin{figure}[htb!]
-	\centering
-	\subcaptionbox{without skip leading zeros}
-	{\includegraphics[width=0.4\linewidth]{img/independent/normalized/isocontour-miranda-viscosity}}
-	\subcaptionbox{with skip leading zeros}
-	{\includegraphics[width=0.4\linewidth]{img/skip-zeros/isocontour-miranda-viscosity}}
-	\caption {Isocontour ($h = 0.0634$) comparison between three streams: by bit-plane, by level, and by wavelet norm}
-	\label{fig:isocontour_traditional_vs_by_norm_viscosity}
-\end{figure}
+\section{The need for task-optimized streams}
+To test whether a stream that is suited to a certain task (function reconstruction, using PSNR as
+the metric) also performs well in another (histogram computation), we compare the streams introduced
+in the previous section using a histogram error metric that is the Earth Mover Distance (EMD)
+[CITE]. The EMD measures how far the histogram of the reconstructed data is from the histogram of
+the original data. We use 256 histogram bins in all experiments. The results are shown in Figure
+\ref{fig:histogram-motivation}. Compared to Figure \ref{fig:motivation}, the \emph{by level} stream
+is removed and two other streams are added: \emph{resolution-adaptive, EMD-optimized} and
+\emph{fully adaptive, EMD-optimized}. The two new streams are analogous to their RMSE counterparts
+(i.e., the two data-dependent streams in Figure \ref{fig:motivation}, now renamed to
+\emph{resolution-adaptive, RMSE-optimized} and \emph{fully adaptive, RMSE-optimized}), but are
+computed by greedily minimizing EMD instead of RMSE with regards to the groundtruth.
 
 \begin{figure}
-  \centering
-  \includegraphics[width=0.8\linewidth]{resources/isocontour-error-by-bit-plane-viscosity.png}
-  \caption {By bit-plane isocontour comparison versus no constraints for viscosity, isoval=-0.005}
-  \label{fig:by_bit_plane_isocontour}
+	\centering
+	\subcaptionbox{Magnetic}
+	{\includegraphics[width=0.44\linewidth]{img/motivation/magnetic-histogram-motivation.pdf}}
+	\subcaptionbox{Boiler-O2}
+	{\includegraphics[width=0.44\linewidth]{img/motivation/boiler-histogram-motivation.pdf}}
+	\subcaptionbox{Flame-OH}
+	{\includegraphics[width=0.44\linewidth]{img/motivation/kflame-oh-histogram-motivation.pdf}}
+	\subcaptionbox{Miranda-diffusivity}
+	{\includegraphics[width=0.44\linewidth]{img/motivation/diffusivity-histogram-motivation.pdf}}
+	\caption{Histogram error comparison. Lower EMD is better. The streams are truncated	towards the
+	end where the errors become negligibly small.}
+	\label{fig:histogram-motivation}
 \end{figure}
+
+The \emph{by bit plane} and \emph{by wavelet norm} streams match one another closely in terms of
+PSNR, but differ significantly in EMD. Furthermore, the \emph{fully adaptive, RMSE-optimized} stream
+underperforms  \emph{fully adaptive, EMD-optimized}, indicating that recontructing an accurate
+function and reconstructing an accurate histogram require two very different orderings of bits.
+Figure \ref{fig:histogram-comparison} illustrates how a quantitative difference in EMD translates to
+a visual difference in histogram.
+
+\begin{figure}
+	\centering
+	\subcaptionbox{\emph{by bit plane}}
+	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-by-bit-plane.png}}
+	\subcaptionbox{\emph{by wavelet norm}}
+	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-by-wavelet-norm.png}}
+	\subcaptionbox{\emph{fully adaptive, RMSE-optimized}}
+	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-rmse-optimized.png}}
+	\subcaptionbox{\emph{fully adaptive, EMD-optimized}}
+	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-emd-optimized.png}}
+	\caption{Histogram comparison for the Magnetic data set at 0.16 bits per sample. The reconstructed
+	histogram (blue) is blended with the groundtruth histogram (yellow), so green is where the two
+	overlap. Larger overlap (more green, less blue and yellow) is better.}
+	\label{fig:histogram-comparison}
+\end{figure}
+
+% \begin{figure}[htb!]
+% 	\centering
+% 	\subcaptionbox{without skip leading zeros}
+% 	{\includegraphics[width=0.4\linewidth]{img/independent/normalized/histogram-miranda-viscosity}}
+% 	\subcaptionbox{with skip leading zeros}
+% 	{\includegraphics[width=0.4\linewidth]{img/skip-zeros/histogram-miranda-viscosity}}
+% 	\caption {Histogram with earth mover distance (EMD) comparison between three streams: by bit-plane, by level, and by wavelet norm}
+% 	\label{fig:histogram_traditional_vs_by_norm_viscosity}
+% \end{figure}
+
+% \begin{figure}[htb!]
+% 	\centering
+% 	\subcaptionbox{without skip leading zeros}
+% 	{\includegraphics[width=0.4\linewidth]{img/independent/normalized/isocontour-miranda-viscosity}}
+% 	\subcaptionbox{with skip leading zeros}
+% 	{\includegraphics[width=0.4\linewidth]{img/skip-zeros/isocontour-miranda-viscosity}}
+% 	\caption {Isocontour ($h = 0.0634$) comparison between three streams: by bit-plane, by level, and by wavelet norm}
+% 	\label{fig:isocontour_traditional_vs_by_norm_viscosity}
+% \end{figure}
+
+% \begin{figure}
+%   \centering
+%   \includegraphics[width=0.8\linewidth]{resources/isocontour-error-by-bit-plane-viscosity.png}
+%   \caption {By bit-plane isocontour comparison versus no constraints for viscosity, isoval=-0.005}
+%   \label{fig:by_bit_plane_isocontour}
+% \end{figure}
