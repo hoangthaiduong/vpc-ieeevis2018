@@ -10,7 +10,8 @@ example, if a user drasticly changes viewpoint in a volume rendering application
 
 Taking the lack of control over the stopping budget to the extreme, the best stream becomes the one which minimizes
 the error at all bit budgets. However, as in any global optimization problem we may get stuck at local minimum, as
-chunks that improve the error but have impact on later refinement will have lower priority.
+chunks that improve the error but have impact on later refinement will have lower priority. The existence of local
+minima prevents this progressive stream to be optimal.
 
 Given above definition we can compute the optimal stream. It turns out that finding a permutation that minimizes
 the total error given a bit budget is exponential in number of chunks. We thus use more practical greedy algorithm (is there
@@ -27,47 +28,37 @@ of more data meaning better result. The running time of this algorithm is $O(n^3
 and at each streaming step decrease the chunk count by one. The cube factor comes from the need to perform inverse
 wavelet transform and compute the error for each chunk.
 
+\begin{figure}
+        \centering
+        \caption{Comparison of coarse-to-fine and by wavelet norm streams on Miranda viscosity data set.
+                 On the left is stream optimized for PSNR and on the right for histogram.}
+\end{figure}
+
 \paragraph*{Fine-to-coarse algorithm} is more practical as it utilizes full dataset to construct the stream.
 This stream outperforms the coarse-to-fine greedy stream as it has access to more knowledge. Moreover,
 if we wanted to precompute stream order which could be utilized during query, we would have access to whole
 data set and could compute this stream. The algorithm is in principle a reverse of the previous approach, the
 stream is constructed by starting with full data set and one by one disabling the chunks. At each step, a chunk
 with smallest errorr impact is disabled (TODO: more detail). This algorithm is still of greedy nature as it
-makes only locally optimal choice. Similarl to the coarse-to-fine algorithm, the running time is still $O(n^3)$.
+makes only locally optimal choice. Similarly to the coarse-to-fine algorithm, the running time is still $O(n^3)$.
+
+\begin{figure}
+        \centering
+        \caption{Comparison of coarse-to-fine and fine-to-coarse greedy algorithms on miranda viscosity data set.
+                 On the left is stream optimized for PSNR and on the right for histogram.}
+\end{figure}
+
 
 As an optimization, we perform the error computation for each chunk only {\em once} and then sort these chunks
 by the error. This approximation reduces the running time to $O(n^2)$ and thus makes it more practical (still
 slow as hell) if
 the stream order needs to be computed for a dataset, for example before the data is streamed over network.
+Surprisingly, this stream is very close to the fully optimized stream which suggests the chunks do not drastically
+affect each other.
+
 
 
 \begin{figure}
         \centering
-        \caption{Compare the greedy coarse-to-fine with skip leading zeros}
+        \caption{The fine-to-coarse stream with only initial sorting closely follows the fully optimized stream.}
 \end{figure}
-
-
-\begin{figure}
-        \centering
-        \caption{all three greedy schemes, the point to show here that $O(n^2)$
-                 algorithm's results are close to the more expensive algorithm}
-\end{figure}
-
-
-
-
-Here we discuss the problem of finding the ``best'' stream for the analysis task at hand. This problem is hard because it is hard to define the notion of ``best''. We will attempt at defining ``best'' in terms of minimizing the error with each bit read. However actually programming the optimization this way will result in a sub-optimal stream because it is necessary to sometimes lose in the short term to then gain more later on. This fact means that we can't optimize for bit budget A and then claim that that solution is also an optimal sub-solution for budget B > A.
-
-Then our next attempt is another $O(n^2)$ scheme where we attempt to maximize the error difference with each bit (Scheme1)
-
-Detailed Algorithm for Scheme1.
-
-Another way to optimize is the $O(n)$ scheme where we start with every bit and then turn each off and measure the impact on error. Then we sort every bit by its impact (Scheme2).
-
-Detailed Algorithm for Scheme2.
-
-A supposedly better scheme is $O(n^2)$ but going from fine to coarse. We start with everything, then turn one chunk off at a time, pick the most important chunk and remove it, then repeat the process for the rest (Scheme3).
-
-Detailed Algorithm for Scheme3.
-
-We show a figure comparing Scheme1, Scheme2, and Scheme3 on PSNR, histogram, and isocontour for two datasets.
