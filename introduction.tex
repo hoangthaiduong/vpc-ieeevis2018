@@ -2,58 +2,79 @@
 
 As the gap between the available compute power and the cost of data
 movement increases, data transfer, whether from caches, main memory,
-or disk is becoming the major bottleneck of many workflows. However,
-it is well known that often not all data is necessary to produce a
-valid result. In particular, for techniques at the end of scientific
-workflow like visualization and data analysis often much coarser
-approximations of the data provide adequate approximations~\cite{?}
-and even during a simulations some loss in precision is often
-acceptable~\cite{PetersSCPaper}. As a result a host of different
+or disk, is becoming the major bottleneck of many workflows. However,
+it is well known that often not every byte of data is necessary to
+answer scientific questions at sufficient accuracy.
+In particular, for techniques at the end of scientific
+workflow, like visualization and data analysis, much coarser
+approximations of the data often provide adequate approximations~\cite{?},
+and even during simulation some loss in precision is often
+acceptable~\cite{PetersSCPaper}. As a result, a host of different
 techniques have been proposed to reduce the size of data. Generically,
 these can be classified into approaches that reduce the data
-resolution, i.e. the number of data points stored, and techniques that
-reduce the precision of each data point. Examples of the former are
-adaptive~\cite{AMR}, octrees~\cite{?}, or other tree
+resolution, i.e. the number of data points or coefficients stored, and
+techniques that reduce the precision of each data point or coefficient.
+Examples of the former are
+adaptive mesh refinement~\cite{AMR}, octrees~\cite{?}, or other tree
 structures~\cite{?} and of the latter compression~\cite{?},
-quantization~\cite{?}, or truncation~\cite{?}. Traditionally,
-multi-resolution structures have often been used to accelerate dynamic
-queries, for example, in rendering~\cite{?}, since ignoring points
+quantization~\cite{?}, or truncation~\cite{?}.
+\note{What does `truncation' refer to?  Discarding mantissa bits?}
+Traditionally,
+multi-resolution structures have been used to accelerate dynamic
+queries, for example, in rendering~\cite{?}, since discarding data points
 based on the view point or data complexity can result in significant
-speed-ups. Uniform compression on the other hand is more common in
-storage type situations where in the absence of other information
-treating each sample as equally important is the
+speed-ups. Compression based on uniform quantization on the other hand is
+more common in storage type situations, where in the absence of other
+information treating each sample as equally important is the
 null-hypothesis. However, in many situations a combination of both
-concepts would be ideal. For example, we may need a certain minimal
-spatial resolution to adequately resolve an isosurface, yet if the
-underlying function is smooth we likely will not need all values at
-full precisions. Similarly, we may need high precision values to
+resolution and precision reduction would be appropriate.
+For example, we may need a certain minimal
+spatial resolution to adequately resolve the geometry of an isosurface,
+yet if the underlying function is smooth we likely will not need all values
+at full precision.
+\note{I see no link between smoothness and precision.  Derivatives require
+high precision; visualization doesn't.}
+Similarly, we may need high precision values to
 accumulate accurate statistics, yet a small subsample of points may be
-sufficient to do so. Some file formats like JPEG2000~\cite{?} do
-provide per-block compression and thus allow at least some flexibility
+sufficient to do so.
+\note{Are we making this up, or do we have an example where such high
+precision is needed?}
+Some multi-resolution file formats like JPEG2000~\cite{?} do
+provide per-block progressive decompression and thus allow at least some
+flexibility
 in adjusting both resolution and precision simultaneously. But we are
 not aware of any analysis pipeline that uses these capabilities beyond
-simple region-of-interest based queries. In fact, while intuitive it
-is unclear whether in practice combining both concepts provides any
-advantage, how big the potential savings could be and how flexible a
-given solution would have to be.
+simple region-of-interest based queries. In fact, while intuitive, it
+is unclear whether combining both concepts provides any
+advantage in practice and how big the potential savings could, as well as
+how flexible a given solution would have to be.\note{What does this flexibility
+refer to?}
 
-Using a wide range of data sets and a suit of different analysis tasks
-we show that selectively adjusting both resolution and precision can
-provide significant advantages over adjust only one of them. In
-particular, given an analysis tasks, we consider progressive
-bitstreams that optimally order the bits (or small chunks bits) of all
-samples to minimize the error of the result. Note that this includes
-interleaving bits of different samples potentially across the entire
-data set. We show that not only can optimal streams provide,
-sometimes drastically, improved results, but that different types of
-analysis require substantially different bitstreams. This means, that
+\note{This makes sense only in a progressive analysis pipeline.  We need
+to make that clear, as well as the notion of both progressive resolution
+and precision.}
+Using a wide range of data sets and a suite of different progressive analysis
+tasks, we show that selectively adjusting both resolution and precision can
+provide significant advantages over adjusting only one of them. In
+particular, given an analysis task, we consider progressive
+bitstreams that improve the ordering of the bits (or small chunks of bits)
+of all samples to reduce the error of the analysis. Note that this includes
+interleaving bits of different samples and resolutions across the entire
+data set. We show that optimal streams can not only provide---sometimes
+drastically---improved results, but that different types of
+analysis require substantially different bitstreams. This means that
 there exists no universally good ordering to replace the
-multi-resolution or precision based streams used today. Instead, an
+multi-resolution or precision based streams used today.
+\note{Point out earlier that standard techniques order by resolution of
+by bit plane only.  I don't think that's clear.}
+Instead, an
 ideal system should support adaptively and dynamically changing the
-bit-ordering dependent on the task. While creating such a system is
-beyond the scope of this paper we demonstrate heuristics that provide
+bit-ordering dependent on the task.
+\note{And dependent on the data?}
+While creating such a system is
+beyond the scope of this paper, we demonstrate heuristics that provide
 good approximations to the theoretical ideal, which is unachievable in
-practice. Our contributions is detail are
+practice. Our contributions is detail are:
 
 \begin{itemize}
 
@@ -65,6 +86,8 @@ practice. Our contributions is detail are
 \item An optimization algorithm approximates the ideal
   bitstream for large data and thus enables extensive, empirical
   experiments; and
+\note{``Enabling extensive, empirical experiments'' is a contribution?
+Clarify why this is a contribution.}
 
 \item A practical heuristic to dynamically create
   high-quality bitstreams for different analysis tasks.

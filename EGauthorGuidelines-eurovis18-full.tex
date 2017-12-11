@@ -84,6 +84,24 @@
 % \issue{1}     % the issue number of the publication
 % \pStartPage{1}      % set starting page
 
+% macros ---
+
+\newcommand{\notetext}[1]{%
+  \raggedright\tiny\sffamily\bfseries{#1}%
+}
+\newcommand{\note}[1]{%
+  \ifinner%
+    \smash{%
+      \raggedright%
+      \hspace*{\textwidth}%
+      \hspace*{\marginparsep}%
+      \parbox[t]{\marginparwidth}{\notetext{#1}}%
+    }%
+    \\[-0.5\bs]%
+  \else%
+    \marginpar{\notetext{#1}}%
+  \fi%
+}
 
 %-------------------------------------------------------------------------
 \begin{document}
