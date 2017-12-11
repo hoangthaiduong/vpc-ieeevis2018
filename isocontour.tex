@@ -1,0 +1,25 @@
+
+\section{Comparing isocontour and rmse}
+Explain the error metric used for isocontour (number of misclassified voxels + the difference in contour length). The number of misclassified voxels is the main error metric, but we need to add the contour lenngth difference because otherwise chunks that affect less than a pixel cannot be ranked.
+
+To meaningfully compare the isocontour and rmse streams, we devise the hybrid scheme with the idea that when confined to a small enough region, the hybrid stream follows the rmse ordering, while the ordering of regions follows that of the isocontour one (so we can skip regions that do not intersect the contour). We present the detailed algorithm below.
+
+Algorith. How to construct the hybrid stream.
+
+Figure 2: a plot comparing the rmse, isocontour, and hybrid in terms of isocontour error. We observe that the hybrid is close to the isocontour stream.
+
+Figure 2': we compare directly the hybrid and isocontour streams in terms of relative misclassified voxels (between the two of them, not between each and groundtruth).
+
+figure 3: show isocontour rendering for the three streams at some low bit rates where the errors are apparent. Ideally the difference between isocontour and hybrid is not noticeable.
+
+%figure 4:  Suppose we have stream-isocontour and stream-rmse for the same data. We construct stream-hybrid1 by following stream-rmse in terms of ordering of regions, while following stream-isocontour within each region by using its signature. Also construct stream-hybrid2 by following stream-isocontour in terms of ordering of regions and stream-rmse within each region. Yet another hybrid is stream-hybrid3 that follows stream-isocontour both in ordering of regions and within each region. Comparing these streams in terms of isocontour error, we will see stream-isocontour > stream-hybrid3 > stream-hybrid2 > stream-hybrid1 > stream-rmse. This means the concept of signature is meaningful.
+
+Figure 4:
+Here, using a synthetic data set (gaussian function) we compare the signature of three isocontour streams at different isovalues, where the derivatives of the function are: low, medium, high. We will observe different orderings (signatures) in each case.
+
+We argue that different isovalues will require different stream signatures, but thanks to the similarity between hybrid and isocontour streams, the rmse stream can be used to extract isocontour too, provided that it is paired with a method to localize the contour (e.g. min-max octrees etc).
+
+Figure 5:
+We show that the hybrid and isocontour can diverge somewhat for low-gradient contour. Valerio suggested here we coudl also build a "ramp" dataset at different angles and see if the two diverges more as the ramp become flatter.
+
+We argue that if the gradient is low, some noise bits at the end will make an impact, the isocontour is very sensitive to noise, and is in general not interesting or meaninfgul to extract.
