@@ -1,5 +1,5 @@
 
-\section{Comparing isocontour and rmse}
+\section{Isocontour extraction}
 Explain the error metric used for isocontour (number of misclassified voxels + the difference in contour length). The number of misclassified voxels is the main error metric, but we need to add the contour lenngth difference because otherwise chunks that affect less than a pixel cannot be ranked.
 
 To meaningfully compare the isocontour and rmse streams, we devise the hybrid scheme with the idea that when confined to a small enough region, the hybrid stream follows the rmse ordering, while the ordering of regions follows that of the isocontour one (so we can skip regions that do not intersect the contour). We present the detailed algorithm below.
