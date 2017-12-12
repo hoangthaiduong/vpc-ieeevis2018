@@ -1,6 +1,73 @@
-\section{Related work (LOCKED BY PAVOL)}
-ZFP~\cite{zfp2014}
+\section{Related work (unlocked, I need to skim read the precision papers)}
 
-IDX~\cite{idx2001}
+The previous work primarily focuses on multiresolution and precision
+reduction independently and we will discuss both directions
+(TODO: JPEG, wavelets is sort of both).
+
+
+\subsection{Adaptivity in Resolution}
+Multiresolution techniques are commonly employed to improve performance or
+reduce aliasing (MIPMAPs). Especially popular are approaches that create
+multiple level of details such as multiresolution octrees~\cite{multires_octree1999},
+AMR meshes[CITE], or sparse grids~\cite{vdb2013, spgrid2014}. In these data structures,
+the data is stored multiple times at different levels created by application of a kernel
+(such as averaging). However, this level-of-detail representation increases data size
+and may not be desired depending on a task.
+
+Alternatives such as IDX~\cite{idx2001} primarily focus on reordering the data to allow
+for faster queries. For example, row-major order is optimal only for slicing
+along one axis, but the other two axis have poor cache utilization. In contrast, hilbert
+or morton order is not optimal for any axis, but on average it outperforms the row-major
+order. Combined with tiling morton order can be highly efficient [CITE texture units] as
+it can utilize fast CPU instructions for conversion to xyz index space~\cite{spgrid2014}.
+Moreover, the order can be changed such that it becomes hierarchical, thus providing
+level-of-detail via subsampling without needing any additional storage. Unfortunately,
+the subsampling introduces interpolation issues where commonly used trilinear interpolation
+is no longer correct.
+
+Wavelet transform constructs hierarchy of resolution levels by applying function and storing
+the result in lower resolution level along with the difference at finer level. Similarly to
+data reordering techniques, this transform does not increase the data size. Moreover, since
+the function support increases as the resolution decreases, the interpolation is well defined
+compared to the data formats based on subsampling. The adaptivity in resolution can be achieved
+by tiling the wavelet coefficients of individual subbands.
+
+For example, Visualization and Analysis Platform for Ocean, Atmosphere, and Solar Researchers
+(VAPOR)~\cite{multires_toolkit2003, vapor2007} incorporates a multiresolution file
+format to allow data analysis on commodity hardware and stores individual tiles in
+separate files to allow loading of the region of interest.
+However, the authors only leverage the resolution control without exploring the precision axis
+(TODO: at least it seems from looking at those papers, I did not check their code) which
+we will discuss in the next subsection.
+
+
+\subsection{Adaptivity in Precision}
+The other major research focus is precision reduction to compress the data. Quantization and
+truncation.
+
+The state-of-the-art techniques such as ZFP~\cite{zfp2014} exploit the in small $4^3$ blocks
+and thus allow localized decompression. Moreover, ZFP supports fixed-rate compression which
+is necessary for random access to the data. The fast transform and caching allows it to
+achieve high throughput. (Peter should write this section)
+
+
+SPIHT~\cite{spiht1996}
+
+
+SBHP~\cite{sbhp2000}
 
 JPEG2000~\cite{jpeg2001}
+Woodring~\cite{woodring2011}
+
+Compression domain volume rendering~\cite{compression_domain2003}
+
+SPECK~\cite{speck2004}
+
+COVRA~\cite{covra2012}
+
+Tensor appriximation for DVR~\cite{tensor_dvr2015}
+
+Transfer function adaptive decompression~\cite{tf_decompression2004}
+
+Transform Coding for HW-accel DVR~\cite{hw_dvr2007}
+

@@ -30,8 +30,10 @@ wavelet transform and compute the error for each chunk.
 
 \begin{figure}
         \centering
-        \caption{Comparison of coarse-to-fine and by wavelet norm streams on Miranda viscosity data set.
-                 On the left is stream optimized for PSNR and on the right for histogram.}
+        \includegraphics[width=0.48\linewidth]{img/figure4/rmse-miranda-viscosity}
+        \includegraphics[width=0.48\linewidth]{img/figure4/histogram-miranda-viscosity}
+        \caption{Comparison of coarse-to-fine and by wavelet norm (TODO: by wavelet norm is 4x4 blocks but the coarse-to-fine is 16x16 blocks due to slowness; I could recompute by wavelet norm with 16x16 blocks) streams on Miranda viscosity data set.
+                 On the left is stream optimized for PSNR (higher is better) and on the right for histogram (lower is better).}
 \end{figure}
 
 \paragraph*{Fine-to-coarse algorithm} is more practical as it utilizes full dataset to construct the stream.
@@ -44,6 +46,8 @@ makes only locally optimal choice. Similarly to the coarse-to-fine algorithm, th
 
 \begin{figure}
         \centering
+        \includegraphics[width=0.48\linewidth]{img/figure5/rmse-miranda-viscosity}
+        \includegraphics[width=0.48\linewidth]{img/figure5/histogram-miranda-viscosity}
         \caption{Comparison of coarse-to-fine and fine-to-coarse greedy algorithms on miranda viscosity data set.
                  On the left is stream optimized for PSNR and on the right for histogram.}
 \end{figure}
@@ -60,5 +64,7 @@ affect each other.
 
 \begin{figure}
         \centering
+        \includegraphics[width=0.48\linewidth]{img/figure6/rmse-miranda-viscosity}
+        \includegraphics[width=0.48\linewidth]{img/figure6/histogram-miranda-viscosity}
         \caption{The fine-to-coarse stream with only initial sorting closely follows the fully optimized stream.}
 \end{figure}

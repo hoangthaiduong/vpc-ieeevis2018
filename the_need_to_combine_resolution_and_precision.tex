@@ -27,8 +27,9 @@ Of the streams to be compared, one proceeds strictly from coarser to finer resol
 (\emph{by level}), one proceeds stricly from higher-ordered to lower-ordered bit planes (\emph{by
 bit plane}), and one combines resolution and precision (\emph{by wavelet norm}). The \emph{by
 levels} stream is designed to represent the way data is read in traditional multi-resolution
-techniques such as those based on subsampling [CITE], octrees [CITE], or wavelets [CITE]. The
-\emph{by bit plane} stream represents techniques that truncate data in precision such as zfp [CITE].
+techniques such as those based on subsampling~\cite{idx2001}, octrees~\cite{multires_octree1999},
+or wavelets [CITE]. The
+\emph{by bit plane} stream represents techniques that truncate data in precision such as zfp~\cite{zfp2014}.
 The \emph{by wavelet norm} sort chunks in decreasing order of $\norm{W_l}_2 \times 2^b$, where $l$
 and $b$ are a chunk's subband and bit plane, and $W_l$ is the wavelet basis function at subband $l$.
 These three streams are data-independent. We also include in the comparison two data-dependent
