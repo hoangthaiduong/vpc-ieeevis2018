@@ -1,4 +1,4 @@
-\section{Related work (LOCKED BY PAVOL)}
+\section{Related work (unlocked, I need to skim read the precision papers)}
 
 The previous work primarily focuses on multiresolution and precision
 reduction independently and we will discuss both directions
@@ -41,11 +41,14 @@ However, the authors only leverage the resolution control without exploring the 
 we will discuss in the next subsection.
 
 
-
-
 \subsection{Adaptivity in Precision}
+The other major research focus is precision reduction to compress the data. Quantization and
+truncation.
 
-ZFP~\cite{zfp2014}
+The state-of-the-art techniques such as ZFP~\cite{zfp2014} exploit the in small $4^3$ blocks
+and thus allow localized decompression. Moreover, ZFP supports fixed-rate compression which
+is necessary for random access to the data. The fast transform and caching allows it to
+achieve high throughput. (Peter should write this section)
 
 
 SPIHT~\cite{spiht1996}
