@@ -42,14 +42,7 @@ we will discuss in the next subsection.
 
 
 \subsection{Adaptivity in Precision}
-The other major research focus is precision reduction to compress the data. Quantization and
-truncation.
-
-The state-of-the-art techniques such as ZFP~\cite{zfp2014} exploit the in small $4^3$ blocks
-and thus allow localized decompression. Moreover, ZFP supports fixed-rate compression which
-is necessary for random access to the data. The fast transform and caching allows it to
-achieve high throughput. (Peter should write this section)
-
+Reducing precision of the samples is primarily used in data compression techniques. 
 
 SPIHT~\cite{spiht1996}
 
@@ -57,17 +50,36 @@ SPIHT~\cite{spiht1996}
 SBHP~\cite{sbhp2000}
 
 JPEG2000~\cite{jpeg2001}
+
+
+The other major research focus is precision reduction to compress the data. Quantization and
+truncation.
+
+
+
+The state-of-the-art techniques such as ZFP~\cite{zfp2014} exploit the in small $4^3$ blocks
+and thus allow localized decompression. Moreover, ZFP supports fixed-rate compression which
+is necessary for random access to the data. The fast transform and caching allows it to
+achieve high throughput. (Peter should write this section)
+Fixed-rate and fixed-precision modes. Not able to adapt rate spatially.
+
+
 Woodring~\cite{woodring2011}
 
-Compression domain volume rendering~\cite{compression_domain2003}
 
 SPECK~\cite{speck2004}
 
 COVRA~\cite{covra2012}
 
-Tensor appriximation for DVR~\cite{tensor_dvr2015}
+
+Volume rendering stuff
+Compression domain volume rendering~\cite{compression_domain2003}
 
 Transfer function adaptive decompression~\cite{tf_decompression2004}
 
 Transform Coding for HW-accel DVR~\cite{hw_dvr2007}
+
+Tensor appriximation for DVR~\cite{tensor_dvr2015}
+
+
 
