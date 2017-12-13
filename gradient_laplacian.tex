@@ -14,7 +14,7 @@ direction: $\frac{\partial f}{\partial x}\approx \frac{f(x+1)-f(x-1)}{2}$, and t
 gradient at each point ($\nabla f(x,y)$) is the vector $(\frac{\partial f}{\partial
 x},\frac{\partial f}{\partial y})$. The difference between the gradient of a reconstructed function
 using $b$ bits per sample $f_b$ and the original function $f$ is defined as $\norm{\nabla f_b-\nabla
-f}_2$. For each data set, we use algorithm [CITE] to compute a stream that minimizes this difference
+f}_2$. For each data set, we use the optimized fine-to-coarse greedy algorithm (\Cref{sec:data_dep_streams} DID YOU MEAN THE GREEDY ONE?) to compute a stream that minimizes this difference
 at any $b$, and call it the \emph{gradient-optimized} stream. Figure
 \ref{fig:gradient-error-comparison} compares the \emph{gradient-optimized} with the
 \emph{rmse-optimized} streams for four data sets.
@@ -42,7 +42,7 @@ two streams both produce the best possible gradient progression, but it is worth
 the \emph{rmse-optimized} stream produces an accurate function as well. We give evidence to this
 claim is in Figure \ref{fig:gradient-comparison}, in which we reconstruct the euler data at 0.25
 bits per sample using both streams, and show the difference in gradient between the two. The two
-gradient fields differ the most along very sharp edges, but are in general in congruent (a), while
+gradient fields differ the most along very sharp edges, but are in general congruent (a), while
 the \emph{rmse-optimized} stream produces significantly more accurate reconstruction of the function
 itself (b, c, and d).
 
@@ -74,8 +74,8 @@ defined as the RMSE between the reconstructed Laplacian scalar field and the ori
 scalar field. Again, algorithm [REF] is used to compute a \emph{laplacian-optimized} bit stream that
 minimizes this error. In Figure \ref{fig:laplacian-comparison} we compare this stream with the
 \emph{rmse-optimized} stream using the PSNR of the difference in Laplacian (compared to the
-groundtruth) as the error metric. The stream labeled \emph{laplacian signature} is to be ignored for
-now.
+ground truth) as the error metric. The stream labeled \emph{laplacian signature} is to be ignored for
+now. (TODO: why is it in the plot? maybe do not mention it at all? or just say that it will be explained later)
 
 \begin{figure}
 	\centering
@@ -119,10 +119,10 @@ gradient case too, but to a much lesser degree.
 \end{figure}
 
 To capture the core characteristics of the \emph{laplacian-optimized} stream, we introduce the
-concept of a stream \emph{signature}. A signature is a 2D array with $B$ columns and $L$ rows, with
+concept of a stream \emph{signature}. A signature is a matrix with $B$ columns and $L$ rows, with
 $B$ being the number of bit planes in the data set, and $L$ being the number of subbands in the
-wavelet transform. Each cell $(b,l)$ in the signature array contain a value from in the range
-$[0,B\times L-1]$, and the ordering of these values reflects the relative ordering in which the $b$
+wavelet transform. Each cell $(b,l)$ in the signature matrix contains a value in the range
+$[0,B\times L)$, and the ordering of these values reflects the relative ordering in which the $b$
 bit on subband $l$ (for all $l$ and $b$) appear in the stream, on average. The signatures for
 \emph{rmse-optimized}, \emph{laplacian-optimized}, and also \emph{gradient-optimized} for the euler
 data set are visualized in Figure \ref{fig:signature-comparison}. 

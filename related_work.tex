@@ -9,10 +9,13 @@ reduction independently and we will discuss both directions
 Multiresolution techniques are commonly employed to improve performance or
 reduce aliasing (MIPMAPs). Especially popular are approaches that create
 multiple level of details such as multiresolution octrees~\cite{multires_octree1999},
-AMR meshes[CITE], or sparse grids~\cite{vdb2013, spgrid2014}. In these data structures,
+AMR meshes~\cite{amr1989}, or sparse grids~\cite{vdb2013, spgrid2014}. In these data structures,
 the data is stored multiple times at different levels created by application of a kernel
 (such as averaging). However, this level-of-detail representation increases data size
 and may not be desired depending on a task.
+
+
+COVRA~\cite{covra2012}
 
 Alternatives such as IDX~\cite{idx2001} primarily focus on reordering the data to allow
 for faster queries. For example, row-major order is optimal only for slicing
@@ -63,13 +66,14 @@ is necessary for random access to the data. The fast transform and caching allow
 achieve high throughput. (Peter should write this section)
 Fixed-rate and fixed-precision modes. Not able to adapt rate spatially.
 
-
-Woodring~\cite{woodring2011}
+JPEG2000 can be used to store floating point data~\cite{woodring2011}. Since JPEG2000 is limited
+to integer data, authors perform uniform scalar quantization to convert floating point data to integer
+form. Even though JPEG2000 support to vary both resolution and precision the paper does not explore
+the two axis and focuses only on bit rate (TODO: is bit rate tied only to precision or also resolution?).
 
 
 SPECK~\cite{speck2004}
 
-COVRA~\cite{covra2012}
 
 
 Volume rendering stuff
