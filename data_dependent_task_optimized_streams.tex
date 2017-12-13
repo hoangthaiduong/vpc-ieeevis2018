@@ -28,14 +28,20 @@ if we wanted to precompute stream order which could be utilized during query, we
 data set and could compute this stream. The algorithm is in principle a reverse of the previous approach, the
 stream is constructed by starting with full data set and one by one disabling the chunks. At each step, a chunk
 with smallest errorr impact is disabled (TODO: more detail). This algorithm is still of greedy nature as it
-makes only locally optimal choice. Similarly to the coarse-to-fine algorithm, the running time is still $O(n^3)$.
+makes only locally optimal choice.
+The running time of this algorithm is $O(n^3)$ as we start with $n$ chunks
+and at each streaming step decrease the chunk count by one. The cube factor comes from the need to perform inverse
+wavelet transform and compute the error for each chunk.
+
 
 \begin{figure}
         \centering
         \includegraphics[width=0.48\linewidth]{img/figure4_new/rmse-miranda-viscosity}
         \includegraphics[width=0.48\linewidth]{img/figure4_new/histogram-miranda-viscosity}
-        \caption{Comparison of fine-to-coarse and by wavelet norm (TODO: by wavelet norm is 4x4 blocks but the coarse-to-fine is 16x16 blocks due to slowness; I could recompute by wavelet norm with 16x16 blocks) streams on Miranda viscosity data set.
-                 On the left is stream optimized for PSNR (higher is better) and on the right for histogram (lower is better).}
+        \caption{Comparison of fine-to-coarse and by wavelet norm streams on Miranda viscosity data set.
+                 On the left is stream optimized for PSNR (higher is better) and on the right for histogram (lower is better).
+                 Despite using larger block size for the greedy stream ($16 \times 16$) due to performance reasons, it still
+                 significantly outperforms the by wavelet norm stream for both quantities.}
 \end{figure}
 
 
@@ -44,12 +50,11 @@ to the full data set. Then it takes a list of all chunks in the dataset, compute
 enabled, and picks the chunk with the highest absolute difference in the error with respect to the current error.
 We use absolute difference to avoid the case where the error difference is zero or negative, which would result
 in a long stream of chunk that do not decrease the error significantly. This assumption reflects the expectation
-of more data meaning better result. The running time of this algorithm is $O(n^3)$ as we start with $n$ chunks
-and at each streaming step decrease the chunk count by one. The cube factor comes from the need to perform inverse
-wavelet transform and compute the error for each chunk.
+of more data meaning better result. Similarly to the coarse-to-fine algorithm, the running time is still $O(n^3)$.
+
 
 Since the fine-to-coarse greedy stream outperforms the coarse-to-fine stream we further investigate possible
-runtime optimizations. Surprisingly, only performing the first round of chunk error calculation and then sorting
+runtime optimizations. Surprisingly, performing only the first round of chunk error calculation and then sorting
 those chunks by the error closely matches the full greedy algorithm. This simple optimization reduces the time
 complexity to $O(n^2)$ and thus makes it more practical. We use this greedy scheme throught our evaluation named
 \emph{fully adpative} stream.
