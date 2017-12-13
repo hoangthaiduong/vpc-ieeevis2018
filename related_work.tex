@@ -11,11 +11,13 @@ reduce aliasing (MIPMAPs). Especially popular are approaches that create
 multiple level of details such as multiresolution octrees~\cite{multires_octree1999},
 AMR meshes~\cite{amr1989}, or sparse grids~\cite{vdb2013, spgrid2014}. In these data structures,
 the data can be stored multiple times at different levels created by application of a kernel
-(such as averaging). However, this level-of-detail representation increases data size
+(such as averaging). 
+
+For example, Compression-domain Output-sensitive Volume Rendering Architecture (COVRA)~\cite{covra2012}
+constructs a level-of-detail pyramid in precomputation stage to reduce memory usage for blocks that
+are far from camera. Moreover, authors further compress the blocks of the pyramid to improve the
+streaming time, either to GPU or over network. However, this level-of-detail representation increases data size
 and may not be desired depending on a task.
-
-
-COVRA~\cite{covra2012}
 
 Alternatives such as IDX~\cite{idx2001} primarily focus on reordering the data to allow
 for faster queries. For example, row-major order is optimal only for slicing
