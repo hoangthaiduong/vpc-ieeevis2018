@@ -23,6 +23,28 @@
 	\label{fig:histogram-comparison}
 \end{figure}
 
+\begin{figure}
+	\centering
+	\subcaptionbox{\emph{histogram-optimized}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/kflame/histogram.png}}
+	\subcaptionbox{\emph{rmse-optimized}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/kflame/rmse.png}}
+	\subcaptionbox{\emph{by wavelet norm, slz}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/kflame/wavenorm.png}}
+	\subcaptionbox{\emph{histogram signature, slz}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/kflame/signature.png}}
+	\subcaptionbox{\emph{histogram-optimized}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/diffusivity/histogram.png}}
+	\subcaptionbox{\emph{rmse-optimized}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/diffusivity/rmse.png}}
+	\subcaptionbox{\emph{by wavelet norm, slz}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/diffusivity/wavenorm.png}}
+	\subcaptionbox{\emph{histogram signature, slz}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/diffusivity/signature.png}}
+	\caption{Histogram comparison. (a,b,c,d) kflame, 0.14 bps. (e,f,g,h) diffusivity, 0.09 bps.}
+	\label{fig:histogram-comparison-low-bit-rate}
+\end{figure}
+
 Histogram computation is another common 
 We compare different error metric for histogram in two figures:
 Figure 1: PSNR plot for all histogram streams using different error metrics.
