@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 #error = ('isocontour', 'Error') 
 error = ('histogram', 'EMD')
-error = ('rmse', 'PSNR')
+#error = ('rmse', 'PSNR')
 
 for dataset in ['miranda-viscosity']:
 
@@ -24,13 +24,10 @@ for dataset in ['miranda-viscosity']:
 
     fig, ax = plt.subplots()
 
-    x, y = Read_Two_Column_File('error-' + error[0] + '-stream-' + error[0] + '-greedy-optimal-fine-to-coarse-' + dataset + '.txt')
+    x, y = Read_Two_Column_File('error-' + error[0] + '-stream-'  + error[0] + '-greedy-optimal-fine-to-coarse-' + dataset + '.txt')
     ax.plot(x, y, label='fine-to-coarse greedy')
-    x, y = Read_Two_Column_File('error-' + error[0] + '-stream-'  + error[0] + '-greedy-optimal-' + dataset + '.txt')
-    ax.plot(x, y, label='coarse-to-fine greedy')
-    x, y = Read_Two_Column_File('error-' + error[0] + '-stream-'  + error[0] + '-greedy-' + dataset + '.txt')
-    ax.plot(x, y, label='fully adaptive')
-
+    x, y = Read_Two_Column_File('error-' + error[0] + '-stream-by-wavelet-norm-' + dataset + '.txt')
+    ax.plot(x, y, label='by wavelet norm')
     ax.legend(loc='lower right')
     ax.set_xlabel('Number of Streamed Bytes', fontsize=14)
     ax.set_ylabel(error[1], fontsize=14, rotation='horizontal', horizontalalignment='right') # the files are though named as RMSE
