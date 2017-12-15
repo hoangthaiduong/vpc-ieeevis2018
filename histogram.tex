@@ -1,6 +1,48 @@
 
 \section{Histogram computation}
 
+A histogram succinctly and meaningfully summarizes the data, thus histogram computation is a very
+common analysis task. In this section, we study bit streams that aim to reproduce the most accurate
+histogram possible at any bit rate. To do so, it is necessary to first define a criteria to compare
+two histograms. In the literature, there have been many distance metric proposed for histograms;
+among the more common ones are Bhattacharyya [CITE], Chi-square [CITE], Earth mover distance [CITe],
+Kolmogorov-Smirnov [CITE], an Kullback-Liebler [CITE]. We use Algorithm [REF] to produce one stream
+for each of these metrics and plot them against one another with PSNR as the metric (Figure [REF]).
+
+\begin{figure}
+	\centering
+	\subcaptionbox{\emph{boiler}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/boiler-histogram-metrics.pdf}}
+	\subcaptionbox{\emph{kflame}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/kflame-histogram-metrics.pdf}}
+	\subcaptionbox{\emph{diffusivity}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/miranda-diffusivity-histogram-metrics.pdf}}
+	\subcaptionbox{\emph{turbulence}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/turbulence-histogram-metrics.pdf}}
+	\caption{Histogram comparison.}
+	\label{fig:histogram-metrics-comparison}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\subcaptionbox{\emph{bhattacharyya}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/bhattacharyya.png}}
+	\subcaptionbox{\emph{chi-square}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/chi_square.png}}
+	\subcaptionbox{\emph{emd}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/emd.png}}
+	\subcaptionbox{\emph{euclidean}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/euclidean.png}}
+	\subcaptionbox{\emph{intersection}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/intersection.png}}
+	\subcaptionbox{\emph{kolmogorov-smirnov}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/kolmogorov_smirnov.png}}
+	\subcaptionbox{\emph{kullback-liebler}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/kullback_liebler.png}}
+	\caption{Histogram metrics comparison.}
+	\label{fig:ahistogram-metrics-comparison}
+\end{figure}
+
 \begin{figure}
 	\centering
 	\subcaptionbox{\emph{boiler}}
@@ -41,7 +83,7 @@
 	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity-wlz/wavenorm.png}}
 	\subcaptionbox{\emph{histogram signature}}
 	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity-wlz/signature.png}}
-	\caption{Histogram comparison. (a,b,c,d) kflame, 0.14 bps. (e,f,g,h) diffusivity, 0.09 bps.}
+	\caption{Histogram comparison. (a,b,c,d) kflame, 0.17 bps. (e,f,g,h) diffusivity, 0.3 bps.}
 	\label{fig:histogram-comparison-low-bit-rate}
 \end{figure}
 
