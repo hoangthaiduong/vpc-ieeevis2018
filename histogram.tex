@@ -3,44 +3,56 @@
 
 A histogram succinctly and meaningfully summarizes the data, thus histogram computation is a very
 common analysis task. In this section, we study bit streams that aim to reproduce the most accurate
-histogram possible at any bit rate. To do so, it is necessary to first define a criteria to compare
-two histograms. In the literature, there have been many distance metric proposed for histograms;
-among the more common ones are Bhattacharyya [CITE], Chi-square [CITE], Earth mover distance [CITe],
-Kolmogorov-Smirnov [CITE], an Kullback-Liebler [CITE]. We use Algorithm [REF] to produce one stream
-for each of these metrics and plot them against one another with PSNR as the metric (Figure [REF]).
+histogram possible at any bit rate. It is necessary to first define a criteria to compare two
+histograms. In the literature, there have been many distance metric proposed for histograms; in the
+experiment that follows, we compare eight of the more common distance metrics, namely Bhattacharyya
+[CITE], Chi-square [CITE], Earth mover's distance (EMD) [CITE], Total variation [CITE], Hellinger
+[CITE], Kolmogorov-Smirnov [CITE], an Kullback-Liebler [CITE]. We use Algorithm [REF] to produce one
+stream for each of these metrics and plot their PSNR curves (Figure
+\ref{fig:histogram-metrics-comparison}).
 
 \begin{figure}
 	\centering
 	\subcaptionbox{\emph{boiler}}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/boiler-histogram-metrics.pdf}}
-	\subcaptionbox{\emph{kflame}}
+	\subcaptionbox{\emph{flame}}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/kflame-histogram-metrics.pdf}}
 	\subcaptionbox{\emph{diffusivity}}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/miranda-diffusivity-histogram-metrics.pdf}}
 	\subcaptionbox{\emph{turbulence}}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/turbulence-histogram-metrics.pdf}}
-	\caption{Histogram comparison.}
+	\caption{PSNR comparison of histogram metrics. The streams are truncated to better highlight differences.}
 	\label{fig:histogram-metrics-comparison}
 \end{figure}
 
+Streams that are optimized for EMD perform the best in terms of function's PSNR, according to Figure
+\ref{fig:histogram-fig:ahistogram-metrics-comparison}. It is unclear, however, that PSNR should be a
+meaningful criteria for evaluating histogram distance metrics. We therefore compare the different
+metrics further by plotting the reconstructed histograms for the \emph{diffusivity} data set at
+$0.24$ bits per sample. The results are shown in Figure \ref{fig:histogram-metrics-comparison2}.
+Based on the results from both of these experiments, we have decided to use EMD as the metric of
+choice in this paper to measure histogram error.
+
 \begin{figure}
 	\centering
-	\subcaptionbox{\emph{bhattacharyya}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/bhattacharyya.png}}
-	\subcaptionbox{\emph{chi-square}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/chi_square.png}}
-	\subcaptionbox{\emph{emd}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/emd.png}}
-	\subcaptionbox{\emph{euclidean}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/euclidean.png}}
-	\subcaptionbox{\emph{intersection}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/intersection.png}}
-	\subcaptionbox{\emph{kolmogorov-smirnov}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/kolmogorov_smirnov.png}}
-	\subcaptionbox{\emph{kullback-liebler}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/kullback_liebler.png}}
-	\caption{Histogram metrics comparison.}
-	\label{fig:ahistogram-metrics-comparison}
+	\subcaptionbox{Bhattacharyya}
+	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/bhattacharyya.png}}
+	\subcaptionbox{Chi-square}
+	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/chi_square.png}}
+	\subcaptionbox{Emd}
+	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/emd.png}}
+	\subcaptionbox{Hellinger}
+	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/hellinger.png}}
+	\subcaptionbox{Total variation}
+	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/total_variation.png}}
+	\subcaptionbox{Intersection}
+	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/intersection.png}}
+	\subcaptionbox{Kolmogorov-Smirnov}
+	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/kolmogorov_smirnov.png}}
+	\subcaptionbox{Kullback-Liebler}
+	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/kullback_liebler.png}}
+	\caption{Reconstructed histograms for \emph{diffusivity} at $0.24$ bits per sample.}
+	\label{fig:histogram-metrics-comparison2}
 \end{figure}
 
 \begin{figure}
