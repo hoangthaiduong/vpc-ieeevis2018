@@ -1,1 +1,31 @@
-\section{Conclusions}
+\section{Conclusion}
+We presented a study of trade-off between resolution and precision for commonly used derived
+scientific quantities such as RMSE, gradient, laplacian, and histogram. During this study we
+covered gamut of scientific data sets, ranging from sharp shockwave with large uniform regions
+to smooth and homogeneous viscosity field.
+
+At the beginning we applied commonly used reduction in either resolution or precision and
+demonstrated the superior results obtained by interleaving streaming of resolution and precision
+bits. Additionally, we showed that different quantities may require vastly different streams.
+For example, the stream optimized for RMSE prefers precision but the histogram stream prefers
+resolution.
+
+To ground our study, we established baseline streams for each quantity. Given the search
+for optimal stream is exponential in the number of chunks, we used greedy strategy to obtain
+baseline stream.
+
+We used the established baseline streams to further investigate streams with goal to identify
+similarities or dissimilarities. We noticed that if a rmse-optimized stream is applied while
+focusing on gradient quantity, the result is almost indistinguishable from the gradient-optimized
+stream. This result suggests, that there is no need to devise heuristic specifically for gradient
+as the rmse one can be used, thus simplifying the implementation.
+
+In contrast, the laplacian can't use the rmse stream. We devised a signature for each stream that
+captures the ordering and can be applied to all the datasets while still outperforming the
+rmse-optimized stream while used for laplacian quantity.
+
+
+
+
+As part of future work, we want to extend the analysis to 3D data sets and develop on-disk
+representation of the streams.

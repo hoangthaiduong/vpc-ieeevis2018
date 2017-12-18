@@ -1,6 +1,17 @@
-
-
 \section{The need to combine resolution and precision}
+
+\begin{figure*}[!htb]
+        \centering
+	\subcaptionbox{Magnetic}
+        {\includegraphics[width=0.20\linewidth]{img/dataset/magnetic-512x512-float64-paraview.png}}
+	\subcaptionbox{Boiler-O2}
+ 	{\includegraphics[width=0.20\linewidth]{img/dataset/boiler-o2-145x170-float64-paraview.png}}
+	\subcaptionbox{Flame-OH}
+ 	{\includegraphics[width=0.20\linewidth]{img/dataset/kflame-oh-256x256-float64-paraview.png}}
+ 	\caption{Datasets used for the stream comparisons which include different properties, such as
+        narrow ridges, smooth mixing, or sharp front.}
+ 	\label{fig:datasets}
+\end{figure*}
 
 Traditional data reduction techniques work in either resolution space or precision space
 exclusively. They truncate either the last few levels in a multi-resolution representation of the
