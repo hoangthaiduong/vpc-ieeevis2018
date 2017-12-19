@@ -167,19 +167,70 @@ stream, and thus matter little to the data quality.
 	\label{fig:histogram-signature-comparison}
 \end{figure}
 
+When leading zero bits are removed from streams, all four streams become closer in EMD error (Figure
+\ref{fig:histogram-stream-comparison} (b, d, f, h)). This is because, if the leading zero bits are
+present, they serve as a `'cost'' that streams must pay to approach the (later) significant bits.
+All streams have to pay that cost, but streams that favor resolution over precision pay more in the
+beginning, because in practice, most of the leading zero bits concentrate in fine-resolution levels.
+Therefore the removal of leading zero bits impacts a resolution-favoring stream, e.g.,
+\emph{rmse-optimized}, more than it impacts a precision-favoring stream such as
+\emph{histogram-optimized}. Even though the streams become closer in EMD, their relative performance
+largely stays the same, that is, \emph{histogram-optimized} and \emph{histogram signature}
+outperform \emph{rmse-optimized} and \emph{by wavelet norm} respectively. For example, Figure
+\ref{fig:histogram-comparison-low-bit-rate-slz} shows the four reconstructed histograms at 0.1 bits
+per sample, with leading zero bits removed, for the diffusivity data set.
+
 \begin{figure}
 	\centering
-	\subcaptionbox{\emph{histogram-optimized}, without leading zeros}
+	\subcaptionbox{\emph{histogram-optimized},\\ without leading zeros}
 	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity/histogram.png}}
-	\subcaptionbox{\emph{rmse-optimized}, without leading zeros}
+	\subcaptionbox{\emph{rmse-optimized},\\ without leading zeros}
 	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity/rmse.png}}
-	\subcaptionbox{\emph{by wavelet norm}, without leading zeros}
+	\subcaptionbox{\emph{by wavelet norm},\\ without leading zeros}
 	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity/wavenorm.png}}
-	\subcaptionbox{\emph{histogram signature}, without leading zeros}
+	\subcaptionbox{\emph{histogram signature},\\ without leading zeros}
 	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity/signature.png}}
 	\caption{diffusivity's histograms at 0.1 bps, without leading zero bits. }
 	\label{fig:histogram-comparison-low-bit-rate-slz}
 \end{figure}
 
-When leading zero bits are removed from streams, all four streams become closer in EMD error (Figure
-\ref{fig:histogram-stream-comparison} (b, d, f, h)). This f
+The streams in Figure \ref{fig:histogram-comparison-low-bit-rate} (b, d, f, h) are truncated where
+the EMD errors of the \emph{histogram-optimized} streams are negligible, suggesting that it is often
+possible to achieve near lossless histograms with just 1 bit per sample. The boiler data set is a
+peculiar case, where the \emph{histogram-optimized} stream outperforms the rest of the streams by a
+large margin in the second half of the bit rate range. Looking at the precision maps (defined in
+Section [REF]) for the \emph{histogram-optimized} stream, as well as its reconstructed histogram
+(Figure \ref{fig:precision-map-histogram}, (a)), we see that the bit distribution is heavily
+concentrated in regions corresponding to one particular histogram bin that contains vastly more
+samples than other bins do. This situtation happens when there are many samples having essentially
+the same value but they are distributed irregularly in space (otherwise they would form constant
+regions which would be captured very well with just a few precision bits of wavelet coefficients --
+this is the case for the flame data set). In this case a stream needs to be more spatially adaptive
+to resolve well the histogram bin with the most samples, and among the tested streams, only
+\emph{histogram-optimized} is spatially adaptive to EMD (\emph{rmse-optimized} is spatially
+adaptive, but to RMSE, and the other two streams are data-independent).
+
+\begin{figure}
+	\centering
+	\subcaptionbox{}
+	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-histogram_resize-vert.png}}
+	\subcaptionbox{}
+	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-rmse_resize-vert.png}}
+	\subcaptionbox{}
+	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-signature_resize-vert.png}}
+	\subcaptionbox{}
+	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-wavenorm_resize-vert.png}}
+	\caption{(top) Precision distribution of wavelet coefficients, and (bottom) reconstructed
+	histograms, for \emph{histogram-optimized}, \emph{rmse-optimized}, \emph{by wavelet norm}, and
+	\emph{histogram signature} streams, at 6.47 bits per sample, without leading zero bits.}
+	\label{fig:precision-map-histogram}
+\end{figure}
+
+In this section we have shown that histogram computation requires a different ordering of bits than
+reconstructing the function itself. We have also proposed a practical heuristic, based on stream
+signatures, to capture the main characteristics of this ordering. In practice, the histogram
+signature can be pre-computed once and stored on disk. A signature's size is negligible (170
+integers in 2D and 374 integers in 3D in the case of four wavelet levels in each dimension), and can
+also be further compressed. Therefore it can be transmitted first, and the receiver of the data can
+ultilize the signature to smartly query the bits so as to reconstruct the data's histogram with as
+few bits as possible.
