@@ -166,6 +166,9 @@ when it comes to computing an accurate histogram.
 % \end{enumerate}
 
 \section{The need for task-optimized streams}
+
+\ptb{I would almost never suggest a section this short. How is this
+  not sipmly the ``motivation'' subsection of the next section ?}
 To test whether a stream that is suited to a certain task (function reconstruction, using PSNR as
 the metric) also performs well in another (histogram computation), we compare the streams introduced
 in the previous section using a histogram error metric that is the Earth Mover Distance (EMD)~\cite{emd1998}.
@@ -191,7 +194,7 @@ computed by greedily minimizing EMD instead of RMSE with regards to the ground t
 	\caption{Histogram error comparison. Lower EMD is better. The streams are truncated	towards the
 	end where the errors become negligibly small.}
 	\label{fig:histogram-motivation}
-\end{figure}
+\end{figure}the_need
 
 The \emph{by bit plane} and \emph{by wavelet norm} streams match one another closely in terms of
 PSNR, but differ significantly in EMD. Furthermore, the \emph{fully adaptive, RMSE-optimized} stream
