@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 #error = ('isocontour', 'Error') 
 error = ('histogram', 'EMD')
-error = ('rmse', 'PSNR')
+#error = ('rmse', 'PSNR')
 
 for dataset in ['miranda-viscosity']:
 
@@ -32,8 +32,8 @@ for dataset in ['miranda-viscosity']:
     ax.plot(x, y, label='fully adaptive')
 
     ax.legend(loc='lower right')
-    ax.set_xlabel('Number of Streamed Bytes', fontsize=14)
-    ax.set_ylabel(error[1], fontsize=14, rotation='horizontal', horizontalalignment='right') # the files are though named as RMSE
+    ax.set_xlabel('Bits per sample', fontsize=14)
+    ax.set_ylabel(error[1], fontsize=14)#, rotation='horizontal', horizontalalignment='right') # the files are though named as RMSE
 
     # hide top and right axis
     ax.spines['top'].set_visible(False)
