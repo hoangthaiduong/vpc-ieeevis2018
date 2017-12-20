@@ -4,92 +4,98 @@ As the gap between the available compute power and the cost of data
 movement increases, data transfer, whether from caches, main memory,
 or disk, is becoming the major bottleneck of many workflows. However,
 it is well known that often not every byte of data is necessary to
-answer scientific questions at sufficient accuracy.
-In particular, for techniques at the end of scientific
-workflow, like visualization and data analysis, much coarser
-approximations of the data often provide adequate approximations~\cite{woodring2011,covra2012,compression_sim2013},
-               and even during simulation some loss in precision is often
-               acceptable~\cite{compression_sim2013}. As a result, a host of different
-               techniques have been proposed to reduce the size of data. Generically,
-               these can be classified into approaches that reduce the data
-               resolution, i.e., the number of data points or coefficients stored, and
-               techniques that reduce the precision of each data point or coefficient.
-               Examples of the former are
-               adaptive mesh refinement~\cite{amr1989}, octrees or other tree
-               structures~\cite{hierarchical1984} and of the latter compression~\cite{zfp2014},
-               quantization~\cite{vq1992}, or truncation~\cite{?}.
-               \note{What does `truncation' refer to?  Discarding mantissa bits?}
-               Traditionally,
-               multi-resolution structures have been used to accelerate dynamic
-               queries, for example, in rendering~\cite{multires_octree1999}, since discarding data points
-               based on the view point or data complexity can result in significant
-               speed-ups. Compression based on uniform quantization on the other hand is
-               more common when storing data, where in the absence of other
-               information treating each sample as equally important is the
-               null-hypothesis. However, in many situations a combination of both
-               resolution and precision reduction would be appropriate.
-               For example, we may need a certain minimal
-               spatial resolution to adequately resolve the geometry of an isosurface,
-               yet if the underlying function is smooth we likely will not need all values
-               at full precision.
-               \note{I see no link between smoothness and precision.  Derivatives require
-                       high precision; visualization doesn't.}
-                       Similarly, we may need high precision values to
-                       accumulate accurate statistics, yet a small subsample of points may be
-                       sufficient to do so.
-                       \note{Are we making this up, or do we have an example where such high
-                               precision is needed?}
-                               Some multi-resolution file formats like JPEG2000~\cite{jpeg2001} do
-provide per-block progressive decompression and thus allow at least some
-flexibility
-in adjusting both resolution and precision simultaneously. But we are
-not aware of any analysis pipeline that uses these capabilities beyond
-simple region-of-interest based queries. In fact, while intuitive, it
-is unclear whether combining both concepts provides any
-advantage in practice and how big the potential savings could, as well as
-how flexible a given solution would have to be.\note{What does this flexibility
-refer to?}
+answer scientific questions at sufficient accuracy.  In particular,
+for techniques at the end of scientific workflow, like visualization
+and data analysis, much coarser approximations of the data often
+provide adequate
+approximations~\cite{woodring2011,covra2012,compression_sim2013}, and
+even during simulation some loss in precision is often
+acceptable~\cite{compression_sim2013}. As a result, a host of
+different techniques have been proposed to reduce the size of
+data. Generically, these can be classified into approaches that reduce
+the data resolution, i.e., the number of data points or coefficients
+stored, and techniques that reduce the precision of each data point or
+coefficient.  Examples of the former are adaptive mesh
+refinement~\cite{amr1989}, octrees or other tree
+structures~\cite{hierarchical1984} and of the latter
+compression~\cite{zfp2014} or quantization~\cite{vq1992}.
+Traditionally, multi-resolution structures have been used to
+accelerate dynamic queries, for example, in
+rendering~\cite{multires_octree1999}, since discarding data points
+based on the view point or data complexity can result in significant
+speed-ups. Compression based on uniform quantization on the other hand
+is more common when storing data, where in the absence of other
+information treating each sample as equally important is the
+null-hypothesis. However, in many situations a combination of both
+resolution and precision reduction would be appropriate.  For example,
+we may need a high spatial resolution to resolve
+the topology of an isosurface, yet we likely do not need the
+corresponding samples at full precision to adequately approximate the geometry.
+Similarly, we may need high precision values to accumulate accurate
+statistics, yet a small subsample of points may be sufficient to do
+so.  \note{Are we making this up, or do we have an example where such
+  high precision is needed? PTB: We are totally making this up!}  
 
-\note{This makes sense only in a progressive analysis pipeline.  We need
-to make that clear, as well as the notion of both progressive resolution
-and precision.}
-Using a wide range of data sets and a suite of different progressive analysis
-tasks, we show that selectively adjusting both resolution and precision can
-provide significant advantages over adjusting only one of them. In
-particular, given an analysis task, we consider progressive
-bitstreams that improve the ordering of the bits (or small chunks of bits)
-of all samples to reduce the error of the analysis. This ordering includes
-interleaving bits of different samples and resolutions across the entire
-data set. We show that reordered streams can not only provide---sometimes
-drastically---improved results, but that different types of
-analysis require substantially different bitstreams. This result implies that
-there exists no universally good ordering to replace the
-multi-resolution or precision based streams used today.
-\note{Point out earlier that standard techniques order by resolution of
-by bit plane only.  I don't think that's clear.}
-Instead, an ideal system should support adaptive and dynamic change in the
-bit-ordering dependening on the task.
-\note{And dependent on the data?}
-While creating such a system is
-beyond the scope of this paper, we demonstrate heuristics that provide
-good approximations to the theoretical ideal, which is unachievable in
-practice. Our contributions is detail are:
+In general, there exists a wide range of potential analysis and
+visualization task all of which may prefer different combinations of
+resolution and precision and for many these requirements will be
+data-dependent.  Consequently, we do not expect any particular data
+organization to be ideal. Instead, we consider a progressive pipeline
+in which some initial data is loaded and processed and new data is
+requested selectively based on the requirement of the current task and
+the characteristics of the data already loaded. However, while there
+are almost certainly advantages in adapting both resolution and
+precision, it is unclear how big the potential gains could be and how
+much of the benefits can be accessed with practical algorithms.
+
+
+%
+% PTB: This does not seem to fit into the current argument chain
+% anymore
+%
+% Some multi-resolution file formats like JPEG2000~\cite{jpeg2001} do
+% provide per-block progressive decompression and thus allow at least
+% some flexibility in adjusting both resolution and precision
+% simultaneously. But we are not aware of any analysis pipeline that
+% uses these capabilities beyond simple region-of-interest based
+% queries.
+
+
+Using a wide range of data sets and progressive instances of different
+tasks, we show that selectively adjusting both resolution and
+precision can provide significant advantages over adjusting only one
+of them. In particular, compared to traditional techniques that either
+adjust resolution according to some spatial ordering, i.e.\ an octree,
+or adjust precision by processing data one bit-plane at a time, we
+consider arbitrarily reordered streams of bits (or small chunk of bits)
+optimized to reduce the resulting error.  We show that reordered
+streams can not only provide---sometimes drastically---improved
+results, but that different types of analysis require substantially
+different bitstreams. This result implies that there exists no
+universally good ordering to replace the multi-resolution or precision
+based streams used today. Instead, an ideal system should support
+adaptive and dynamic changes in the bit-ordering depending on the
+task and the data.  While creating such a system is beyond the scope
+of this paper, we provide: an offline optimization algorithm as a
+stand-in for the ideal bitstream; and an online heuristic that
+provides a good approximation to the theoretical ideal. The former
+provides a crucial metric to evaluate the latter, since the the
+theoretically optimal stream is NP-hard to construct and thus not
+accessible for any data of relevant size. Our contributions is detail
+are:
 
 \begin{itemize}
 
+\item An optimization algorithm that approximates the ideal bitstream
+  for a given data-task combination ;
+ 
 \item Using a suite of data sets and analysis tasks, we demonstrate
   that jointly optimizing both resolution and precision provides
   significant data reductions above and beyond  adjusting each
   separately;
 
-\item An optimization algorithm approximates the ideal
-  bitstream for large data and thus enables extensive, empirical
-  experiments; and
-\note{``Enabling extensive, empirical experiments'' is a contribution?
-Clarify why this is a contribution.}
-
-\item A practical heuristic to dynamically create
-  high-quality bitstreams for different analysis tasks.
+\item A practical heuristic to dynamically create high-quality
+  bitstreams for different analysis tasks.
 
 \end{itemize}
 
