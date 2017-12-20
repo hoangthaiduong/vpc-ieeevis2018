@@ -1,8 +1,8 @@
 all:
-	pdflatex EGauthorGuidelines-eurovis18-full
-	pdflatex EGauthorGuidelines-eurovis18-full
-	bibtex EGauthorGuidelines-eurovis18-full
-	pdflatex EGauthorGuidelines-eurovis18-full
+	pdflatex template
+	pdflatex template
+	bibtex template
+	pdflatex template
 
 
 clean:
