@@ -1,8 +1,46 @@
 
 \section{Isocontour extraction}
-Explain the error metric used for isocontour (number of misclassified voxels + the difference in contour length). The number of misclassified voxels is the main error metric, but we need to add the contour lenngth difference because otherwise chunks that affect less than a pixel cannot be ranked.
+If histograms provide statistical overviews of the range space of data, isocontour (isosurface)
+extraction reveals data's structures and features of interest, such as objects or organs in medical
+imaging, or a flame's front in combustion simulation. Sequences of isocontours can reveal important
+topological structures in data. Extraction of isocontour is therefore an essential task in any
+visualization and analysis system. In this section we study the characteristics of bit streams that
+minimize errors in the reconstructed contour at all time.
 
-To meaningfully compare the isocontour and rmse streams, we devise the hybrid scheme with the idea that when confined to a small enough region, the hybrid stream follows the rmse ordering, while the ordering of regions follows that of the isocontour one (so we can skip regions that do not intersect the contour). We present the detailed algorithm below.
+As before, we begin by defining an error metric two compare two contours. A popular metric is the
+Hausdorff distance [CITE] between two curves (in 2D) or two surfaces (in 3D), but we have found that
+using the number of misclassified samples result is a more robust mertic. This metric can be
+computed without actually extracting contours. Given two grid of values $G_1$ and $C_2$, and an
+isovalue $v$, we classify each sample of each grid with a binary label, $0$ means the sample's value
+is less than $v$, and $1$ means the opposite. Then, we perform an element-wise XOR of the resulting
+two binary grids, and count the number of $1$'s in the result. This number is the number of samples
+that were classified differently between the two grids, and in our experience, is a close proxy to
+how different the two corresponding isocontours would be from each other.
+
+Using just the number of misclassified voxels as the error metric in Algorithm [REF] is
+insufficient, however. We have found that in step TODO of the algorithm, if the error caused by
+switching off a chunk is too small (in orders of sub-pixel/sub-voxel), then the importance of the
+chunk cannot be properly measured. We therefore amend the error metric by adding to it the relative
+difference in length between two contours. This relative difference is, most of the time, a number
+between $0$ and $1$,computed by the formula $|L(C_1)-L(C_2)|/L(C_1)$, where $L(C)$ is the length of
+a contour $C$. The idea is that when the number number of misclassified voxels is less than $1$, the
+error -- which is at the sub-pixel level -- is captured by the relative difference in contour length
+instead.
+
+With an error metric defined, we can compute an \emph{isocontour-optimized} stream for a data set,
+given an isovalue. However, it is not straightforward to compare an \emph{isocontour-optimized}
+stream to an \emph{rmse-optimized} stream in any contour error metric, because in practice, an
+isocontour occupies an order of magnitude fewer grid cells, compared to the whole grid. An
+\emph{rmse-optimized} stream has no reason to prioritize these cells, which is what an
+\emph{isocontour-optimized} stream would do. This makes for a less meaningful comparison. To
+circumvent this problem, we propose to combine \emph{isocontour-optimized} and \emph{rmse-optimized}
+to form a \emph{hybrid} stream that can be more fairly compared with \emph{isocontour-optimized}.
+The idea is to partition the domain into equal-size regions. Within a region, a \emph{hybrid} stream
+has the same chunk ordering as that of the \emph{rmse-optimized} stream's; but globally, the
+\emph{hybrid} visits the regions in the same order that the \emph{isocontour-optimized} does. The
+partitioning into regions help steer the \emph{hybrid} stream away from regions that do not contain
+the contour. Since \emph{hybrid} is designed to retain the characteristics of \emph{rmse-optimized}
+locally (within a region), it can be used as a proxy of \emph{rmse-optimized} for comparison against \emph{isocontour-optimized}.
 
 Algorith. How to construct the hybrid stream.
 
@@ -12,14 +50,17 @@ Figure 2': we compare directly the hybrid and isocontour streams in terms of rel
 
 figure 3: show isocontour rendering for the three streams at some low bit rates where the errors are apparent. Ideally the difference between isocontour and hybrid is not noticeable.
 
-%figure 4:  Suppose we have stream-isocontour and stream-rmse for the same data. We construct stream-hybrid1 by following stream-rmse in terms of ordering of regions, while following stream-isocontour within each region by using its signature. Also construct stream-hybrid2 by following stream-isocontour in terms of ordering of regions and stream-rmse within each region. Yet another hybrid is stream-hybrid3 that follows stream-isocontour both in ordering of regions and within each region. Comparing these streams in terms of isocontour error, we will see stream-isocontour > stream-hybrid3 > stream-hybrid2 > stream-hybrid1 > stream-rmse. This means the concept of signature is meaningful.
+Figure 4: Here, using a synthetic data set (gaussian function) we compare the signature of three
+isocontour streams at different isovalues, where the derivatives of the function are: low, medium,
+high. We will observe different orderings (signatures) in each case.
 
-Figure 4:
-Here, using a synthetic data set (gaussian function) we compare the signature of three isocontour streams at different isovalues, where the derivatives of the function are: low, medium, high. We will observe different orderings (signatures) in each case.
+We argue that different isovalues will require different stream signatures, but thanks to the
+similarity between hybrid and isocontour streams, the rmse stream can be used to extract isocontour
+too, provided that it is paired with a method to localize the contour (e.g. min-max octrees etc).
 
-We argue that different isovalues will require different stream signatures, but thanks to the similarity between hybrid and isocontour streams, the rmse stream can be used to extract isocontour too, provided that it is paired with a method to localize the contour (e.g. min-max octrees etc).
+Figure 5: We show that the hybrid and isocontour can diverge somewhat for low-gradient contour.
+Valerio suggested here we coudl also build a "ramp" dataset at different angles and see if the two
+diverges more as the ramp become flatter.
 
-Figure 5:
-We show that the hybrid and isocontour can diverge somewhat for low-gradient contour. Valerio suggested here we coudl also build a "ramp" dataset at different angles and see if the two diverges more as the ramp become flatter.
-
-We argue that if the gradient is low, some noise bits at the end will make an impact, the isocontour is very sensitive to noise, and is in general not interesting or meaninfgul to extract.
+We argue that if the gradient is low, some noise bits at the end will make an impact, the isocontour
+is very sensitive to noise, and is in general not interesting or meaninfgul to extract.
