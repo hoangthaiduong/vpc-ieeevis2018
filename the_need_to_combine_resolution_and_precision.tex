@@ -23,34 +23,82 @@ impact on the error (in regards to a metric of interest) appear earlier. We call
 that is optimized for a certain metric, the receiver would be able to perform analysis tasks
 pertaining to that metric as soon as possible, while incurring minimal error.
 
-Streams are not constructed from raw data bits, but from a representation in which every bit can be
-associated with a resolution level and a bit plane. We use the CDF5/3 wavelet transform [CITE] to
-decompose the domain into resolution levels (also known as subbands). To handle precision in a
-unified way, we quantize the resulting wavelet coefficients to $16$-bit signed integers, which are
-then converted to negabinary form [CITE]. In each subband, negabinary coefficients are grouped into
-groups of $g \times g$ in 2D, and each group is divided into \emph{chunks}. A chunk contains a
-single bit plane of all coefficients in the group. For performance reasons, we do not stream one bit
-at a time, but always one chunk at a time (a typical chunk size used in this paper is $4 \times 4 =
-16$ bits; TODO: we use 16x16 for data dependent streams). This constraint is reasonable because in practice, data is almost never read or written
-bit-by-bit.
 
-Of the streams to be compared, one proceeds strictly from coarser to finer resolution levels
-(\emph{by level}), one proceeds stricly from higher-ordered to lower-ordered bit planes (\emph{by
-bit plane}), and one combines resolution and precision (\emph{by wavelet norm}). The \emph{by
-levels} stream is designed to represent the way data is read in traditional multi-resolution
-techniques such as those based on subsampling~\cite{idx2001}, octrees~\cite{multires_octree1999},
-or wavelets [CITE]. The
-\emph{by bit plane} stream represents techniques that truncate data in precision such as zfp~\cite{zfp2014}.
-The \emph{by wavelet norm} sort chunks in decreasing order of $\norm{W_l}_2 \times 2^b$, where $l$
-and $b$ are a chunk's subband and bit plane, and $W_l$ is the wavelet basis function at subband $l$.
-These three streams are data-independent. We also include in the comparison two data-dependent
-streams, namely \emph{resolution-adaptive} and \emph{fully adaptive}. In the
-\emph{resolution-adaptive} stream, chunks are ordered so as to minimize peak-signal-to-noise ratio
-(PSNR [CITE]), with one constraint: every wavelet coefficients must come in full precision (in other
-words, chunks of the same group are streamed together). The \emph{fully adaptive} stream orders
-chunks to minimize PSNR the same way, but without any constraints. Both streams are constructed
-using the greedy algorithm discussed in~\Cref{sec:data_dep_streams}.
+\note{This paragraph is difficult to follow and comprehend for
+  non-compression people. Can we make a figure somehow ?} Streams are
+not constructed from raw data bits, but from a representation in which
+every bit can be associated with a resolution level and a bit
+plane. \ptb{I think the argument needs to be inverted. ``To associate
+  bits to resolution and bit planes we transform the data ...''
+  Somehow this also has to do with the fact that we need some other
+  basis in which to represent the data. So abother way of starting
+  this argument is that the naive approach of literally using raw bits
+  of different floating point number is stupid. Instead we make the
+  ``obvious'' transformation into some better basis.} We use the
+CDF5/3 wavelet transform [CITE] to decompose the domain into
+resolution levels (also known as subbands). To handle precision in a
+unified way, we quantize the resulting wavelet coefficients to
+$16$-bit signed integers \ptb{why does quantization lead to a unified
+  way ?}, which are then converted to negabinary form [CITE]\ptb{Why ?
+  Either you need to tell me shorty why this makes sense or tell me
+  later on when you can tell me that negabinary has advantages}. In
+each subband, negabinary coefficients are grouped into groups of
+$g \times g$ in 2D, and each group is divided into \emph{chunks}
+\ptb{This is very hard to parse ... I doubt many people will have a
+  feel for what a subband is nor understand why you first tell be
+  about groups and then chunks. If we only process chunks ... why do I
+  need to know about groups ?}. A chunk contains a single bit plane of
+all coefficients in the group. \ptb{If a chunk contains the bitplane
+  than a group is not ``divided'' into chunks since at least to me
+  ``divided implies some spatial grouping in this context. ... maybe
+  we call each bitplane of a group a chunk and these will be the
+  fundamental units of data ...} For performance reasons, we do not
+stream one bit at a time, but always one chunk at a time (a typical
+chunk size used in this paper is $4 \times 4 = 16$ bits;\ptb{Hmm, 4x4
+  is not the chunk size but the group size ... at least if I
+  underestand the definitions above correctly} TODO: we use
+16x16 for data dependent streams).\ptb{Why do we use different group
+  sizes ? If we really need to I would make this a positive. ... We
+  found that different group sizes can make a difference with data
+  dependent stream perfoming better for larger group sizes as they
+  allow to better predict .....} This constraint is reasonable
+because in practice, data is almost never read or written bit-by-bit.
 
+\ptb{This feels like a subsection to me and probbaly needs the
+  corresponding ``intro'' sentence. Also reading the rest of the
+  section I realized that it focuses entirely on PSNR as metric and
+  that is what it distinguishes it from Section 4. But that is not
+  clear from the text at all. Maybe the entire section should be title
+  Task-Independent Streams and the next one Task Dependent Streams or
+  something similar. Also in that case I would move the discussion
+  below on how we evaliuate to earlier.}  Of the streams to be
+compared, one proceeds strictly from coarser to finer resolution
+levels (\emph{by level}), one proceeds stricly from higher-ordered to
+lower-ordered bit planes (\emph{by bit plane}), and one combines
+resolution and precision (\emph{by wavelet norm}). The \emph{by
+  levels} stream is designed to represent the way data is read in
+traditional multi-resolution techniques such as those based on
+subsampling~\cite{idx2001}, octrees~\cite{multires_octree1999}, or
+wavelets [CITE]. The \emph{by bit plane} stream represents techniques
+that truncate data in precision such as zfp~\cite{zfp2014}.  The
+\emph{by wavelet norm} sort chunks in decreasing order of
+$\norm{W_l}_2 \times 2^b$, where $l$ and $b$ are a chunk's subband and
+bit plane, and $W_l$ is the wavelet basis function at subband $l$.
+These three streams are data-independent. We also include in the
+comparison two data-dependent streams, namely
+\emph{resolution-adaptive} and \emph{fully adaptive}. In the
+\emph{resolution-adaptive} stream, chunks are ordered so as to
+minimize peak-signal-to-noise ratio (PSNR [CITE]), with one
+constraint: every wavelet coefficients must come in full precision (in
+other words, chunks of the same group are streamed together). The
+\emph{fully adaptive} stream orders chunks to minimize PSNR the same
+way, but without any constraints. Both streams are constructed using
+the greedy algorithm discussed in~\Cref{sec:data_dep_streams}.
+
+\ptb{This paragraph almost feels liek a result/experiment section
+  since it talks about exactly how we setup the tests ... This feels a
+  bit weird in this section. What do you want this section to be ?
+  Background ? High level overview ? Experimental design ?}
 For each stream, everytime a chunk is received, the data is reconstructed at full resolution using
 only the chunks received so far. An error value is then computed, depending on the metric used
 (e.g., PSNR, histogram error, isocontour error, etc). For the $512 \times 512$, double-precision
@@ -76,6 +124,10 @@ compression in practice.
 	\label{fig:motivation}
 \end{figure}
 
+\ptb{This description of the results feels very minimalistic to me
+  ... afterall this discussion is the entire punch line for this
+  section and why you made me read the rest. Also I can't read the
+  text i nthe figures}
 It can be seen from Figure \ref{fig:motivation} that the streams that combine resolution and
 precision (\emph{by wavelet norm} and \emph{fully adaptive}) perform the best, either among the
 data-independent streams, or the data-dependent ones. This result is true across all four data sets shown,
@@ -190,3 +242,8 @@ a visual difference in histogram.
 %   \caption {By bit-plane isocontour comparison versus no constraints for viscosity, isoval=-0.005}
 %   \label{fig:by_bit_plane_isocontour}
 % \end{figure}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "EGauthorGuidelines-eurovis18-full"
+%%% End:
