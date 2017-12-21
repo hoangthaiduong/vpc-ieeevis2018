@@ -1,4 +1,5 @@
 \section{The need to combine resolution and precision}
+\label{sec:combining}
 
 \begin{figure*}[!htb]
         \centering
@@ -56,14 +57,17 @@ all coefficients in the group. \ptb{If a chunk contains the bitplane
   we call each bitplane of a group a chunk and these will be the
   fundamental units of data ...} For performance reasons, we do not
 stream one bit at a time, but always one chunk at a time (a typical
-chunk size used in this paper is $4 \times 4 = 16$ bits;\ptb{Hmm, 4x4
+group size used in this paper is $4 \times 4, thus each chunk is of 16$ bits;\ptb{Hmm, 4x4
   is not the chunk size but the group size ... at least if I
-  underestand the definitions above correctly} TODO: we use
-16x16 for data dependent streams).\ptb{Why do we use different group
+  underestand the definitions above correctly}
+  We used $16 \times 16$ group size for data dependent streams (the streams are
+  almost identical) to accelerate the optimization process.\ptb{Why do we use different group
   sizes ? If we really need to I would make this a positive. ... We
   found that different group sizes can make a difference with data
   dependent stream perfoming better for larger group sizes as they
-  allow to better predict .....} This constraint is reasonable
+  allow to better predict .....}
+  
+  This constraint is reasonable
 because in practice, data is almost never read or written bit-by-bit.
 
 \begin{figure}
@@ -173,60 +177,60 @@ when it comes to computing an accurate histogram.
 %   \item Enzo u (wide range)
 % \end{enumerate}
 
-\section{The need for task-optimized streams}
-
-\ptb{I would almost never suggest a section this short. How is this
-  not sipmly the ``motivation'' subsection of the next section ?}
-To test whether a stream that is suited to a certain task (function reconstruction, using PSNR as
-the metric) also performs well in another (histogram computation), we compare the streams introduced
-in the previous section using a histogram error metric that is the Earth Mover Distance (EMD)~\cite{emd1998}.
-The EMD measures how far the histogram of the reconstructed data is from the histogram of
-the original data. We use 256 histogram bins in all experiments. The results are shown in Figure
-\ref{fig:histogram-motivation}. Compared to Figure \ref{fig:motivation}, the \emph{by level} stream
-is removed and two other streams are added: \emph{resolution-adaptive, EMD-optimized} and
-\emph{fully adaptive, EMD-optimized}. The two new streams are analogous to their RMSE counterparts
-(i.e., the two data-dependent streams in Figure \ref{fig:motivation}, now renamed to
-\emph{resolution-adaptive, RMSE-optimized} and \emph{fully adaptive, RMSE-optimized}), but are
-computed by greedily minimizing EMD instead of RMSE with regards to the ground truth.
-
-\begin{figure}
-	\centering
-	\subcaptionbox{Magnetic}
-	{\includegraphics[width=0.44\linewidth]{img/motivation/magnetic-histogram-motivation.pdf}}
-	\subcaptionbox{Boiler-O2}
-	{\includegraphics[width=0.44\linewidth]{img/motivation/boiler-histogram-motivation.pdf}}
-	\subcaptionbox{Flame-OH}
-	{\includegraphics[width=0.44\linewidth]{img/motivation/kflame-oh-histogram-motivation.pdf}}
-	\subcaptionbox{Miranda-diffusivity}
-	{\includegraphics[width=0.44\linewidth]{img/motivation/diffusivity-histogram-motivation.pdf}}
-	\caption{Histogram error comparison. Lower EMD is better. The streams are truncated	towards the
-	end where the errors become negligibly small.}
-	\label{fig:histogram-motivation}
-\end{figure}
-
-The \emph{by bit plane} and \emph{by wavelet norm} streams match one another closely in terms of
-PSNR, but differ significantly in EMD. Furthermore, the \emph{fully adaptive, RMSE-optimized} stream
-underperforms  \emph{fully adaptive, EMD-optimized}, indicating that recontructing an accurate
-function and reconstructing an accurate histogram require two very different orderings of bits.
-Figure \ref{fig:histogram-comparison} illustrates how a quantitative difference in EMD translates to
-a visual difference in histogram.
-
-\begin{figure}
-	\centering
-	\subcaptionbox{\emph{by bit plane}}
-	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-by-bit-plane.png}}
-	\subcaptionbox{\emph{by wavelet norm}}
-	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-by-wavelet-norm.png}}
-	\subcaptionbox{\emph{fully adaptive, RMSE-optimized}}
-	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-rmse-optimized.png}}
-	\subcaptionbox{\emph{fully adaptive, EMD-optimized}}
-	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-emd-optimized.png}}
-	\caption{Histogram comparison for the Magnetic data set at 0.16 bits per sample. The reconstructed
-	histogram (blue) is blended with the ground truth histogram (yellow), so green is where the two
-	overlap. Larger overlap (more green, less blue and yellow) is better.}
-	\label{fig:histogram-comparison}
-\end{figure}
-
+%\section{The need for task-optimized streams}
+%
+%\ptb{I would almost never suggest a section this short. How is this
+%  not sipmly the ``motivation'' subsection of the next section ?}
+%To test whether a stream that is suited to a certain task (function reconstruction, using PSNR as
+%the metric) also performs well in another (histogram computation), we compare the streams introduced
+%in the previous section using a histogram error metric that is the Earth Mover Distance (EMD)~\cite{emd1998}.
+%The EMD measures how far the histogram of the reconstructed data is from the histogram of
+%the original data. We use 256 histogram bins in all experiments. The results are shown in Figure
+%\ref{fig:histogram-motivation}. Compared to Figure \ref{fig:motivation}, the \emph{by level} stream
+%is removed and two other streams are added: \emph{resolution-adaptive, EMD-optimized} and
+%\emph{fully adaptive, EMD-optimized}. The two new streams are analogous to their RMSE counterparts
+%(i.e., the two data-dependent streams in Figure \ref{fig:motivation}, now renamed to
+%\emph{resolution-adaptive, RMSE-optimized} and \emph{fully adaptive, RMSE-optimized}), but are
+%computed by greedily minimizing EMD instead of RMSE with regards to the ground truth.
+%
+%\begin{figure}
+%	\centering
+%	\subcaptionbox{Magnetic}
+%	{\includegraphics[width=0.44\linewidth]{img/motivation/magnetic-histogram-motivation.pdf}}
+%	\subcaptionbox{Boiler-O2}
+%	{\includegraphics[width=0.44\linewidth]{img/motivation/boiler-histogram-motivation.pdf}}
+%	\subcaptionbox{Flame-OH}
+%	{\includegraphics[width=0.44\linewidth]{img/motivation/kflame-oh-histogram-motivation.pdf}}
+%	\subcaptionbox{Miranda-diffusivity}
+%	{\includegraphics[width=0.44\linewidth]{img/motivation/diffusivity-histogram-motivation.pdf}}
+%	\caption{Histogram error comparison. Lower EMD is better. The streams are truncated	towards the
+%	end where the errors become negligibly small.}
+%	\label{fig:histogram-motivation}
+%\end{figure}
+%
+%The \emph{by bit plane} and \emph{by wavelet norm} streams match one another closely in terms of
+%PSNR, but differ significantly in EMD. Furthermore, the \emph{fully adaptive, RMSE-optimized} stream
+%underperforms  \emph{fully adaptive, EMD-optimized}, indicating that recontructing an accurate
+%function and reconstructing an accurate histogram require two very different orderings of bits.
+%Figure \ref{fig:histogram-comparison} illustrates how a quantitative difference in EMD translates to
+%a visual difference in histogram.
+%
+%\begin{figure}
+%	\centering
+%	\subcaptionbox{\emph{by bit plane}}
+%	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-by-bit-plane.png}}
+%	\subcaptionbox{\emph{by wavelet norm}}
+%	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-by-wavelet-norm.png}}
+%	\subcaptionbox{\emph{fully adaptive, RMSE-optimized}}
+%	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-rmse-optimized.png}}
+%	\subcaptionbox{\emph{fully adaptive, EMD-optimized}}
+%	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-emd-optimized.png}}
+%	\caption{Histogram comparison for the Magnetic data set at 0.16 bits per sample. The reconstructed
+%	histogram (blue) is blended with the ground truth histogram (yellow), so green is where the two
+%	overlap. Larger overlap (more green, less blue and yellow) is better.}
+%	\label{fig:histogram-comparison}
+%\end{figure}
+%
 % \begin{figure}[htb!]
 % 	\centering
 % 	\subcaptionbox{without skip leading zeros}
