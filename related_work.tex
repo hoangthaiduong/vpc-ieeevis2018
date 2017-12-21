@@ -32,10 +32,11 @@ is no longer correct.
 
 Wavelet transform constructs hierarchy of resolution levels by applying function and storing
 the result in lower resolution level along with the difference at finer level. Similarly to
-data reordering techniques, this transform does not increase the data size. Moreover, since
+data reordering techniques, this transform does not increase the data size. The disadvantage is non-constant
+time random access cost. Moreover, since
 the function support increases as the resolution decreases, the interpolation is well defined
 compared to the data formats based on subsampling. The adaptivity in resolution can be achieved
-by tiling the wavelet coefficients of individual subbands.
+by tiling the wavelet coefficients of individual subbands. 
 
 For example, Visualization and Analysis Platform for Ocean, Atmosphere, and Solar Researchers
 (VAPOR)~\cite{multires_toolkit2003, vapor2007} incorporates a multiresolution file
