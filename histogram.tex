@@ -9,7 +9,9 @@ experiment that follows, we compare eight of the more common distance metrics, n
 [CITE], Chi-square [CITE], Earth mover's distance (EMD) [CITE], Total variation [CITE], Hellinger
 [CITE], Kolmogorov-Smirnov [CITE], an Kullback-Liebler [CITE]. We use Algorithm [REF] to produce one
 stream for each of these metrics and plot their PSNR curves (Figure
-\ref{fig:histogram-metrics-comparison}).
+\ref{fig:histogram-metrics-comparison}). \ptb{It is not quite clear
+  whether these streams are optimized by their correspoinding norm or
+  by EMD ?}
 
 \begin{figure}
 	\centering
@@ -31,7 +33,8 @@ meaningful criteria for evaluating histogram distance metrics. We therefore comp
 metrics further by plotting the reconstructed histograms for the \emph{diffusivity} data set at
 $0.24$ bits per sample. The results are shown in Figure \ref{fig:histogram-metrics-comparison2}.
 Based on the results from both of these experiments, we have decided to use EMD as the metric of
-choice in this paper to measure histogram error.
+choice in this paper to measure histogram error. \ptb{I do not see a
+  differences in the histograms}
 
 \begin{figure}
 	\centering
@@ -234,3 +237,7 @@ integers in 2D and 374 integers in 3D in the case of four wavelet levels in each
 also be further compressed. Therefore it can be transmitted first, and the receiver of the data can
 ultilize the signature to smartly query the bits so as to reconstruct the data's histogram with as
 few bits as possible.
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "template"
+%%% End:
