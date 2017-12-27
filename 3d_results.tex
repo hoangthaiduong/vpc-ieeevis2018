@@ -1,4 +1,11 @@
 \section{3D Results}
+\pavol{
+\begin{itemize}
+        \item show that it extends to 3D (and hopefully the results hold)
+        \item compare fully adaptive and by wavelet norm?
+\end{itemize}
+}
+
 We extend our comparison to 3D miranda viscosity dataset, to further validate the approach.
 Due to computation cost we primarily focus on two streams, {\em by wavelet norm} and {\em fully
 adaptive}, as we showed in previous sections (TODO: refer to them) that these two streams represent
@@ -11,5 +18,3 @@ We computed streams for the three primary queries, l2norm, histogram, and isosur
 major code change was related to the isosurface query as the area instead of length is needed.
 We used piecewise linear approximation to the isosurface extracted with Marching Cubes algorithm
 (TODO: or remove it as those guys have enough references already).
-
-
