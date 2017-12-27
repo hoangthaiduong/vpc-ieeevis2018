@@ -32,27 +32,59 @@ given an isovalue. However, it is not straightforward to compare an \emph{isocon
 stream to an \emph{rmse-optimized} stream in any contour error metric, because in practice, an
 isocontour occupies an order of magnitude fewer grid cells, compared to the whole grid. An
 \emph{rmse-optimized} stream has no reason to prioritize these cells, which is what an
-\emph{isocontour-optimized} stream would do. This makes for a less meaningful comparison. To
-circumvent this problem, we propose to combine \emph{isocontour-optimized} and \emph{rmse-optimized}
-to form a \emph{hybrid} stream that can be more fairly compared with \emph{isocontour-optimized}.
-The idea is to partition the domain into equal-size regions. Within a region, a \emph{hybrid} stream
-has the same chunk ordering as that of the \emph{rmse-optimized} stream's; but globally, the
-\emph{hybrid} visits the regions in the same order that the \emph{isocontour-optimized} does. The
-partitioning into regions help steer the \emph{hybrid} stream away from regions that do not contain
-the contour. Since \emph{hybrid} is designed to retain the characteristics of \emph{rmse-optimized}
-locally (within a region), it can be used as a proxy of \emph{rmse-optimized} for comparison against \emph{isocontour-optimized}.
+\emph{isocontour-optimized} stream would do. In other words, the \emph{isocontour-optimized} stream
+is spatially adaptive to a much higher degree than the \emph{rmse-optimized} stream is, and this
+makes a direct comparison less meaningful. One way to solve this problem is to isolate the spatial
+adaptivity aspect of a stream from its core characteristics (i.e., its tendency to favor precision
+or resolution). Our solution is to divide space into regions, and study the relative order in which
+a stream consumes bits within a region (in a way similar to how we construct a stream's signature),
+while keeping the ordering of regions constant across streams.
 
-Algorith. How to construct the hybrid stream.
+To do so, we construct \emph{hybrid} streams that combines two given streams (the relative order
+matters). For example, the \emph{hybrid isocontour-rmse} combines \emph{isocontour-optimized} and
+\emph{rmse-optimized} in a way such that within a region, it has the same chunk ordering as that of
+\emph{rmse-optimized}'s, but globally, it visits the regions in the same order that
+\emph{isocontour-optimized} does. Another hybrid stream that can be formed is \emph{hybrid
+rmse-isocontour}, which is form similarly to how \emph{hybrid isocontour-rmse} is formed, but with
+its two input streams switching roles. Since a hybrid stream is designed to retain the
+characteristics of the first stream locally (within a region), it can be used as a proxy of the
+second stream for comparison against the first. The \emph{hybrid isocontour-rmse} stream can be
+compared with \emph{isocontour-optimized}, and the \emph{hybrid rmse-isocontour} stream can be
+compared with \emph{rmse-optimized}. Figure \ref{fig:isocontour-plots} provides these comparisons.
 
-Figure 2: a plot comparing the rmse, isocontour, and hybrid in terms of isocontour error. We observe that the hybrid is close to the isocontour stream.
+\begin{figure}
+	\centering
+	\subcaptionbox{boiler}
+	{\includegraphics[width=0.48\linewidth]{img/isocontour/boiler-isocontour.pdf}}
+	\subcaptionbox{boiler}
+	{\includegraphics[width=0.48\linewidth]{img/isocontour/boiler-isocontour-long.pdf}}
+	\subcaptionbox{kingsnake}
+	{\includegraphics[width=0.48\linewidth]{img/isocontour/kingsnake-isocontour.pdf}}
+	\subcaptionbox{kingsnake}
+	{\includegraphics[width=0.48\linewidth]{img/isocontour/kingsnake-isocontour-long.pdf}}
+	\subcaptionbox{pressure}
+	{\includegraphics[width=0.48\linewidth]{img/isocontour/pressure-isocontour.pdf}}
+	\subcaptionbox{viscosity}
+	{\includegraphics[width=0.48\linewidth]{img/isocontour/pressure-isocontour-long.pdf}}
+	\subcaptionbox{viscosity}
+	{\includegraphics[width=0.48\linewidth]{img/isocontour/viscosity-isocontour.pdf}}
+	\subcaptionbox{pressure}
+	{\includegraphics[width=0.48\linewidth]{img/isocontour/viscosity-isocontour-long.pdf}}
+	\caption{Isocontour errors for \emph{rmse-optimized}, \emph{isocontour-optimized}, and their
+	hybrid streams. The vertical axis is log-scaled. The bit rates are capped to highlight differences
+	among streams.}
+	\label{fig:isocontour-plots}
+\end{figure}
 
-Figure 2': we compare directly the hybrid and isocontour streams in terms of relative misclassified voxels (between the two of them, not between each and ground truth).
+The first thing to observe from Figure \ref{fig:isocontour-plots} is that the \emph{hybrid
+isocontour-rmse} stream improves on \emph{rmse-optimized}, as expected. However, it underperforms
+\emph{isocontour-optimized} by a considerable degree. This could be due to the fact that
+\emph{hybrid isocontour-rmse} is more spatially adaptive to the contour, or that \emph{hybrid
+isocontour-rmse} is fundamentally different than \emph{rmse-optimized}. To answer this question, we
+form a special stream 
 
-figure 3: show isocontour rendering for the three streams at some low bit rates where the errors are apparent. Ideally the difference between isocontour and hybrid is not noticeable.
-
-Figure 4: Here, using a synthetic data set (gaussian function) we compare the signature of three
-isocontour streams at different isovalues, where the derivatives of the function are: low, medium,
-high. We will observe different orderings (signatures) in each case.
+figure 3: show isocontour rendering for the three streams at some low bit rates where the errors are
+apparent. Ideally the difference between isocontour and hybrid is not noticeable.
 
 We argue that different isovalues will require different stream signatures, but thanks to the
 similarity between hybrid and isocontour streams, the rmse stream can be used to extract isocontour

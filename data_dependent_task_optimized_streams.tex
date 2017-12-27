@@ -125,12 +125,17 @@ wavelet transform and compute the error for each chunk.
 \end{figure}
 
 
-\paragraph*{Coarse-to-fine greedy algorithm} starts with no data and the initial error is computed with respect
-to the full data set. Then it takes a list of all chunks in the dataset, computes the error as if the chunk was
-enabled, and picks the chunk with the highest absolute difference in the error with respect to the current error.
-We use absolute difference to avoid the case where the error difference is zero or negative, which would result
-in a long stream of chunk that do not decrease the error significantly. This assumption reflects the expectation
-of more data meaning better result. Similarly to the coarse-to-fine algorithm, the running time is still $O(n^3)$.
+\paragraph*{Coarse-to-fine greedy algorithm} starts with no data and
+the initial error is computed with respect to the full data set. Then
+it takes a list of all chunks in the dataset, computes the error as if
+the chunk was enabled, and picks the chunk with the highest absolute
+difference in the error with respect to the current error.  We use
+absolute difference to avoid the case where the error difference is
+zero or negative, which would result in a long stream of chunk that do
+not decrease the error significantly. \ptb{I am not sure in understand
+  the previous sentence} This assumption reflects the expectation of
+more data meaning better result. Similarly to the coarse-to-fine
+algorithm, the running time is still $O(n^3)$.
 
 
 Since the fine-to-coarse greedy stream outperforms the coarse-to-fine stream we further investigate possible
@@ -146,3 +151,8 @@ complexity to $O(n^2)$ and thus makes it more practical. We use this greedy sche
         \caption{The fully adaptive stream (fine-to-coarse with only initial sorting) closely follows the coarse-to-fine and
                  fine-to-coarse streams both for PSNR and histogram.}
 \end{figure}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "template"
+%%% End:
