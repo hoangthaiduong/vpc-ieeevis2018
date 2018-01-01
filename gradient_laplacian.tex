@@ -1,22 +1,40 @@
 \section{Derivatives computation}
 
-In addition to tasks that require an accurate function in the RMSE sense, tasks that concern with
-the computation of derivative quantities such as gradient and Laplacian are of fundamental
-importance in data analysis. As such, in this section we study streams that minimize gradient and
-Laplacian errors. For the experiments in this section, we use the 4-4 B-spline wavelet [CITE] that
-has four vanishing moments on each of the analysis and synthesis sides, to ensure that the
-reconstructed function is smooth enough for the purpose of taking derivatives.
+Computation of derivative quantities such as gradient and Laplacian is of fundamental importance in
+data analysis, so in this section, we studies streams that aim to minimize errors of derivative
+fields. For the experiments in this section, instead of the CDF 5/3 linear B-spline wavelet, we use
+the 4-4 B-spline wavelet [CITE] that has four vanishing moments on each of the analysis and
+synthesis sides, to ensure that the reconstructed function is smooth enough for taking derivatives.
+We also use quantize the original data to $32$ instead of $16$ bits, to avoid losing too much
+precision due to floating-point cancellation in computing derivatives.
 
 \subsection{Gradient}
 
-We use the two-point central difference formula for computing partial derivatives in each
-direction: $\frac{\partial f}{\partial x}\approx \frac{f(x+1)-f(x-1)}{2}$, and the same for $y$. The
-gradient at each point ($\nabla f(x,y)$) is the vector $(\frac{\partial f}{\partial
-x},\frac{\partial f}{\partial y})$. The difference between the gradient of a reconstructed function
-using $b$ bits per sample $f_b$ and the original function $f$ is defined as $\norm{\nabla f_b-\nabla
-f}_2$. For each data set, we use the optimized fine-to-coarse greedy algorithm (\Cref{sec:data_dep_streams} DID YOU MEAN THE GREEDY ONE?) to compute a stream that minimizes this difference
-at any $b$, and call it the \emph{gradient-optimized} stream. Figure
-\ref{fig:gradient-error-comparison} compares the \emph{gradient-optimized} with the
+Since simulation data can rarely be captured by closed-form formulas, we use finite difference to
+compute the gradient. We experiment with three popular finite difference schemes using stencil sizes
+of two, three, and five points, to compute partial derivatives in each direction: $\frac{\partial
+f}{\partial x}\approx f(x+1)-f(x) \approx \frac{1}{2}f(x+1)-\frac{1}{2}f(x-1) \approx
+\frac{1}{12}f(x-2)-\frac{2}{3}f(x-1)+\frac{2}{3}f(x+1)-\frac{1}{12}f(x+2)$. The gradient at each
+grid point $(x,y)$ is the vector $(\frac{\partial f}{\partial x},\frac{\partial f}{\partial y})$. We
+use algorithm (\Cref{sec:data_dep_streams} to compute a stream that minimizes the difference between
+the gradient field of $f_b$ (the reconstructed function using $b$ bits per sample) and that of the
+original function ($f$), defined as $\norm{\nabla f_b-\nabla f}_2$. This is called the
+\emph{gradient-optimized} stream. For each of the three \emph{gradient-optimized} streams for the
+three aforementioned stencils, we measure its gradient error against the analytically computed,
+ground-truth gradient field of a $512\times 512$ synthetic function, $f(x,y)=\sin x\sin y$ for
+$x,y\in[-0.5,0.5]$. The results are in Figure \ref{fig:gradient-error-comparison-stencils}.
+
+\begin{figure}
+	\centering
+	\subcaptionbox{full}
+	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/sine-gradient-stencils-full.pdf}}
+	\subcaptionbox{zoomed in}
+	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/sine-gradient-stencils-cutoff.pdf}}
+	\caption{Gradient error by three \emph{gradient-optimized} optimized	streams, using different
+	 stencils. Smaller is better. The right plot zooms in on beginning part of the left plot, so as to distinguish the curves. Smaller stencils are marginally better at low bit rates, but fail to accurately track the ground-truth gradient field at high bit rates.}
+  \label{fig:gradient-error-comparison-stencils}
+\end{figure}
+Figure \ref{fig:gradient-error-comparison} compares the \emph{gradient-optimized} with the
 \emph{rmse-optimized} streams for four data sets.
 
 \begin{figure}
@@ -27,7 +45,7 @@ at any $b$, and call it the \emph{gradient-optimized} stream. Figure
 	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/magnetic-gradient.pdf}}
 	\subcaptionbox{diffusivity}
 	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-diffusivity-gradient.pdf}}
-	\subcaptionbox{velocityx}
+	\subcaptionbox{velocityz}
 	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-velocityz-gradient.pdf}}
 	\caption{Gradient error comparison between \emph{gradient-optimized} and \emph{rmse-optimized}
 	streams for four data sets. Smaller is better. Note that the leading zero chunks are still
