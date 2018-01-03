@@ -40,17 +40,6 @@ or resolution). Our solution is to divide space into regions, and study the rela
 a stream consumes bits within a region (in a way similar to how we construct a stream's signature),
 while keeping the ordering of regions constant across streams.
 
-To do so, we construct \emph{hybrid} streams that combines two given streams (the relative order
-matters). For example, the \emph{hybrid isocontour-rmse} combines \emph{isocontour-optimized} and
-\emph{rmse-optimized} in a way such that within a region, it has the same chunk ordering as that of
-\emph{rmse-optimized}'s, but globally, it visits the regions in the same order that
-\emph{isocontour-optimized} does. Another hybrid stream that can be formed is \emph{hybrid
-rmse-isocontour}, which is form similarly to how \emph{hybrid isocontour-rmse} is formed, but with
-its two input streams switching roles. Since a hybrid stream is designed to retain the
-characteristics of the first stream locally (within a region), it can be used as a proxy of the
-second stream for comparison against the first. The \emph{hybrid isocontour-rmse} stream can be
-compared with \emph{isocontour-optimized}, and the \emph{hybrid rmse-isocontour} stream can be
-compared with \emph{rmse-optimized}. Figure \ref{fig:isocontour-plots} provides these comparisons.
 
 \begin{figure}
 	\centering

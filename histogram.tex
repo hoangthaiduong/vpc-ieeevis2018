@@ -4,144 +4,56 @@
 A histogram succinctly and meaningfully summarizes the data, thus histogram computation is a very
 common analysis task. In this section, we study bit streams that aim to reproduce the most accurate
 histogram possible at any bit rate. It is necessary to first define a criteria to compare two
-histograms. In the literature, there have been many distance metric proposed for histograms; in the
-experiment that follows, we compare eight of the more common distance metrics, namely Bhattacharyya
-[CITE], Chi-square [CITE], Earth mover's distance (EMD) [CITE], Total variation [CITE], Hellinger
-[CITE], Kolmogorov-Smirnov [CITE], an Kullback-Liebler [CITE]. We use Algorithm [REF] to produce one
-stream for each of these metrics and plot their PSNR curves (Figure
-\ref{fig:histogram-metrics-comparison}). \ptb{It is not quite clear
-  whether these streams are optimized by their correspoinding norm or
-  by EMD ?}
+histograms. We choose to use the popular Earth mover's distance as the distance metric for
+histograms [CITE]. With the error metric defined, Algorithm [REF] gives us a
+\emph{histogram-optimized} stream, given an input data set. To understand the characteristics of an
+\emph{histogram-optimized} stream that make it suitable for histogram computation, we compare it
+with the \emph{rmse-optimized} stream for the same data set. We also include their corresponding
+data-independent analouges, namely \emph{histogram signature} and \emph{by wavelet norm} (the
+concept of a signature is defined in Section [REF]). Figures \ref{fig:histogram-stream-comparison}
+are plots of the EMD errors for these streams on four data sets.
 
 \begin{figure}
 	\centering
 	\subcaptionbox{\emph{boiler}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/boiler-histogram-metrics.pdf}}
-	\subcaptionbox{\emph{flame}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/kflame-histogram-metrics.pdf}}
-	\subcaptionbox{\emph{diffusivity}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/miranda-diffusivity-histogram-metrics.pdf}}
-	\subcaptionbox{\emph{turbulence}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/different-metrics/turbulence-histogram-metrics.pdf}}
-	\caption{PSNR comparison of eight histogram metrics on four data sets. The streams are truncated to better highlight differences.}
-	\label{fig:histogram-metrics-comparison}
-\end{figure}
-
-Streams that are optimized for EMD perform the best in terms of function's PSNR, according to Figure
-\ref{fig:histogram-fig:ahistogram-metrics-comparison}. It is unclear, however, that PSNR should be a
-meaningful criteria for evaluating histogram distance metrics. We therefore compare the different
-metrics further by plotting the reconstructed histograms for the \emph{diffusivity} data set at
-$0.24$ bits per sample. The results are shown in Figure \ref{fig:histogram-metrics-comparison2}.
-Based on the results from both of these experiments, we have decided to use EMD as the metric of
-choice in this paper to measure histogram error. \ptb{I do not see a
-  differences in the histograms}
-
-\begin{figure}
-	\centering
-	\subcaptionbox{Bhattacharyya}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/bhattacharyya.png}}
-	\subcaptionbox{Chi-square}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/chi_square.png}}
-	\subcaptionbox{Emd}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/emd.png}}
-	\subcaptionbox{Hellinger}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/hellinger.png}}
-	\subcaptionbox{Total variation}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/total_variation.png}}
-	\subcaptionbox{Intersection}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/intersection.png}}
-	\subcaptionbox{Kolmogorov-Smirnov}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/kolmogorov_smirnov.png}}
-	\subcaptionbox{Kullback-Liebler}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/different-metrics/kullback_liebler.png}}
-	\caption{Reconstructed histograms for \emph{diffusivity} at $0.24$ bits per sample.}
-	\label{fig:histogram-metrics-comparison2}
-\end{figure}
-
-With an error metric defined, Algorithm [REF] gives us a \emph{histogram-optimized} stream, given an
-input data set. To understand the characteristics of an \emph{histogram-optimized} stream that make
-it suitable for histogram computation, we compare it with the \emph{rmse-optimized} stream for the
-same data set. Both of these streams, however, are data-dependent, and thus are impractical to
-implement on the data receiving side as they require access to the whole data set to compute.
-Therefore we also include the corresponding data-independent streams, namely \emph{histogram
-signature} and \emph{by wavelet norm} (the concept of a signature is defined in Section [REF]).
-Figures \ref{fig:histogram-stream-comparison} (a, c, e, g) are plots of the EMD errors for these
-streams on four data sets. Figures \ref{fig:histogram-stream-comparison} (b, d, f, h) show the same
-plots, except the leading zero bits are removed from each stream to mimic the effects of
-compression often used in practice.
-
-\begin{figure}
-	\centering
-	\subcaptionbox{\emph{boiler}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/boiler-histogram.pdf}}
-	\subcaptionbox{\emph{boiler}, without leading zeros}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/skip-leading-zeros/boiler-histogram.pdf}}
 	\subcaptionbox{\emph{flame}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/kflame-histogram.pdf}}
-	\subcaptionbox{\emph{flame}, without leading zeros}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/skip-leading-zeros/kflame-histogram.pdf}}
-	\subcaptionbox{\emph{diffusivity}}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/miranda-diffusivity-histogram.pdf}}
-	\subcaptionbox{\emph{diffusivity}, without leading zeros}
+	\subcaptionbox{\emph{diffusivity}}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/skip-leading-zeros/miranda-diffusivity-histogram.pdf}}
 	\subcaptionbox{\emph{turbulence}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/turbulence-histogram.pdf}}
-	\subcaptionbox{\emph{turbulence}, without leading zeros}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/skip-leading-zeros/turbulence-histogram.pdf}}
 	\caption{EMD error comparison among four streams \emph{histogram-optimized},
-	\emph{rmse-optimized}, \emph{by wavelet norm}, and \emph{histogram signature}, with (left) and
-	without (right)	the leading zero bits. For the case of without leading zero bits (right), the
-	plots are truncated to make the differences large enough for visual inspection, and trunction
-	points are chosen so that the difference between the best of the reconstructed histograms and the
-	groundtruth histogram is negligibly small.}
+	\emph{rmse-optimized}, \emph{by wavelet norm}, and \emph{histogram signature}, without the leading
+	zero bits. The plots are truncated to make the differences large enough for visual inspection, and
+	truncation points are chosen so that the best among the reconstructed histograms is visually the
+	same as the groundtruth histogram. }
 	\label{fig:histogram-stream-comparison}
 \end{figure}
 
-The are two observations to have from Figures \ref{fig:histogram-stream-comparison} (a, c, e, g).
 First, compared to \emph{rmse-optimized}, the \emph{histogram-optimized} stream produces
 consistently better histograms. Second, between the two data-independent streams, \emph{histogram
 signature} outperforms \emph{by wavelet norm}. To better understand how the Earth mover's distance
 translates to visual differences, we visualize the histograms produced by the different streams, at
 low bit rates, in Figure \ref{fig:histogram-comparison-low-bit-rate}. These plots confirm our
 observations.
+\emph{histogram-optimized} and \emph{histogram signature}
+outperform \emph{rmse-optimized} and \emph{by wavelet norm} respectively. For example, Figure
+\ref{fig:histogram-comparison-low-bit-rate-slz} shows the four reconstructed histograms at 0.1 bits
+per sample, with leading zero bits removed, for the diffusivity data set.
 
 \begin{figure}
 	\centering
-	\subcaptionbox{\emph{histogram-optimized}\\ emd = 0.42}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/turbulence-wlz/histogram.png}}
-	\subcaptionbox{\emph{rmse-optimized}\\ emd = 0.77}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/turbulence-wlz/rmse.png}}
-	\subcaptionbox{\emph{by wavelet norm}\\ emd = 4.24}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/turbulence-wlz/wavenorm.png}}
-	\subcaptionbox{\emph{histogram signature}\\ emd = 0.54}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/turbulence-wlz/signature.png}}
-	\subcaptionbox{\emph{histogram-optimized}\\ emd = 1.11}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler-wlz/histogram.png}}
-	\subcaptionbox{\emph{rmse-optimized}\\ emd = 0.97}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler-wlz/rmse.png}}
-	\subcaptionbox{\emph{by wavelet norm}\\ emd = 3.98}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler-wlz/wavenorm.png}}
-	\subcaptionbox{\emph{histogram signature}\\ emd = 1.71}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler-wlz/signature.png}}
-	\subcaptionbox{\emph{histogram-optimized}\\ emd = 0.40}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/kflame-wlz/histogram.png}}
-	\subcaptionbox{\emph{rmse-optimized}\\ emd = 0.84}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/kflame-wlz/rmse.png}}
-	\subcaptionbox{\emph{by wavelet norm}\\ emd = 8.49}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/kflame-wlz/wavenorm.png}}
-	\subcaptionbox{\emph{histogram signature}\\ emd = 1.03}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/kflame-wlz/signature.png}}
-	\subcaptionbox{\emph{histogram-optimized}\\ emd = 0.58}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity-wlz/histogram.png}}
-	\subcaptionbox{\emph{rmse-optimized}\\ emd = 1.14}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity-wlz/rmse.png}}
-	\subcaptionbox{\emph{by wavelet norm}\\ emd = 5.07}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity-wlz/wavenorm.png}}
-	\subcaptionbox{\emph{histogram signature}\\ emd = 3.87}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity-wlz/signature.png}}
-	\caption{Histograms at low bit rates. (a,b,c,d) turbulence at 0.3 bps, (e,f,g,h) boiler at 0.1
-	bps, (i,j,k,l) flame at 0.2 bps, (m,n,o,p) diffusivity at 0.3 bps.}
-	\label{fig:histogram-comparison-low-bit-rate}
+	\subcaptionbox{\emph{histogram-optimized},\\ without leading zeros}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/diffusivity/histogram.png}}
+	\subcaptionbox{\emph{rmse-optimized},\\ without leading zeros}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/diffusivity/rmse.png}}
+	\subcaptionbox{\emph{by wavelet norm},\\ without leading zeros}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/diffusivity/wavenorm.png}}
+	\subcaptionbox{\emph{histogram signature},\\ without leading zeros}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/diffusivity/signature.png}}
+	\caption{diffusivity's histograms at 0.1 bps, without leading zero bits. }
+	\label{fig:histogram-comparison-low-bit-rate-slz}
 \end{figure}
 
 The main difference between the \emph{histogram-optimized} and the \emph{rmse-optimized} streams is
@@ -168,33 +80,6 @@ stream, and thus matter little to the data quality.
 	{\includegraphics[width=0.24\linewidth]{img/histogram/sig-GREEDY-(rmse).png}}
 	\caption{\emph{histogram-optimized}'s signature and \emph{rmse-optimized}'s signature}
 	\label{fig:histogram-signature-comparison}
-\end{figure}
-
-When leading zero bits are removed from streams, all four streams become closer in EMD error (Figure
-\ref{fig:histogram-stream-comparison} (b, d, f, h)). This is because, if the leading zero bits are
-present, they serve as a `'cost'' that streams must pay to approach the (later) significant bits.
-All streams have to pay that cost, but streams that favor resolution over precision pay more in the
-beginning, because in practice, most of the leading zero bits concentrate in fine-resolution levels.
-Therefore the removal of leading zero bits impacts a resolution-favoring stream, e.g.,
-\emph{rmse-optimized}, more than it impacts a precision-favoring stream such as
-\emph{histogram-optimized}. Even though the streams become closer in EMD, their relative performance
-largely stays the same, that is, \emph{histogram-optimized} and \emph{histogram signature}
-outperform \emph{rmse-optimized} and \emph{by wavelet norm} respectively. For example, Figure
-\ref{fig:histogram-comparison-low-bit-rate-slz} shows the four reconstructed histograms at 0.1 bits
-per sample, with leading zero bits removed, for the diffusivity data set.
-
-\begin{figure}
-	\centering
-	\subcaptionbox{\emph{histogram-optimized},\\ without leading zeros}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity/histogram.png}}
-	\subcaptionbox{\emph{rmse-optimized},\\ without leading zeros}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity/rmse.png}}
-	\subcaptionbox{\emph{by wavelet norm},\\ without leading zeros}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity/wavenorm.png}}
-	\subcaptionbox{\emph{histogram signature},\\ without leading zeros}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/diffusivity/signature.png}}
-	\caption{diffusivity's histograms at 0.1 bps, without leading zero bits. }
-	\label{fig:histogram-comparison-low-bit-rate-slz}
 \end{figure}
 
 The streams in Figure \ref{fig:histogram-comparison-low-bit-rate} (b, d, f, h) are truncated where

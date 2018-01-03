@@ -31,38 +31,63 @@ $x,y\in[-0.5,0.5]$. The results are in Figure \ref{fig:gradient-error-comparison
 	\subcaptionbox{zoomed in}
 	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/sine-gradient-stencils-cutoff.pdf}}
 	\caption{Gradient error by three \emph{gradient-optimized} optimized	streams, using different
-	 stencils. Smaller is better. The right plot zooms in on beginning part of the left plot, so as to distinguish the curves. Smaller stencils are marginally better at low bit rates, but fail to accurately track the ground-truth gradient field at high bit rates.}
+	 stencils. Smaller is better. The right plot zooms in on beginning part of the left plot, so as to
+	 distinguish the curves. Smaller stencils perform marginally better at low bit rates, but fail to
+	 track the ground-truth gradient at high bit rates.}
   \label{fig:gradient-error-comparison-stencils}
 \end{figure}
-Figure \ref{fig:gradient-error-comparison} compares the \emph{gradient-optimized} with the
+
+At low bit rates, the two-point stencil performs the best, by a small margin. Its gradient error,
+however, plateaus out the earliest, at about $0.6$ bits per sample, with an approximated error of
+$10^-5$ (Figure \ref{fig:gradient-error-comparison-stencils}a). The three-point stencil achieves
+effectively the same error as the two-point scheme, while achieving almost three orders of magnitude
+smaller error at the maximum bit rate. The five-point scheme improves the error by another order of
+magnitude, but suffers slightly more at low bit rates, possibly due to its larger size being more
+susceptible to cancellation errors when subtracting low-precision floating-point values.
+
+When comparing the \emph{gradient-optimized}, \emph{rmse-optimized} streams as well as their
+data-independent analogues, \emph{gradient signature} and \emph{by wavelet norm} (Figure
+\ref{fig:gradient-error-comparison}), we see that in the {fig:gradient-error-comparison} compares the \emph{gradient-optimized} with the
 \emph{rmse-optimized} streams for four data sets.
 
 \begin{figure}
 	\centering
-	\subcaptionbox{euler}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/euler-gradient.pdf}}
-	\subcaptionbox{magnetic}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/magnetic-gradient.pdf}}
-	\subcaptionbox{diffusivity}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-diffusivity-gradient.pdf}}
-	\subcaptionbox{velocityz}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-velocityz-gradient.pdf}}
-	\caption{Gradient error comparison between \emph{gradient-optimized} and \emph{rmse-optimized}
-	streams for four data sets. Smaller is better. Note that the leading zero chunks are still
-	skipped.}
+	\subcaptionbox{euler, 3-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/euler2d-gradient-stencil-3.pdf}}
+	\subcaptionbox{euler, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/euler2d-gradient-stencil-5.pdf}}
+	\subcaptionbox{magnetic, 3-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/magnetic-gradient-stencil-3.pdf}}
+	\subcaptionbox{magnetic, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/magnetic-gradient-stencil-5.pdf}}
+	\subcaptionbox{diffusivity, 3-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-diffusivity-gradient-stencil-3.pdf}}
+	\subcaptionbox{diffusivity, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-diffusivity-gradient-stencil-5.pdf}}
+	\subcaptionbox{velocityz, 3-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-velocityz-gradient-stencil-3.pdf}}
+	\subcaptionbox{velocityz, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-velocityz-gradient-stencil-5.pdf}}
+	\caption{Gradient error comparison between \emph{gradient-optimized}, \emph{rmse-optimized},
+	\emph{by wavelet norm}, and \emph{gradient signature} streams for four data sets, using the
+	3-point stencil (left) and the 5-point stencil (right). Smaller is better. Chunks consisting of
+	leading zero bits are removed from all streams. It all cases, the \emph{gradient-optimized} and
+	\emph{rmse-optimized} streams perform the same, while \emph{gradient} signature is only slightly
+	better than \emph{by wavelet norm}.}
 	\label{fig:gradient-error-comparison}
 \end{figure}
 
 Figure \ref{fig:gradient-error-comparison} suggests that the \emph{rmse-optimized} streams are also
 nearly optimal for gradient computation. The gradient operator is not invertible, that is, there are
-infinitely many functions that result in the same gradient field. So it is not surprising that the
-two streams both produce the best possible gradient progression, but it is worth noting that only
-the \emph{rmse-optimized} stream produces an accurate function as well. We give evidence to this
-claim is in Figure \ref{fig:gradient-comparison}, in which we reconstruct the euler data at 0.25
+infinitely many functions that result in the same gradient field. It is therefore not surprising
+that the two streams both produce the best possible gradient progression. The \emph{rmse-optimized},
+however, also produces an accurate function in addition to its gradient. We give evidence to this
+claim is in Figure \ref{fig:gradient-comparison}, in which we reconstruct the euler data at $0.25$
 bits per sample using both streams, and show the difference in gradient between the two. The two
-gradient fields differ the most along very sharp edges, but are in general congruent (a), while
-the \emph{rmse-optimized} stream produces significantly more accurate reconstruction of the function
-itself (b, c, and d).
+gradient fields differ the most along very sharp edges, but are in general congruent (a), while the
+\emph{rmse-optimized} stream produces significantly more accurate reconstruction of the function
+itself (b, c, and d). It is therefore reasonable in practice to simply use \emph{by wavelet norm}
+for the purpose of gradient computation.
 
 \begin{figure}
 	\centering
@@ -72,16 +97,12 @@ itself (b, c, and d).
 	{\includegraphics[width=0.24\linewidth]{img/gradient-laplacian/euler-original.png}}
 	\subcaptionbox{\emph{rmse-optimized}}
 	{\includegraphics[width=0.24\linewidth]{img/gradient-laplacian/euler-rmse.png}}
-	\subcaptionbox{\emph{gradient-optimized}}
+	\subcaptionbox{\emph{gradient-optimized}, 3-point stencil}
 	{\includegraphics[width=0.24\linewidth]{img/gradient-laplacian/euler-gradient.png}}
-	\caption{Comparing \emph{rmse-optimized} and \emph{gradient-optimized} at 0.25 bits per sample. }
+	\caption{TODO: replace this figure (use 32-bit instead of 16-bit quantization). Comparing
+	\emph{rmse-optimized} and \emph{gradient-optimized} at 0.25 bits per sample. }
 	\label{fig:gradient-comparison}
 \end{figure}
-
-It is therefore reasonable in practice to simply use heuristics that are optimized for RMSE when the
-analysis relies on an accurate gradient field. One such heuristic is the one used by the \emph{by
-wavelet norm} stream (when coupled with a typical entropy compression that avoids most of the
-leading zero bits).
 
 \subsection{Laplacian}
 
@@ -98,7 +119,7 @@ now. (TODO: why is it in the plot? maybe do not mention it at all? or just say t
 \begin{figure}
 	\centering
 	\subcaptionbox{euler}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/euler-laplacian.pdf}}
+	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/euler2d-laplacian.pdf}}
 	\subcaptionbox{magnetic}
 	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/magnetic-laplacian.pdf}}
 	\subcaptionbox{diffusivity}
@@ -136,12 +157,6 @@ gradient case too, but to a much lesser degree.
 	\label{fig:laplacian-precision-comparison}
 \end{figure}
 
-To capture the core characteristics of the \emph{laplacian-optimized} stream, we introduce the
-concept of a stream \emph{signature}. A signature is a matrix with $B$ columns and $L$ rows, with
-$B$ being the number of bit planes in the data set, and $L$ being the number of subbands in the
-wavelet transform. Each cell $(b,l)$ in the signature matrix contains a value in the range
-$[0,B\times L)$, and the ordering of these values reflects the relative ordering in which the $b$
-bit on subband $l$ (for all $l$ and $b$) appear in the stream, on average. The signatures for
 \emph{rmse-optimized}, \emph{laplacian-optimized}, and also \emph{gradient-optimized} for the euler
 data set are visualized in Figure \ref{fig:signature-comparison}. 
 
@@ -159,23 +174,6 @@ data set are visualized in Figure \ref{fig:signature-comparison}.
 	contain leading zero bits, which explains the very dark cells }
 	\label{fig:signature-comparison}
 \end{figure}
-
-The algorithm used to compute a signature from a stream is presented below (TODO: placeholder).
-\begin{algorithm}
-  \KwData{this text}
-  \KwResult{how to write algorithm with \LaTeX2e }
-  initialization\;
-  \While{not at end of this document}{
-   read current\;
-   \eIf{understand}{
-    go to next section\;
-    current section becomes this one\;
-    }{
-    go back to the beginning of current section\;
-   }
-  }
-  \caption{How to write algorithms}
- \end{algorithm}
 
 Using the signature for \emph{laplacian-optimized}, we are able construct a data-independent stream
 (in the sense that once the signature is computed and is given, the ordering of the bits follows the

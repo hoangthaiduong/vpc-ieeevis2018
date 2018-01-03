@@ -1,0 +1,57 @@
+\section{Stream signatures and hybrid streams}
+
+\subsection{Stream signatures}
+To capture the core characteristics of the \emph{laplacian-optimized} stream, we introduce the
+concept of a stream \emph{signature}. A signature is a matrix with $B$ columns and $L$ rows, with
+$B$ being the number of bit planes in the data set, and $L$ being the number of subbands in the
+wavelet transform. Each cell $(b,l)$ in the signature matrix contains a value in the range
+$[0,B\times L)$, and the ordering of these values reflects the relative ordering in which the $b$
+bit on subband $l$ (for all $l$ and $b$) appear in the stream, on average. The signatures for
+
+The algorithm used to compute a signature from a stream is presented below (TODO: placeholder).
+\begin{algorithm}
+  \KwData{this text}
+  \KwResult{how to write algorithm with \LaTeX2e }
+  initialization\;
+  \While{not at end of this document}{
+   read current\;
+   \eIf{understand}{
+    go to next section\;
+    current section becomes this one\;
+    }{
+    go back to the beginning of current section\;
+   }
+  }
+  \caption{How to write algorithms}
+\end{algorithm}
+
+\subsection{Hybrid streams}
+
+To do so, we construct \emph{hybrid} streams that combines two given streams (the relative order
+matters). For example, the \emph{hybrid isocontour-rmse} combines \emph{isocontour-optimized} and
+\emph{rmse-optimized} in a way such that within a region, it has the same chunk ordering as that of
+\emph{rmse-optimized}'s, but globally, it visits the regions in the same order that
+\emph{isocontour-optimized} does. Another hybrid stream that can be formed is \emph{hybrid
+rmse-isocontour}, which is form similarly to how \emph{hybrid isocontour-rmse} is formed, but with
+its two input streams switching roles. Since a hybrid stream is designed to retain the
+characteristics of the first stream locally (within a region), it can be used as a proxy of the
+second stream for comparison against the first. The \emph{hybrid isocontour-rmse} stream can be
+compared with \emph{isocontour-optimized}, and the \emph{hybrid rmse-isocontour} stream can be
+compared with \emph{rmse-optimized}. Figure \ref{fig:isocontour-plots} provides these comparisons.
+
+The algorithm used to compute a hybrid stream from two input streams is presented below (TODO: placeholder).
+\begin{algorithm}
+  \KwData{this text}
+  \KwResult{how to write algorithm with \LaTeX2e }
+  initialization\;
+  \While{not at end of this document}{
+   read current\;
+   \eIf{understand}{
+    go to next section\;
+    current section becomes this one\;
+    }{
+    go back to the beginning of current section\;
+   }
+  }
+  \caption{How to write algorithms}
+\end{algorithm}
