@@ -14,7 +14,7 @@ Since simulation data can rarely be captured by closed-form formulas, we use fin
 compute the gradient. We experiment with three popular finite difference schemes using stencil sizes
 of two, three, and five points, to compute partial derivatives in each direction: $\frac{\partial
 f}{\partial x}\approx f(x+1)-f(x) \approx \frac{1}{2}f(x+1)-\frac{1}{2}f(x-1) \approx
-\frac{1}{12}f(x-2)-\frac{2}{3}f(x-1)+\frac{2}{3}f(x+1)-\frac{1}{12}f(x+2)$. The gradient at each
+\frac{1}{12}f(x-2)-\frac{2}{3}f(x-1)+\frac{2}{3}f(x+1)-\frac{1}{12}f(x+2)$. \hb{missing denominator $\partial x = 1$.. perhaps rename the stencil?} The gradient at each
 grid point $(x,y)$ is the vector $(\frac{\partial f}{\partial x},\frac{\partial f}{\partial y})$. We
 use algorithm (\Cref{sec:data_dep_streams} to compute a stream that minimizes the difference between
 the gradient field of $f_b$ (the reconstructed function using $b$ bits per sample) and that of the
@@ -44,6 +44,7 @@ effectively the same error as the two-point scheme, while achieving almost three
 smaller error at the maximum bit rate. The five-point scheme improves the error by another order of
 magnitude, but suffers slightly more at low bit rates, possibly due to its larger size being more
 susceptible to cancellation errors when subtracting low-precision floating-point values.
+\hb{concise message is missing}
 
 When comparing the \emph{gradient-optimized}, \emph{rmse-optimized} streams as well as their
 data-independent analogues, \emph{gradient signature} and \emph{by wavelet norm} (Figure
