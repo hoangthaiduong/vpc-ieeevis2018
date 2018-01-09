@@ -1,6 +1,11 @@
 \section{Data dependent task-optimized streams}
 \label{sec:data_dep_streams}
 
+\hb{general comments: figures are not consistently sized.. some labels are smaller than others, 
+likely because the actual figure files are different in size.. they should all be same size. the 
+axis labels should only be slightly smaller than caption font size, and even better, the font should 
+match too}
+
 The previous section used fixed ordered streams, either by bit plane, level, or wavelet norm. We
 will show that these streams are suboptimal, and will describe a greedy heuristic to obtain better
 stream tailored to a task. 
@@ -38,7 +43,7 @@ PSNR, but differ significantly in EMD. Furthermore, the \emph{fully adaptive, RM
 underperforms  \emph{fully adaptive, EMD-optimized}, indicating that recontructing an accurate
 function and reconstructing an accurate histogram require two very different orderings of bits.
 Figure \ref{fig:histogram-comparison} illustrates how a quantitative difference in EMD translates to
-a visual difference in histogram.
+a visual difference in histogram. \hb{explain the difference.. what does that mean for the reader}
 
 \begin{figure}
 	\centering
@@ -64,6 +69,7 @@ is for a given query. It could be a stream that exhibit small changes in the dat
 reaches the smallest error fastest. Moreover, it is common to stop the streaming in case the
 quantity of interest is good enough or the data size reached the limit of the machine.
 
+\hb{the para above and the def of best stream seem to have a wider scope..} 
 We define the best stream as a sequence of refinements that reach the minimum error at given
 stopping bit budget. Alas, in interactive application we can only make assumptions what will be the
 number of bits streamed before user decides to stop the streaming. For example, if a user drasticly
@@ -71,7 +77,7 @@ changes viewpoint in a volume rendering application, the stream starts almost fr
 the lack of control over the stopping budget to the extreme, the best stream becomes the one which
 minimizes the error at all bit budgets. However, as in any optimization problem we may reach local
 minimum, as chunks that improve the error but have impact on later refinement will have lower
-priority. The existence of local minima prevents this progressive stream to be globally optimal. We
+priority. \hb{can be shortened} The existence of local minima prevents this progressive stream to be globally optimal. We
 can compute the optimal stream by searching the ordering space for one that is optimal for the
 largest number of bit budgets. Unfortunately, finding such ordering is exponential in number of
 chunks. Therefore, we focus on finding a greedy scheme that could be good representative for the
@@ -81,7 +87,7 @@ fine-to-coarse or coarse-to-fine.
 \paragraph*{Fine-to-coarse greedy algorithm} utilizes full dataset to construct the stream.
 Moreover, if we wanted to precompute stream order which could be utilized during query, we would
 have access to whole data set and could compute this stream. The algorithm is in principle a reverse
-of the previous approach, the stream is constructed by starting with full data set and one by one
+of the previous approach \hb{perhaps the order was switched?}, the stream is constructed by starting with full data set and one by one
 disabling the chunks. At each step, a chunk with smallest errorr impact is disabled (TODO: more
 detail). This algorithm is still of greedy nature as it makes only locally optimal choice. The
 running time of this algorithm is $O(n^3)$ as we start with $n$ chunks and at each streaming step
@@ -108,7 +114,9 @@ transform and compute the error for each chunk.
    chunks = chunks $\setminus$ smallestChunk\;
    orderedChunks = orderedChunks $\cup \{$smallestChunk$\}$\;
   }
-  \caption{Fine-to-coarse stream optimization algorithms}
+  \caption{Fine-to-coarse stream optimization algorithms. \hb{use symbols for unordered / ordered sets? this would be strict total ordering nor partial ordering, right? 
+  depending upon that, $\cup$ may or may not maintain ordering.  
+  what is the `slice' in input? }}
 \end{algorithm}
 
 \begin{figure}
@@ -136,7 +144,7 @@ more data meaning better result. Similarly to the coarse-to-fine
 algorithm, the running time is still $O(n^3)$.
 
 
-Since the fine-to-coarse greedy stream outperforms the coarse-to-fine stream we further investigate
+Since the fine-to-coarse greedy stream outperforms \hb{needs to be pointed out using the figures} the coarse-to-fine stream we further investigate
 possible runtime optimizations. Surprisingly, performing only the first round of chunk error
 calculation and then sorting those chunks by the error closely matches the full greedy algorithm.
 This simple optimization reduces the time complexity to $O(n^2)$ and thus makes it more practical.
