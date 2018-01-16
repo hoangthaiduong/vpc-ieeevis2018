@@ -1,272 +1,116 @@
 \section{The need to combine resolution and precision}
-\label{sec:combining}
+\label{sec:motivation}
 
-\hb{strongly suggest using Def environments to define different types of streams.. also, 
-things like groups and chunks are easy to confuse... so def envs will allow refering back to them..
-having a simple figure will help too. 
-perhaps signature too should be defined explicitely, coz it is defined too late in a narrower context than i think it should}
+Traditional data reduction techniques work by either truncating the finest few resolution levels, or
+truncating the last few low-ordered bits of every sample, but rarely both. Our aim in this section
+is to show that significant gain can be achieved when one combines both dimensions, namely
+resolution and precision, for data reduction. To do so, for each data set, we construct and compare
+three different streams, which use different sorting criteria to sort the same set of chunks in
+decreasing order of weights. We will use $W(m)$ to denote a sorting criteria, which is any function
+that takes a chunk, $m$, and returns its `'weight'', which determines how important the chunk is.
 
-\begin{figure*}[!htb]
-        \centering
-	\subcaptionbox{Magnetic}
-        {\includegraphics[width=0.20\linewidth]{img/dataset/magnetic-512x512-float64-paraview.png}}
-	\subcaptionbox{Boiler-O2}
- 	{\includegraphics[width=0.20\linewidth]{img/dataset/boiler-o2-145x170-float64-paraview.png}}
-	\subcaptionbox{Flame-OH}
- 	{\includegraphics[width=0.20\linewidth]{img/dataset/kflame-oh-256x256-float64-paraview.png}}
-	\subcaptionbox{Miranda-diffusivity}
- 	{\includegraphics[width=0.20\linewidth]{img/dataset/miranda-diffusivity-384x384-float64-paraview.png}}
- 	\caption{Datasets used for the stream comparisons which include different properties, such as
-        narrow ridges, smooth mixing, or sharp front.}
- 	\label{fig:datasets}
-\end{figure*}
+The weight function used by the first stream is $W_1(c)=\bar{l}-L(c)$, where $L$ is a function that
+returns the subband (resolution level) of its argument (higher-numbered subbands are finer), and
+$\bar{l}$ is the total number of subbands. This stream orders the chunks strictly from coarser to
+finer resolution levels, so we will name it the \emph{by level} stream. Within the same subband,
+without any further knowledge of the underlying data, the chunks naturally follow the row-major
+order. The second stream, \emph{by bit plane}, proceeds stricly from higher-ordered to lower-ordered
+bit planes (i.e., $W_2(c)=\bar{b}-B(c)$, where $B$ is a function that map its argument to the
+corresponding bit plane and $\bar{b}$ is the total number of bit planes, with $0$ being the most
+significant bit plane). The third stream, \emph{by wavelet norm}, orders chunks using
+$W_3(c)=2^{\bar{b}-1-B(c)}\times \norm{\omega_{L(c)}}^2$. The term $2^{\bar{b}-1-B(c)}$ captures the
+contribution of a bit on bit plane $B(c)$, while the term $\norm{\omega_{L(c)}}^2$ captures the
+contribution of a coefficient on subband $L(c)$, where $\omega_{L(c)}$ refers to the wavelet basis
+function on subband $L(c)$. Note that all three streams are data-agnostic, and the \emph{by level}
+and \emph{by bit plane} streams are designed to mimic the way data is read in traditional data
+reduction methods that work either in resolution or in precision space, while \emph{by wavelet norm}
+combines these two dimensions. Finally, to emulate the effect of entropy compression typically done
+in practice, we remove all the chunks that consist of purely leading zero bits from all streams.
 
-Traditional data reduction techniques work in either resolution space or precision space
-exclusively. They truncate either the last few levels in a multi-resolution representation of the
-data, or the last few low-ordered bits, but rarely both. Our aim in this section is to show that
-significant gain can be achieved when one combines both dimensions of data reduction. To do so, we
-construct and compare different ways to order the bits of a data set so that bits that have higher
-impact on the error (in regards to a metric of interest) appear earlier. We call each ordering a
-\emph{stream} of bits. The idea is that, if the data is streamed to a receiver using a bit ordering
-that is optimized for a certain metric, the receiver would be able to perform analysis tasks
-pertaining to that metric as soon as possible, while incurring minimal error.
-
-
-\note{This paragraph is difficult to follow and comprehend for
-  non-compression people. Can we make a figure somehow ?} Streams are
-not constructed from raw data bits, but from a representation in which
-every bit can be associated with a resolution level and a bit
-plane. \ptb{I think the argument needs to be inverted. ``To associate
-  bits to resolution and bit planes we transform the data ...''
-  Somehow this also has to do with the fact that we need some other
-  basis in which to represent the data. So abother way of starting
-  this argument is that the naive approach of literally using raw bits
-  of different floating point number is stupid. Instead we make the
-  ``obvious'' transformation into some better basis.} We use the
-CDF5/3 wavelet transform [CITE] to decompose the domain into
-resolution levels (also known as subbands). To handle precision in a
-unified way, we quantize the resulting wavelet coefficients to
-$16$-bit signed integers \ptb{why does quantization lead to a unified
-  way ?}, which are then converted to negabinary form [CITE]\ptb{Why ?
-  Either you need to tell me shorty why this makes sense or tell me
-  later on when you can tell me that negabinary has advantages}. In
-each subband, negabinary coefficients are grouped into groups of
-$g \times g$ in 2D, and each group is divided into \emph{chunks}
-\ptb{This is very hard to parse ... I doubt many people will have a
-  feel for what a subband is nor understand why you first tell be
-  about groups and then chunks. If we only process chunks ... why do I
-  need to know about groups ?}. A chunk contains a single bit plane of
-all coefficients in the group. \ptb{If a chunk contains the bitplane
-  than a group is not ``divided'' into chunks since at least to me
-  ``divided implies some spatial grouping in this context. ... maybe
-  we call each bitplane of a group a chunk and these will be the
-  fundamental units of data ...} For performance reasons, we do not
-stream one bit at a time, but always one chunk at a time (a typical
-group size used in this paper is $4 \times 4, thus each chunk is of 16$ bits;\ptb{Hmm, 4x4
-  is not the chunk size but the group size ... at least if I
-  underestand the definitions above correctly}
-  We used $16 \times 16$ group size for data dependent streams (the streams are
-  almost identical) to accelerate the optimization process.\ptb{Why do we use different group
-  sizes ? If we really need to I would make this a positive. ... We
-  found that different group sizes can make a difference with data
-  dependent stream perfoming better for larger group sizes as they
-  allow to better predict .....}
-  
-  This constraint is reasonable
-because in practice, data is almost never read or written bit-by-bit.
+We compare the three streams by plotting an error curve for each, with regards to three error
+metrics, namely root-mean-square error (Figure \ref{fig:motivation-rmse}), histogram error (Figure
+\ref{fig:motivation-histogram}), and isocontour error (Figure \ref{fig:motivation-isocontour}). For
+each metric, the function is reconstructed every time a new chunk is received from a stream, then
+the relevant quantity (the function itself, its histogram, or an isocontour) is computed from the
+reconstructed function, and compared against the same quantity computed from the original (lossless)
+function. The definitions of histogram error and isocontour error are discussed in detail in Section
+[REF] and Section [REF] respectively.
 
 \begin{figure}
-        \centering
-        \includegraphics[width=\linewidth]{img/pipeline.png}
-        \caption{{This image from duong's poster may make things clearer; we could update it or create something similar}}
+  \centering
+	\subcaptionbox{Boiler}
+  {\includegraphics[width=0.48\linewidth]{img/motivation/motivation-psnr-boiler.pdf}}
+	\subcaptionbox{Diffusivity}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-psnr-diffusivity.pdf}}
+	\subcaptionbox{Euler}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-psnr-plasma.pdf}}
+	\subcaptionbox{Turbulence}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-psnr-turbulence.pdf}}
+	\subcaptionbox{Plasma}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-psnr-plasma.pdf}}
+	\subcaptionbox{Velocity-z}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-psnr-velocityz.pdf}}
+ 	\caption{Root-mean-square error of reconstructed functions using the three data-agnostic streams
+ 	defined in Section \ref{sec:motivation}. Lower is better. The streams are truncated to highlight
+ 	the differences, without omitting important information. \emph{by wavelet norm} performs best,
+ 	followed closely by \emph{by bit plane}.}
+ 	\label{fig:motivation-rmse}
 \end{figure}
-
-\ptb{This feels like a subsection to me and probbaly needs the
-  corresponding ``intro'' sentence. Also reading the rest of the
-  section I realized that it focuses entirely on PSNR as metric and
-  that is what it distinguishes it from Section 4. But that is not
-  clear from the text at all. Maybe the entire section should be title
-  Task-Independent Streams and the next one Task Dependent Streams or
-  something similar. Also in that case I would move the discussion
-  below on how we evaliuate to earlier.}  Of the streams to be
-compared, one proceeds strictly from coarser to finer resolution
-levels (\emph{by level}), one proceeds stricly from higher-ordered to
-lower-ordered bit planes (\emph{by bit plane}), and one combines
-resolution and precision (\emph{by wavelet norm}). The \emph{by
-  levels} stream is designed to represent the way data is read in
-traditional multi-resolution techniques such as those based on
-subsampling~\cite{idx2001}, octrees~\cite{multires_octree1999}, or
-wavelets [CITE]. The \emph{by bit plane} stream represents techniques
-that truncate data in precision such as zfp~\cite{zfp2014}.  The
-\emph{by wavelet norm} sort chunks in decreasing order of
-$\norm{W_l}_2 \times 2^b$, where $l$ and $b$ are a chunk's subband and
-bit plane, and $W_l$ is the wavelet basis function at subband $l$.
-These three streams are data-independent. We also include in the
-comparison two data-dependent streams, namely
-\emph{resolution-adaptive} and \emph{fully adaptive}. In the
-\emph{resolution-adaptive} stream, chunks are ordered so as to
-minimize peak-signal-to-noise ratio (PSNR [CITE]), with one
-constraint: every wavelet coefficients must come in full precision (in
-other words, chunks of the same group are streamed together). The
-\emph{fully adaptive} stream orders chunks to minimize PSNR the same
-way, but without any constraints. Both streams are constructed using
-the greedy algorithm discussed in~\Cref{sec:data_dep_streams}.
-
-\ptb{This paragraph almost feels liek a result/experiment section
-  since it talks about exactly how we setup the tests ... This feels a
-  bit weird in this section. What do you want this section to be ?
-  Background ? High level overview ? Experimental design ?}
-For each stream, everytime a chunk is received, the data is reconstructed at full resolution using
-only the chunks received so far. An error value is then computed, depending on the metric used
-(e.g., PSNR, histogram error, isocontour error, etc). For the $512 \times 512$, double-precision
-data set \emph{Magnetic} [REF], Figure \ref{fig:motivation} compares the five streams in
-PSNR relative to the original (unquantized) data. We note that for this particular comparison,
-chunks containing only leading zero bits are removed for all streams, to mimic the effect of entropy
-compression in practice.
 
 \begin{figure}
-	\centering
-	\subcaptionbox{Magnetic}
-	{\includegraphics[width=0.44\linewidth]{img/motivation/magnetic-motivation.pdf}}
-	\subcaptionbox{Boiler-O2}
-	{\includegraphics[width=0.44\linewidth]{img/motivation/boiler-o2-motivation.pdf}}
-	\subcaptionbox{Flame-OH}
-	{\includegraphics[width=0.44\linewidth]{img/motivation/kflame-oh-motivation.pdf}}
-	\subcaptionbox{Miranda-diffusivity}
-	{\includegraphics[width=0.44\linewidth]{img/motivation/miranda-diffusivity-motivation.pdf}}
-	\caption{PSNR comparison of streams that are by resolution exclusively (\emph{by level} and
-	\emph{resolution-adaptive}), by precision exclusively (\emph{by bit plane}), and by both combined
-	(\emph{by wavelet norm} and \emph{fully adaptive}). Higher is better. A 20 dB increase in PSNR
-	approximately translates to one more decimal digit of accuracy.}
-	\label{fig:motivation}
+  \centering
+	\subcaptionbox{Boiler}
+  {\includegraphics[width=0.48\linewidth]{img/motivation/motivation-histogram-boiler.pdf}}
+	\subcaptionbox{Diffusivity}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-histogram-diffusivity.pdf}}
+	\subcaptionbox{Euler}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-histogram-euler.pdf}}
+	\subcaptionbox{Turbulence}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-histogram-turbulence.pdf}}
+	\subcaptionbox{Plasma}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-histogram-plasma.pdf}}
+	\subcaptionbox{Velocity-z}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-histogram-velocityz.pdf}}
+ 	\caption{Histogram error of reconstructed functions using the three data-agnostic streams defined
+ 	in Section \ref{sec:motivation}. Lower is better. Each histogram comprises of 256 bins. The
+ 	streams are truncated to highlight the differences, without omitting important information.
+ 	\emph{by wavelet norm} performs best.}
+ 	\label{fig:motivation-histogram}
 \end{figure}
 
-\ptb{This description of the results feels very minimalistic to me ... afterall this discussion is
-  the entire punch line for this section and why you made me read the rest. Also I can't read the
-  text i nthe figures} It can be seen from Figure \ref{fig:motivation} that the streams that combine
-  resolution and precision (\emph{by wavelet norm} and \emph{fully adaptive}) perform the best,
-  either among the data-independent streams, or the data-dependent ones. This result is true across
-  all four data sets shown, and for all other data sets in our experiments. The \emph{fully
-  adaptive} stream, can be thought of as an empirical upper bound on how well any stream of the same
-  data can perform in terms of PSNR. Of the data-independent streams, \emph{by bit plane}
-  approximates \emph{by wavelet norm}  well, but this is true only when the error metric is PSNR. In
-  the next section, we show that because of its greater flexibility, the \emph{by wavelet norm}
-  stream outperforms \emph{by bit plane} by a large margin when it comes to computing an accurate
-  histogram.
+\begin{figure}
+  \centering
+	\subcaptionbox{Boiler, isovalue = $0.07$}
+  {\includegraphics[width=0.48\linewidth]{img/motivation/motivation-isocontour-boiler.pdf}}
+	\subcaptionbox{Diffusivity, isovalue = $0.04315$}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-isocontour-diffusivity.pdf}}
+	\subcaptionbox{Euler, isovalue = $3$}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-isocontour-euler.pdf}}
+	\subcaptionbox{Turbulence, isovalue = $2$}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-isocontour-turbulence.pdf}}
+	\subcaptionbox{Plasma, isovalue = $2$}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-isocontour-plasma.pdf}}
+	\subcaptionbox{Velocity-z, isovalue = $-2$}
+ 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-isocontour-velocityz.pdf}}
+ 	\caption{Isocontour error of reconstructed functions using the three data-agnostic streams defined
+ 	in Section \ref{sec:motivation}. Lower is better. The streams are truncated to highlight the
+ 	differences, without omitting important information. \emph{by wavelet norm} performs best.}
+ 	\label{fig:motivation-isocontour}
+\end{figure}
 
-\hb{this section is confusing..  it really discusses more than a need.. so perhaps Timo's idea of 
-having task-independent vs task-dependent sections... or talk only about motivation here, but 
-somehow combine 4.1 as well?}
-
-% \begin{figure*}[!htb]
-% 	\includegraphics[width=0.33\linewidth]{img/dataset/miranda-viscosity.png}
-% 	\includegraphics[width=0.33\linewidth]{img/dataset/magnetic.png}
-% 	\includegraphics[width=0.33\linewidth]{img/dataset/euler2d.png}
-% 	\caption{Left to right: Miranda viscosity field, magnetic reconnection, Euler 2d sharp front}
-% 	\label{fig:datasets}
-% \end{figure*}
-
-% \begin{figure}[htb!]
-% 	\centering
-% 	\subcaptionbox{without skip leading zeros}
-% 	{\includegraphics[width=0.4\linewidth]{img/independent/rmse-miranda-viscosity}}
-% 	\subcaptionbox{with skip leading zeros}
-% 	{\includegraphics[width=0.4\linewidth]{img/skip-zeros/rmse-miranda-viscosity}}
-% 	\caption {PSNR comparison between three streams: by bit-plane, by level, and by wavelet norm}
-% 	\label{fig:psnr_traditional_vs_by_norm_viscosity}
-% \end{figure}
-
-% In the supplement materials, we show the same plot for the following datasets:
-% \begin{enumerate}
-%   \item Miranda viscosity (smooth and uniform)
-%   \item Kingsnake (noisy and sparse)
-%   \item Magnetic (tiny narrow lines)
-%   \item Euler 2D (sharp front)
-%   \item Enzo u (wide range)
-% \end{enumerate}
-
-%\section{The need for task-optimized streams}
-%
-%\ptb{I would almost never suggest a section this short. How is this
-%  not sipmly the ``motivation'' subsection of the next section ?}
-%To test whether a stream that is suited to a certain task (function reconstruction, using PSNR as
-%the metric) also performs well in another (histogram computation), we compare the streams introduced
-%in the previous section using a histogram error metric that is the Earth Mover Distance (EMD)~\cite{emd1998}.
-%The EMD measures how far the histogram of the reconstructed data is from the histogram of
-%the original data. We use 256 histogram bins in all experiments. The results are shown in Figure
-%\ref{fig:histogram-motivation}. Compared to Figure \ref{fig:motivation}, the \emph{by level} stream
-%is removed and two other streams are added: \emph{resolution-adaptive, EMD-optimized} and
-%\emph{fully adaptive, EMD-optimized}. The two new streams are analogous to their RMSE counterparts
-%(i.e., the two data-dependent streams in Figure \ref{fig:motivation}, now renamed to
-%\emph{resolution-adaptive, RMSE-optimized} and \emph{fully adaptive, RMSE-optimized}), but are
-%computed by greedily minimizing EMD instead of RMSE with regards to the ground truth.
-%
-%\begin{figure}
-%	\centering
-%	\subcaptionbox{Magnetic}
-%	{\includegraphics[width=0.44\linewidth]{img/motivation/magnetic-histogram-motivation.pdf}}
-%	\subcaptionbox{Boiler-O2}
-%	{\includegraphics[width=0.44\linewidth]{img/motivation/boiler-histogram-motivation.pdf}}
-%	\subcaptionbox{Flame-OH}
-%	{\includegraphics[width=0.44\linewidth]{img/motivation/kflame-oh-histogram-motivation.pdf}}
-%	\subcaptionbox{Miranda-diffusivity}
-%	{\includegraphics[width=0.44\linewidth]{img/motivation/diffusivity-histogram-motivation.pdf}}
-%	\caption{Histogram error comparison. Lower EMD is better. The streams are truncated	towards the
-%	end where the errors become negligibly small.}
-%	\label{fig:histogram-motivation}
-%\end{figure}
-%
-%The \emph{by bit plane} and \emph{by wavelet norm} streams match one another closely in terms of
-%PSNR, but differ significantly in EMD. Furthermore, the \emph{fully adaptive, RMSE-optimized} stream
-%underperforms  \emph{fully adaptive, EMD-optimized}, indicating that recontructing an accurate
-%function and reconstructing an accurate histogram require two very different orderings of bits.
-%Figure \ref{fig:histogram-comparison} illustrates how a quantitative difference in EMD translates to
-%a visual difference in histogram.
-%
-%\begin{figure}
-%	\centering
-%	\subcaptionbox{\emph{by bit plane}}
-%	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-by-bit-plane.png}}
-%	\subcaptionbox{\emph{by wavelet norm}}
-%	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-by-wavelet-norm.png}}
-%	\subcaptionbox{\emph{fully adaptive, RMSE-optimized}}
-%	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-rmse-optimized.png}}
-%	\subcaptionbox{\emph{fully adaptive, EMD-optimized}}
-%	{\includegraphics[width=0.24\linewidth]{img/motivation/histogram-emd-optimized.png}}
-%	\caption{Histogram comparison for the Magnetic data set at 0.16 bits per sample. The reconstructed
-%	histogram (blue) is blended with the ground truth histogram (yellow), so green is where the two
-%	overlap. Larger overlap (more green, less blue and yellow) is better.}
-%	\label{fig:histogram-comparison}
-%\end{figure}
-%
-% \begin{figure}[htb!]
-% 	\centering
-% 	\subcaptionbox{without skip leading zeros}
-% 	{\includegraphics[width=0.4\linewidth]{img/independent/normalized/histogram-miranda-viscosity}}
-% 	\subcaptionbox{with skip leading zeros}
-% 	{\includegraphics[width=0.4\linewidth]{img/skip-zeros/histogram-miranda-viscosity}}
-% 	\caption {Histogram with earth mover distance (EMD) comparison between three streams: by bit-plane, by level, and by wavelet norm}
-% 	\label{fig:histogram_traditional_vs_by_norm_viscosity}
-% \end{figure}
-
-% \begin{figure}[htb!]
-% 	\centering
-% 	\subcaptionbox{without skip leading zeros}
-% 	{\includegraphics[width=0.4\linewidth]{img/independent/normalized/isocontour-miranda-viscosity}}
-% 	\subcaptionbox{with skip leading zeros}
-% 	{\includegraphics[width=0.4\linewidth]{img/skip-zeros/isocontour-miranda-viscosity}}
-% 	\caption {Isocontour ($h = 0.0634$) comparison between three streams: by bit-plane, by level, and by wavelet norm}
-% 	\label{fig:isocontour_traditional_vs_by_norm_viscosity}
-% \end{figure}
-
-% \begin{figure}
-%   \centering
-%   \includegraphics[width=0.8\linewidth]{resources/isocontour-error-by-bit-plane-viscosity.png}
-%   \caption {By bit-plane isocontour comparison versus no constraints for viscosity, isoval=-0.005}
-%   \label{fig:by_bit_plane_isocontour}
-% \end{figure}
-
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "EGauthorGuidelines-eurovis18-full"
-%%% End:
+It can be seen that, for all metrics, the \emph{by wavelet norm} stream consistently performs the
+best. The \emph{by bit plane} works almost as well as \emph{by wavelet norm} for RMS error and
+isocontour error, but not for histogram error. \emph{by level} works poorly in almost all cases.
+These results show that it is often suboptimal to stream or reduce data exclusively in either
+resolution or precision. Combining these two dimensions of data reduction can lead to significant
+quality improvement at the same bit rate, especially when quantities of interest other than simply
+the function itself are considered. The reason is that \emph{by wavelet norm} can take advantage of
+the fact that a higher-ordered bit from a fine-scale coefficient could contribute more than a
+lower-ordered bit from a coarse-scale coefficient (which \emph{by level} ignores), and vice-versa
+(which \emph{by bit plane} ignores). It is unclear, however, whether \emph{by wavelet norm} is the
+best stream to use in all cases. To answer this question, we will expand our study from
+data-agnostic to data-dependent streams that are optimized for each of these quantities of interest.
+While data-dependent streams are likely unrealizable in practice due to the fact that the
+`'receiver'' of data does not have access to the data beforehand, we hope they provide insights for
+designing streams that improve on the generic \emph{by wavelet norm}, by being tailored to each
+error metric.
