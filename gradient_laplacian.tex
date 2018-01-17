@@ -53,6 +53,41 @@ data-independent analogues, \emph{gradient signature} and \emph{by wavelet norm}
 
 \begin{figure}
 	\centering
+	\subcaptionbox{boiler, 3-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/3points/gradient-optimized-boiler.pdf}}
+	\subcaptionbox{boiler, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-boiler.pdf}}
+	\subcaptionbox{diffusivity, 3-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/3points/gradient-optimized-diffusivity.pdf}}
+	\subcaptionbox{diffusivity, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-diffusivity.pdf}}
+	\subcaptionbox{euler, 3-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/3points/gradient-optimized-euler.pdf}}
+	\subcaptionbox{euler, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-euler.pdf}}
+	\subcaptionbox{marschner-lobb, 3-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/3points/gradient-optimized-marschner-lobb.pdf}}
+	\subcaptionbox{marschner-lobb, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-marschner-lobb.pdf}}
+	\subcaptionbox{sinusoid, 3-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/3points/gradient-optimized-sinusoid.pdf}}
+	\subcaptionbox{sinusoid, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-sinusoid.pdf}}
+	\subcaptionbox{velocityz, 3-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/3points/gradient-optimized-velocityz.pdf}}
+	\subcaptionbox{velocityz, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-velocityz.pdf}}
+	\caption{Gradient error comparison between \emph{gradient-optimized}, \emph{rmse-optimized},
+	\emph{by wavelet norm}, and \emph{gradient signature} streams for four data sets, using the
+	3-point stencil (left) and the 5-point stencil (right). Smaller is better. Chunks consisting of
+	leading zero bits are removed from all streams. It all cases, the \emph{gradient-optimized} and
+	\emph{rmse-optimized} streams perform the same, while \emph{gradient} signature is only slightly
+	better than \emph{by wavelet norm}.}
+	\label{fig:gradient-error-comparison}
+\end{figure}
+
+\begin{figure}
+	\centering
 	\subcaptionbox{euler, 3-point stencil}
 	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/euler2d-gradient-stencil-3.pdf}}
 	\subcaptionbox{euler, 5-point stencil}

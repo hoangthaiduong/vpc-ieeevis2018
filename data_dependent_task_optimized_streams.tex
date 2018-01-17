@@ -50,6 +50,42 @@ includes \emph{rmse-optimized} (Section [REF]), \emph{gradient-optimized} (Secti
 \emph{laplacian-optimized} (Section [REF]), \emph{histogram-optimized} (Section [REF]), and
 \emph{isocontour-optimized} (Section [REF]), for a wide variety of data sets.
 
+\textbf{Minimizing function error in $L_2$} The most fundamental task is that of reconstructing the
+function itself, using a common error metric such as the root-mean-square error (RMSE). For each
+data set, we use the aforementioned $O(n)$ greedy algorithm to construct an \emph{rmse-optimized}
+stream. In Section \ref{sec:motivation} we have seen that the \emph{by wavelet norm} performs the
+best among the data-agnostic streams. To see how the \emph{rmse-optimized} stream, which is
+data-dependent, compares to the data-agnostic streams, we plot all four streams together in Figure
+\ref{fig:rmse-optimized}. It can be seen that the difference between \emph{by wavelet norm} and
+\emph{rmse-optimized} is negligible. This result is expected, because \emph{by wavelet norm} and
+\emph{rmse-optimized} both order the chunks according to their contribution to the function in $L_2$
+sense, with \emph{rmse-optimized} taking into account the actual values of the bits. This difference
+has little effect in this case, because, as leading zero bits are removed, the rest of the bits (of
+the wavelet coefficients) are known to be distributed approximately uniformly among $0$ and $1$ for
+wavelet coefficients [CITE].
+
+\begin{figure}
+  \centering
+	\subcaptionbox{Boiler}
+  {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-boiler.pdf}}
+	\subcaptionbox{Diffusivity}
+ 	{\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-diffusivity.pdf}}
+	\subcaptionbox{Euler}
+ 	{\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-euler.pdf}}
+	\subcaptionbox{Turbulence}
+ 	{\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-turbulence.pdf}}
+	\subcaptionbox{Plasma}
+ 	{\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-plasma.pdf}}
+	\subcaptionbox{Velocity-z}
+ 	{\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-velocityz.pdf}}
+ 	\caption{Root-mean-square error of reconstructed functions for the three data-agnostic streams
+ 	defined in Section \ref{sec:motivation}, and the \emph{rmse-optimized} stream. Lower is better.
+ 	The streams are truncated to highlight the differences, without omitting important information.
+ 	\emph{rmse-optimized} performs best, followed closely by \emph{by wavelet norm} and \emph{by bit
+ 	plane}.}
+ 	\label{fig:rmse-optimized}
+\end{figure}
+
 % \paragraph*{Fine-to-coarse greedy algorithm} utilizes full dataset to construct the stream.
 % Moreover, if we wanted to precompute stream order which could be utilized during query, we would
 % have access to whole data set and could compute this stream. The algorithm is in principle a reverse
