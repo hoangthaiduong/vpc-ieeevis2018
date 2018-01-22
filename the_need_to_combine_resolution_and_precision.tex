@@ -6,8 +6,8 @@ truncating the last few low-ordered bits of every sample, but rarely both. Our a
 is to show that significant gain can be achieved when one combines both dimensions, namely
 resolution and precision, for data reduction. To do so, for each data set, we construct and compare
 three different streams, which use different sorting criteria to sort the same set of chunks in
-decreasing order of weights. We will use $W(m)$ to denote a sorting criteria, which is any function
-that takes a chunk, $m$, and returns its `'weight'', which determines how important the chunk is.
+decreasing order of weights. We will use $W(c)$ to denote a sorting criteria, which is any function
+that takes a chunk, $c$, and returns its `'weight'', which determines how important the chunk is.
 
 The weight function used by the first stream is $W_1(c)=\bar{l}-L(c)$, where $L$ is a function that
 returns the subband (resolution level) of its argument (higher-numbered subbands are finer), and
