@@ -16,14 +16,18 @@ are plots of the EMD errors for these streams on four data sets.
 \begin{figure}
 	\centering
 	\subcaptionbox{\emph{boiler}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/skip-leading-zeros/boiler-histogram.pdf}}
-	\subcaptionbox{\emph{flame}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/miranda-diffusivity-histogram.pdf}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-optimized-boiler.pdf}}
 	\subcaptionbox{\emph{diffusivity}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/skip-leading-zeros/miranda-diffusivity-histogram.pdf}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-optimized-diffusivity.pdf}}
+	\subcaptionbox{\emph{euler}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-optimized-euler.pdf}}
+	\subcaptionbox{\emph{pressure}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-optimized-pressure.pdf}}
 	\subcaptionbox{\emph{turbulence}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/skip-leading-zeros/turbulence-histogram.pdf}}
-	\caption{EMD error comparison among four streams \emph{histogram-optimized},
+	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-optimized-turbulence.pdf}}
+	\subcaptionbox{\emph{velocityz}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-optimized-velocityz.pdf}}
+	\caption{Histogram error comparison among four streams \emph{histogram-optimized},
 	\emph{rmse-optimized}, \emph{by wavelet norm}, and \emph{histogram signature}, without the leading
 	zero bits. The plots are truncated to make the differences large enough for visual inspection, and
 	truncation points are chosen so that the best among the reconstructed histograms is visually the
@@ -44,15 +48,12 @@ per sample, with leading zero bits removed, for the diffusivity data set.
 
 \begin{figure}
 	\centering
-	\subcaptionbox{\emph{histogram-optimized},\\ without leading zeros}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/diffusivity/histogram.png}}
-	\subcaptionbox{\emph{rmse-optimized},\\ without leading zeros}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/diffusivity/rmse.png}}
-	\subcaptionbox{\emph{by wavelet norm},\\ without leading zeros}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/diffusivity/wavenorm.png}}
-	\subcaptionbox{\emph{histogram signature},\\ without leading zeros}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/diffusivity/signature.png}}
-	\caption{diffusivity's histograms at 0.1 bps, without leading zero bits. }
+	\subcaptionbox{\emph{histogram-optimized}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-signature.png}}
+	\subcaptionbox{\emph{rmse-optimized}}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-by-wavelet-norm.png}}
+	\caption{euler's histograms at 0.18 bps. The groundtruth histogram is rendered in red, while the
+	reconstructed histogram is rendered in green. The dark yellow regions are where the two overlap.}
 	\label{fig:histogram-comparison-low-bit-rate-slz}
 \end{figure}
 

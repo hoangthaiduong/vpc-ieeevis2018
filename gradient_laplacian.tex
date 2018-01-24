@@ -1,28 +1,37 @@
 \section{Derivatives computation}
 
 Computation of derivative quantities such as gradient and Laplacian is of fundamental importance in
-data analysis, so in this section, we studies streams that aim to minimize errors of derivative
-fields. For the experiments in this section, instead of the CDF 5/3 linear B-spline wavelet, we use
-the 4-4 B-spline wavelet [CITE] that has four vanishing moments on each of the analysis and
-synthesis sides, to ensure that the reconstructed function is smooth enough for taking derivatives.
-We also use quantize the original data to $32$ instead of $16$ bits, to avoid losing too much
-precision due to floating-point cancellation in computing derivatives.
+data analysis. In this section, we studies streams that aim to minimize errors of derivative fields.
+For the experiments in this section, we quantize the data to $32$ instead of $16$ bits, to ensure
+enough precision for the purpose of computing derivatives.
 
 \subsection{Gradient}
 
-Since simulation data can rarely be captured by closed-form formulas, we use finite difference to
-compute the gradient. We experiment with three popular finite difference schemes using stencil sizes
-of two, three, and five points, to compute partial derivatives in each direction: $\frac{\partial
-f}{\partial x}\approx f(x+1)-f(x) \approx \frac{1}{2}f(x+1)-\frac{1}{2}f(x-1) \approx
-\frac{1}{12}f(x-2)-\frac{2}{3}f(x-1)+\frac{2}{3}f(x+1)-\frac{1}{12}f(x+2)$. \hb{missing denominator $\partial x = 1$.. perhaps rename the stencil?} The gradient at each
-grid point $(x,y)$ is the vector $(\frac{\partial f}{\partial x},\frac{\partial f}{\partial y})$. We
-use algorithm (\Cref{sec:data_dep_streams} to compute a stream that minimizes the difference between
-the gradient field of $f_b$ (the reconstructed function using $b$ bits per sample) and that of the
-original function ($f$), defined as $\norm{\nabla f_b-\nabla f}_2$. This is called the
-\emph{gradient-optimized} stream. For each of the three \emph{gradient-optimized} streams for the
-three aforementioned stencils, we measure its gradient error against the analytically computed,
-ground-truth gradient field of a $512\times 512$ synthetic function, $f(x,y)=\sin x\sin y$ for
-$x,y\in[-0.5,0.5]$. The results are in Figure \ref{fig:gradient-error-comparison-stencils}.
+% Since simulation data can rarely be captured by closed-form formulas, we use finite difference to
+% compute gradients. We experiment with three popular finite difference schemes using stencil sizes of
+% two, three, and five points, to compute partial derivatives in each direction: $\frac{\partial
+% f}{\partial x}\approx f(x+1)-f(x) \approx \frac{1}{2}f(x+1)-\frac{1}{2}f(x-1) \approx
+% \frac{1}{12}f(x-2)-\frac{2}{3}f(x-1)+\frac{2}{3}f(x+1)-\frac{1}{12}f(x+2)$. The gradient at each
+% grid point $(x,y)$ is the vector $(\frac{\partial f}{\partial x},\frac{\partial f}{\partial y})$. We
+% use the greedy algorithm in Section (\Cref{sec:data_dep_streams} to compute a stream that minimizes
+% the difference between the gradient field of $f_b$ (the reconstructed function using $b$ bits per
+% sample) and that of the original function ($f$). At each grid point $p$, we compute an error $e(p)$,
+% defined to be the squared Euclidean length of the difference between two gradient vectors at $p$,
+% that is $e(p)=\norm{\nabla f_b(p)-\nabla f(p)}^2$. The overall error metric, $E_g$, over the whole
+% field is defined as $E_g(\nabla f_b,\nabla f)=\sqrt{\frac{1}{n}\sum_{i=1}^{n}{e(p_i)}}$. The stream
+% computed using the greedy algorithm in Section [REF] is called the \emph{gradient-optimized} stream.
+
+In the first experiment, we want to quantify the effects (if any) of the type of stencil on the
+performance of \emph{gradient-optimized} streams. To obtain an exact gradient, we use an analytic
+function, in this case $f(x,y)=\sin x\sin y$ for $x,y\in[-0.5,0.5]$, discretized on a $512\times
+512$ grid. We measure $E_g$ at all bit rates, for each of the three \emph{gradient-optimized}
+streams for the three aforementioned stencils, against an analytically computed gradient field. The
+results are plotted in Figure \ref{fig:gradient-error-comparison-stencils}. At low bit rates, the
+two-point stencil performs marginally better than the three-point and five-point stencils, likely
+due to non-exact values on the grid points. The larger stencils though, can achieve better error
+bounds at higher bit rates where the two-point stencil plateaus out, which is expected. The same
+results hold when the experiment is repeated for different grid sizes, namely $128\times 128$,
+$256\times 256$, and $1024 \times 1024$.
 
 \begin{figure}
 	\centering
@@ -30,80 +39,70 @@ $x,y\in[-0.5,0.5]$. The results are in Figure \ref{fig:gradient-error-comparison
 	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/sine-gradient-stencils-full.pdf}}
 	\subcaptionbox{zoomed in}
 	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/sine-gradient-stencils-cutoff.pdf}}
-	\caption{Gradient error by three \emph{gradient-optimized} optimized	streams, using different
-	 stencils. Smaller is better. The right plot zooms in on beginning part of the left plot, so as to
-	 distinguish the curves. Smaller stencils perform marginally better at low bit rates, but fail to
-	 track the ground-truth gradient at high bit rates.}
+	\caption{Gradient error by three \emph{gradient-optimized} optimized streams on a sinusoid field,
+	using different stencils. Smaller is better. The right plot zooms in on beginning part of the
+	left plot, to better distinguish the curves. Smaller stencils perform marginally better than
+	large stencils at low bit rates, but, unsurprisingly fail to track the ground-truth gradient at
+	high bit rates.}
   \label{fig:gradient-error-comparison-stencils}
 \end{figure}
 
-At low bit rates, the two-point stencil performs the best, by a small margin. Its gradient error,
-however, plateaus out the earliest, at about $0.6$ bits per sample, with an approximated error of
-$10^-5$ (Figure \ref{fig:gradient-error-comparison-stencils}a). The three-point stencil achieves
-effectively the same error as the two-point scheme, while achieving almost three orders of magnitude
-smaller error at the maximum bit rate. The five-point scheme improves the error by another order of
-magnitude, but suffers slightly more at low bit rates, possibly due to its larger size being more
-susceptible to cancellation errors when subtracting low-precision floating-point values.
-\hb{concise message is missing}
-
-When comparing the \emph{gradient-optimized}, \emph{rmse-optimized} streams as well as their
-data-independent analogues, \emph{gradient signature} and \emph{by wavelet norm} (Figure
-\ref{fig:gradient-error-comparison}), we see that in the {fig:gradient-error-comparison} compares the \emph{gradient-optimized} with the
-\emph{rmse-optimized} streams for four data sets.
-
 \begin{figure}
 	\centering
-	\subcaptionbox{boiler, 3-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/3points/gradient-optimized-boiler.pdf}}
-	\subcaptionbox{boiler, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-boiler.pdf}}
-	\subcaptionbox{diffusivity, 3-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/3points/gradient-optimized-diffusivity.pdf}}
-	\subcaptionbox{diffusivity, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-diffusivity.pdf}}
-	\subcaptionbox{euler, 3-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/3points/gradient-optimized-euler.pdf}}
-	\subcaptionbox{euler, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-euler.pdf}}
-	\subcaptionbox{marschner-lobb, 3-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/3points/gradient-optimized-marschner-lobb.pdf}}
-	\subcaptionbox{marschner-lobb, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-marschner-lobb.pdf}}
-	\subcaptionbox{sinusoid, 3-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/3points/gradient-optimized-sinusoid.pdf}}
-	\subcaptionbox{sinusoid, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-sinusoid.pdf}}
-	\subcaptionbox{velocityz, 3-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/3points/gradient-optimized-velocityz.pdf}}
-	\subcaptionbox{velocityz, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-velocityz.pdf}}
-	\caption{Gradient error comparison between \emph{gradient-optimized}, \emph{rmse-optimized},
-	\emph{by wavelet norm}, and \emph{gradient signature} streams for four data sets, using the
-	3-point stencil (left) and the 5-point stencil (right). Smaller is better. Chunks consisting of
-	leading zero bits are removed from all streams. It all cases, the \emph{gradient-optimized} and
-	\emph{rmse-optimized} streams perform the same, while \emph{gradient} signature is only slightly
-	better than \emph{by wavelet norm}.}
+	\subcaptionbox{boiler}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-boiler.pdf}}
+	\subcaptionbox{diffusivity}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-diffusivity.pdf}}
+	\subcaptionbox{euler}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-euler.pdf}}
+	\subcaptionbox{pressure}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-pressure.pdf}}
+	\subcaptionbox{marschner-lobb}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-marschner-lobb.pdf}}
+	\subcaptionbox{velocityz}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-velocityz.pdf}}
+	\caption{Gradient error for different stencil sizes, assuming the groundtruth gradient is computed
+	using 5-point finite difference on the original field. There are no meaningful differences among
+	the different stencil sizes.}
 	\label{fig:gradient-error-comparison}
 \end{figure}
 
 \begin{figure}
 	\centering
-	\subcaptionbox{euler, 3-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/euler2d-gradient-stencil-3.pdf}}
-	\subcaptionbox{euler, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/euler2d-gradient-stencil-5.pdf}}
-	\subcaptionbox{magnetic, 3-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/magnetic-gradient-stencil-3.pdf}}
-	\subcaptionbox{magnetic, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/magnetic-gradient-stencil-5.pdf}}
-	\subcaptionbox{diffusivity, 3-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-diffusivity-gradient-stencil-3.pdf}}
+	\subcaptionbox{by wavelet norm}
+	{\includegraphics[width=0.49\linewidth]{img/gradient/gradient_0.png}}
+	\subcaptionbox{by bit plane}
+	{\includegraphics[width=0.49\linewidth]{img/gradient/gradient_1.png}}
+	\subcaptionbox{gradient signature}
+	{\includegraphics[width=0.49\linewidth]{img/gradient/gradient_2.png}}
+	\subcaptionbox{groundtruth}
+	{\includegraphics[width=0.49\linewidth]{img/gradient/groundtruth_gradient_0.png}}
+	\caption{Comparison of reconstructed gradient fields among \emph{by wavelet norm}, \emph{by bit
+	plane} and \emph{gradient signature} streams, for the \emph{marschner-lobb} function, at 0.52 bps.
+	The \emph{by bit plane} and \emph{gradient signature} stream produces a gradient field with fewer
+	artifacts.}
+  \label{fig:gradient-rendering}
+\end{figure}
+
+When comparing the \emph{gradient-optimized}, \emph{rmse-optimized} streams as well as their
+data-independent analogues, \emph{gradient signature} and \emph{by wavelet norm} (Figure
+\ref{fig:gradient-error-comparison}), we see that in the {fig:gradient-error-comparison} compares
+the \emph{gradient-optimized} with the \emph{rmse-optimized} streams for four data sets.
+
+\begin{figure}
+	\centering
+	\subcaptionbox{boiler, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-boiler.pdf}}
 	\subcaptionbox{diffusivity, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-diffusivity-gradient-stencil-5.pdf}}
-	\subcaptionbox{velocityz, 3-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-velocityz-gradient-stencil-3.pdf}}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-diffusivity.pdf}}
+	\subcaptionbox{euler, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-euler.pdf}}
+	\subcaptionbox{pressure, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-pressure.pdf}}
+	\subcaptionbox{marschner-lobb, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-marschner-lobb.pdf}}
 	\subcaptionbox{velocityz, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-velocityz-gradient-stencil-5.pdf}}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-velocityz.pdf}}
 	\caption{Gradient error comparison between \emph{gradient-optimized}, \emph{rmse-optimized},
 	\emph{by wavelet norm}, and \emph{gradient signature} streams for four data sets, using the
 	3-point stencil (left) and the 5-point stencil (right). Smaller is better. Chunks consisting of
@@ -154,17 +153,20 @@ now. (TODO: why is it in the plot? maybe do not mention it at all? or just say t
 
 \begin{figure}
 	\centering
-	\subcaptionbox{euler}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/euler2d-laplacian.pdf}}
-	\subcaptionbox{magnetic}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/magnetic-laplacian.pdf}}
-	\subcaptionbox{diffusivity}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-diffusivity-laplacian.pdf}}
-	\subcaptionbox{velocityz}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/miranda-velocityz-laplacian.pdf}}
-	\caption{Comparing \emph{rmse-optimized}, \emph{laplacian-optimized} and \emph{laplacian
-	signature} streams in PSNR of Laplacian error (higher is better).}
-	\label{fig:laplacian-comparison}
+	\subcaptionbox{boiler, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-boiler.pdf}}
+	\subcaptionbox{diffusivity, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-diffusivity.pdf}}
+	\subcaptionbox{euler, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-euler.pdf}}
+	\subcaptionbox{pressure, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-pressure.pdf}}
+	\subcaptionbox{marschner-lobb, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-marschner-lobb.pdf}}
+	\subcaptionbox{velocityz, 5-point stencil}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-velocityz.pdf}}
+	\caption{Laplacian error}
+	\label{fig:gradient-error-comparison}
 \end{figure}
 
 It can be observed that unlike the case for gradient, there exists significant differences between
@@ -176,6 +178,34 @@ finer-resolution bits where the sharp shockwave is, unlike the \emph{rmse-optimi
 prefers lower-ordered, coarse-resolution bits. This effect makes sense intuitively, as the
 derivative operator makes functions less smooth, hence amplifing hard edges. This happens in the
 gradient case too, but to a much lesser degree.
+
+\begin{figure}
+	\centering
+	\subcaptionbox{\emph{by wavelet norm}}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian_0.png}}
+	\subcaptionbox{\emph{by bit plane}}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian_1.png}}
+	\subcaptionbox{\emph{laplacian signature}}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian_2.png}}
+	\subcaptionbox{\emph{groundtruth}}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/groundtruth_laplacian_0.png}}
+	\caption{Laplacian rendering, diffusivity}
+	\label{fig:laplacian-precision-comparison}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\subcaptionbox{\emph{by wavelet norm}}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian_00.png}}
+	\subcaptionbox{\emph{by bit plane}}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian_11.png}}
+	\subcaptionbox{\emph{laplacian signature}}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian_22.png}}
+	\subcaptionbox{\emph{groundtruth}}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/groundtruth_laplacian_00.png}}
+	\caption{Laplacian rendering, marschner-lobb}
+	\label{fig:laplacian-precision-comparison}
+\end{figure}
 
 \begin{figure}
 	\centering
