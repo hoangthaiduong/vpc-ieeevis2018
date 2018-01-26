@@ -1,7 +1,7 @@
 As the gap between the available compute power and the cost of data movement increases, data
 transfer, whether from cache, main memory, or disk, is becoming the major bottleneck of many
 workflows. However, it is well known that often not every bit of data is necessary to answer
-scientific questions at sufficient accuracy. In particular, for techniques at the end of scientific
+scientific questions at required accuracy. In particular, for techniques at the end of scientific
 workflows, such as visualization and data analysis, much coarser approximations of the data often
 provide adequate approximations~\cite{woodring2011,covra2012,compression_sim2013}, and even during
 simulation some loss in precision is often acceptable~\cite{compression_sim2013}. As a result, a
@@ -16,31 +16,32 @@ dynamic queries, for example, in rendering~\cite{multires_octree1999}, since dis
 based on the view point or data complexity can result in significant speed-ups. Compression based on
 uniform quantization on the other hand is more common when storing data, where in the absence of
 other information, treating each sample as equally important is the null-hypothesis. However, in
-many situations a combination of both resolution and precision reduction would be appropriate. For
-example, we may need a high spatial resolution to resolve the topology of an isosurface, yet we
-likely do not need the corresponding data samples at full precision to adequately approximate the
+many situations a combination of both resolution and precision reduction could be appropriate. For
+example, we may need a high spatial resolution to resolve the topology of an isosurface, yet it is unlikely we
+need the corresponding data samples at full precision to adequately approximate the
 geometry. Conversely, we may need high precision values to accumulate accurate statistics, yet a
 lower-resolution subset of points may be sufficient to do so. 
 
 In general, there exists a wide range of potential analysis and visualization tasks all of which may
 prefer different combinations of resolution and precision, and for many, these requirements will be
 data-dependent. Consequently, we do not expect any particular data organization to be ideal for all
-cases. Instead, we consider a progressive setting in which some initial data is loaded and processed
+cases. Instead, we consider a progressive setting in which some initial data is loaded and processed,
 and new data is requested selectively based on the requirement of the current task and the
-characteristics of the data already loaded. The result is a stream of bits that hopefully minimizes
-error for the task at hand. However, while intuitively there are almost certainly advantages in
+characteristics of the data already loaded. The result is a stream of bits that should minimize
+the error of the task at hand. However, while intuitively there are almost certainly advantages in
 adapting both resolution and precision, it is unclear how big the potential gains could be and how
 much of the benefits can be realized with practical algorithms. This paper aims to answer these
 important questions through extensive, empirical experiments. Our contributions are:
 
 \begin{itemize}
-\item First, and perhaps most importantly, we present the first in-depth study on the
-  resolution-precision tradeoffs for fundamental data analysis tasks. To make this study possible,
+\item First, and perhaps most importantly, we present an in-depth study on the
+  resolution-precision trade-offs for fundamental data analysis tasks. To make this study possible,
   we formulate the problem in the framework of streaming chunks of bit planes of wavelet
   coefficients (Section \ref{sec:terminologies}). Within this framework, data streams lying at
-  different points on the resolution-precision scale can be formed and compared.
+  different points on the resolution-precision scale can be formed and compared. \pavol{I would not understand
+  this last sentence if not read rest of paper}
    
-\item Using a suite of data sets and analysis tasks, we clearly demonstrate that jointly optimizing
+\item Using a collection of data sets and analysis tasks, we clearly demonstrate that jointly optimizing
   both resolution and precision provides significant improvements on the results of analysis tasks
   over adjusting only resolution or precision, for the same number of bits (Section
   \ref{sec:motivation}). We also show that different types of analysis require substantially
