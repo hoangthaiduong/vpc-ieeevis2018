@@ -36,8 +36,8 @@ We first want to quantify the effects (if any) that the stencil width has on the
 five-point stencil on the finest resolution grid, at full precision, as the ``groundtruth'' gradient
 field. Three \emph{gradient-optimized} streams (2-point, 3-point, and 5-point) are compared against
 this groundtruth gradient field, using the error criteria $E_g$ defined above. The results are
-plotted in Figure \ref{fig:gradient-error-comparison}. The error curves for all three stencils match
-one another closely, with the two-point stencil having negligibly higher errors in some cases.
+plotted in Figure \ref{fig:gradient-stencil-comparison}. The error curves for all three stencils
+match one another closely, with the two-point stencil having negligibly higher errors in some cases.
 Subsequent experiments in the section uses the five-point stencil always.
 
 \begin{figure}
@@ -56,10 +56,53 @@ Subsequent experiments in the section uses the five-point stencil always.
 	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-velocityz.pdf}}
 	\caption{Gradient error for \emph{gradient-optimized} streams using different stencil widths,
 	againts the ``groundtruth'' gradient, computed using 5-point finite difference on the original
-	field. It can be seen that in most cases, there are no meaningful differences among the different
+	field. The plots are truncated towards the end, so as to better highlight differences between the
+	curves. It can be seen that in most cases, there are no meaningful differences among the different
 	stencil widths. The largest difference in error happens at 0.67 bps, for \emph{marschner-lobb}, in
 	which the two-point scheme produces, on average, an error vector that is four-third longer than
 	ones produced by the other two.}
+	\label{fig:gradient-stencil-comparison}
+\end{figure}
+
+In the next experiment, we plot the gradient error curves produced by \emph{gradient-optimized},
+together with ones produced by the \emph{by level}, \emph{by bit plane}, and \emph{by wavelet norm}
+streams, for the same six data sets. These curves are plotted in Figure
+\ref{fig:gradient-error-comparison}. As can be seen from the Figure, \emph{gradient-optimized}
+typically performs far better than the data-independent streams, due to the fact that
+\emph{gradient-optimized}, with the knowledge of the data, is able to better prioritize regions that
+would benefit the most from additional bits. Among the data-independent streams, \emph{by level}
+performs the worst, while \emph{by wavelet norm} performs slightly worse than the other two streams,
+but the differences in most cases are negligible.
+
+In Figure \ref{fig:gradient-rendering} we visualize the three reconstructed, as well as the
+groundtruth, gradient fields for the \emph{marschner-lobb} data set, at 0.52 bps, which is the only
+case (among all the tested bit rates and data sets) in which the visualized gradient fields show
+noticable differences. It is arguable that the differences are small, and would largely vanish at a
+slightly higher bit rate (e.g., 0.6 bps). For this reason, in practice, the best stream to use would
+likely be \emph{by bit plane}, due to \emph{gradient signature} being a lot more expensive to
+compute in comparison. Otherwise, \emph{by wavelet norm} is a reasonable alternative, especially if
+the bits are stored on disk in the same order, to optimize for root-mean-square errors (see Section
+\ref{sec:motivation}, for example.
+
+\begin{figure}
+	\centering
+	\subcaptionbox{boiler}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-boiler.pdf}}
+	\subcaptionbox{diffusivity}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-diffusivity.pdf}}
+	\subcaptionbox{euler}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-euler.pdf}}
+	\subcaptionbox{pressure}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-pressure.pdf}}
+	\subcaptionbox{marschner-lobb}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-marschner-lobb.pdf}}
+	\subcaptionbox{velocityz}
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-velocityz.pdf}}
+	\caption{Gradient error comparison among \emph{gradient-optimized}, \emph{rmse-optimized},
+	\emph{by wavelet norm}, and \emph{gradient signature} streams, using the five-point stencil. The
+	plots are truncated in the same way as in Figure \ref{fig:gradient-stencil-comparison}. In all
+	cases, \emph{by wavelet norm} performs slightly worse than \emph{by bit plane} and \emph{gradient
+	signature} do, but the differences are largely negligible. \emph{by level} performs the worst.}
 	\label{fig:gradient-error-comparison}
 \end{figure}
 
@@ -75,64 +118,9 @@ Subsequent experiments in the section uses the five-point stencil always.
 	{\includegraphics[width=0.49\linewidth]{img/gradient/groundtruth_gradient_0.png}}
 	\caption{Comparison of reconstructed gradient fields among \emph{by wavelet norm}, \emph{by bit
 	plane} and \emph{gradient signature} streams, for the \emph{marschner-lobb} function, at 0.52 bps.
-	The \emph{by bit plane} and \emph{gradient signature} stream produces a gradient field with fewer
-	artifacts.}
+	The \emph{by bit plane} and \emph{gradient signature} stream produce gradient fields with fewer
+	artifacts (see the lower-left corners of the images, for example). }
   \label{fig:gradient-rendering}
-\end{figure}
-
-When comparing the \emph{gradient-optimized}, \emph{rmse-optimized} streams as well as their
-data-independent analogues, \emph{gradient signature} and \emph{by wavelet norm} (Figure
-\ref{fig:gradient-error-comparison}), we see that in the {fig:gradient-error-comparison} compares
-the \emph{gradient-optimized} with the \emph{rmse-optimized} streams for four data sets.
-
-\begin{figure}
-	\centering
-	\subcaptionbox{boiler, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-boiler.pdf}}
-	\subcaptionbox{diffusivity, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-diffusivity.pdf}}
-	\subcaptionbox{euler, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-euler.pdf}}
-	\subcaptionbox{pressure, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-pressure.pdf}}
-	\subcaptionbox{marschner-lobb, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-marschner-lobb.pdf}}
-	\subcaptionbox{velocityz, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-velocityz.pdf}}
-	\caption{Gradient error comparison between \emph{gradient-optimized}, \emph{rmse-optimized},
-	\emph{by wavelet norm}, and \emph{gradient signature} streams for four data sets, using the
-	3-point stencil (left) and the 5-point stencil (right). Smaller is better. Chunks consisting of
-	leading zero bits are removed from all streams. It all cases, the \emph{gradient-optimized} and
-	\emph{rmse-optimized} streams perform the same, while \emph{gradient} signature is only slightly
-	better than \emph{by wavelet norm}.}
-	\label{fig:gradient-error-comparison}
-\end{figure}
-
-Figure \ref{fig:gradient-error-comparison} suggests that the \emph{rmse-optimized} streams are also
-nearly optimal for gradient computation. The gradient operator is not invertible, that is, there are
-infinitely many functions that result in the same gradient field. It is therefore not surprising
-that the two streams both produce the best possible gradient progression. The \emph{rmse-optimized},
-however, also produces an accurate function in addition to its gradient. We give evidence to this
-claim is in Figure \ref{fig:gradient-comparison}, in which we reconstruct the euler data at $0.25$
-bits per sample using both streams, and show the difference in gradient between the two. The two
-gradient fields differ the most along very sharp edges, but are in general congruent (a), while the
-\emph{rmse-optimized} stream produces significantly more accurate reconstruction of the function
-itself (b, c, and d). It is therefore reasonable in practice to simply use \emph{by wavelet norm}
-for the purpose of gradient computation.
-
-\begin{figure}
-	\centering
-	\subcaptionbox{gradient difference}
-	{\includegraphics[width=0.24\linewidth]{img/gradient-laplacian/grad-diff.png}}
-	\subcaptionbox{original data}
-	{\includegraphics[width=0.24\linewidth]{img/gradient-laplacian/euler-original.png}}
-	\subcaptionbox{\emph{rmse-optimized}}
-	{\includegraphics[width=0.24\linewidth]{img/gradient-laplacian/euler-rmse.png}}
-	\subcaptionbox{\emph{gradient-optimized}, 3-point stencil}
-	{\includegraphics[width=0.24\linewidth]{img/gradient-laplacian/euler-gradient.png}}
-	\caption{TODO: replace this figure (use 32-bit instead of 16-bit quantization). Comparing
-	\emph{rmse-optimized} and \emph{gradient-optimized} at 0.25 bits per sample. }
-	\label{fig:gradient-comparison}
 \end{figure}
 
 \subsection{Laplacian}
