@@ -1,52 +1,44 @@
-\section{Derivatives computation}
+\section{Computation of derivatives}
 \label{sec:derivatives}
 
 Computation of derivative quantities such as gradient and Laplacian is of fundamental importance in
-data analysis. In this section, we studies streams that aim to minimize errors of derivative fields.
+data analysis. In this section, we study streams that aim to minimize errors of derivative fields.
 For the experiments in this section, we quantize the data to $32$ instead of $16$ bits, to ensure
-enough precision for the purpose of computing derivatives.
+enough precision for the purpose of taking derivatives using finite differences of floating-point
+values. Note that in this paper, for the purpose of derivative computation, we always perform finite
+differences on the finest (original) resolution. This is possible since the wavelet transform allows
+for reconstruction of the function at the original resolution. The reason for this decision is to
+avoid the problem of computing distances between quantities across grids of different dimensions
+(e.g., computing the root-mean-square error between a (down-sampled) $n\times n$ grid and a
+$2n\times 2n$ grid), because we are unaware of solutions to this problem. In the following Sections,
+we perform experiments with two of the most common types of derivative, namely gradient and
+Laplacian.
 
 \subsection{Gradient}
 
-% Since simulation data can rarely be captured by closed-form formulas, we use finite difference to
-% compute gradients. We experiment with three popular finite difference schemes using stencil sizes of
-% two, three, and five points, to compute partial derivatives in each direction: $\frac{\partial
-% f}{\partial x}\approx f(x+1)-f(x) \approx \frac{1}{2}f(x+1)-\frac{1}{2}f(x-1) \approx
-% \frac{1}{12}f(x-2)-\frac{2}{3}f(x-1)+\frac{2}{3}f(x+1)-\frac{1}{12}f(x+2)$. The gradient at each
-% grid point $(x,y)$ is the vector $(\frac{\partial f}{\partial x},\frac{\partial f}{\partial y})$. We
-% use the greedy algorithm in Section (\Cref{sec:data_dep_streams} to compute a stream that minimizes
-% the difference between the gradient field of $f_b$ (the reconstructed function using $b$ bits per
-% sample) and that of the original function ($f$). At each grid point $p$, we compute an error $e(p)$,
-% defined to be the squared Euclidean length of the difference between two gradient vectors at $p$,
-% that is $e(p)=\norm{\nabla f_b(p)-\nabla f(p)}^2$. The overall error metric, $E_g$, over the whole
-% field is defined as $E_g(\nabla f_b,\nabla f)=\sqrt{\frac{1}{n}\sum_{i=1}^{n}{e(p_i)}}$. The stream
-% computed using the greedy algorithm in Section [REF] is called the \emph{gradient-optimized} stream.
+Since simulation data can rarely be captured by closed-form formulas, we use finite difference to
+compute gradients. We experiment with three popular finite difference schemes using stencil size
+widths of two, three, and five points in each dimension: $\frac{\partial f}{\partial x}\approx
+f(x+1)-f(x)
+\approx \frac{1}{2}f(x+1)-\frac{1}{2}f(x-1) \approx
+\frac{1}{12}f(x-2)-\frac{2}{3}f(x-1)+\frac{2}{3}f(x+1)-\frac{1}{12}f(x+2)$. In 2D, the gradient at
+each grid point $(x,y)$ is the vector $(\frac{\partial f}{\partial x},\frac{\partial f}{\partial
+y})$. We use the greedy algorithm in Section (\Cref{sec:data_dep_streams} to compute a
+\emph{gradient-optimized} stream that minimizes the difference between the gradient field of $f_b$
+(the reconstructed function using $b$ bits per sample) and that of the original function ($f$). At
+each grid point $p$, we compute an error $e(p)$, defined to be the squared Euclidean length of the
+difference between two gradient vectors at $p$, that is $e(p)=\norm{\nabla f_b(p)-\nabla f(p)}^2$.
+The overall error metric over the whole field, $E_g$, is defined as $E_g(\nabla f_b,\nabla
+f)=\sqrt{\frac{1}{n}\sum_{i=1}^{n}{e(p_i)}}$.
 
-In the first experiment, we want to quantify the effects (if any) of the type of stencil on the
-performance of \emph{gradient-optimized} streams. To obtain an exact gradient, we use an analytic
-function, in this case $f(x,y)=\sin x\sin y$ for $x,y\in[-0.5,0.5]$, discretized on a $512\times
-512$ grid. We measure $E_g$ at all bit rates, for each of the three \emph{gradient-optimized}
-streams for the three aforementioned stencils, against an analytically computed gradient field. The
-results are plotted in Figure \ref{fig:gradient-error-comparison-stencils}. At low bit rates, the
-two-point stencil performs marginally better than the three-point and five-point stencils, likely
-due to non-exact values on the grid points. The larger stencils though, can achieve better error
-bounds at higher bit rates where the two-point stencil plateaus out, which is expected. The same
-results hold when the experiment is repeated for different grid sizes, namely $128\times 128$,
-$256\times 256$, and $1024 \times 1024$.
-
-\begin{figure}
-	\centering
-	\subcaptionbox{full}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/sine-gradient-stencils-full.pdf}}
-	\subcaptionbox{zoomed in}
-	{\includegraphics[width=0.48\linewidth]{img/gradient-laplacian/sine-gradient-stencils-cutoff.pdf}}
-	\caption{Gradient error by three \emph{gradient-optimized} optimized streams on a sinusoid field,
-	using different stencils. Smaller is better. The right plot zooms in on beginning part of the
-	left plot, to better distinguish the curves. Smaller stencils perform marginally better than
-	large stencils at low bit rates, but, unsurprisingly fail to track the ground-truth gradient at
-	high bit rates.}
-  \label{fig:gradient-error-comparison-stencils}
-\end{figure}
+We first want to quantify the effects (if any) that the stencil width has on the performance of
+\emph{gradient-optimized} streams. For this experiment, we treat the gradient computed using the
+five-point stencil on the finest resolution grid, at full precision, as the ``groundtruth'' gradient
+field. Three \emph{gradient-optimized} streams (2-point, 3-point, and 5-point) are compared against
+this groundtruth gradient field, using the error criteria $E_g$ defined above. The results are
+plotted in Figure \ref{fig:gradient-error-comparison}. The error curves for all three stencils match
+one another closely, with the two-point stencil having negligibly higher errors in some cases.
+Subsequent experiments in the section uses the five-point stencil always.
 
 \begin{figure}
 	\centering
@@ -62,9 +54,12 @@ $256\times 256$, and $1024 \times 1024$.
 	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-marschner-lobb.pdf}}
 	\subcaptionbox{velocityz}
 	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-velocityz.pdf}}
-	\caption{Gradient error for different stencil sizes, assuming the groundtruth gradient is computed
-	using 5-point finite difference on the original field. There are no meaningful differences among
-	the different stencil sizes.}
+	\caption{Gradient error for \emph{gradient-optimized} streams using different stencil widths,
+	againts the ``groundtruth'' gradient, computed using 5-point finite difference on the original
+	field. It can be seen that in most cases, there are no meaningful differences among the different
+	stencil widths. The largest difference in error happens at 0.67 bps, for \emph{marschner-lobb}, in
+	which the two-point scheme produces, on average, an error vector that is four-third longer than
+	ones produced by the other two.}
 	\label{fig:gradient-error-comparison}
 \end{figure}
 
