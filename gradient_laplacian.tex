@@ -74,8 +74,9 @@ would benefit the most from additional bits. Among the data-independent streams,
 performs the worst, while \emph{by wavelet norm} performs slightly worse than the other two streams,
 but the differences in most cases are negligible.
 
-In Figure \ref{fig:gradient-rendering} we visualize the three reconstructed, as well as the
-groundtruth, gradient fields for the \emph{marschner-lobb} data set, at 0.52 bps, which is the only
+In Figure \ref{fig:gradient-rendering} we visualize the three reconstructed gradient fields (using
+\emph{by bit plane}, \emph{by wavelet norm}, and \emph{graidnet signature}, as well as the
+groundtruth gradient field for the \emph{marschner-lobb} data set, at 0.52 bps, which is the only
 case (among all the tested bit rates and data sets) in which the visualized gradient fields show
 noticable differences. It is arguable that the differences are small, and would largely vanish at a
 slightly higher bit rate (e.g., 0.6 bps). For this reason, in practice, the best stream to use would
@@ -109,17 +110,22 @@ the bits are stored on disk in the same order, to optimize for root-mean-square 
 \begin{figure}
 	\centering
 	\subcaptionbox{by wavelet norm}
-	{\includegraphics[width=0.49\linewidth]{img/gradient/gradient_0.png}}
+	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_0_diff.png}}
 	\subcaptionbox{by bit plane}
-	{\includegraphics[width=0.49\linewidth]{img/gradient/gradient_1.png}}
+	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_1_diff.png}}
 	\subcaptionbox{gradient signature}
-	{\includegraphics[width=0.49\linewidth]{img/gradient/gradient_2.png}}
-	\subcaptionbox{groundtruth}
-	{\includegraphics[width=0.49\linewidth]{img/gradient/groundtruth_gradient_0.png}}
-	\caption{Comparison of reconstructed gradient fields among \emph{by wavelet norm}, \emph{by bit
-	plane} and \emph{gradient signature} streams, for the \emph{marschner-lobb} function, at 0.52 bps.
-	The \emph{by bit plane} and \emph{gradient signature} stream produce gradient fields with fewer
-	artifacts (see the lower-left corners of the images, for example). }
+	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_2_diff.png}}
+	\subcaptionbox{gradient-optimized}
+	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_3_diff.png}}
+	\subcaptionbox{by wavelet norm}
+	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_0.png}}
+	\subcaptionbox{by bit plane}
+	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_1.png}}
+	\subcaptionbox{gradient signature}
+	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_2.png}}
+	\subcaptionbox{gradient-optimized}
+	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_3.png}}
+	\caption{Renderings of reconstructed gradient fields (bottom row), and differences (XOR) from the groundtruth gradient field. \emph{velocityz}, 0.35 bps.}
   \label{fig:gradient-rendering}
 \end{figure}
 
@@ -172,39 +178,45 @@ gradient case too, but to a much lesser degree.
 	\subcaptionbox{\emph{laplacian signature}}
 	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian_2.png}}
 	\subcaptionbox{\emph{groundtruth}}
-	{\includegraphics[width=0.48\linewidth]{img/laplacian/groundtruth_laplacian_0.png}}
-	\caption{Laplacian rendering, diffusivity}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian_3.png}}
+	\caption{Laplacian rendering, velocityz, 1.28bps}
 	\label{fig:laplacian-precision-comparison}
 \end{figure}
 
 \begin{figure}
 	\centering
 	\subcaptionbox{\emph{by wavelet norm}}
-	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian_00.png}}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/by-wavelet-norm.png}}
 	\subcaptionbox{\emph{by bit plane}}
-	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian_11.png}}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/by-bit-plane.png}}
 	\subcaptionbox{\emph{laplacian signature}}
-	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian_22.png}}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-signature.png}}
 	\subcaptionbox{\emph{groundtruth}}
-	{\includegraphics[width=0.48\linewidth]{img/laplacian/groundtruth_laplacian_00.png}}
-	\caption{Laplacian rendering, marschner-lobb}
+	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized.png}}
+	\caption{Precision map per subband (brigther is more precise) \emph{velocityz}, 1.28 bps}
 	\label{fig:laplacian-precision-comparison}
 \end{figure}
 
 \begin{figure}
 	\centering
-	\subcaptionbox{\emph{laplacian-optimized}}
-	{\includegraphics[width=0.32\linewidth]{img/gradient-laplacian/euler-prec-lap.png}}
-	\subcaptionbox{\emph{rmse-optimized}}
-	{\includegraphics[width=0.32\linewidth]{img/gradient-laplacian/euler-prec-rmse.png}}
-	\subcaptionbox{\emph{laplacian signature}}
-	{\includegraphics[width=0.32\linewidth]{img/gradient-laplacian/euler-prec-signature.png}}
-	\caption{Precision distribution of wavelet coefficients at 0.25 bits per sample for the euler data
-	set. Each square box with red boundary is a wavelet subband (the coarsest subband is in the top
-	left). Brighter pixels correspond to higher-precision wavelet coefficients (black means no bit of
-	that coefficient has not been received, while white means the whole coefficient has been
-	received).}
-	\label{fig:laplacian-precision-comparison}
+	\subcaptionbox{by wavelet norm}
+	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func0-by-wavelet-norm-diff.png}}
+	\subcaptionbox{by bit plane}
+	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func1-by-bit-plane-diff.png}}
+	\subcaptionbox{gradient signature}
+	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func2-laplacian-signature-diff.png}}
+	\subcaptionbox{gradient-optimized}
+	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func3-laplacian-optimized-diff.png}}
+	\subcaptionbox{by wavelet norm}
+	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func0-by-wavelet-norm.png}}
+	\subcaptionbox{by bit plane}
+	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func1-by-bit-plane.png}}
+	\subcaptionbox{gradient signature}
+	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func2-laplacian-signature.png}}
+	\subcaptionbox{gradient-optimized}
+	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func3-laplacian-optimized.png}}
+	\caption{Renderings of reconstructions of function (bottom row), and differences (XOR) from the groundtruth (top row). \emph{velocityz}, 1.28 bps.}
+  \label{fig:gradient-rendering}
 \end{figure}
 
 \emph{rmse-optimized}, \emph{laplacian-optimized}, and also \emph{gradient-optimized} for the euler
