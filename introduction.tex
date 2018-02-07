@@ -34,23 +34,21 @@ much of the benefits can be realized with practical algorithms. This paper aims 
 important questions through extensive, empirical experiments. Our contributions are:
 
 \begin{itemize}
-\item First, and perhaps most importantly, we present an in-depth study on the
-  resolution-precision trade-offs for fundamental data analysis tasks. To make this study possible,
-  we formulate the problem in the framework of streaming chunks of bit planes of wavelet
-  coefficients (Section \ref{sec:terminologies}). Within this framework, data streams lying at
-  different points on the resolution-precision scale can be formed and compared. \pavol{I would not understand
-  this last sentence if not read rest of paper}
+\item We present an in-depth study of the resolution-versus-precision trade-offs for fundamental
+  data analysis and visualization tasks. To make this study possible, we put these trade-offs in the
+  framework of streaming wavelet coefficients, interleaving precision and resolution (Section
+  \ref{sec:terminologies}). In this way, we can represent different data streams in a unified
+  framework and perform fair comparisons.
    
-\item Using a collection of data sets and analysis tasks, we clearly demonstrate that jointly optimizing
-  both resolution and precision provides significant improvements on the results of analysis tasks
-  over adjusting only resolution or precision, for the same number of bits (Section
-  \ref{sec:motivation}). We also show that different types of analysis require substantially
+\item We demonstrate how jointly optimizing both resolution and precision provides significant
+  improvements on the results of analysis tasks over adjusting resolution or precision independently
+  (Section \ref{sec:motivation}). In particular, we provide empirical evidence using a collection of
+  data sets and analysis tasks. We also show how different types of analysis require substantially
   different bit streams for optimal results.
 
-\item By jointly optimizing both resolution and precision using a general and fast algorithm
-  (Section \ref{sec:data_dep_streams}), we obtain empirical error lower-bounds for various analysis
-  tasks. In addition, we present practical heuristics to create high-quality data streams that
-  closely approximate these bounds (Section \ref{sec:derivatives}).
+\item We present a greedy algorithm to compute lower bounds of error for various analysis tasks.
+  (Section \ref{sec:data_dep_streams}). In addition, we also present heuristics to construct
+  high-quality data streams closely approximating these bounds (Section \ref{sec:derivatives}, \ref{sec:histogram}, \ref{sec:isocontour}).
 \end{itemize}
 
 %%% Local Variables:

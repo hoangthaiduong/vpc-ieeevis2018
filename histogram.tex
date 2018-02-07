@@ -1,5 +1,5 @@
 
-\section{Histogram computation}
+\subsection{Histogram computation}
 \label{sec:histogram}
 
 A histogram succinctly and meaningfully summarizes the data, thus histogram computation is a very
@@ -14,20 +14,42 @@ data-independent analouges, namely \emph{histogram signature} and \emph{by wavel
 concept of a signature is defined in Section [REF]). Figures \ref{fig:histogram-stream-comparison}
 are plots of the EMD errors for these streams on four data sets.
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
-	\subcaptionbox{\emph{boiler}}
+	\subcaptionbox{\emph{boiler}, 256 bins}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-optimized-boiler.pdf}}
-	\subcaptionbox{\emph{diffusivity}}
+	\subcaptionbox{\emph{diffusivity}, 256 bins}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-optimized-diffusivity.pdf}}
-	\subcaptionbox{\emph{euler}}
+	\subcaptionbox{\emph{euler}, 256 bins}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-optimized-euler.pdf}}
-	\subcaptionbox{\emph{pressure}}
+	\subcaptionbox{\emph{pressure}, 256 bins}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-optimized-pressure.pdf}}
-	\subcaptionbox{\emph{turbulence}}
+	\subcaptionbox{\emph{turbulence}, 256 bins}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-optimized-turbulence.pdf}}
-	\subcaptionbox{\emph{velocityz}}
+	\subcaptionbox{\emph{velocityz}, 256 bins}
 	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-optimized-velocityz.pdf}}
+	\caption{Histogram error comparison among four streams \emph{histogram-optimized},
+	\emph{rmse-optimized}, \emph{by wavelet norm}, and \emph{histogram signature}, without the leading
+	zero bits. The plots are truncated to make the differences large enough for visual inspection, and
+	truncation points are chosen so that the best among the reconstructed histograms is visually the
+	same as the groundtruth histogram. }
+	\label{fig:histogram-stream-comparison}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{\emph{boiler}, 64 bins}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/64bins/histogram-optimized-boiler.pdf}}
+	\subcaptionbox{\emph{diffusivity}, 64 bins}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/64bins/histogram-optimized-diffusivity.pdf}}
+	\subcaptionbox{\emph{euler}, 64 bins}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/64bins/histogram-optimized-euler.pdf}}
+	\subcaptionbox{\emph{pressure}, 64 bins}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/64bins/histogram-optimized-pressure.pdf}}
+	\subcaptionbox{\emph{turbulence}, 64 bins}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/64bins/histogram-optimized-turbulence.pdf}}
+	\subcaptionbox{\emph{velocityz}, 64 bins}
+	{\includegraphics[width=0.48\linewidth]{img/histogram/64bins/histogram-optimized-velocityz.pdf}}
 	\caption{Histogram error comparison among four streams \emph{histogram-optimized},
 	\emph{rmse-optimized}, \emph{by wavelet norm}, and \emph{histogram signature}, without the leading
 	zero bits. The plots are truncated to make the differences large enough for visual inspection, and
@@ -47,16 +69,50 @@ outperform \emph{rmse-optimized} and \emph{by wavelet norm} respectively. For ex
 \ref{fig:histogram-comparison-low-bit-rate-slz} shows the four reconstructed histograms at 0.1 bits
 per sample, with leading zero bits removed, for the diffusivity data set.
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
-	\subcaptionbox{\emph{histogram-optimized}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-signature.png}}
-	\subcaptionbox{\emph{rmse-optimized}}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-by-wavelet-norm.png}}
-	\caption{euler's histograms at 0.18 bps. The groundtruth histogram is rendered in red, while the
-	reconstructed histogram is rendered in green. The dark yellow regions are where the two overlap.}
-	\label{fig:histogram-comparison-low-bit-rate-slz}
+	\subcaptionbox{\emph{boiler}, 0.24 bps}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-boiler-by-wavelet-norm.png}}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-boiler-signature.png}}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-boiler-groundtruth.png}}
+	\subcaptionbox{\emph{diffusivity}, 0.75 bins}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-diffusivity-by-wavelet-norm.png}}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-diffusivity-signature.png}}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-diffusivity-groundtruth.png}}
+	\subcaptionbox{\emph{euler}, 0.28 bins}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-euler-by-wavelet-norm.png}}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-euler-signature.png}}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-euler-groundtruth.png}}
+	\subcaptionbox{\emph{pressure}, 0.64 bps}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-pressure-by-wavelet-norm.png}}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-pressure-signature.png}}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-pressure-groundtruth.png}}
+	\subcaptionbox{\emph{turbulence}, 0.75 bps}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-turbulence-by-wavelet-norm.png}}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-turbulence-signature.png}}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-turbulence-groundtruth.png}}
+	\subcaptionbox{\emph{velocityz}, 1.19 bps}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-velocityz-by-wavelet-norm.png}}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-velocityz-signature.png}}
+	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-velocityz-groundtruth.png}}
+	\caption{Histogram error comparison among four streams \emph{histogram-optimized},
+	\emph{rmse-optimized}, \emph{by wavelet norm}, and \emph{histogram signature}, without the leading
+	zero bits. The plots are truncated to make the differences large enough for visual inspection, and
+	truncation points are chosen so that the best among the reconstructed histograms is visually the
+	same as the groundtruth histogram. }
+	\label{fig:histogram-stream-comparison}
 \end{figure}
+
+% \begin{figure}
+% 	\centering
+% 	\subcaptionbox{\emph{histogram-optimized}}
+% 	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-signature.png}}
+% 	\subcaptionbox{\emph{rmse-optimized}}
+% 	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-by-wavelet-norm.png}}
+% 	\caption{euler's histograms at 0.18 bps. The groundtruth histogram is rendered in red, while the
+% 	reconstructed histogram is rendered in green. The dark yellow regions are where the two overlap.}
+% 	\label{fig:histogram-comparison-low-bit-rate-slz}
+% \end{figure}
 
 The main difference between the \emph{histogram-optimized} and the \emph{rmse-optimized} streams is
 that \emph{histogram-optimized} favors low-ordered bits of coarse-level coefficients, while,
@@ -70,7 +126,7 @@ Section are performed with 256 bins, but this fact holds for a wide range of num
 (the dark blue cells at the bottom right of the signature). These are bits that come at the end of a
 stream, and thus matter little to the data quality. 
  
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\subcaptionbox{\emph{histogram-optimized}'s signature,\\ 128 bins}
 	{\includegraphics[width=0.24\linewidth]{img/histogram/sig-GREEDY-(histogram-128).png}}
@@ -100,21 +156,23 @@ to resolve well the histogram bin with the most samples, and among the tested st
 \emph{histogram-optimized} is spatially adaptive to EMD (\emph{rmse-optimized} is spatially
 adaptive, but to RMSE, and the other two streams are data-independent).
 
-\begin{figure}
-	\centering
-	\subcaptionbox{}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-histogram_resize-vert.png}}
-	\subcaptionbox{}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-rmse_resize-vert.png}}
-	\subcaptionbox{}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-signature_resize-vert.png}}
-	\subcaptionbox{}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-wavenorm_resize-vert.png}}
-	\caption{(top) Precision distribution of wavelet coefficients, and (bottom) reconstructed
-	histograms, for \emph{histogram-optimized}, \emph{rmse-optimized}, \emph{by wavelet norm}, and
-	\emph{histogram signature} streams, at 6.47 bits per sample, without leading zero bits.}
-	\label{fig:precision-map-histogram}
-\end{figure}
+% \begin{figure}[h]
+% 	\centering
+% 	\subcaptionbox{}
+% 	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-histogram_resize-vert.png}}
+% 	\subcaptionbox{}
+% 	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-rmse_resize-vert.png}}
+% 	\subcaptionbox{}
+% 	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-signature_resize-vert.png}}
+% 	\subcaptionbox{}
+% 	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-wavenorm_resize-vert.png}}
+% 	\caption{(top) Precision distribution of wavelet coefficients, and (bottom) reconstructed
+% 	histograms, for \emph{histogram-optimized}, \emph{rmse-optimized}, \emph{by wavelet norm}, and
+% 	\emph{histogram signature} streams, at 6.47 bits per sample, without leading zero bits.}
+% 	\label{fig:precision-map-histogram}
+% \end{figure}
+
+TODO: discuss the case of not using compression, where the signature plays a more important role.
 
 In this section we have shown that histogram computation requires a different ordering of bits than
 reconstructing the function itself. We have also proposed a practical heuristic, based on stream
