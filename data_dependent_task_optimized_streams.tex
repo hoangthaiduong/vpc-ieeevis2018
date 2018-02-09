@@ -4,7 +4,7 @@
 This section aims to solve the problem of finding the most optimal (and data-dependent) stream
 possible, given a data set and an error metric. An error metric is a function $E(Q(f'),Q(f))$, where
 $f$ is the original data field and $f'$ is a reconstructed version of $f$ using a subset of the
-bits. $Q$ is an operation that trasnforms a raw data fields (e.g., $f$ and $f'$) to some quantity of
+bits. $Q$ is an operation that transforms raw data fields (i.e., $f$ and $f'$) to some quantity of
 interest (e.g., derivatives, histograms, isocontours, etc). There can be multiple error functions
 $E$ that makes sense for the same quantity $Q$. In this paper, we choose to use only one error
 metric with each quantity, one which we believe is either common, or intuitive and simple without
@@ -50,5 +50,4 @@ Our modified algorithm disables (sets to zero) a new chunk $c_i$ in each iterati
 records the error $E_i$ due to chunk $c_i$ missing, and enables again the chunk at the end of the
 iteration. After $n$ iterations, each chunk has an associated weight, $E_i$. The optimal stream,
 then, is simply a sorted list of chunks, in decreasing order of the weights. In our experience, this
-simplified algorithm brings the running time down from days to minutes, while retaining the same
-performance.
+simplified algorithm brings the running time down from days to minutes, while retaining the stream quality.

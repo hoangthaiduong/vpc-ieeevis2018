@@ -2,12 +2,12 @@
 \label{sec:motivation}
 
 Traditional data reduction techniques work by either truncating the finest few resolution levels, or
-truncating the last few low-ordered bits of every sample, but rarely both. Our aim in this section
+truncating the last few low-ordered bits of every sample, but rarely both. In this section, our aim
 is to show that significant gain can be achieved when one combines both dimensions, namely
 resolution and precision, for data reduction. To do so, for each data set, we construct and compare
 three different streams, which use different sorting criteria to sort the same set of chunks in
 decreasing order of weights. We will use $W(c)$ to denote a sorting criteria, which is any function
-that takes a chunk, $c$, and returns its `'weight'', which determines how important the chunk is.
+that takes a chunk $c$ and returns its `'weight'' that determines its importance.
 
 We compare the three streams by plotting an error curve for each, with regards to three error
 metrics, namely root-mean-square error (Figure \ref{fig:motivation-rmse}), histogram error (Figure
@@ -80,9 +80,9 @@ function. The definitions of histogram error and isocontour error are discussed 
  	\label{fig:motivation-isocontour}
 \end{figure}
 
-It can be seen that, for all metrics, the \emph{by wavelet norm} stream consistently performs the
+We see that, for all metrics, the \emph{by wavelet norm} stream consistently performs the
 best. The \emph{by bit plane} works almost as well as \emph{by wavelet norm} for RMS error and
-isocontour error, but not for histogram error. \emph{by level} works poorly in almost all cases.
+isocontour error, but not for histogram error. The \emph{by level} stream works poorly in almost all cases.
 These results show that it is often suboptimal to stream or reduce data exclusively in either
 resolution or precision. Combining these two dimensions of data reduction can lead to significant
 quality improvement at the same bit rate, especially when quantities of interest other than simply
