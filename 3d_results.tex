@@ -1,12 +1,8 @@
 \section{3D Results}
 In previous sections, we showed that changing the streaming order can significantly reduce error. For example,
 adaptive RMSE optimized stream outperforms any fixed ordering stream, such as by level,
-by bit plane, or by wavelet norm. Moreover, we performed an extensive study on various 2D datasets which shows that
-data-dependent stream order offers best result.
-
-However, all experiments were done on mostly on 2D slices of 3D data, since those can be inspected manually in our
-tool (\pavol{REF}) and the stream and error computation takes orders of magnitude less time. To validate the results
-apply to 3D data, we run the same experiments on the full 3D data sets. Since, the data sets are much larger, for
+by bit plane, or by wavelet norm. We now validate those result on the full 3D datasets.
+Since, the data sets are much larger, for
 practical reason we had increase the group size from $4^2$ to $16^3$.
 
 We start with reproducing the experiment comparing streaming the data \emph{by level}, \emph{by bit plane},
@@ -27,12 +23,10 @@ the these subbands.
  	{\includegraphics[width=0.48\linewidth]{img/motivation-3d/rmse-turbulence.pdf}}
 	\subcaptionbox{Velocity-z}
  	{\includegraphics[width=0.48\linewidth]{img/motivation-3d/rmse-velocityz.pdf}}
- 	\caption{Root-mean-square error of reconstructed functions using the three data-agnostic streams
+ 	\caption{Root-mean-square error for 3D datasets of reconstructed functions using the three data-agnostic streams
  	defined in Section \ref{sec:motivation} and the data dependant greedy scheme. Lower is better.
         The streams are truncated to highlight
- 	the differences, without omitting important information. \emph{by wavelet norm} performs best,
- 	followed closely by \emph{by bit plane}. We left out \emph{euler} (2D) and \emph{plasma} (buggy) datasets.
-        \pavol{should we use log scale on y axis? also truncate x axis?}}
+ 	the differences, without omitting important information. \pavol{explain why by level and by bit plane cross}}
  	\label{fig:motivation-3d-rmse}
 \end{figure}
 
@@ -47,13 +41,11 @@ the these subbands.
  	{\includegraphics[width=0.48\linewidth]{img/motivation-3d/gradient-turbulence.pdf}}
 	\subcaptionbox{Velocity-z}
  	{\includegraphics[width=0.48\linewidth]{img/motivation-3d/gradient-velocityz.pdf}}
- 	\caption{Gradient error (3-point stencil) of reconstructed functions using the three data-agnostic streams
+ 	\caption{Gradient error (3-point stencil) of reconstructed functions for 3D data sets using the three data-agnostic streams
  	defined in Section \ref{sec:motivation} and the data dependant greedy scheme. Lower is better.
         The streams are truncated to highlight
- 	the differences, without omitting important information. \emph{by wavelet norm} performs best,
- 	followed closely by \emph{by bit plane}. We left out \emph{euler} (2D) and \emph{plasma} (buggy) datasets.
-        \pavol{should we use log scale on y axis? also truncate x axis?}}
- 	\label{fig:motivation-3d-rmse}
+ 	the differences, without omitting important information.}
+ 	\label{fig:motivation-3d-gradient}
 \end{figure}
 
 \begin{figure}
@@ -69,9 +61,7 @@ the these subbands.
  	\caption{Gradient error (5-point stencil) of reconstructed functions using the three data-agnostic streams
  	defined in Section \ref{sec:motivation} and the data dependant greedy scheme. Lower is better.
         The streams are truncated to highlight
- 	the differences, without omitting important information. \emph{by wavelet norm} performs best,
- 	followed closely by \emph{by bit plane}. We left out \emph{euler} (2D) and \emph{plasma} (buggy) datasets.
-        \pavol{should we use log scale on y axis? also truncate x axis?}}
- 	\label{fig:motivation-3d-rmse}
+ 	the differences, without omitting important information.}
+ 	\label{fig:motivation-3d-gradient5}
 \end{figure}
 
