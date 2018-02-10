@@ -6,7 +6,8 @@ paper. We first describe a preprocessing step that turns a regular grid of value
 \emph{stream} of \emph{chunks}, each of which slightly improves data's resolution or precision
 (Section \ref{sec:raw-to-stream}). We then define the concepts of \emph{static} and \emph{dynamic}
 streams (Section \ref{sec:static-dynamic-streams}), as well as discuss some of the most common
-static streams (Section \ref{sec:common-static-streams}).
+static streams (Section \ref{sec:common-static-streams}). Finally we list all the data sets that are
+used in experiments, with relevant properties (Section \ref{sec:data-sets}).
 
 \subsection{Data streaming framework}
 \label{sec:raw-to-stream}
@@ -113,3 +114,31 @@ array, encoding the relative orderings of all possible pairs $<l,b>$ for $0\leq 
 $0\leq b \leq \bar{b}$. We will show that the use of such signatures can sometimes result in
 significant improvements over using purely static streams. Section [REF] gives a detailed discussion
 of the signature concept.
+
+\subsection{Data sets}
+\label{sec:data-sets}
+
+Table \ref{tbl:data-sets} contains all the data sets used for experiment in this paper. Note that
+during pre-processing, all fields are converted to double-precision floating-point values before
+quantization takes place.
+
+\begin{table*}[t]
+  \caption{Data sets used in experiments}
+  \centering
+  \begin{tabular}{p{0.15\linewidth}p{0.20\linewidth}p{0.15\linewidth}p{0.10\linewidth}p{0.15\linewidth}}
+  \hline
+  Name & Source & Slice dimension & Type & Citation\\
+  \hline
+  boiler & combustion simulation& $140\times 148$ & float64 &\\
+  euler & fluid simulation& $256\times 1024$ & float64 &\\
+  kingsnake & CT scan & $1024\times 795$ & uint8 &\\
+  plasma & magnetic reconnection simulation& $512\times 512$ & float32 &\\
+  marschner-lobb & analytical function& $256\times 256$ & float64 &\\
+  diffusivity & hydrodynamics simulation& $384\times 384$ & float64 &\\
+  pressure & hydrodynamics simulation& $384\times 384$ & float64 &\\
+  velocityz & hydrodynamics simulation& $384\times 384$ & float64 &\\
+  turbulence & fluid dynamics simulation& $256\times 256$ & float32 &\\
+  \hline
+  \end{tabular}
+\label{tbl:data-sets}
+\end{table*}
