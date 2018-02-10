@@ -1,117 +1,115 @@
 \section{Taxonomy}
 \label{sec:terminologies}
 
-This section defines common terminologies that are used throughout the paper.
+This section establishes a common framework, and defines common terminologies used throughout the
+paper. We first describe a preprocessing step that turns a regular grid of values into a
+\emph{stream} of \emph{chunks}, each of which slightly improves data's resolution or precision
+(Section \ref{sec:raw-to-stream}). We then define the concepts of \emph{static} and \emph{dynamic}
+streams (Section \ref{sec:static-dynamic-streams}), as well as discuss some of the most common
+static streams (Section \ref{sec:common-static-streams}).
 
-\subsection{From raw data to bit streams}
+\subsection{Data streaming framework}
+\label{sec:raw-to-stream}
 
-Our goal is to introduce the concept of resolution and precision to data stored as a simple grid.
-For resolution, we use the discrete wavelet transform, in particular, the popular CDF5/3 [CITE]
-transform. For precision, we quantize the floating-point wavelet coefficients to $16$-bit signed
-integers, thereby eliminating the exponent bits so that every bit can be associated with a bit
-plane. To further avoid special treatment of the sign bit in two's complement form, we convert the
-quantized coefficients to negabinary form [CITE]. This transformation increase the number of bit
-planes from $16$ to $17$.
+Comparing different data reduction techniques is challenging. For example, it is difficult to force
+a data subsampling method to use the same amount of data as a data quantization method for fair
+comparison, because they reduce data in different sets of discrete steps. To tackle this problem, we
+enforce one single step size which we call a \emph{chunk}. The data is first converted into a set of
+\emph{chunks}, then the chunks can be ordered to form a \emph{stream}. Different data reduction
+techniques then can be represented with different ways of ordering the chunks, or different streams.
+To study the resolution-versus-precision tradeoffs in data analysis, however, we still need to
+associate each chunk with a resolution and a precision level.
 
-In practice, bits are never read and transmitted one by one, so in this paper, our fundamental unit
-of data is a \emph{chunk} of bits. A \emph{chunks} is a bit plane of a group of $4\times 4$
-coefficients in the same subband (the multi-dimensional wavelet transform rearranges the
-coefficients into subbands [CITE], each can be thought of as a resolution level). Each group hence
-contains $17$ chunks. For all the experiments in this paper, we perform the wavelet transform $3$
-times in each dimension, producing $10$ subbands in 2D and $22$ subbands in 3D. Figure
-\ref{fig:pipeline} illustrates how all these steps fit together to produce a stream of chunks from
-the original, raw data.
+For resolution, we use the popular CDF5/3 discrete wavelet transform [CITE] to partition the data
+into \emph{subbands}, each can be thought of as a resolution level. In the typical multi-dimensional
+wavelet decomposition, one pass transform in 2D creates four subbands. The first subband is a
+smoothed, downsampled version of the original data. The next two subbands add fine details in each
+dimension respectively. The last subband add fine details in both dimensions (or ``diagonal''
+details) (see Figure \ref{fig:pipeline}). Subsequent transform pass iterates only on the first
+subband created by the previous pass. We use $\bar{l}$ to denote the highest-numbered subband. In
+this paper, $\bar{l}=9$ in 2D and $21$ in 3D, corresponding to three passes of transform.
 
-\begin{figure}
+For precision, we quantize the floating-point wavelet coefficients to $\bar{b}$-bit signed integers.
+For most of the experiments in this paper, $\bar{b}=16$. This quantization eliminates the exponent
+bits, so that every bit can be associated with a bit plane $b$ ($0\leq b\leq \bar{b}-1$). To further
+avoid having to treat the sign bit specially in two's complement form, we convert the quantized
+coefficients to negabinary form, in which integers are represented in base negative two (i.e.,
+$v=\sum_{i=0}^{B}{c_i(-2)^i}$ with $c_i\in \{0,1\}$). This transformation increases the number of
+bit planes from by one to compensate for the absence of the sign bit.
+
+As mentioned before, our fundamental unit of data for streaming is a \emph{chunk} of bits. A chunk
+consists of bits that belong to the same bit plane, from a group of $4\times 4$ negabinary wavelet
+coefficients in the same subband. Although each bit can be a chunk itself, we use a chunk size of
+$16$ bits because in practice, for performance reasons, bits are never read and transmitted one by
+one. This choice also significantly speeds up our experiments without meaningfully affecting the
+results. By definition, each chunk can be associated with a subband $l$ ($0\leq l\leq \bar{l}$) and
+a bit plane $b$ ($0\leq b\leq \bar{b}$). Different streams can thus be compared based on whether
+they prioritize chunks belonging to finer subbands or chunks belonging to less significant bit
+planes. The rest of the paper discusses different streams for various analysis tasks, and compare
+them on this basis. We use the convention that higher subband is finer (so $l=0$ means the coarsest
+subband), and higher bit plane is more precise (so $b=0$ is the most significant bit plane).
+
+Figure \ref{fig:pipeline} helps visualize the concepts of subbands, bit planes, chunks, and streams,
+as well as summarizes our data preprocessing pipeline.
+
+\begin{figure}[h]
   \centering
   \includegraphics[width=\linewidth]{img/pipeline.png}
-  \caption{Our data stream creation pipeline. The input is a regular grid, the output is a stream of
-  chunks, where each chunk is a bit plane from a group of quantized wavelet coefficients stored in
-  negabinary format. The subbands are separated by blue lines in the second image, with the coarsest
-  subband at the top left corner. TODO: revise this figure}
+  \caption{Our data stream creation pipeline. The input is a regular grid of floating-point values,
+  the output is a stream of chunks, where each chunk is a bit plane from a $4\times 4$ group of
+  quantized wavelet coefficients, stored in negabinary format. The subbands are separated by blue
+  lines in the second image, with the coarsest subband at the top left corner. TODO: revise this
+  figure}
   \label{fig:pipeline}
 \end{figure}
 
 \subsection{Static and dynamic streams}
 \label{sec:static-dynamic-streams}
 
-In our data streaming model, there is a ``server'' which serves data and a ``client'' which requests
-for and receives data from the server. Although the server and the client can both be on the same
-machine physically, the server has full knowledge of the data, while the client does not. Thus, when
-the client receives a bit, it might not know where the bit should be deposited. A solution to this
-problem is to have both the client and the server agree on an ordering of bit positions beforehand.
-We use the term \emph{static stream} to refer to streams using this solution. In constrast, a
-\emph{dynamic stream} is one in which the client is assumed to ``magically'' know the positions of
-the bits without any prior agreement with the server. Dynamic streams have an advantage over static
-streams in that they can make use of bit values, not just their positions, to better prioritize the
-important bits. However, this also means that dynamic streams are ill-suited for practical
-implementations, because the cost associated with streaming bit positions likely outweights any
-potential benefit.
+In our data streaming model, there is a ``server'' which serves data and a ``client'' which receives
+data from the server. While they can be on the same machine, the server has full knowledge of the
+data, but the client does not. Thus, when the client receives a chunk, it might not know where the
+chunk should be deposited. A common solution to this problem is to have both the client and the
+server agree beforehand on a static ordering of chunks, regardless of the data. We use the term
+\emph{static stream} to refer to streams using this solution. In constrast, a \emph{dynamic stream}
+is one in which the client is assumed to ``magically'' know the positions of chunks without any
+prior agreement with the server. In theory, dynamic streams perform better than static streams
+because they can use actual chunk values, not just chunk positions, to better prioritize important
+chunks. However, this also means that dynamic streams are ill-suited for implementations, because in
+practice, the cost associated with sending position information likely outweights any potential
+benefit gained from better prioritization of chunks. Despite of that, dynamic streams are studied in
+this paper because they can serve as a benchmark to evaluate the performance of their static
+counterparts.
 
-In this paper, we use the terms \emph{by bit plane}, \emph{by level}, and \emph{by wavelet norm} to
-refer to three common static bit orderings (their exact definitions are in Section [REF]). In
-addition, we also consider a \emph{signature}-based stream (Section \ref{sec:stream-signature}) to
-be static. This is becaue, in a signature-based stream, the server and the client established the
-agreement over bit positions over the transmission of a negligibly small message, called signature,
-before any actual value bits are transmitted. As we will show throughout the paper, the use of such
-signatures can sometimes result in significant improvements over using purely static streams.
+\subsection{Four static streams}
+\label{sec:common-static-streams}
 
-\subsection{Common static streams}
-A bit stream can be viewed as a collection of bits, sorted by some weight associated with each bit.
-In the literature, two of the most common orderings of bits are \emph{by level} and \emph{by bit
-plane}. The \emph{by level} stream orders the chunks strictly from coarser to finer resolution
-levels. The weight function used by this stream is $W_1(c)=\bar{l}-L(c)$, where $L$ is a function
-that returns the subband (resolution level) of its argument (higher-numbered subbands are finer),
-and $\bar{l}$ is the total number of subbands. Within the same subband, without any further
-knowledge of the underlying data, the chunks naturally follow the row-major order. The second common
-stream, \emph{by bit plane}, proceeds stricly from higher-ordered to lower-ordered bit planes (i.e.,
-$W_2(c)=\bar{b}-B(c)$, where $B$ is a function that map its argument to the corresponding bit plane
-and $\bar{b}$ is the total number of bit planes, with $0$ being the most significant bit plane). 
+A stream can be viewed as a collection of chunks, sorted by some weight associated with each chunk.
+In the literature, two of the most common orderings are \emph{by level} and \emph{by bit plane}. The
+\emph{by level} stream orders the chunks strictly from coarser to finer resolution levels. The
+weight function used by this stream is $W_1(c)=\bar{l}-L(c)$, where $L$ is a function that returns
+the subband of its argument (with $0$ being the coarsest), and $\bar{l}$ is the total number of
+subbands. Within the same subband, without any assumption on the underlying data, the chunks
+naturally follow the row-major order. The other common ordering, \emph{by bit plane}, proceeds
+strictly from higher-ordered to lower-ordered bit planes. That is, $W_2(c)=\bar{b}-B(c)$, where $B$
+is a function that map its argument to the corresponding bit plane and $\bar{b}$ is the total number
+of bit planes, with $0$ being the most significant.
 
 The \emph{by level} and \emph{by bit plane} streams are designed to mimic the way data is read in
-traditional data reduction methods that work either in resolution or in precision space. In this
-paper we also define the \emph{by wavelet norm} stream which combines these two dimensions. \emph{by
-wavelet norm} orders chunks using $W_3(c)=2^{\bar{b}-1-B(c)}\times \norm{\omega_{L(c)}}^2$. The term
+traditional data reduction methods that work either in resolution (\emph{by level}) or in precision
+\emph{by bit plane}. In this paper we also define the \emph{by wavelet norm} stream which combines
+these two dimensions. The reason for the combination is that \emph{by level} and \emph{by bit plane}
+are not flexible enough, so they tend to waste space for less important bits. Our \emph{by wavelet
+norm} orders chunks using $W_3(c)=2^{\bar{b}-1-B(c)}\times \norm{\omega_{L(c)}}^2$. The term
 $2^{\bar{b}-1-B(c)}$ captures the contribution of a bit on bit plane $B(c)$, while the term
 $\norm{\omega_{L(c)}}^2$ captures the contribution of a coefficient on subband $L(c)$, where
-$\omega_{L(c)}$ refers to the wavelet basis function on subband $L(c)$. Note that all three streams
-mentioned so far are data-agnostic.
+$\omega_{L(c)}$ refers to the wavelet basis function on subband $L(c)$.
 
-TODO: mention that all streams are without leading zero bits
-
-\subsection{Stream signatures}
-\label{sec:stream-signature}
-
-To analyze the core characteristics of a stream, we introduce the concept of a stream
-\emph{signature}. A signature is a $B \times L$ matrix, with $B$ being the number of bit planes, and
-$S$ being the number of subbands produced by the wavelet transform. A chunk on subband $s$ and bit
-plane $b$ can be associated with the $b, l$ cell of the matrix. Every chunk in the stream can be
-associated with one (and only one) of the cells. Each matrix cell $(b,l)$ contains a value in the
-range of $[0,B\times L)$, indicating the position in which chunks of that cell appear in the stream,
-relative to chunks of all other cells, on average. It is our hypothesis that streams optimized for
-different analysis tasks produce qualitatively distinctive signatures, and therefore, a set of
-signatures can be pre-computed once and later picked to use depending on the analysis at hand.
-
-To compute a stream signature, we partition the whole domain into several regions, compute one
-chunks in each per-region signature are spatially related. The reason for this partitioning is that
-it is only meaningful to study the relative ordering of cells if the chunks associated with those
-cells all come from same region of the original domain. Ideally the global signature for a stream
-should contain all the per-region signatures, but due to space constraint, as well as for ease of
-visualization, we condense all the local signatures by averaging them on a per-cell basis, and only
-study the average signature. (TODO: add the algorithm).
-
-% \begin{algorithm}
-%   \KwData{this text}
-%   \KwResult{how to write algorithm with \LaTeX2e }
-%   initialization\;
-%   \While{not at end of this document}{
-%    read current\;
-%    \eIf{understand}{
-%     go to next section\;
-%     current section becomes this one\;
-%     }{
-%     go back to the beginning of current section\;
-%    }
-%   }
-%   \caption{How to write algorithms}
-% \end{algorithm}
+All the three streams mentioned so far are data-agnostic. In addition, we also consider a
+\emph{signature}-based stream to be static. A signature-based stream is one in which the server and
+the client establish the agreement over chunk positions through the transmission of a negligibly
+small message, called a signature, before any actual value bits are transmitted. A signature is a 2D
+array, encoding the relative orderings of all possible pairs $<l,b>$ for $0\leq l \leq \bar{l}$ and
+$0\leq b \leq \bar{b}$. We will show that the use of such signatures can sometimes result in
+significant improvements over using purely static streams. Section [REF] gives a detailed discussion
+of the signature concept.

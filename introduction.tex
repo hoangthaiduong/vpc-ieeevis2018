@@ -36,19 +36,20 @@ important questions through extensive, empirical experiments. Our contributions 
 \begin{itemize}
 \item We present an in-depth study of the resolution-versus-precision trade-offs for fundamental
   data analysis and visualization tasks. To make this study possible, we put these trade-offs in the
-  framework of streaming wavelet coefficients, interleaving precision and resolution (Section
-  \ref{sec:terminologies}). In this way, we can represent different data streams in a unified
-  framework and perform fair comparisons.
+  framework of streaming wavelet coefficients, interleaving bits that improve precision and bits
+  that improve resolution (Section \ref{sec:terminologies}). In this way, we can represent different
+  data streams in a unified framework and perform fair comparisons.
    
-\item We demonstrate how jointly optimizing both resolution and precision provides significant
+\item We demonstrate how jointly optimizing resolution and precision provides significant
   improvements on the results of analysis tasks over adjusting resolution or precision independently
   (Section \ref{sec:motivation}). In particular, we provide empirical evidence using a collection of
   data sets and analysis tasks. We also show how different types of analysis require substantially
   different bit streams for optimal results.
 
-\item We present a greedy algorithm to compute lower bounds of error for various analysis tasks.
-  (Section \ref{sec:data_dep_streams}). In addition, we also present heuristics to construct
-  high-quality data streams closely approximating these bounds (Section \ref{sec:derivatives}, \ref{sec:histogram}, \ref{sec:isocontour}).
+\item We estimate lower bounds of error for various analysis tasks using a greedy aprroach that
+  jointly optimizes resolution and precision (Section \ref{sec:data_dep_streams}). In addition, we
+  also present heuristics to construct high-quality data streams closely approximating these bounds
+  (Section \ref{sec:derivatives}, \ref{sec:histogram}, \ref{sec:isocontour}).
 \end{itemize}
 
 %%% Local Variables:
