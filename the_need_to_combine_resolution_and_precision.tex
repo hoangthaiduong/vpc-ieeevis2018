@@ -2,21 +2,14 @@
 \label{sec:motivation}
 
 Traditional data reduction techniques work by either truncating the finest few resolution levels, or
-truncating the last few low-ordered bits of every sample, but rarely both. In this section, our aim
-is to show that significant gain can be achieved when one combines both dimensions, namely
-resolution and precision, for data reduction. To do so, for each data set, we construct and compare
-three different streams, which use different sorting criteria to sort the same set of chunks in
-decreasing order of weights. We will use $W(c)$ to denote a sorting criteria, which is any function
-that takes a chunk $c$ and returns its `'weight'' that determines its importance.
-
-We compare the three streams by plotting an error curve for each, with regards to three error
-metrics, namely root-mean-square error (Figure \ref{fig:motivation-rmse}), histogram error (Figure
-\ref{fig:motivation-histogram}), and isocontour error (Figure \ref{fig:motivation-isocontour}). For
-each metric, the function is reconstructed every time a new chunk is received from a stream, then
-the relevant quantity (the function itself, its histogram, or an isocontour) is computed from the
-reconstructed function, and compared against the same quantity computed from the original (lossless)
-function. The definitions of histogram error and isocontour error are discussed in detail in Section
-[REF] and Section [REF] respectively.
+truncating the last few low-ordered bits of every sample, but rarely both. In this section, we show
+that significant gain can be achieved through combining resolution and precision for data reduction.
+For each data set, we construct and compare three different streams, namely \emph{by level},
+\emph{by bit plane}, and \emph{by wavelet norm} (see Section \ref{sec:common-static-streams}). Every
+time a new chunk arrives, we reconstruct the function, and compute the root-mean-square error
+between this reconstructed function and the original function. Finally, note that we remove all
+chunks containing purely leading zero bits, as such chunks tend to be compressed away in practice.
+Figure \ref{fig:motivation-rmse} shows the results.
 
 \begin{figure}[h]
   \centering
@@ -39,63 +32,21 @@ function. The definitions of histogram error and isocontour error are discussed 
  	\label{fig:motivation-rmse}
 \end{figure}
 
-\begin{figure}[h]
-  \centering
-	\subcaptionbox{Boiler}
-  {\includegraphics[width=0.48\linewidth]{img/motivation/motivation-histogram-boiler.pdf}}
-	\subcaptionbox{Diffusivity}
- 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-histogram-diffusivity.pdf}}
-	\subcaptionbox{Euler}
- 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-histogram-euler.pdf}}
-	\subcaptionbox{Turbulence}
- 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-histogram-turbulence.pdf}}
-	\subcaptionbox{Plasma}
- 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-histogram-plasma.pdf}}
-	\subcaptionbox{Velocity-z}
- 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-histogram-velocityz.pdf}}
- 	\caption{Histogram error of reconstructed functions using the three data-agnostic streams defined
- 	in Section \ref{sec:motivation}. Lower is better. Each histogram comprises of 256 bins. The
- 	streams are truncated to highlight the differences, without omitting important information.
- 	\emph{by wavelet norm} performs best.}
- 	\label{fig:motivation-histogram}
-\end{figure}
-
-\begin{figure}[h]
-  \centering
-	\subcaptionbox{Boiler, isovalue = $0.07$}
-  {\includegraphics[width=0.48\linewidth]{img/motivation/motivation-isocontour-boiler.pdf}}
-	\subcaptionbox{Diffusivity, isovalue = $0.04315$}
- 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-isocontour-diffusivity.pdf}}
-	\subcaptionbox{Euler, isovalue = $3$}
- 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-isocontour-euler.pdf}}
-	\subcaptionbox{Turbulence, isovalue = $2$}
- 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-isocontour-turbulence.pdf}}
-	\subcaptionbox{Plasma, isovalue = $2$}
- 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-isocontour-plasma.pdf}}
-	\subcaptionbox{Velocity-z, isovalue = $-2$}
- 	{\includegraphics[width=0.48\linewidth]{img/motivation/motivation-isocontour-velocityz.pdf}}
- 	\caption{Isocontour error of reconstructed functions using the three data-agnostic streams defined
- 	in Section \ref{sec:motivation}. Lower is better. The streams are truncated to highlight the
- 	differences, without omitting important information. \emph{by wavelet norm} performs best.}
- 	\label{fig:motivation-isocontour}
-\end{figure}
-
-We see that, for all metrics, the \emph{by wavelet norm} stream consistently performs the
-best. The \emph{by bit plane} works almost as well as \emph{by wavelet norm} for RMS error and
-isocontour error, but not for histogram error. The \emph{by level} stream works poorly in almost all cases.
-These results show that it is often suboptimal to stream or reduce data exclusively in either
-resolution or precision. Combining these two dimensions of data reduction can lead to significant
-quality improvement at the same bit rate, especially when quantities of interest other than simply
-the function itself are considered. The reason is that \emph{by wavelet norm} can take advantage of
-the fact that a higher-ordered bit from a fine-scale coefficient could contribute more than a
-lower-ordered bit from a coarse-scale coefficient (which \emph{by level} ignores), and vice-versa
-(which \emph{by bit plane} ignores). It is unclear, however, whether \emph{by wavelet norm} is the
-best stream to use in all cases. To answer this question, we will expand our study from
-data-agnostic to data-dependent streams that are optimized for each of these quantities of interest.
-While data-dependent streams are likely unrealizable in practice due to the fact that the
-`'receiver'' of data does not have access to the data beforehand, we hope they provide insights for
-designing streams that improve on the generic \emph{by wavelet norm}, by being tailored to each
-error metric.
+The \emph{by wavelet norm} stream can be seen to consistently performs the best, across all data
+sets. \emph{by bit plane} works almost as well as \emph{by wavelet norm}. The \emph{by level} stream
+works poorly in almost all cases. These results show that it is often suboptimal to stream or reduce
+data exclusively in either resolution or precision. Combining these two dimensions of data reduction
+can lead to significant quality improvement at the same bit rate, especially when quantities of
+interest other than simply the function itself are considered. The reason is that \emph{by wavelet
+norm} can take advantage of the fact that a higher-ordered bit from a fine-scale coefficient could
+contribute more than a lower-ordered bit from a coarse-scale coefficient (which \emph{by level}
+ignores), and vice-versa (which \emph{by bit plane} ignores). It is unclear, however, whether
+\emph{by wavelet norm} is the best stream to use in all cases. To answer this question, we will
+expand our study from data-agnostic to data-dependent streams that are optimized for each of these
+quantities of interest. While data-dependent streams are likely unrealizable in practice due to the
+fact that the `'receiver'' of data does not have access to the data beforehand, we hope they provide
+insights for designing streams that improve on the generic \emph{by wavelet norm}, by being tailored
+to each error metric.
 
 \subsection{Data-dependent, quantity-optimized streams}
 \label{sec:data_dep_streams}
