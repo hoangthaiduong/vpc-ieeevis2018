@@ -85,35 +85,38 @@ counterparts.
 \subsection{Four static streams}
 \label{sec:common-static-streams}
 
-A stream can be viewed as a collection of chunks, sorted by some weight associated with each chunk.
-In the literature, two of the most common orderings are \emph{by level} and \emph{by bit plane}. The
-\emph{by level} stream orders the chunks strictly from coarser to finer resolution levels. The
-weight function used by this stream is $W_1(c)=\bar{l}-L(c)$, where $L$ is a function that returns
-the subband of its argument (with $0$ being the coarsest), and $\bar{l}$ is the total number of
-subbands. Within the same subband, without any assumption on the underlying data, the chunks
-naturally follow the row-major order. The other common ordering, \emph{by bit plane}, proceeds
-strictly from higher-ordered to lower-ordered bit planes. That is, $W_2(c)=\bar{b}-B(c)$, where $B$
-is a function that map its argument to the corresponding bit plane and $\bar{b}$ is the total number
-of bit planes, with $0$ being the most significant.
+A stream can be viewed as a collection of chunks, sorted in descending order of some weight
+associated with each chunk $c$. In the literature, two of the most common orderings are \emph{by
+level} and \emph{by bit plane}. The \emph{by level} stream orders the chunks strictly from coarser
+to finer resolution levels. The weight function used by this stream is $W_1(c)=\bar{l}-L(c)$, where
+$L$ is a function that returns the subband of a given chunk $c$ (with $0$ being the coarsest), and
+$\bar{l}$ is the total number of subbands. Within the same subband, without any assumption on the
+underlying data, the chunks naturally follow the row-major order. The other common ordering,
+\emph{by bit plane}, proceeds strictly from higher-ordered to lower-ordered bit planes. That is,
+$W_2(c)=\bar{b}-B(c)$, where $B$ is a function that map a chunk $c$ to the corresponding bit plane
+and $\bar{b}$ is the total number of bit planes, with $0$ being the most significant.
 
-The \emph{by level} and \emph{by bit plane} streams are designed to mimic the way data is read in
-traditional data reduction methods that work either in resolution (\emph{by level}) or in precision
-\emph{by bit plane}. In this paper we also define the \emph{by wavelet norm} stream which combines
-these two dimensions. The reason for the combination is that \emph{by level} and \emph{by bit plane}
-are not flexible enough, so they tend to waste space for less important bits. Our \emph{by wavelet
-norm} orders chunks using $W_3(c)=2^{\bar{b}-1-B(c)}\times \norm{\omega_{L(c)}}^2$. The term
-$2^{\bar{b}-1-B(c)}$ captures the contribution of a bit on bit plane $B(c)$, while the term
-$\norm{\omega_{L(c)}}^2$ captures the contribution of a coefficient on subband $L(c)$, where
-$\omega_{L(c)}$ refers to the wavelet basis function on subband $L(c)$.
+The \emph{by level} and \emph{by bit plane} streams are designed to mimic the way data is accessed
+progressively in traditional methods that work either in resolution (\emph{by level}) or in
+precision (\emph{by bit plane}). In this paper we also define a third stream, called \emph{by
+wavelet norm}, which combines these two dimensions. Our \emph{by wavelet norm} orders chunks using
+$W_3(c)=2^{\bar{b}-1-B(c)}\times \norm{\omega_{L(c)}}^2$. The term $2^{\bar{b}-1-B(c)}$ captures the
+contribution of a bit on bit plane $B(c)$, while the term $\norm{\omega_{L(c)}}^2$ captures the
+contribution of a coefficient on subband $L(c)$, where $\omega_{L(c)}$ refers to the wavelet basis
+function on subband $L(c)$. The intuition behind \emph{by wavelet norm} is simply that in the
+wavelet representation, a function $f$ is written as a linear sum of wavelet basis functions:
+$f=\sum{c_i\omega_i}$, where $c_i$ are the coefficients and the basis functions $\omega_i$ in the
+same subband have the same norm. Thus $W_3(c)$ is simply the contribution (in $L_2$ norm) of a bit
+on bit plane $B(c)$ and subband $L(c)$ to the whole function $f$.
 
-All the three streams mentioned so far are data-agnostic. In addition, we also consider a
+All the three streams mentioned so far are static. In addition, we also consider a
 \emph{signature}-based stream to be static. A signature-based stream is one in which the server and
-the client establish the agreement over chunk positions through the transmission of a negligibly
+the client establish the agreement over chunk ordering through the transmission of a negligibly
 small message, called a signature, before any actual value bits are transmitted. A signature is a 2D
-array, encoding the relative orderings of all possible pairs $<l,b>$ for $0\leq l \leq \bar{l}$ and
-$0\leq b \leq \bar{b}$. We will show that the use of such signatures can sometimes result in
-significant improvements over using purely static streams. Section [REF] gives a detailed discussion
-of the signature concept.
+array with $\bar{l}$ rows and $\bar{b}$ columns, encoding the relative ordering of all possible
+pairs $<l,b>$ for $0\leq l \leq \bar{l}$ and $0\leq b \leq \bar{b}$. We will show that the use of
+such signatures can sometimes result in significant improvements over using purely static streams.
+Section \ref{sec:stream-signature} gives a detailed discussion of the signature concept.
 
 \subsection{Data sets}
 \label{sec:data-sets}
