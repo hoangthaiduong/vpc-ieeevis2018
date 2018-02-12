@@ -61,16 +61,15 @@ wavelet norm}, by being tailored to the analysis task at hand.
 Each analysis task potentially requires a fundamentally different stream for optimal results. This
 section aims to solve the problem of finding the most optimal stream possible, given a data set and
 an error metric associated with the analysis task at hand. An error metric is a function
-$E(Q(f'),Q(f))$, where $f$ is the original data field and $f'$ is a reconstructed version of $f$
-using a subset of the bits. $Q$ is an operation that trasnforms a raw data fields (e.g., $f$ and
-$f'$) to some quantity of interest (e.g., derivatives, histograms, isocontours, etc). There can be
-multiple error functions $E$ that makes sense for the same quantity $Q$. In this paper, we choose to
-use only one error metric with each quantity, one which we believe is either common, or intuitive
-and simple while generalizable. The list of quantity-optimized streams studied in
-this paper includes \emph{rmse-optimized} (Section \ref{sec:rmse-optimized}),
-\emph{gradient-optimized} (Section \ref{sec:gradient}), \emph{laplacian-optimized} (Section
-\ref{sec:laplacian}), \emph{histogram-optimized} (Section \ref{sec:histogram}), and
-\emph{isocontour-optimized} (Section \ref{sec:isocontour}).
+$E(Q(f'),Q(f))$ that returns the distance between its two arguments. $f$ is the original data field
+and $f'$ is a reconstructed version of $f$ using a subset of the bits. $Q$ is a quantity of interest
+(e.g., histogram, isocontour, etc) derived from $f$ or $f'$. There can be multiple error functions
+$E$ that makes sense for the same $Q$. In this paper, we choose to use only one error metric with
+each quantity, one which we believe is either common, or intuitive and simple while generalizable.
+The list of quantity-optimized streams studied in this paper includes \emph{rmse-optimized} (Section
+\ref{sec:rmse-optimized}), \emph{gradient-optimized} (Section \ref{sec:gradient}),
+\emph{laplacian-optimized} (Section \ref{sec:laplacian}), \emph{histogram-optimized} (Section
+\ref{sec:histogram}), and \emph{isocontour-optimized} (Section \ref{sec:isocontour}).
 
 Studying a (data-dependent) quantity-optimized stream is important because such a stream serves both
 as a benchmark, and a source of insights for other, more practical streams for the same quantity.
@@ -112,4 +111,25 @@ missing, and enables $c_i$ again at the end of iteration $i$. After repeating th
 $n$ iterations, each chunk now has an associated weight, $E_i$. The optimal stream, then, is simply
 a sorted list of chunks, in decreasing order of the weights. We have observed that this simplified
 algorithm brings the running time down from days to minutes, while retaining the same quality of the
-output stream.
+output stream. The pseudocode of the algorithm is presented below.
+
+\begin{algorithm}[h]
+  \caption{Computing a task-optimized stream}
+  \begin{algorithmic}[1]
+    \Inputs{
+			The original function $f$\\
+			An unordered set of $n$ chunks $C = \{c_i\}, i\in \{1,\dots,n\}$\\
+			A quantity of interest $Q$, and a distance function $E$}
+		\Initialize{A set of weights $\Gamma = \{\gamma_i\}, i\in \{1,\dots,n\}$ }
+		\For{$i$ = $1$ to $n$}
+			\State $c_i \gets 0$
+      \State Back-transform $C$ to produce a set of wavelet coefficients $W$
+			\State Perform inverse wavelet transform on $W$ to produce $f'$
+			\State $\gamma_i \gets E(Q(f'),Q(f))$			
+			\State Restore $c_i$
+		\EndFor
+		\State Sort the $c_i$'s in descending order of $\gamma_i$.
+		\Output{The $Q$-optimized stream, which is the sorted $C$}
+	\end{algorithmic}
+	\label{alg:greedy}
+\end{algorithm}

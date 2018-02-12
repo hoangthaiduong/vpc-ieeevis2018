@@ -52,11 +52,24 @@
 \usepackage{cite}                      % needed to automatically sort the references
 \usepackage{tabu}                      % only used for the table example
 \usepackage{booktabs}                  % only used for the table example
-\usepackage[]{algorithm2e}
+% \usepackage[]{algorithm2e}
 \usepackage{color}
 \usepackage{amsmath}
 \usepackage{cleveref}
 \usepackage{amsmath}
+\usepackage{algorithm,algpseudocode}
+\algnewcommand{\Inputs}[1]{%
+  \State \textbf{Inputs:}
+  \Statex \hspace*{\algorithmicindent}\parbox[t]{.8\linewidth}{\raggedright #1}
+}
+\algnewcommand{\Output}[1]{%
+  \State \textbf{Output:}
+  \Statex \hspace*{\algorithmicindent}\parbox[t]{.8\linewidth}{\raggedright #1}
+}
+\algnewcommand{\Initialize}[1]{%
+  \State \textbf{Initialize:}
+  \Statex \hspace*{\algorithmicindent}\parbox[t]{.8\linewidth}{\raggedright #1}
+}
 %%\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 %% We encourage the use of mathptmx for consistent usage of times font
 %% throughout the proceedings. However, if you encounter conflicts
