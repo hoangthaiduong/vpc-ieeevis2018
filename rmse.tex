@@ -26,10 +26,10 @@ associated with chunks belonging in subband $l$ and bit plane $b$ , and contains
 the range $[0,\bar{b}\times \bar{l})$. This value indicates, on average, the position in which
 chunks associated with that element appear in the stream, relative to chunks associated with other
 elements. For example, the signature  $A=\bigl[
-\begin{smallmatrix}0 & 1 & 4\\ 2 & 3 & 5\end{smallmatrix}\bigr]$. This signature conveys the
-information that the most important chunks lie on the first bit plane of the first subband
-($A_{0,0}=0$), followed by chunks lying on the second bit plane of the first subband ($A_{0,1}=1$),
-then the first bit plane of the second subband ($A_{1,0}=2$), and so on.
+\begin{smallmatrix}0 & 1 & 4\\ 2 & 3 & 5\end{smallmatrix}\bigr]$ conveys the information that the
+most important chunks lie on the first bit plane of the first subband ($A_{0,0}=0$), followed by
+chunks lying on the second bit plane of the first subband ($A_{0,1}=1$), then the first bit plane of
+the second subband ($A_{1,0}=2$), and so on.
 
 To compute a stream signature, we partition the whole domain into several \emph{regions}, compute
 one signature per region, then sum all the per-region signatures. Partitioning is needed since it is
@@ -37,15 +37,15 @@ only meaningful to compute the relative ordering of chunks if they come from the
 enough) region. For example, a chunk at one corner of the domain can be streamed before another
 chunk at an opposite corner, but this fact contains no useful information. We want a region to be as
 small as possible, and define a region to be the spatial volume/area that is covered by a chunk in
-the coarsest subband. So, the total number of regions is the same as the number of chunks in the
-coarsest subband. Note that regions exist in the global domain, as they are not confined to
-individual subbands. Ideally, the global signature should retain information from all the per-region
-signatures, but due to space constraints, we have chosen to condense all the local signatures by
-summing them into one signature. This choice results in signatures that are less meaningful for data
-that contains a high degree of spatial variability. We have found, however, that this choice works
-well for the various data sets used in this paper. If signatures are deemed useful enough to be
-deployed in practice, a more sophisticated ``compression'' of the signature stack might be necessary
-for the best results.
+the coarsest subband. So, the total number of regions, $\bar{r}$, is the same as the number of
+chunks in the coarsest subband. Note that regions exist in the global domain, as they are not
+confined to individual subbands. Ideally, the global signature should retain information from all
+the per-region signatures, but due to space constraints, we have chosen to condense all the local
+signatures by summing them into one signature. This choice results in signatures that are less
+meaningful for data that contains a high degree of spatial variability. We have found, however, that
+this choice works well for the various data sets used in this paper. If signatures are deemed useful
+enough to be deployed in practice, a more sophisticated ``compression'' of the signature stack might
+be necessary for the best results.
 
 The following algorithm computes a stream signature.
 
@@ -53,17 +53,21 @@ The following algorithm computes a stream signature.
   \caption{Computing a stream signature}
   \begin{algorithmic}[1]
     \Inputs{
-			A stream $C$\\}
-		\Initialize{A set of weights $\Gamma = \{\gamma_i\}, i\in \{1,\dots,n\}$ }
-		\For{$i$ = $1$ to $n$}
-			\State $c_i \gets 0$
-      \State Back-transform $C$ to produce a set of wavelet coefficients $W$
-			\State Perform inverse wavelet transform on $W$ to produce $f'$
-			\State $\gamma_i \gets E(Q(f'),Q(f))$			
-			\State Restore $c_i$
+			A stream $C=\{c_i\}, i\in\{0,\dots,n-1\}$\\}
+		\Initialize{Per-region signature matrix $A_r\gets 0, r\in\{0,\dots\bar{r}-1\}$\\
+		Global signature matrix $A \gets 0$}
+		\For{each chunk $c_i$}
+			\State Let $r$, $b$, $l$ be the region, bit plane, and subband that $c_i$ belongs
+			\State $A_r(l,b) \gets A_r(l,b)+i$
 		\EndFor
-		\State Sort the $c_i$'s in descending order of $\gamma_i$.
-		\Output{The $Q$-optimized stream, which is the sorted $C$}
+		\For{each region $r$}
+			\State Sort the elements of $A_r$
+			\State Assign each element of $A_r$ its index after sorting
+			\State $A \gets A+A_r$
+		\EndFor
+		\State Sort the elements of $A$
+		\State Assign each element of $A$ its index after sorting
+		\Output{The signature matrix $A$}
 	\end{algorithmic}
 	\label{alg:greedy}
 \end{algorithm}

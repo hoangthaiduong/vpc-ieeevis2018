@@ -127,7 +127,7 @@ output stream. The pseudocode of the algorithm is presented in Algorithm~\ref{al
 			An unordered set of $n$ chunks $C = \{c_i\}, i\in \{1,\dots,n\}$\\
 			A quantity of interest $Q$, and a distance function $E$}
 		\Initialize{A set of weights $\Gamma = \{\gamma_i\}, i\in \{1,\dots,n\}$ }
-		\For{$i$ = $1$ to $n$}
+		\For{each chunk $c_i$}
 			\State $c_i \gets 0$
       \State Back-transform $C$ to produce a set of wavelet coefficients $W$
 			\State Perform inverse wavelet transform on $W$ to produce $f'$
