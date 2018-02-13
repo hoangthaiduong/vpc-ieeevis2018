@@ -33,7 +33,7 @@ the second subband ($A_{1,0}=2$), and so on.
 
 To compute a stream signature, we partition the whole domain into several \emph{regions}, compute
 one signature per region, then sum all the per-region signatures. Partitioning is needed since it is
-only meaningful to compute the relative ordering of chunks if they come from the the same (``small''
+only meaningful to compute the relative ordering of chunks if they come from the same (``small''
 enough) region. For example, a chunk at one corner of the domain can be streamed before another
 chunk at an opposite corner, but this fact contains no useful information. We want a region to be as
 small as possible, and define a region to be the spatial volume/area that is covered by a chunk in
@@ -45,9 +45,7 @@ signatures by summing them into one signature. This choice results in signatures
 meaningful for data that contains a high degree of spatial variability. We have found, however, that
 this choice works well for the various data sets used in this paper. If signatures are deemed useful
 enough to be deployed in practice, a more sophisticated ``compression'' of the signature stack might
-be necessary for the best results.
-
-The following algorithm computes a stream signature.
+be necessary for the best results. Algorithm~\ref{alg:signature} lists the steps in detail.
 
 \begin{algorithm}[h]
   \caption{Computing a stream signature}
@@ -69,10 +67,28 @@ The following algorithm computes a stream signature.
 		\State Assign each element of $A$ its index after sorting
 		\Output{The signature matrix $A$}
 	\end{algorithmic}
-	\label{alg:greedy}
+	\label{alg:signature}
 \end{algorithm}
 
-TODO: example signatures for the by bit plane, by level, by wavelet norm
+Figure~\ref{fig:signature-static} shows renderings of signatures for the three static streams:
+\emph{by bit plane}, \emph{by level}, \emph{by wavelet norm}. Each signature is shown as an image of
+size $\bar{b}$ (width) $\times \bar{l}$ (height). The signature's $(0,0)$ element, corresponding to
+the coarsest subband and the most significant bit plane, maps to the top-left pixel of the image.
+The elements' values are mapped to colors on a linear green scale, in which smaller numbers map to
+brighter greens. That is, $(l,b)$ pairs that map to brighter pixels are considered more important
+and thus appear earlier in stream.
+
+\begin{figure}[h]
+  \centering
+	\subcaptionbox{By bit plane}{
+	{\includegraphics[width=0.31\linewidth]{img/rmse/SIG-(STATIC)-(BY-BIT-PLANE)-(rmse).png}}}
+	\subcaptionbox{By level}{
+ 	{\includegraphics[width=0.31\linewidth]{img/rmse/SIG-(STATIC)-(BY-LEVEL)-(rmse).png}}}
+	\subcaptionbox{By wavelet norm}{
+ 	{\includegraphics[width=0.31\linewidth]{img/rmse/SIG-(STATIC)-(BY-WAVELET-NORM)-(rmse).png}}}
+ 	\caption{Signature renderings of the three static streams.}
+ 	\label{fig:signature-static}
+\end{figure}
 
 \subsection{Function reconstruction}
 \label{sec:rmse-optimized}

@@ -123,10 +123,10 @@ output stream. The pseudocode of the algorithm is presented in Algorithm~\ref{al
   \caption{Computing a task-optimized stream}
   \begin{algorithmic}[1]
     \Inputs{
-			The original function $f$\\
-			An unordered set of $n$ chunks $C = \{c_i\}, i\in \{1,\dots,n\}$\\
+			An original function $f$\\
+			An unordered set of $n$ chunks $C = \{c_i\}, i\in \{0,\dots,n-1\}$\\
 			A quantity of interest $Q$, and a distance function $E$}
-		\Initialize{A set of weights $\Gamma = \{\gamma_i\}, i\in \{1,\dots,n\}$ }
+		\Initialize{A set of weights $\Gamma = \{\gamma_i\}, i\in \{0,\dots,n-1\}$ }
 		\For{each chunk $c_i$}
 			\State $c_i \gets 0$
       \State Back-transform $C$ to produce a set of wavelet coefficients $W$
