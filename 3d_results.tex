@@ -1,4 +1,6 @@
 \section{3D Results}
+\label{sec:3d_results}
+
 In previous sections, we showed that changing the streaming order can significantly reduce error. For example,
 adaptive RMSE optimized stream outperforms any fixed ordering stream, such as by level,
 by bit plane, or by wavelet norm. We now validate those result on the full 3D datasets.
@@ -48,20 +50,21 @@ the these subbands.
  	\label{fig:motivation-3d-gradient}
 \end{figure}
 
-\begin{figure}
-  \centering
-	\subcaptionbox{Boiler}
-        {\includegraphics[width=0.48\linewidth]{img/motivation-3d/gradient5-boiler.pdf}}
-	\subcaptionbox{Diffusivity}
- 	{\includegraphics[width=0.48\linewidth]{img/motivation-3d/gradient5-diffusivity.pdf}}
-	\subcaptionbox{Turbulence}
- 	{\includegraphics[width=0.48\linewidth]{img/motivation-3d/gradient5-turbulence.pdf}}
-	\subcaptionbox{Velocity-z}
- 	{\includegraphics[width=0.48\linewidth]{img/motivation-3d/gradient5-velocityz.pdf}}
- 	\caption{Gradient error (5-point stencil) of reconstructed functions using the three data-agnostic streams
- 	defined in Section \ref{sec:motivation} and the data dependant greedy scheme. Lower is better.
-        The streams are truncated to highlight
- 	the differences, without omitting important information.}
- 	\label{fig:motivation-3d-gradient5}
-\end{figure}
+% commented out because the pdf files are missing
+% \begin{figure}
+%   \centering
+% 	\subcaptionbox{Boiler}
+%         {\includegraphics[width=0.48\linewidth]{img/motivation-3d/gradient5-boiler.pdf}}
+% 	\subcaptionbox{Diffusivity}
+%  	{\includegraphics[width=0.48\linewidth]{img/motivation-3d/gradient5-diffusivity.pdf}}
+% 	\subcaptionbox{Turbulence}
+%  	{\includegraphics[width=0.48\linewidth]{img/motivation-3d/gradient5-turbulence.pdf}}
+% 	\subcaptionbox{Velocity-z}
+%  	{\includegraphics[width=0.48\linewidth]{img/motivation-3d/gradient5-velocityz.pdf}}
+%  	\caption{Gradient error (5-point stencil) of reconstructed functions using the three data-agnostic streams
+%  	defined in Section \ref{sec:motivation} and the data dependant greedy scheme. Lower is better.
+%         The streams are truncated to highlight
+%  	the differences, without omitting important information.}
+%  	\label{fig:motivation-3d-gradient5}
+% \end{figure}
 

@@ -117,7 +117,7 @@ missing, and enables $c_i$ again at the end of iteration $i$. After repeating th
 $n$ iterations, each chunk now has an associated weight, $E_i$. The optimal stream, then, is simply
 a sorted list of chunks, in decreasing order of the weights. We have observed that this simplified
 algorithm brings the running time down from days to minutes, while retaining the same quality of the
-output stream. The pseudocode of the algorithm is presented below.
+output stream. The pseudocode of the algorithm is presented in Algorithm~\ref{alg:greedy}.
 
 \begin{algorithm}[h]
   \caption{Computing a task-optimized stream}
