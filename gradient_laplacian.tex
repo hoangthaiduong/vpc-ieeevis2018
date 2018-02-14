@@ -10,66 +10,30 @@ differences on the finest (original) resolution. This is possible since the wave
 for reconstruction of the function at the original resolution. The reason for this decision is to
 avoid the problem of computing distances between quantities across grids of different dimensions
 (e.g., computing the root-mean-square error between a (down-sampled) $n\times n$ grid and a
-$2n\times 2n$ grid), because we are unaware of solutions to this problem. In the following Sections,
-we perform experiments with two of the most common types of derivative, namely gradient and
-Laplacian.
+$2n\times 2n$ grid), because we are unaware of widely accepted solutions to this problem. In the
+following sections, we perform experiments with two of the most common types of derivative, namely
+gradient (Section~\ref{sec:gradient}) and Laplacian (Section~\ref{sec:laplacian}).
 
 \subsubsection{Gradient}
 \label{sec:gradient}
 
 Since simulation data can rarely be captured by closed-form formulas, we use finite difference to
 compute gradients. We experiment with three popular finite difference schemes using stencil size
-widths of two, three, and five points in each dimension: $\frac{\partial f}{\partial x}\approx
-f(x+1)-f(x)
-\approx \frac{1}{2}f(x+1)-\frac{1}{2}f(x-1) \approx
+widths of two, three, and five points in each dimension, but found no tangible differences in the
+results. We have therefore decided to use the five-point stencil exlusively in this paper:
+$\frac{\partial f}{\partial x}\approx
 \frac{1}{12}f(x-2)-\frac{2}{3}f(x-1)+\frac{2}{3}f(x+1)-\frac{1}{12}f(x+2)$. In 2D, the gradient at
 each grid point $(x,y)$ is the vector $(\frac{\partial f}{\partial x},\frac{\partial f}{\partial
-y})$. We use the greedy algorithm in Section (\ref{sec:data_dep_streams} to compute a
-\emph{gradient-optimized} stream that minimizes the difference between the gradient field of $f_b$
-(the reconstructed function using $b$ bits per sample) and that of the original function ($f$). At
-each grid point $p$, we compute an error $e(p)$, defined to be the squared Euclidean length of the
-difference between two gradient vectors at $p$, that is $e(p)=\norm{\nabla f_b(p)-\nabla f(p)}^2$.
-The overall error metric over the whole field, $E_g$, is defined as $E_g(\nabla f_b,\nabla
-f)=\sqrt{\frac{1}{n}\sum_{i=1}^{n}{e(p_i)}}$.
+y})$. We use Algorithm~\ref{alg:greedy} to compute a \emph{gradient-optimized} stream that minimizes
+the difference between the gradient field of $f_b$ (the reconstructed function using $b$ bits per
+sample) and that of the original function ($f$). At each grid point $p$, we compute an error $e(p)$,
+defined to be the squared Euclidean length of the difference between two gradient vectors at $p$,
+that is $e(p)=\norm{\nabla f_b(p)-\nabla f(p)}^2$. The overall error metric over the whole field,
+$E_g$, is defined as $E_g(\nabla f_b,\nabla f)=\sqrt{\frac{1}{n}\sum_{i=1}^{n}{e(p_i)}}$.
 
-We first want to quantify the effects (if any) that the stencil width has on the performance of
-\emph{gradient-optimized} streams. For this experiment, we treat the gradient computed using the
-five-point stencil on the finest resolution grid, at full precision, as the ``groundtruth'' gradient
-field. Three \emph{gradient-optimized} streams (2-point, 3-point, and 5-point) are compared against
-this groundtruth gradient field, using the error criteria $E_g$ defined above. The results are
-plotted in Figure \ref{fig:gradient-stencil-comparison}. The plots show that the error curves for
-all three stencils match one another closely, with the two-point stencil having negligibly higher
-errors in some cases. This means in practice, a three-point stencil would likely strike a good
-balance between the accuracy and speed. Since a slight increase in speed is not our main concern for
-the experiments in this paper, we have chosen to use the five-point stencil always in the rest of
-the section, noting that any conclusions drawn also apply to the other stencils.
-
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{boiler}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-boiler.pdf}}
-	\subcaptionbox{diffusivity}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-diffusivity.pdf}}
-	\subcaptionbox{euler}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-euler.pdf}}
-	\subcaptionbox{pressure}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-pressure.pdf}}
-	\subcaptionbox{marschner-lobb}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-marschner-lobb.pdf}}
-	\subcaptionbox{velocityz}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/compare-stencils/gradient-optimized-velocityz.pdf}}
-	\caption{Gradient error for \emph{gradient-optimized} streams using different stencil widths,
-	againts the ``groundtruth'' gradient, computed using 5-point finite difference on the original
-	field. The plots are truncated towards the end, so as to better highlight differences between the
-	curves. It can be seen that in most cases, there are no meaningful differences among the different
-	stencil widths.}
-	\label{fig:gradient-stencil-comparison}
-\end{figure}
-
-In the next experiment, we plot the gradient error curves produced by \emph{gradient-optimized},
-together with ones produced by the \emph{by level}, \emph{by bit plane}, and \emph{by wavelet norm}
-streams, for the same six data sets. These curves are plotted in Figure
-\ref{fig:gradient-error-comparison}. \emph{gradient-optimized} typically performs far better than
+We plot the gradient error curves produced by the \emph{by level}, \emph{by bit plane}, \emph{by
+wavelet norm}, \emph{gradient-optimized}, and \emph{gradient signature} streams, for six data sets
+(Figure~\ref{fig:gradient-error-comparison}). \emph{gradient-optimized} performs far better than all
 the static streams, due to the fact that, with the knowledge of the data, this stream is able to
 prioritize regions that would benefit the most from additional bits. Among the static streams,
 \emph{by level} performs the worst, while \emph{by wavelet norm} performs slightly worse than the
@@ -77,18 +41,18 @@ other two streams.
 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{boiler}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-boiler.pdf}}
-	\subcaptionbox{diffusivity}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-diffusivity.pdf}}
-	\subcaptionbox{euler}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-euler.pdf}}
-	\subcaptionbox{pressure}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-pressure.pdf}}
-	\subcaptionbox{marschner-lobb}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-marschner-lobb.pdf}}
-	\subcaptionbox{velocityz}
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-velocityz.pdf}}
+	\subcaptionbox{boiler}{
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-boiler.pdf}}}
+	\subcaptionbox{diffusivity}{
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-diffusivity.pdf}}}
+	\subcaptionbox{euler}{
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-euler.pdf}}}
+	\subcaptionbox{pressure}{
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-pressure.pdf}}}
+	\subcaptionbox{marschner-lobb}{
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-marschner-lobb.pdf}}}
+	\subcaptionbox{velocityz}{
+	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-velocityz.pdf}}}
 	\caption{Gradient error comparison among different streams, using the five-point stencil. The
 	plots are truncated in the same way as in Figure \ref{fig:gradient-stencil-comparison}. In all
 	cases, \emph{by wavelet norm} performs slightly worse than \emph{by bit plane} and \emph{gradient
@@ -96,86 +60,75 @@ other two streams.
 	\label{fig:gradient-error-comparison}
 \end{figure}
 
-The differences in gradient errors among the streams in all cases are negligible. To give an
-example, in Figure \ref{fig:gradient-rendering} we visualize the three reconstructed gradient fields
-(using \emph{by bit plane}, \emph{by wavelet norm}, and \emph{gradient signature}, as well as the
-groundtruth gradient field for the \emph{velocityz} data set, at 0.35 bps, where the streams diverge
-the most. This figure shows that the differences among reconstructed gradient fields are barely
-visible. For this reason, in practice, any static stream would likely suffice for the purpose of
-computing gradient. However, \emph{by bit plane} is significantly cheaper to compute compared to
-\emph{gradient signature}, because the latter requires obtaining \emph{gradient-optimized} first.
-\emph{by wavelet norm} is also a reasonable alternative, especially if the bits are stored on disk
-in the same order, for example, to optimize for root-mean-square errors (see Section
-\ref{sec:motivation}. Finally, \emph{by wavelet norm} is also preferrable if, beside an accurate
-gradient field, the task also requires an accurate function itself.
+The differences in gradient errors among the \emph{by bit plane}, \emph{by wavelet norm}, and
+\emph{gradient signature} streams are negligible. As an example, in
+Figure~\ref{fig:gradient-rendering-diff} we visualize the three reconstructed gradient fields, as
+well as the groundtruth gradient field for the \emph{velocityz} data set, at 0.35 bps, where the
+streams diverge the most. This figure shows that the differences among reconstructed gradient fields
+are barely visible. For this reason, in practice, any static stream would likely suffice for the
+purpose of computing gradient. However, \emph{by bit plane} is significantly cheaper to compute
+compared to \emph{gradient signature}, because the latter requires obtaining
+\emph{gradient-optimized} first. \emph{by wavelet norm} is also a reasonable alternative, especially
+if the bits are stored on disk in the same order, for example, to optimize for root-mean-square
+errors (see Section~\ref{sec:motivation}. Finally, \emph{by wavelet norm} is also preferrable if,
+beside an accurate gradient field, the task also requires an accurate function itself.
 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{by wavelet norm}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_0_diff.png}}
-	\subcaptionbox{by bit plane}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_1_diff.png}}
-	\subcaptionbox{gradient signature}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_2_diff.png}}
-	\subcaptionbox{gradient-optimized}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_3_diff.png}}
-	\subcaptionbox{by wavelet norm}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_0.png}}
-	\subcaptionbox{by bit plane}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_1.png}}
-	\subcaptionbox{gradient signature}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_2.png}}
-	\subcaptionbox{gradient-optimized}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/gradient_3.png}}
+	\subcaptionbox{by wavelet norm}{
+	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_0_diff.png}}
+	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_1_diff.png}}
+	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_2_diff.png}}
+	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_3_diff.png}}}
+	\subcaptionbox{by wavelet norm}{
+	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_0.png}}
+	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_1.png}}
+	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_2.png}}
+	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_3.png}}}
 	\caption{Renderings of reconstructed gradient fields (bottom row), and differences, using the XOR
 	operator (top row) from the groundtruth gradient field. \emph{velocityz}, 0.35 bps. The
 	differences among the streams are barely noticable.}
-  \label{fig:gradient-rendering}
+  \label{fig:gradient-rendering-diff}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{boiler's gradient, 2.39 bps}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/boiler-gradient.png}}
-	\subcaptionbox{boiler's groundtruth gradient}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/boiler-groundtruth-gradient.png}}
-	\subcaptionbox{euler's gradient, 0.25 bps}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/euler-gradient.png}}
-	\subcaptionbox{euler's groundtruth gradient}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/euler-groundtruth-gradient.png}}
-	\subcaptionbox{marschner-lobb's gradient, 1.55 bps}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/marschner-lobb-gradient.png}}
-	\subcaptionbox{marschner-lobb's groundtruth gradient}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/marschner-lobb-groundtruth-gradient.png}}
-	\subcaptionbox{diffusivity's gradient, 0.75 bps}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/diffusivity-gradient.png}}
-	\subcaptionbox{diffusivity's groundtruth gradient}
-	{\includegraphics[width=0.24\linewidth]{img/gradient/diffusivity-groundtruth-gradient.png}}
-	\caption{Renderings of reconstructed gradient fields at low bit rates, compared to renderings of groundtruth gradient fields. The bit rates are chosen to be as low as possible, while largely capturing the visual fidelity of the results.}
-  \label{fig:gradient-rendering}
-\end{figure}
-
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{by wavelet norm}
+	\subcaptionbox{by wavelet norm}{
 	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func0-by-wavelet-norm-diff.png}}
-	\subcaptionbox{by bit plane}
 	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func1-by-bit-plane-diff.png}}
-	\subcaptionbox{gradient signature}
 	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func2-laplacian-signature-diff.png}}
-	\subcaptionbox{gradient-optimized}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func3-laplacian-optimized-diff.png}}
-	\subcaptionbox{by wavelet norm}
+	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func3-laplacian-optimized-diff.png}}}
+	\subcaptionbox{by wavelet norm}{
 	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func0-by-wavelet-norm.png}}
-	\subcaptionbox{by bit plane}
 	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func1-by-bit-plane.png}}
-	\subcaptionbox{gradient signature}
 	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func2-laplacian-signature.png}}
-	\subcaptionbox{gradient-optimized}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func3-laplacian-optimized.png}}
+	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func3-laplacian-optimized.png}}}
 	\caption{Renderings of reconstructions of function (bottom row), and differences (XOR) from the groundtruth (top row). \emph{velocityz}, 1.28 bps. Although \emph{gradient signature} and \emph{by wavelet norm} produce same-quality gradient fields, \emph{by wavelet norm} produces a higher-quality function.}
-  \label{fig:gradient-rendering}
+  \label{fig:gradient-vs-rmse}
 \end{figure}
+
+Figure~\ref{fig:gradient-renderings} gives a crude idea on the range of bit rates needed to
+reconstruct a gradient field that is visually close to the ground-truth. For the data sets used in
+our experiments, as low as 0.25 bps and as high as 2.39 bps are needed for this purpose.
+
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{boiler's gradient, 2.39 bps}{
+	{\includegraphics[width=0.23\linewidth]{img/gradient/boiler-gradient.png}}
+	{\includegraphics[width=0.23\linewidth]{img/gradient/boiler-groundtruth-gradient.png}}}
+	\subcaptionbox{euler's gradient, 0.25 bps}{
+	{\includegraphics[width=0.23\linewidth]{img/gradient/euler-gradient.png}}
+	{\includegraphics[width=0.23\linewidth]{img/gradient/euler-groundtruth-gradient.png}}}
+	\subcaptionbox{marschner-lobb's gradient, 1.55 bps}{
+	{\includegraphics[width=0.23\linewidth]{img/gradient/marschner-lobb-gradient.png}}
+	{\includegraphics[width=0.23\linewidth]{img/gradient/marschner-lobb-groundtruth-gradient.png}}}
+	\subcaptionbox{diffusivity's gradient, 0.75 bps}{
+	{\includegraphics[width=0.23\linewidth]{img/gradient/diffusivity-gradient.png}}
+	{\includegraphics[width=0.23\linewidth]{img/gradient/diffusivity-groundtruth-gradient.png}}}
+	\caption{Renderings of reconstructed gradient fields at low bit rates, compared to renderings of groundtruth gradient fields. The bit rates are chosen to be as low as possible, while largely capturing the visual fidelity of the results.}
+  \label{fig:gradient-renderings}
+\end{figure}
+
 
 \subsubsection{Laplacian}
 \label{sec:laplacian}
@@ -262,6 +215,8 @@ gradient case too, but to a much lesser degree.
 	\caption{Laplacian rendering, velocityz, 1.28bps. \emph{laplacian signature} incurs lowest level of visual artifacts among the static streams.}
 	\label{fig:laplacian-precision-comparison}
 \end{figure}
+
+
 
 \begin{figure}[h]
 	\subcaptionbox{\emph{by wavelet norm}}
