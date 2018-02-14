@@ -27,9 +27,9 @@ the range $[0,\bar{b}\times \bar{l})$. This value indicates, on average, the pos
 chunks associated with that element appear in the stream, relative to chunks associated with other
 elements. For example, the signature  $A=\bigl[
 \begin{smallmatrix}0 & 1 & 4\\ 2 & 3 & 5\end{smallmatrix}\bigr]$ conveys the information that the
-most important chunks lie on the first bit plane of the first subband ($A_{0,0}=0$), followed by
-chunks lying on the second bit plane of the first subband ($A_{0,1}=1$), then the first bit plane of
-the second subband ($A_{1,0}=2$), and so on.
+most important chunks lie on the first bit plane of the first subband ($A(0,0)=0$), followed by
+chunks lying on the second bit plane of the first subband ($A(0,1)=1$), then the first bit plane of
+the second subband ($A(1,0)=2$), and so on.
 
 To compute a stream signature, we partition the whole domain into several \emph{regions}, compute
 one signature per region, then sum all the per-region signatures. Partitioning is needed since it is
@@ -93,27 +93,26 @@ and thus appear earlier in stream.
 \subsection{Function reconstruction}
 \label{sec:rmse-optimized}
 
-The most fundamental task is that of reconstructing the function itself (i.e., $Q$ is the identity
-map), using a common error metric such as the root-mean-square error (RMSE). For each data set, we
-use the aforementioned $O(n)$ greedy algorithm to construct an \emph{rmse-optimized} stream. In
-Section \ref{sec:motivation} we have seen that the \emph{by wavelet norm} performs the best among
-the data-agnostic streams with regards to RMSE. To see how the \emph{rmse-optimized} stream, which
-is data-dependent, compares to the data-agnostic streams, we plot all four streams together in
-Figure \ref{fig:rmse-optimized}. It can be seen that the difference between \emph{by wavelet norm}
-and \emph{rmse-optimized} is negligible in most cases. This result is expected, because \emph{by
-wavelet norm} and \emph{rmse-optimized} both order the chunks according to their contribution to in
-the $L_2$ sense, with \emph{rmse-optimized} also taking into account the actual values of the bits.
-This difference has little effect in this case, because, as leading zero bits are removed, the rest
-of the bits (of the wavelet coefficients) are known to be distributed approximately uniformly among
-$0$ and $1$ for wavelet coefficients [CITE]. 
+The most fundamental analysis task is that of reconstructing the function itself. The most common
+error metric in this case is the root-mean-square error (RMSE). For each data set, we use
+Algorithm~\ref{alg:greedy} to construct an \emph{rmse-optimized} stream, and plot this stream
+together with the three static streams (Section~\ref{sec:terminologies}) in
+Figure~\ref{fig:rmse-optimized}. Note, again, that all leading-zero chunks are removed before
+plotting, to emulate the effect of entropy compression often done in practice. It can be observed
+that the difference between \emph{by wavelet norm} and \emph{rmse-optimized} is negligible in most
+cases. This result is expected, because \emph{by wavelet norm} and \emph{rmse-optimized} both order
+the chunks according to their contribution to in the $L_2$ sense, with \emph{rmse-optimized} also
+taking into account the actual values of the bits. This difference has little effect, because, as
+leading zero bits are removed, the rest of the bits (of the wavelet coefficients) are known to be
+distributed approximately uniformly among $0$ and $1$. 
 
 Among the static streams, \emph{by level} performs poorly compared to \emph{by bit plane} and
-\emph{by wavelet norm}. This is because, in the $L_2$ norm, low-ordered bits or coarse-level
-coefficients contribute little compared to high-ordered bits of fine-level coefficients. This
-difference in contribution is magnified when the data contains fine-scale features, as is the case
-for the \emph{plasma} data set. In Figure \ref{fig:rmse-rendering}, we render this field at 0.74
-bits per sample for all three streams, and compare these rendering with that of the groundtruth
-data. \emph{by level} results in heavy artifacts that are not seen by \emph{by bit plane} and
+\emph{by wavelet norm}. This is because, in this case, low-ordered bits or coarse-level coefficients
+contribute little compared to high-ordered bits of fine-level coefficients. This difference in
+contribution is magnified when the data contains more fine-scale features, as is the case for the
+\emph{plasma} data set. In Figure~\ref{fig:rmse-rendering}, we render this field at 0.74 bits per
+sample (bps) for all three streams, and compare these rendering with that of the groundtruth data.
+\emph{by level} results in heavy artifacts that are not seen by \emph{by bit plane} and
 \emph{by wavelet norm}. \emph{by wavelet norm} performs slightly better than \emph{by bit plane}
 here and in all other cases. These results suggest that in practice, \emph{by wavelet norm} is a
 near-optimal way to stream data that minimizes root-mean-square errors, regardless of the data.
