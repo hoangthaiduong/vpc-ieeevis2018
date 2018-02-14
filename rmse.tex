@@ -90,6 +90,15 @@ and thus appear earlier in stream.
  	\label{fig:signature-static}
 \end{figure}
 
+A signature can be used to construct a ``semi-static'' stream, by iterating through the elements of
+the signature in ascending order, and streaming all the chunks associated with each current element.
+This stream is similar to purely static streams, in the sense that the ordering of subband-bit plane
+pairs is deterministic. However, it is different from purely static streams in that this
+deterministic ordering must be established between the client and the server through the
+transmission of the signature. Fortunately, the size of the signature is often negligible compared
+to the size of the data itself. In 3D, assuming 22 subbands and 32-bit quantized coefficients, a
+signature is merely $1408 (=22\times 32\times 2)$ bytes.
+
 \subsection{Function reconstruction}
 \label{sec:rmse-optimized}
 
@@ -97,75 +106,84 @@ The most fundamental analysis task is that of reconstructing the function itself
 error metric in this case is the root-mean-square error (RMSE). For each data set, we use
 Algorithm~\ref{alg:greedy} to construct an \emph{rmse-optimized} stream, and plot this stream
 together with the three static streams (Section~\ref{sec:terminologies}) in
-Figure~\ref{fig:rmse-optimized}. Note, again, that all leading-zero chunks are removed before
+Figure~\ref{fig:rmse-optimized}. We also include \emph{rmse signature} streams, computed from the
+signatures of \emph{rmse-optimized}. Note, again, that all leading-zero chunks are removed before
 plotting, to emulate the effect of entropy compression often done in practice. It can be observed
 that the difference between \emph{by wavelet norm} and \emph{rmse-optimized} is negligible in most
 cases. This result is expected, because \emph{by wavelet norm} and \emph{rmse-optimized} both order
 the chunks according to their contribution to in the $L_2$ sense, with \emph{rmse-optimized} also
 taking into account the actual values of the bits. This difference has little effect, because, as
 leading zero bits are removed, the rest of the bits (of the wavelet coefficients) are known to be
-distributed approximately uniformly among $0$ and $1$. 
-
-Among the static streams, \emph{by level} performs poorly compared to \emph{by bit plane} and
-\emph{by wavelet norm}. This is because, in this case, low-ordered bits or coarse-level coefficients
-contribute little compared to high-ordered bits of fine-level coefficients. This difference in
-contribution is magnified when the data contains more fine-scale features, as is the case for the
-\emph{plasma} data set. In Figure~\ref{fig:rmse-rendering}, we render this field at 0.74 bits per
-sample (bps) for all three streams, and compare these rendering with that of the groundtruth data.
-\emph{by level} results in heavy artifacts that are not seen by \emph{by bit plane} and
-\emph{by wavelet norm}. \emph{by wavelet norm} performs slightly better than \emph{by bit plane}
-here and in all other cases. These results suggest that in practice, \emph{by wavelet norm} is a
-near-optimal way to stream data that minimizes root-mean-square errors, regardless of the data.
+distributed approximately uniformly among $0$ and $1$.
 
 \begin{figure}[h]
   \centering
-	\subcaptionbox{Boiler}
-  {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-boiler.pdf}}
-	\subcaptionbox{Diffusivity}
- 	{\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-diffusivity.pdf}}
-	\subcaptionbox{Euler}
- 	{\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-euler.pdf}}
-	\subcaptionbox{Turbulence}
- 	{\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-turbulence.pdf}}
-	\subcaptionbox{Plasma}
- 	{\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-plasma.pdf}}
-	\subcaptionbox{Velocity-z}
- 	{\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-velocityz.pdf}}
- 	\caption{Root-mean-square error of reconstructed functions for the three data-agnostic streams
- 	defined in Section \ref{sec:motivation}, and the \emph{rmse-optimized} stream. Lower is better.
- 	The streams are truncated to highlight the differences, without omitting important information.
- 	\emph{rmse-optimized} performs best, followed closely by \emph{by wavelet norm} and \emph{by bit
- 	plane}.}
+	\subcaptionbox{Boiler}{
+  {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-boiler.pdf}}}
+  \subcaptionbox{Diffusivity}{
+  {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-diffusivity.pdf}}}
+  \subcaptionbox{Euler}{
+  {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-euler.pdf}}}
+  \subcaptionbox{Turbulence}{
+  {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-turbulence.pdf}}}
+  \subcaptionbox{Plasma}{
+  {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-plasma.pdf}}}
+  \subcaptionbox{Velocity-z}{
+  {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-velocityz.pdf}}}
+  \caption{Root-mean-square error of reconstructed functions for the three data-agnostic streams
+  defined in Section \ref{sec:motivation}, and the \emph{rmse-optimized} stream. Lower is better.
+  The streams are truncated to highlight the differences, without omitting important information.
+  \emph{rmse-optimized} performs best, followed closely by \emph{by wavelet norm}, \emph{rmse
+  signature} and \emph{by bit plane}.}
  	\label{fig:rmse-optimized}
 \end{figure}
 
+Among the static streams, \emph{by level} performs poorly compared to \emph{by bit plane}, \emph{by
+wavelet norm}, and \emph{rmse signature}. This is because, in this case, low-ordered bits or
+coarse-level coefficients contribute little compared to high-ordered bits of fine-level
+coefficients. This difference in contribution is magnified when the data contains more fine-scale
+features, as is the case for the \emph{plasma} data set. In Figure~\ref{fig:rmse-rendering}, we
+render this field at 0.74 bits per sample (bps) for all three streams, and compare these rendering
+with that of the groundtruth data. \emph{by level} results in heavy artifacts that are not seen by
+\emph{by bit plane} and \emph{by wavelet norm}. \emph{by wavelet norm} performs slightly better than
+\emph{by bit plane} here and in all other cases. In Figure~\ref{fig:precision-map-rmse}, it can be
+observed that the distribution of bits per subband of the \emph{rmse signature} stream (and hence,
+the \emph{rmse-optimized} stream) closely resembles that of \emph{by wavelet norm}. These results
+suggest that in practice, \emph{by wavelet norm} is a near-optimal way to stream data that minimizes
+root-mean-square errors, regardless of the data.
+
 \begin{figure}[h]
 	\centering
+	\subcaptionbox{Function rendering, \emph{by level}, \emph{by bit plane}, \emph{by wavelet norm},
+	and \emph{rmse signature}}{
 	{\includegraphics[width=0.24\linewidth]{img/rmse/plasma_curr_func2.png}}
 	{\includegraphics[width=0.24\linewidth]{img/rmse/plasma_curr_func1.png}}
 	{\includegraphics[width=0.24\linewidth]{img/rmse/plasma_curr_func0.png}}
-	{\includegraphics[width=0.24\linewidth]{img/rmse/signature_curr_func0.png}}
+	{\includegraphics[width=0.24\linewidth]{img/rmse/signature_curr_func0.png}}}
+	\subcaptionbox{Image difference (XOR) from ground-truth, same ordering}{
 	{\includegraphics[width=0.24\linewidth]{img/rmse/plasma_curr_func2_diff.png}}
 	{\includegraphics[width=0.24\linewidth]{img/rmse/plasma_curr_func1_diff.png}}
 	{\includegraphics[width=0.24\linewidth]{img/rmse/plasma_curr_func0_diff.png}}
-	{\includegraphics[width=0.24\linewidth]{img/rmse/signature_curr_func0_diff.png}}
+	{\includegraphics[width=0.24\linewidth]{img/rmse/signature_curr_func0_diff.png}}}
 	
-	\caption{Top row:	renderings of the \emph{plasma} function at 0.74 bps. From left to right:
-	\emph{by level}, \emph{by bit plane}, \emph{by wavelet norm}, and ground-truth. Bottom row:
-	difference (XOR) of the reconstructed images (in respective order) from the groundtruth image,
-	brighter pixels mean higher errors. The \emph{by wavelet norm} provides the most accurate
-	function, followed closely by
-	\emph{by bit plane}.}
+	\caption{Top row:	renderings of the \emph{plasma} function at 0.74 bps. Bottom row: difference
+	(XOR) of the reconstructed images (in respective order) from the groundtruth image, brighter
+	pixels mean higher errors. The \emph{by wavelet norm} and \emph{rmse signature} provide the most
+	accurate function, followed closely by \emph{by bit plane}.}
  	\label{fig:rmse-rendering}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
-	{\includegraphics[width=0.24\linewidth]{img/rmse/rmse-precision-dist-by-level.png}}
-	{\includegraphics[width=0.24\linewidth]{img/rmse/rmse-precision-by-bit-plane.png}}
-	{\includegraphics[width=0.24\linewidth]{img/rmse/rmse-precision-dist-by-wavelet-norm.png}}
-	{\includegraphics[width=0.24\linewidth]{img/rmse/rmse-precision-signature.png}}
+	\subcaptionbox{\emph{by level}}{
+	{\includegraphics[width=0.23\linewidth]{img/rmse/rmse-precision-dist-by-level.png}}}
+	\subcaptionbox{\emph{by bit plane}}{
+	{\includegraphics[width=0.23\linewidth]{img/rmse/rmse-precision-by-bit-plane.png}}}
+	\subcaptionbox{\emph{by wavelet norm}}{
+	{\includegraphics[width=0.23\linewidth]{img/rmse/rmse-precision-dist-by-wavelet-norm.png}}}
+	\subcaptionbox{\emph{rmse-signature}}{
+	{\includegraphics[width=0.23\linewidth]{img/rmse/rmse-precision-signature.png}}}
 	
-	\caption{Precision distribution, plasma, 0.74 bps.}
- 	\label{fig:rmse-rendering}
+	\caption{Precision distribution per subband, \emph{plasma}, 0.74 bps. The coarsest subband is located at the top-left corner. Greater precision maps to brighter green pixels. Note that precision bits are distributed non-uniformly within each subband, because leading-zero bits were removed. The \emph{by level} stream allocates too many precision bits to the coarser subbands. The \emph{rmse-optimized} and \emph{by wavelet norm} streams distribute bits very similarly.}
+ 	\label{fig:precision-map-rmse}
 \end{figure}
