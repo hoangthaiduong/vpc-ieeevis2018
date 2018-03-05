@@ -49,10 +49,10 @@ other two streams.
 	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-euler.pdf}}}
 	\subcaptionbox{pressure}{
 	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-pressure.pdf}}}
-	\subcaptionbox{marschner-lobb}{
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-marschner-lobb.pdf}}}
-	\subcaptionbox{velocityz}{
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-velocityz.pdf}}}
+	% \subcaptionbox{marschner-lobb}{
+	% {\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-marschner-lobb.pdf}}}
+	% \subcaptionbox{velocityz}{
+	% {\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-velocityz.pdf}}}
 	\caption{Gradient error comparison among different streams, using the five-point stencil. The
 	plots are truncated in the same way as in Figure \ref{fig:gradient-stencil-comparison}. In all
 	cases, \emph{by wavelet norm} performs slightly worse than \emph{by bit plane} and \emph{gradient
@@ -124,10 +124,10 @@ previously defined streams, including \emph{gradient-optimized} using $E_g$ as t
 	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-euler.pdf}}
 	\subcaptionbox{pressure, 5-point stencil}
 	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-pressure.pdf}}
-	\subcaptionbox{marschner-lobb, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-marschner-lobb.pdf}}
-	\subcaptionbox{velocityz, 5-point stencil}
-	{\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-velocityz.pdf}}
+	% \subcaptionbox{marschner-lobb, 5-point stencil}
+	% {\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-marschner-lobb.pdf}}
+	% \subcaptionbox{velocityz, 5-point stencil}
+	% {\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-velocityz.pdf}}
 	\caption{Laplacian error comparison among streams, using the three-point stencil. The plots are
 	truncated so as to better highlight differences without discarding important information. In all cases, \emph{laplacian}}
 	\label{fig:laplacian-error-comparison}
@@ -207,10 +207,10 @@ TODO: add comparison of stream signatures
 	{\includegraphics[width=0.48\linewidth]{img/laplacian/SIG-(GREEDY)-(laplacian)-velocityz.png}}
 	\subcaptionbox{\emph{marschner-lobb}}
 	{\includegraphics[width=0.48\linewidth]{img/laplacian/SIG-(GREEDY)-(laplacian)-marschner-lobb.png}}
-	\subcaptionbox{\emph{euler}}
-	{\includegraphics[width=0.48\linewidth]{img/laplacian/SIG-(GREEDY)-(laplacian)-euler.png}}
-	\subcaptionbox{\emph{pressure}}
-	{\includegraphics[width=0.48\linewidth]{img/laplacian/SIG-(GREEDY)-(laplacian)-pressure.png}}
+	% \subcaptionbox{\emph{euler}}
+	% {\includegraphics[width=0.48\linewidth]{img/laplacian/SIG-(GREEDY)-(laplacian)-euler.png}}
+	% \subcaptionbox{\emph{pressure}}
+	% {\includegraphics[width=0.48\linewidth]{img/laplacian/SIG-(GREEDY)-(laplacian)-pressure.png}}
 	\caption{Precision map per subband (brigther is more precise) \emph{velocityz}, 1.28 bps. \emph{by wavelet norm} allocates more bits for the coarse-level subbands, while \emph{laplacian-optimized} and \emph{laplacian signature} do the opposite.}
 	\label{fig:laplacian-precision-comparison}
 \end{figure}
