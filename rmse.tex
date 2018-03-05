@@ -107,22 +107,18 @@ distributed approximately uniformly among $0$ and $1$.
 \begin{figure}[h]
   \centering
 	\subcaptionbox{Boiler}{
-  {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-boiler.pdf}}}
+  {\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-boiler}}}
   \subcaptionbox{Diffusivity}{
-  {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-diffusivity.pdf}}}
-  \subcaptionbox{Euler}{
-  {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-euler.pdf}}}
+  {\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-diffusivity}}}
+  \subcaptionbox{Plasma}{
+  {\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-plasma}}}
   \subcaptionbox{Turbulence}{
-  {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-turbulence.pdf}}}
-  % \subcaptionbox{Plasma}{
-  % {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-plasma.pdf}}}
-  % \subcaptionbox{Velocity-z}{
-  % {\includegraphics[width=0.48\linewidth]{img/rmse/rmse-optimized-velocityz.pdf}}}
+  {\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-turbulence}}}
   \caption{Root-mean-square error of reconstructed functions for the three data-agnostic streams
   defined in Section \ref{sec:motivation}, and the \emph{rmse-optimized} stream. Lower is better.
   The streams are truncated to highlight the differences, without omitting important information.
   \emph{rmse-optimized} performs best, followed closely by \emph{by wavelet norm}, \emph{rmse
-  signature} and \emph{by bit plane}.}
+  signature} and \emph{by bit plane}. TODO:explain any ``strange'' behavior in the plot.}
  	\label{fig:rmse-optimized}
 \end{figure}
 
@@ -142,21 +138,18 @@ root-mean-square errors, regardless of the data.
 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{Function rendering, \emph{by level}, \emph{by bit plane}, \emph{by wavelet norm},
-	and \emph{rmse signature}}{
-	{\includegraphics[width=0.24\linewidth]{img/rmse/plasma_curr_func2.png}}
-	{\includegraphics[width=0.24\linewidth]{img/rmse/plasma_curr_func1.png}}
-	{\includegraphics[width=0.24\linewidth]{img/rmse/plasma_curr_func0.png}}
-	{\includegraphics[width=0.24\linewidth]{img/rmse/signature_curr_func0.png}}}
-	\subcaptionbox{Image difference (XOR) from ground-truth, same ordering}{
-	{\includegraphics[width=0.24\linewidth]{img/rmse/plasma_curr_func2_diff.png}}
-	{\includegraphics[width=0.24\linewidth]{img/rmse/plasma_curr_func1_diff.png}}
-	{\includegraphics[width=0.24\linewidth]{img/rmse/plasma_curr_func0_diff.png}}
-	{\includegraphics[width=0.24\linewidth]{img/rmse/signature_curr_func0_diff.png}}}
-	
-	\caption{Top row:	renderings of the \emph{plasma} function at 0.74 bps. Bottom row: difference
-	(XOR) of the reconstructed images (in respective order) from the groundtruth image, brighter
-	pixels mean higher errors. The \emph{by wavelet norm} and \emph{rmse signature} provide the most
-	accurate function, followed closely by \emph{by bit plane}.}
+	\subcaptionbox{\emph{by level}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-boiler-level.png}}}
+	\subcaptionbox{\emph{by bit plane}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-boiler-bit-plane.png}}}
+	\subcaptionbox{\emph{by magnitude}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-boiler-magnitude.png}}}
+	\subcaptionbox{\emph{by wavelet norm}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-boiler-wavelet-norm.png}}}
+	\subcaptionbox{\emph{by signature}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-boiler-signature.png}}}
+	\subcaptionbox{\emph{rmse-optimized}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-boiler-groundtruth.png}}}
+	\caption{\emph{boiler} data reconstructed at 0.03 bps}
  	\label{fig:rmse-rendering}
 \end{figure}
