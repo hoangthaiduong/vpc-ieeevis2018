@@ -93,44 +93,9 @@ beside an accurate gradient field, the task also requires an accurate function i
 
 Although \emph{gradient-optimized} and \emph{}
 
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{by wavelet norm}{
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func0-by-wavelet-norm-diff.png}}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func1-by-bit-plane-diff.png}}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func2-laplacian-signature-diff.png}}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func3-laplacian-optimized-diff.png}}}
-	\subcaptionbox{by wavelet norm}{
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func0-by-wavelet-norm.png}}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func1-by-bit-plane.png}}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func2-laplacian-signature.png}}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/curr_func3-laplacian-optimized.png}}}
-	\caption{Renderings of reconstructions of function (bottom row), and differences (XOR) from the groundtruth (top row). \emph{velocityz}, 1.28 bps. Although \emph{gradient signature} and \emph{by wavelet norm} produce same-quality gradient fields, \emph{by wavelet norm} produces a higher-quality function.}
-  \label{fig:gradient-vs-rmse}
-\end{figure}
-
 Figure~\ref{fig:gradient-renderings} gives a crude idea on the range of bit rates needed to
 reconstruct a gradient field that is visually close to the ground-truth. For the data sets used in
 our experiments, as low as 0.25 bps and as high as 2.39 bps are needed for this purpose.
-
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{boiler's gradient, 2.39 bps}{
-	{\includegraphics[width=0.23\linewidth]{img/gradient/boiler-gradient.png}}
-	{\includegraphics[width=0.23\linewidth]{img/gradient/boiler-groundtruth-gradient.png}}}
-	\subcaptionbox{euler's gradient, 0.25 bps}{
-	{\includegraphics[width=0.23\linewidth]{img/gradient/euler-gradient.png}}
-	{\includegraphics[width=0.23\linewidth]{img/gradient/euler-groundtruth-gradient.png}}}
-	\subcaptionbox{marschner-lobb's gradient, 1.55 bps}{
-	{\includegraphics[width=0.23\linewidth]{img/gradient/marschner-lobb-gradient.png}}
-	{\includegraphics[width=0.23\linewidth]{img/gradient/marschner-lobb-groundtruth-gradient.png}}}
-	\subcaptionbox{diffusivity's gradient, 0.75 bps}{
-	{\includegraphics[width=0.23\linewidth]{img/gradient/diffusivity-gradient.png}}
-	{\includegraphics[width=0.23\linewidth]{img/gradient/diffusivity-groundtruth-gradient.png}}}
-	\caption{Renderings of reconstructed gradient fields at low bit rates, compared to renderings of groundtruth gradient fields. The bit rates are chosen to be as low as possible, while largely capturing the visual fidelity of the results.}
-  \label{fig:gradient-renderings}
-\end{figure}
-
 
 \subsubsection{Laplacian}
 \label{sec:laplacian}
@@ -166,28 +131,6 @@ previously defined streams, including \emph{gradient-optimized} using $E_g$ as t
 	\caption{Laplacian error comparison among streams, using the three-point stencil. The plots are
 	truncated so as to better highlight differences without discarding important information. In all cases, \emph{laplacian}}
 	\label{fig:laplacian-error-comparison}
-\end{figure}
-
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{boiler's laplacian, 4.0 bps}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/boiler-laplacian.png}}
-	\subcaptionbox{boiler's groundtruth laplacian}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/boiler-groundtruth-laplacian.png}}
-	\subcaptionbox{euler's laplacian, 0.64 bps}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/euler-laplacian.png}}
-	\subcaptionbox{euler's groundtruth laplacian}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/euler-groundtruth-laplacian.png}}
-	\subcaptionbox{marschner-lobb's laplacian, 3.9 bps}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/marschner-lobb-laplacian.png}}
-	\subcaptionbox{marschner-lobb's groundtruth laplacian}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/marschner-lobb-groundtruth-laplacian.png}}
-	\subcaptionbox{diffusivity's laplacian, 2.92 bps}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/diffusivity-laplacian.png}}
-	\subcaptionbox{diffusivity's groundtruth laplacian}
-	{\includegraphics[width=0.24\linewidth]{img/laplacian/diffusivity-groundtruth-laplacian.png}}
-	\caption{Renderings of reconstructed Laplacian fields at low bit rates, compared to renderings of groundtruth gradient fields. The bit rates are chosen to be as low as possible, while largely capturing the visual fidelity of the results. Compared to the gradient case (Figure \ref{fig:gradient-rendering}), to achieve the same level of visual fidelity for the Laplacian fields requires bit rates that are two to three times higher.}
-  \label{fig:gradient-rendering}
 \end{figure}
 
 It can be observed that unlike the case for gradient, there exists significant differences between

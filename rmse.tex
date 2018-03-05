@@ -187,27 +187,3 @@ root-mean-square errors, regardless of the data.
 	\caption{Precision distribution per subband, \emph{plasma}, 0.74 bps. The coarsest subband is located at the top-left corner. Greater precision maps to brighter green pixels. Note that precision bits are distributed non-uniformly within each subband, because leading-zero bits were removed. The \emph{by level} stream allocates too many precision bits to the coarser subbands. The \emph{rmse-optimized} and \emph{by wavelet norm} streams distribute bits very similarly.}
  	\label{fig:precision-map-rmse}
 \end{figure}
-
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{\emph{velocityz}, 0.26 bps}{
-	{\includegraphics[width=0.23\linewidth]{img/rmse/velocityz_groundtruth_function_0.png}}
-	{\includegraphics[width=0.23\linewidth]{img/rmse/velocityz_curr_by-wavelet-norm.png}}}
-	\subcaptionbox{\emph{plasma}, 0.74 bps}{
-	{\includegraphics[width=0.23\linewidth]{img/rmse/plasma_groundtruth_function_0.png}}
-	{\includegraphics[width=0.23\linewidth]{img/rmse/plasma_curr_by-wavelet-norm.png}}}
-	\subcaptionbox{\emph{turbulence}, 0.95 bps}{
-	{\includegraphics[width=0.23\linewidth]{img/rmse/turbulence_groundtruth_function_0.png}}
-	{\includegraphics[width=0.23\linewidth]{img/rmse/turbulence_curr_by-wavelet-norm.png}}}
-	\subcaptionbox{\emph{euler}, 0.23 bps}{
-	{\includegraphics[width=0.23\linewidth]{img/rmse/euler_groundtruth_function_0.png}}
-	{\includegraphics[width=0.23\linewidth]{img/rmse/euler_curr_by-wavelet-norm.png}}}
-	\subcaptionbox{\emph{diffusivity}, 0.30 bps}{
-	{\includegraphics[width=0.23\linewidth]{img/rmse/diffusivity_groundtruth_function_0.png}}
-	{\includegraphics[width=0.23\linewidth]{img/rmse/diffusivity_curr_by-wavelet-norm.png}}}
-	\subcaptionbox{\emph{boiler}, 0.95 bps}{
-	{\includegraphics[width=0.23\linewidth]{img/rmse/boiler_groundtruth_function_0.png}}
-	{\includegraphics[width=0.23\linewidth]{img/rmse/boiler_curr_by-wavelet-norm.png}}}
-	\caption{Renderings of original fields. Left: \emph{by wavelet norm}, right: groundtruth. The bit rates are chosen as low as possible, while keeping the reconstructed function virtually indistinguishable from the groundtruth.}
- 	\label{fig:precision-map-rmse}
-\end{figure}
