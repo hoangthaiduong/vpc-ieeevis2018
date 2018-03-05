@@ -41,7 +41,7 @@
 \fi%
 
 %% it is recomended to use ``\autoref{sec:bla}'' instead of ``Fig.~\ref{sec:bla}''
-\graphicspath{{figures/}{pictures/}{images/}{./}} % where to search for the images
+\graphicspath{{figures/}{pictures/}{images/}{./}{img/}} % where to search for the images
 
 \usepackage{microtype}                 % use micro-typography (slightly more compact, better to read)
 \PassOptionsToPackage{warn}{textcomp}  % to address font issues with \textrightarrow
@@ -146,12 +146,33 @@ exploration as well as cursory analysis of enormous data.%
 }
 
 %% Uncomment below to include a teaser figure.
-%\teaser{
-%  \centering
-%  \includegraphics[width=\linewidth]{CypressView}
-%  \caption{In the Clouds: Vancouver from Cypress Mountain. Note that the teaser may not be wider than the abstract block.}
-%	\label{fig:teaser}
-%}
+\teaser{
+  \centering
+  \includegraphics[width=0.9\linewidth]{cats}
+  % \subcaptionbox{By level}{
+  % {\includegraphics[width=0.15\linewidth]{teaser_rmse_level}}}
+  % \subcaptionbox{By bit plane}{
+  % {\includegraphics[width=0.15\linewidth]{teaser_rmse_bit_plane}}}
+  % \subcaptionbox{By wavelet norm}{
+  % {\includegraphics[width=0.15\linewidth]{teaser_rmse_wavelet_norm}}}
+  % \subcaptionbox{Signature}{
+  % {\includegraphics[width=0.15\linewidth]{teaser_rmse_signature}}}
+  % \subcaptionbox{Groundtruth}{
+  % {\includegraphics[width=0.15\linewidth]{teaser_rmse_groundtruth}}}
+  % \\
+  % \subcaptionbox{By level}{
+  % {\includegraphics[width=0.15\linewidth]{teaser_laplacian_level}}}
+  % \subcaptionbox{By bit plane}{
+  % {\includegraphics[width=0.15\linewidth]{teaser_laplacian_bit_plane}}}
+  % \subcaptionbox{By wavelet norm}{
+  % {\includegraphics[width=0.15\linewidth]{teaser_laplacian_wavelet_norm}}}
+  % \subcaptionbox{By signature}{
+  % {\includegraphics[width=0.15\linewidth]{teaser_laplacian_signature}}}
+  % \subcaptionbox{Groundtruth}{
+  % {\includegraphics[width=0.15\linewidth]{teaser_laplacian_groundtruth}}}
+  % \caption{Signature renderings of the three static streams.}
+  \label{fig:teaser}
+}
 
 %% Uncomment below to disable the manuscript note
 %\renewcommand{\manuscriptnotetxt}{}
@@ -197,8 +218,8 @@ exploration as well as cursory analysis of enormous data.%
 %% ``\begin{document}'' command. It prepares and prints the title block.
 
 %% the only exception to this rule is the \firstsection command
-\firstsection{Introduction}
 
+\firstsection{Introduction}
 \maketitle
 
 \input{introduction.tex}

@@ -34,22 +34,24 @@ much of the benefits can be realized with practical algorithms. This paper aims 
 important questions through extensive, empirical experiments. Our contributions are:
 
 \begin{itemize}
-\item We present an in-depth study of the resolution-versus-precision trade-offs for fundamental
-  data analysis and visualization tasks. To make this study possible, we put these trade-offs in the
-  framework of streaming wavelet coefficients, interleaving bits that improve precision and bits
-  that improve resolution (Section \ref{sec:terminologies}). In this way, we can represent different
-  data streams in a unified framework and perform fair comparisons.
+\item We present a framework that allows systematic studies of the resolution-versus-precision
+  trade-offs for fundamental data analysis and visualization tasks. The core idea is to represent
+  various data reduction techniques as data streams that improve data quality in either resolution
+  or precision in each step (Section~\ref{sec:terminologies}). We can thus compare these techniques
+  fairly, by comparing the corresponding data streams.
    
-\item We demonstrate how jointly optimizing resolution and precision provides significant
-  improvements on the results of analysis tasks over adjusting resolution or precision independently
-  (Section \ref{sec:motivation}). In particular, we provide empirical evidence using a collection of
-  data sets and analysis tasks. We also show how different types of analysis require substantially
-  different bit streams for optimal results.
+\item We provide empirical evidence on how jointly optimizing resolution and precision can provide
+  significant improvements on the results of analysis tasks over adjusting either independently
+  (Section~\ref{sec:motivation}). This claim is demonstrated using a collection of data sets and
+  data analysis tasks. We also show how different types of data analysis might require substantially
+  different data streams for optimal results.
 
 \item We estimate lower bounds of error for various analysis tasks using a greedy aprroach that
-  jointly optimizes resolution and precision (Section \ref{sec:data_dep_streams}). In addition, we
-  also present heuristics to construct high-quality data streams closely approximating these bounds
-  (Section \ref{sec:derivatives}, \ref{sec:histogram}, \ref{sec:isocontour}).
+  jointly optimizes resolution and precision (Section~\ref{sec:data_dep_streams}). In addition, we
+  also identify practical streams that closely approximate these bounds for each task
+  (Section~\ref{sec:rmse-optimized},~\ref{sec:derivatives},~\ref{sec:histogram},
+  and~\ref{sec:isocontour}), using a novel concept called \emph{stream signature}
+  (Section~\ref{sec:stream-signature}).
 \end{itemize}
 
 %%% Local Variables:
