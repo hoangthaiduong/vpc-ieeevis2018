@@ -103,20 +103,6 @@ Section are performed with 256 bins, but this fact holds for a wide range of num
 512 only affects the relative ordering among the low-ordered bits on very fine resolution levels
 (the dark blue cells at the bottom right of the signature). These are bits that come at the end of a
 stream, and thus matter little to the data quality. 
- 
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{\emph{histogram-optimized}'s signature,\\ 128 bins}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/sig-GREEDY-(histogram-128).png}}
-	\subcaptionbox{\emph{histogram-optimized}'s signature,\\ 256 bins}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/sig-GREEDY-(histogram-256).png}}
-	\subcaptionbox{\emph{histogram-optimized}'s signature,\\ 512 bins}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/sig-GREEDY-(histogram-512).png}}
-	\subcaptionbox{\emph{rmse-optimized}'s signature}
-	{\includegraphics[width=0.24\linewidth]{img/histogram/sig-GREEDY-(rmse).png}}
-	\caption{\emph{histogram-optimized}'s signature and \emph{rmse-optimized}'s signature}
-	\label{fig:histogram-signature-comparison}
-\end{figure}
 
 The streams in Figure \ref{fig:histogram-comparison-low-bit-rate} (b, d, f, h) are truncated where
 the EMD errors of the \emph{histogram-optimized} streams are negligible, suggesting that it is often

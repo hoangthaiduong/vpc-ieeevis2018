@@ -197,24 +197,6 @@ TODO: add comparison of stream signatures
 % 	\label{fig:signature-comparison}
 % \end{figure}
 
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{\emph{boiler}}
-	{\includegraphics[width=0.48\linewidth]{img/laplacian/SIG-(GREEDY)-(laplacian)-boiler.png}}
-	\subcaptionbox{\emph{diffusivity}}
-	{\includegraphics[width=0.48\linewidth]{img/laplacian/SIG-(GREEDY)-(laplacian)-diffusivity.png}}
-	\subcaptionbox{\emph{velocityz}}
-	{\includegraphics[width=0.48\linewidth]{img/laplacian/SIG-(GREEDY)-(laplacian)-velocityz.png}}
-	\subcaptionbox{\emph{marschner-lobb}}
-	{\includegraphics[width=0.48\linewidth]{img/laplacian/SIG-(GREEDY)-(laplacian)-marschner-lobb.png}}
-	% \subcaptionbox{\emph{euler}}
-	% {\includegraphics[width=0.48\linewidth]{img/laplacian/SIG-(GREEDY)-(laplacian)-euler.png}}
-	% \subcaptionbox{\emph{pressure}}
-	% {\includegraphics[width=0.48\linewidth]{img/laplacian/SIG-(GREEDY)-(laplacian)-pressure.png}}
-	\caption{Precision map per subband (brigther is more precise) \emph{velocityz}, 1.28 bps. \emph{by wavelet norm} allocates more bits for the coarse-level subbands, while \emph{laplacian-optimized} and \emph{laplacian signature} do the opposite.}
-	\label{fig:laplacian-precision-comparison}
-\end{figure}
-
 Using the signature for \emph{laplacian-optimized}, we are able construct a data-independent stream
 (in the sense that once the signature is computed and is given, the ordering of the bits follows the
 the signature only). This stream, called \emph{laplacian signature}, performs at least as well as,

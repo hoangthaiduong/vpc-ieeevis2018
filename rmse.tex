@@ -78,18 +78,6 @@ The elements' values are mapped to colors on a linear green scale, in which smal
 brighter greens. That is, $(l,b)$ pairs that map to brighter pixels are considered more important
 and thus appear earlier in stream.
 
-\begin{figure}[h]
-  \centering
-	\subcaptionbox{By bit plane}{
-	{\includegraphics[width=0.31\linewidth]{img/rmse/SIG-(STATIC)-(BY-BIT-PLANE)-(rmse).png}}}
-	\subcaptionbox{By level}{
- 	{\includegraphics[width=0.31\linewidth]{img/rmse/SIG-(STATIC)-(BY-LEVEL)-(rmse).png}}}
-	\subcaptionbox{By wavelet norm}{
- 	{\includegraphics[width=0.31\linewidth]{img/rmse/SIG-(STATIC)-(BY-WAVELET-NORM)-(rmse).png}}}
- 	\caption{Signature renderings of the three static streams.}
- 	\label{fig:signature-static}
-\end{figure}
-
 A signature can be used to construct a ``semi-static'' stream, by iterating through the elements of
 the signature in ascending order, and streaming all the chunks associated with each current element.
 This stream is similar to purely static streams, in the sense that the ordering of subband-bit plane
@@ -171,19 +159,4 @@ root-mean-square errors, regardless of the data.
 	pixels mean higher errors. The \emph{by wavelet norm} and \emph{rmse signature} provide the most
 	accurate function, followed closely by \emph{by bit plane}.}
  	\label{fig:rmse-rendering}
-\end{figure}
-
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{\emph{by level}}{
-	{\includegraphics[width=0.23\linewidth]{img/rmse/rmse-precision-dist-by-level.png}}}
-	\subcaptionbox{\emph{by bit plane}}{
-	{\includegraphics[width=0.23\linewidth]{img/rmse/rmse-precision-by-bit-plane.png}}}
-	\subcaptionbox{\emph{by wavelet norm}}{
-	{\includegraphics[width=0.23\linewidth]{img/rmse/rmse-precision-dist-by-wavelet-norm.png}}}
-	\subcaptionbox{\emph{rmse-signature}}{
-	{\includegraphics[width=0.23\linewidth]{img/rmse/rmse-precision-signature.png}}}
-	
-	\caption{Precision distribution per subband, \emph{plasma}, 0.74 bps. The coarsest subband is located at the top-left corner. Greater precision maps to brighter green pixels. Note that precision bits are distributed non-uniformly within each subband, because leading-zero bits were removed. The \emph{by level} stream allocates too many precision bits to the coarser subbands. The \emph{rmse-optimized} and \emph{by wavelet norm} streams distribute bits very similarly.}
- 	\label{fig:precision-map-rmse}
 \end{figure}
