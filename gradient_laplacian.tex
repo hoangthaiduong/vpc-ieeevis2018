@@ -42,13 +42,13 @@ other two streams.
 \begin{figure}[h]
 	\centering
 	\subcaptionbox{boiler}{
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-boiler.pdf}}}
+	{\includegraphics[width=0.48\linewidth]{gradient/gradient-optimized-boiler}}}
 	\subcaptionbox{diffusivity}{
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-diffusivity.pdf}}}
-	\subcaptionbox{euler}{
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-euler.pdf}}}
+	{\includegraphics[width=0.48\linewidth]{gradient/gradient-optimized-diffusivity}}}
+	\subcaptionbox{turbulence}{
+	{\includegraphics[width=0.48\linewidth]{gradient/gradient-optimized-turbulence}}}
 	\subcaptionbox{pressure}{
-	{\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-pressure.pdf}}}
+	{\includegraphics[width=0.48\linewidth]{gradient/gradient-optimized-pressure}}}
 	% \subcaptionbox{marschner-lobb}{
 	% {\includegraphics[width=0.48\linewidth]{img/gradient/5points/gradient-optimized-marschner-lobb.pdf}}}
 	% \subcaptionbox{velocityz}{
@@ -75,19 +75,19 @@ beside an accurate gradient field, the task also requires an accurate function i
 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{by wavelet norm}{
-	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_0_diff.png}}
-	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_1_diff.png}}
-	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_2_diff.png}}
-	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_3_diff.png}}}
-	\subcaptionbox{by wavelet norm}{
-	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_0.png}}
-	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_1.png}}
-	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_2.png}}
-	{\includegraphics[width=0.23\linewidth]{img/gradient/gradient_3.png}}}
-	\caption{Renderings of reconstructed gradient fields (bottom row), and differences, using the XOR
-	operator (top row) from the groundtruth gradient field. \emph{velocityz}, 0.35 bps. The
-	differences among the streams are barely noticable.}
+	\subcaptionbox{\emph{by level}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-level}}}
+	\subcaptionbox{\emph{by bit plane}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-bit-plane}}}
+	\subcaptionbox{\emph{by magnitude}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-magnitude}}}
+	\subcaptionbox{\emph{by wavelet norm}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-wavelet-norm}}}
+	\subcaptionbox{\emph{by signature}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-signature.png}}}
+	\subcaptionbox{\emph{groundtruth}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-groundtruth.png}}}
+	\caption{\emph{turbulence}, 0.2 bps}
   \label{fig:gradient-rendering-diff}
 \end{figure}
 
