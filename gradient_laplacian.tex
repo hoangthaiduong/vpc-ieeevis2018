@@ -124,10 +124,6 @@ previously defined streams, including \emph{gradient-optimized} using $E_g$ as t
 	{\includegraphics[width=0.48\linewidth]{laplacian/laplacian-optimized-turbulence}}
 	\subcaptionbox{pressure}
 	{\includegraphics[width=0.48\linewidth]{laplacian/laplacian-optimized-pressure}}
-	% \subcaptionbox{marschner-lobb, 5-point stencil}
-	% {\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-marschner-lobb.pdf}}
-	% \subcaptionbox{velocityz, 5-point stencil}
-	% {\includegraphics[width=0.48\linewidth]{img/laplacian/laplacian-optimized-velocityz.pdf}}
 	\caption{Laplacian error comparison among streams, using the three-point stencil. The plots are
 	truncated so as to better highlight differences without discarding important information. In all cases, \emph{laplacian}}
 	\label{fig:laplacian-error-comparison}
@@ -145,19 +141,19 @@ gradient case too, but to a much lesser degree.
 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{\emph{by wavelet norm}}
-	{\includegraphics[width=0.32\linewidth]{img/laplacian/laplacian_0.png}}
+	\subcaptionbox{\emph{by level}}
+	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-level}}
 	\subcaptionbox{\emph{by bit plane}}
-	{\includegraphics[width=0.32\linewidth]{img/laplacian/laplacian_1.png}}
-	\subcaptionbox{\emph{laplacian signature}}
-	{\includegraphics[width=0.32\linewidth]{img/laplacian/laplacian_2.png}}
-	\subcaptionbox{\emph{laplacian-optimized}}
-	{\includegraphics[width=0.32\linewidth]{img/laplacian/laplacian_3.png}}
-	\subcaptionbox{\emph{gradient signature}}
-	{\includegraphics[width=0.32\linewidth]{img/laplacian/laplacian_4.png}}
+	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-bit-plane}}
+	\subcaptionbox{\emph{by magnitude}}
+	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-magnitude}}
+	\subcaptionbox{\emph{by wavelet norm}}
+	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-wavelet-norm}}
+	\subcaptionbox{\emph{by signature}}
+	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-signature}}
 	\subcaptionbox{\emph{groundtruth}}
-	{\includegraphics[width=0.32\linewidth]{img/laplacian/groundtruth_laplacian_0.png}}
-	\caption{Laplacian rendering, velocityz, 1.28bps. \emph{laplacian signature} incurs lowest level of visual artifacts among the static streams.}
+	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-groundtruth}}
+	\caption{pressure, laplacian, 0.9 bps}
 	\label{fig:laplacian-precision-comparison}
 \end{figure}
 
