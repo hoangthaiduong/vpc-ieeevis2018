@@ -17,17 +17,13 @@ are plots of the EMD errors for these streams on four data sets.
 \begin{figure}[h]
 	\centering
 	\subcaptionbox{\emph{boiler}, 64 bins}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/64bins/histogram-optimized-boiler.pdf}}
+	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-boiler}}
 	\subcaptionbox{\emph{diffusivity}, 64 bins}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/64bins/histogram-optimized-diffusivity.pdf}}
-	\subcaptionbox{\emph{euler}, 64 bins}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/64bins/histogram-optimized-euler.pdf}}
-	\subcaptionbox{\emph{pressure}, 64 bins}
-	{\includegraphics[width=0.48\linewidth]{img/histogram/64bins/histogram-optimized-pressure.pdf}}
-	% \subcaptionbox{\emph{turbulence}, 64 bins}
-	% {\includegraphics[width=0.48\linewidth]{img/histogram/64bins/histogram-optimized-turbulence.pdf}}
-	% \subcaptionbox{\emph{velocityz}, 64 bins}
-	% {\includegraphics[width=0.48\linewidth]{img/histogram/64bins/histogram-optimized-velocityz.pdf}}
+	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-diffusivity}}
+	\subcaptionbox{\emph{plasma}, 64 bins}
+	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-plasma}}
+	\subcaptionbox{\emph{turbulence}, 64 bins}
+	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-turbulence}}
 	\caption{Histogram error comparison among four streams \emph{histogram-optimized},
 	\emph{rmse-optimized}, \emph{by wavelet norm}, and \emph{histogram signature}, without the leading
 	zero bits. The plots are truncated to make the differences large enough for visual inspection, and
@@ -49,35 +45,19 @@ per sample, with leading zero bits removed, for the diffusivity data set.
 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{\emph{boiler}, 0.24 bps}
-	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-boiler-by-wavelet-norm.png}}
-	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-boiler-signature.png}}
-	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-boiler-groundtruth.png}}
-	\subcaptionbox{\emph{diffusivity}, 0.75 bins}
-	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-diffusivity-by-wavelet-norm.png}}
-	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-diffusivity-signature.png}}
-	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-diffusivity-groundtruth.png}}
-	\subcaptionbox{\emph{euler}, 0.28 bins}
-	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-euler-by-wavelet-norm.png}}
-	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-euler-signature.png}}
-	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-euler-groundtruth.png}}
-	\subcaptionbox{\emph{pressure}, 0.64 bps}
-	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-pressure-by-wavelet-norm.png}}
-	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-pressure-signature.png}}
-	{\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-pressure-groundtruth.png}}
-	% \subcaptionbox{\emph{turbulence}, 0.75 bps}
-	% {\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-turbulence-by-wavelet-norm.png}}
-	% {\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-turbulence-signature.png}}
-	% {\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-turbulence-groundtruth.png}}
-	% \subcaptionbox{\emph{velocityz}, 1.19 bps}
-	% {\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-velocityz-by-wavelet-norm.png}}
-	% {\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-velocityz-signature.png}}
-	% {\includegraphics[width=0.32\linewidth]{img/histogram/histogram-renderings/histogram-velocityz-groundtruth.png}}
-	\caption{Histogram error comparison among four streams \emph{histogram-optimized},
-	\emph{rmse-optimized}, \emph{by wavelet norm}, and \emph{histogram signature}, without the leading
-	zero bits. The plots are truncated to make the differences large enough for visual inspection, and
-	truncation points are chosen so that the best among the reconstructed histograms is visually the
-	same as the groundtruth histogram. }
+	\subcaptionbox{\emph{by level}}{
+	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-level.png}}}
+	\subcaptionbox{\emph{by bit plane}}{
+	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-bit-plane.png}}}
+	\subcaptionbox{\emph{by magnitude}}{
+	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-magnitude.png}}}
+	\subcaptionbox{\emph{by wavelet norm}}{
+	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-wavelet-norm.png}}}
+	\subcaptionbox{\emph{by signature}}{
+	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-signature.png}}}
+	\subcaptionbox{\emph{groundtruth}}{
+	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-groundtruth.png}}}
+	\caption{\emph{boiler}, 0.08 bps}
 	\label{fig:histogram-stream-comparison}
 \end{figure}
 
