@@ -71,6 +71,21 @@ We argue that different isovalues will require different stream signatures, but 
 similarity between hybrid and isocontour streams, the rmse stream can be used to extract isocontour
 too, provided that it is paired with a method to localize the contour (e.g. min-max octrees etc).
 
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{\emph{by level}}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-pressure-level}}
+	\subcaptionbox{\emph{by bit plane}}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-pressure-bit-plane}}
+	\subcaptionbox{\emph{by wavelet norm}}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-pressure-wavelet-norm}}
+	\subcaptionbox{\emph{by magnitude}}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-pressure-magnitude}}
+	\subcaptionbox{\emph{groundtruth}}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-pressure-groundtruth}}
+	\caption{pressure, 0.4 bps}
+	\label{fig:isocontour-plots}
+\end{figure}
 Figure 5: We show that the hybrid and isocontour can diverge somewhat for low-gradient contour.
 Valerio suggested here we coudl also build a "ramp" dataset at different angles and see if the two
 diverges more as the ramp become flatter.
