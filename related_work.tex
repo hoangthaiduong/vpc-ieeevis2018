@@ -1,4 +1,4 @@
-\section{Related work (unlocked, I need to skim read the precision papers)}
+\section{Related work}
 
 The previous work primarily focuses on multiresolution and precision
 reduction independently and we will discuss both directions
@@ -22,7 +22,7 @@ and may not be desired depending on a task.
 Alternatives such as IDX~\cite{idx2001} primarily focus on reordering the data to allow
 for faster queries. For example, row-major order is optimal only for slicing
 along one axis, but the other two axis have poor cache utilization. In contrast, hilbert
-or morton order is not optimal for any axis, but on average it outperforms the row-major
+or morton order is not optimal for any axis, but on average outperforms the row-major
 order. Combined with tiling morton order can be highly efficient [CITE texture units] as
 it can utilize fast CPU instructions for conversion to xyz index space~\cite{spgrid2014}.
 Moreover, the order can be changed such that it becomes hierarchical, thus providing

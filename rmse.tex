@@ -1,12 +1,12 @@
 \section{Analysis tasks}
 \label{sec:analysis-tasks}
 
-In this section, we study a range of fundamental analysis tasks, namely function reconstruction
+In this section, we study a gamut of fundamental analysis tasks, namely function reconstruction
 (Section~\ref{sec:rmse-optimized}), gradient computation (Section~\ref{sec:gradient}), Laplacian
 computation (Section~\ref{sec:laplacian}), histogram computation (Section~\ref{sec:histogram}), and
 isocontour extraction (Section~\ref{sec:isocontour}). For each task, we define an error metric $E$
-(see Section~\ref{sec:data_dep_streams}) that is the basis for evaluating a stream's performance.
-Algorithm~\ref{alg:greedy} is used to compute a greedy stream optimized for the task at hand, in
+(see Section~\ref{sec:data_dep_streams}) that is the basis for evaluating stream's performance.
+Algorithm~\ref{alg:greedy} is used to compute a greedy stream optimized for every task, in
 terms of minimizing the relevant $E$ at every point. Each analysis task potentially requires a
 fundamentally different stream for optimal results. Therefore, the goal is to distill the core
 characteristics of these optimized streams. To accomplish this goal, we define and make use of a
@@ -14,7 +14,7 @@ concept named \emph{stream signature} (Section~\ref{sec:stream-signature}). The 
 stream is a small matrix that encodes the stream's ``preferences'' in terms of
 precision-versus-resolution tradeoffs. As such, the signature not only reveals the characteristics
 of a stream, but can also be used in practice to ``steer'' streaming in a way that is optimized for
-the task at hand.
+particular task.
 
 \subsection{Stream signatures}
 \label{sec:stream-signature}

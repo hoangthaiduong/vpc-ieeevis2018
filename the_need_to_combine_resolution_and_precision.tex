@@ -65,13 +65,13 @@
 \label{sec:data_dep_streams}
 
 Each analysis task potentially requires a fundamentally different stream for optimal results. This
-section aims to solve the problem of finding the most optimal stream possible, given a data set and
-an error metric associated with the analysis task at hand. An error metric is a function
+section aims to solve the problem of finding the optimal stream, given a data set and
+an error metric associated with the analysis task. An error metric is a function
 $E(Q(f'),Q(f))$ that returns the distance between its two arguments. $f$ is the original data field
 and $f'$ is a reconstructed version of $f$ using a subset of the bits. $Q$ is a quantity of interest
 (e.g., histogram, isocontour, etc) derived from $f$ or $f'$. There can be multiple error functions
-$E$ that makes sense for the same $Q$. In this paper, we choose to use only one error metric with
-each quantity, one which we believe is either common, or intuitive and simple while generalizable.
+$E$ for the same $Q$. We choose to use only one error metric with
+each quantity, one which is either common, or intuitive and simple while generalizable.
 The list of quantity-optimized streams studied in this paper includes \emph{rmse-optimized} (Section
 \ref{sec:rmse-optimized}), \emph{gradient-optimized} (Section \ref{sec:gradient}),
 \emph{laplacian-optimized} (Section \ref{sec:laplacian}), \emph{histogram-optimized} (Section
@@ -82,40 +82,41 @@ as a benchmark, and a source of insights for other, more practical streams for t
 One way to define the ``optimal'' stream for a quantity $Q$ could be the stream that incurs the
 minimum error $E$ at every point. However, in trying to realize it, our experience has been that
 such a stream does not exist. Assume otherwise that the optimal stream exists, then by definition,
-it must be possible to construct this stream using the following greedy algorithm: start with a pool
-of all the chunks (and correspondingly an all-zero $f'$, and a presumably very high error $E$), pick
+it must be possible to construct this stream using the following greedy algorithm\pavol{the algorithm
+may fail to construct optimal stream}: start with a pool
+of all chunks (and correspondingly an all-zero $f'$\pavol{zeroed?}, and a presumably very high error $E$), pick
 the chunk that when enabled, would minimize $E$, and remove it from the pool. Repeatedly pick and
-remove the next chunk that minimizes $E$, until the pool is empty. This algorithm, however, can
+remove the next chunk that minimizes $E$, until the pool is empty. This algorithm can
 encounter a situation in which the next chunk that minimizes the error is on a low-ordered bit plane
 of a fine-scale coefficient, which contributes almost nothing to the reconstructed function. The
-error is minimized because it is kept approximately constant. In this case it is actually better to
+error is minimized because it is kept approximately constant. In this case, it is actually better to
 pick a chunk that increases the error slightly, but otherwise contributes a lot more to the
 function. In optimization terms, it is necessary to move in a direction that increases the error to
-avoid getting stuck in a local minima.
+avoid ending in a local minimum.
 
 The optimal stream for an error metric can also be defined as the stream such that the area bounded
 by its plotted error curve and the horizontal axis is the smallest. However, the usefulness of such
 a definition is limited in practice, because a stream should be able to be terminated at any point
 and still be expected to produce an error as small as possible. Therefore, instead of using this
 definition of ``optimality'', we slightly modify the greedy algorithm stated above to avoid the
-problem of being stuck in local minima. We start with a pool consisting of all the chunks and an
-empty stream, and build this stream back-to-front. In particular, in each step, the chunk whose
+problem of ending in a local minimum. We start with a pool consisting of all the chunks and an
+empty stream, and build this stream back-to-front. In particular, at each step, the chunk whose
 removal from the pool has the least impact on the error $E$ is removed and inserted to the beginning
 of the current stream. This algorithm solves the problem of unimportant chunks being picked too
-early in the original algorithm, because here, chunks being picked early are at the end of the
+early in the original algorithm, because here, chunks picked early are at the end of the
 stream, not the beginning.
 
-In our experiments, however, this back-to-front greedy algorithm is too costly in practice. Ignoring
+For our experiments, however, this back-to-front greedy algorithm is too costly. Ignoring
 all the steps done in each iteration, this algorithm amounts to a 2-level nested loop running for
 $n^2$ iterations, where $n$ is the number of chunks. In 2D, with a $256^2$ data set, a chunk size
 that spans $16$ coefficients, and $16$ bits of quantization, $n^2$ would be in the billions, which
 we have found to be prohibitively large. We have therefore adopted a simplified version of this
 algorithm, where only one pass through the set of $n$ chunks is needed, reducing the number of
-iterations from $n^2$ to $n$. The modified algorithm works as follows. We disable (sets to zero) a
+iterations from $n^2$ to $n$. The modified algorithm works as follows. We disable (set to zero) a
 new chunk $c_i$ in iteration $i$, then compute and record the error $E_i$ due to chunk $c_i$
-missing, and enables $c_i$ again at the end of iteration $i$. After repeating the same process for
+missing, and enable $c_i$ again at the end of iteration $i$. After repeating the same process for
 $n$ iterations, each chunk now has an associated weight, $E_i$. The optimal stream, then, is simply
-a sorted list of chunks, in decreasing order of the weights. We have observed that this simplified
+a sorted list of chunks, in decreasing order of the weights. We observed that this simplified
 algorithm brings the running time down from days to minutes, while retaining the same quality of the
 output stream. The pseudocode of the algorithm is presented in Algorithm~\ref{alg:greedy}.
 
