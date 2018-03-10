@@ -6,7 +6,7 @@ In this section, we study a gamut of fundamental analysis tasks, namely function
 computation (Section~\ref{sec:laplacian}), histogram computation (Section~\ref{sec:histogram}), and
 isocontour extraction (Section~\ref{sec:isocontour}). For each task, we define an error metric $E$
 (see Section~\ref{sec:data_dep_streams}) that is the basis for evaluating stream's performance.
-Algorithm~\ref{alg:greedy} is used to compute a greedy stream optimized for every task, in
+Algorithm~\ref{alg:greedy} is used to compute a greedy stream optimized separately for each task, in
 terms of minimizing the relevant $E$ at every point. Each analysis task potentially requires a
 fundamentally different stream for optimal results. Therefore, the goal is to distill the core
 characteristics of these optimized streams. To accomplish this goal, we define and make use of a
