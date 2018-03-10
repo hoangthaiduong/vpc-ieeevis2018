@@ -56,17 +56,6 @@ $\sum_{i=0}^{B}{c_i(-2)^i}$ with $c_i\in \{0,1\}$). This transformation increase
 planes by one, to compensate for the absence of the sign bit. We use $b$, which starts from 0, to
 index the bit planes, with the convention that higher-indexed bit planes are less significant.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=\linewidth]{img/pipeline.png}
-  \caption{Our data stream creation pipeline. The input is a regular grid of floating-point values,
-  the output is a stream of chunks, where each chunk is a bit plane from a $4\times 4$ group of
-  quantized wavelet coefficients, stored in negabinary format. The subbands are separated by blue
-  lines in the second image, with the coarsest subband at the top left corner. TODO: revise this
-  figure}
-  \label{fig:pipeline}
-\end{figure}
-
 As mentioned earlier, in our framework, the smallest unit of data is called a \emph{packet}.
 Precisely, a packet consists of bits on the same bit plane, from a \emph{block} of negabinary
 wavelet coefficients. A block is a $g\times g\times g$ grid of adjacent coefficients on the same
@@ -75,19 +64,28 @@ enables the natural tradeoff between wider (but coarser) coverage and finer (but
 details, for the same number of packets. In this paper, a packet always contains $4096$ bits (i.e.,
 $g=16$), following the common practice of reading bits in batch for performance reason. This choice
 of $g$ also accelarates our experiments significantly, without affecting the results in a meaningful
-way. From its definition, a packet can always be associated with a subband $l$ ($0\leq l\leq
-\bar{l}$) and a bit plane $b$ ($0\leq b\leq \bar{b}$).
+way.
 
 A data reduction scheme can be modeled as an ``inverse'' stream of packets, where the original data
 contains all packets, and any reduction step removes certain packets based on some criteria (more
 details in \autoref{sec:static-dynamic-streams}). In our data streaming model, there is a ``server''
 which serves data and a ``client'' which receives data from the server. At any point, the client is
-assumed to have received a subset of packets from the server, so it can reconstruct the original
-function from these packets (using the inverse wavelet transform). Therefore, to compare a set of
-streams, we can extract the same number of packets to reconstruct the original data from each, and
-perform analysis tasks on each of these (approximate) reconstructions. A stream is better suited for
-an anlysis task if it produces results that are closer to reference results computed from the
-original data.
+assumed to have received a subset of packets from the server, which it can use to reconstruct the
+original function (using the inverse wavelet transform). Therefore, to compare different streams, we
+can reconstruct the original data using the same number of packets from each, and perform analysis
+tasks on each of the (approximate) reconstructions. A stream is better suited for an anlysis task if
+it produces results that are closer to reference results computed from the original data.
+\autoref{fig:pipeline} gives a schematic view of our data streaming model.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{img/pipeline.png}
+  \caption{Our data streaming model (in 2D). The input is a regular grid of floating-point samples,
+  the output is a stream of packets. Different data reduction schemes generate different streams.
+  The wavelet subbands are separated by blue lines in the second image, with the coarsest subband at
+  the top left corner. TODO: revise this figure}
+\label{fig:pipeline}
+\end{figure}
 
 \subsection{Data-dependent and data-independent streams}
 \label{sec:static-dynamic-streams}
