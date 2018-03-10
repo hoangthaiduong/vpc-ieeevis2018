@@ -81,60 +81,65 @@ it produces results that are closer to reference results computed from the origi
   \caption{Our data streaming model (in 2D). The input is a regular grid of floating-point samples,
   the output is a stream of packets. Different data reduction schemes generate different streams.
   The wavelet subbands are separated by blue lines in the second image, with the coarsest subband at
-  the top left corner. TODO: revise this figure}\label{fig:pipeline}
+  the top left corner. Although not showed here, quantization and negabinary convesion happen
+  immediately after wavelet transform. TODO: revise this figure}\label{fig:pipeline}
 \end{figure}
 
 \subsection{Data-dependent and data-independent streams}\label{sec:static-dynamic-streams}
 
-In our model, while both the server and the client can be on the same machine, only the server has
-full knowledge of the data. Thus, when the client receives a packet, it might not know where that
-packet should be deposited. A common solution is to have both the client and the server agree
-beforehand on a static ordering of packets, independent of the data. We use the term
+While both the server and the client in our model can be on the same physical machine, only the
+server has full knowledge of the data. Thus, when the client receives a packet, it might not know
+where that packet should be deposited. A common solution is to have both the client and the server
+agree beforehand on a static ordering of packets, independent of the data. We use the term
 \emph{data-independent streams} to refer to streams using this solution. In constrast, for
 \emph{data-dependent streams}, the client is assumed to ``magically'' know the positions of packets
 without receiving this information from the server.
 
-A stream is a collection of packets, sorted in descending order of some weight associated with each
-packet $p$. Two sorting criteria, corresponding to two common data reduction schemes in the
-literature, are \emph{by level} and \emph{by bit plane}. The \emph{by level} stream orders the
+A stream can be viewed a collection of packets, sorted in descending order of some weight associated
+with each packet $p$. Two sorting criteria, corresponding to two common data reduction schemes in
+the literature, are \emph{by level} and \emph{by bit plane}. The \emph{by level} stream orders the
 packets strictly from coarser to finer resolution levels. The weight function in this case is
-$W_l(p)=L-l_p$, where $l_p$ is the subband index of $p$, and $L$ is the total number of subbands.
+$W_l(p)=L-l(p)$, where $l(p)$ is the subband index of $p$, and $L$ is the total number of subbands.
 Within the same subband, without any assumption on the underlying data, packets follow the row-major
 order of coefficients, then bit plane order (from 0 to $B$) within each coefficient. The other
 common ordering, \emph{by bit plane}, proceeds strictly from higher-ordered to lower-ordered bit
-planes. That is, $W_b(p)=B-b_p$, where $b_p$ is the bit plane index of $p$, and $B$ is the
-total number of bit planes. Within the same bit plane, packets follow the subband order (from 0 to
-$L$), then row-major order in each subband.
+planes. That is, $W_b(p)=B-b(p)$, where $b(p)$ is the bit plane index of $p$, and $B$ is the total
+number of bit planes. Within the same bit plane, packets follow the subband order (from 0 to $L$),
+then row-major order in each subband.
 
-The \emph{by level} and \emph{by bit plane} streams are designed to mimic the way data is
-progressively accessed in traditional methods that work either in resolution (\emph{by level}) or in
-precision (\emph{by bit plane}). We also define a third stream, called \emph{by wavelet norm}, which
-combines these two dimensions. The \emph{by wavelet norm} stream orders chunks using
-$W_3(c)=2^{\bar{b}-1-B(c)}\times \norm{\omega_{L(c)}}^2$. The term $2^{\bar{b}-1-B(c)}$ captures the
-contribution of a bit on bit plane $B(c)$, while the term $\norm{\omega_{L(c)}}^2$ captures the
-contribution of a coefficient on subband $L(c)$, where $\omega_{L(c)}$ refers to the wavelet basis
-function on subband $L(c)$. The intuition behind \emph{by wavelet norm} is simply that in the
-wavelet representation, a function $f$ is written as a linear sum of wavelet basis functions:
-$f=\sum{c_i\omega_i}$, where $c_i$ are the coefficients and the basis functions $\omega_i$ in the
-same subband have the same norm. Thus $W_3(c)$ is simply the contribution (in $L_2$ norm) of a bit
-on bit plane $B(c)$ and subband $L(c)$ to the whole function $f$.
+The \emph{by level} and \emph{by bit plane} streams are designed to mimic the way data is accessed
+in traditional methods that work either in resolution (\emph{by level}) or in precision (\emph{by
+bit plane}). We also define a third stream, called \emph{by wavelet norm}, which combines these two
+dimensions. The \emph{by wavelet norm} stream orders packets using $W_w(p)=2^{B-1-b(p)}\times
+\norm{\omega_{l(p)}}^2$. The first term captures the contribution of a bit on bit plane $b(p)$,
+while the second term captures the contribution of a wavelet coefficient on subband $l(p)$, where
+$\omega_{l(p)}$ refers to a wavelet basis function on subband $l(p)$. In the wavelet representation,
+a function $f$ is written as a linear sum of wavelet basis functions $\omega_i$:
+$f=\sum{c_i\omega_i}$, where $c_i$ are the coefficients. Since basis functions in the same subband
+share the same norm, $W_w(p)$ is simply the contribution (in $L_2$ norm) of a bit on bit plane $b_p$
+and subband $l_p$, to the whole function $f$. To our knowledge, a data reduction scheme based on
+\emph{by wavelet norm} was hinted at in [CITE]. \duong{if there is enough space, include here the
+formula to compute the norm of basis functions, else put it in the appendix}
 
-All the three streams mentioned so far are static. In addition, we also consider a
-\emph{signature}-based stream to be static. A signature-based stream is one in which the server and
-the client establish the agreement over chunk ordering through the transmission of a negligibly
-small message, called signature, before any actual value bits are transmitted. A signature is a 2D
-array with $\bar{l}$ rows and $\bar{b}$ columns, encoding the relative ordering of all possible
-pairs $<l,b>$ for $0\leq l \leq \bar{l}$ and $0\leq b \leq \bar{b}$. We will show that the use of
-such signatures can sometimes result in significant improvements over using purely static streams.
-Section \ref{sec:stream-signature} gives a detailed discussion of the signature concept.
+Another data common reduction technique, especially for transform-based data, is one in which
+truncation happens by by leaving out coefficients of smallest magnitudes. We model this scheme with
+a stream called \emph{by magnitude}. Here, the weight function is $W_m(p)=\sum_{c\in
+block(p)}\norm{c}^2$ (the sum is over all coefficients in the block that contains packet $p$). If
+two packets have the same weight, they are ordered by subband index, then by bit plane. Unlike
+\emph{by level} and \emph{by bit plane}, \emph{by magnitude} is data-dependent, because the
+coefficient magnitudes are not known until after the data has gone through the wavelet transform.
+
+In general, data-dependent streams are better than data-independent streams in theory, because they
+can prioritize important chunks based on the actual data. However, data-dependent streams are
+ill-suited for practical purposes, because the cost of sending position information likely
+outweights any potential benefit. Despite that, we include them in our study for various reasons.
+First, the \emph{by magnitude} scheme is well-known in the literature. Second, data-dependent
+streams can serve as a benchmark to evaluate the performance of their data-independent counterparts.
+Finally, in addition to being data-dependent, streams can also be task-dependent. Task-dependent
+streams may provide insights on how data should be queried to perform certain analysis tasks.
 
 \subsection{Constructing data-dependent, task-optimized streams}\label{sec:data_dep_streams}
-
-Data-dependent streams are better in theory, because they can prioritize important chunks based on
-the actual data. However, they are ill-suited for implementations, because the cost of sending
-position information likely outweights any potential benefit. Despite that, data-dependent streams
-are studied in this paper because they can serve as a benchmark to evaluate the performance of their
-static counterparts. Each analysis task potentially requires a fundamentally different stream for
+Each analysis task potentially requires a fundamentally different stream for
 optimal results. This section aims to solve the problem of finding the optimal stream, given a data
 set and an error metric associated with the analysis task. An error metric is a function
 $E(Q(f'),Q(f))$ that returns the distance between its two arguments. $f$ is the original data field
@@ -244,6 +249,14 @@ Section~\ref{sec:3d_results} presents our main results for 3D data sets. \pavol{
 
 \subsection{Stream signatures}
 \label{sec:stream-signature}
+
+also consider a \emph{signature}-based stream to be static. A signature-based stream is one in which
+the server and the client establish the agreement over chunk ordering through the transmission of a
+negligibly small message, called signature, before any actual value bits are transmitted. A
+signature is a 2D array with $\bar{l}$ rows and $\bar{b}$ columns, encoding the relative ordering of
+all possible pairs $<l,b>$ for $0\leq l \leq \bar{l}$ and $0\leq b \leq \bar{b}$. We will show that
+the use of such signatures can sometimes result in significant improvements over using purely static
+streams. Section \ref{sec:stream-signature} gives a detailed discussion of the signature concept.
 
 To analyze the core characteristics of a stream, we introduce the concept of a \emph{stream
 signature}. A signature is a $\bar{l} \times \bar{b}$ matrix, with $\bar{b}$ being the number of bit
