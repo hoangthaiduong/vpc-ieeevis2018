@@ -1,30 +1,50 @@
 \section{Packet streams}
 \label{sec:terminologies}
 
-\subsection{Data streaming framework}
 To fairly compare different data reduction techniques is challenging. One popular method is to
 restrict the techniques to the same data size, and compare data quality. It is however difficult to
-enforce, for example, that a multi-resolution scheme use the same amount of data as a quantization
-scheme. This is because going down one step in resolution decreases the data size by a different
-amount from removing one more bit from each data sample. To avoid this mismatch of data
+enforce, for example, that a multi-resolution scheme uses the same amount of data as a quantization
+scheme does. This is because going down one step in resolution decreases the data size by a
+different amount from removing one more bit from each data sample. To avoid this mismatch of data
 increment/decrement units, we model each reduction scheme as a stream of equal-size \emph{packets}.
-A packet consists of a relatively small number of bits from a data set, and form the smallest unit
-of data increment/decrement in our framework. To study the resolution-versus-precision tradeoffs, we
-associate each packet with a resolution level and a precision level (i.e., bit plane), so each
-packet can improve either data's resolution or precision. In this framework, different data
-reduction schemes become different ways of ordering packets from a data set. For example, a
-quantization scheme would order packets by precision, while a multi-resolution scheme would order
-packets by resolution.
+A packet forms the smallest unit of data increment/decrement in our framework, and each consists of
+a relatively small number of bits from a data set. To study the resolution-versus-precision
+tradeoffs, we associate a packet with a resolution level and a precision level (i.e., bit plane), so
+that each packet can improve either data's resolution or precision. In this framework, different
+data reduction schemes become different orderings of packets from a data set, or different packet
+\emph{streams}. For example, a quantization scheme would stream packets by precision, while a
+multi-resolution scheme would stream packets by resolution. By forcing the different schemes to use
+the same number of packets, we can compare data quality across the schemes more fairly.
 
-To introduce the concept of resolution, we use the popular CDF5/3 discrete wavelet transform [CITE].
-We choose wavelet instead of the Fourier transform, because wavelet coefficients are spatially
-localized, enabling spatial adaptivity for data streams built from them. The typical
-multi-dimensional wavelet transform partitions the spatial domain into several \emph{subbands}, each
-can be thought of as a resolution level. One transform pass creates four subbands in 2D, and eight
-in 3D. The first subband is a smoothed, downsampled version of the original data. The next seven
-subbands (in 3D) add fine details in each dimension. The next transform pass recurses on the first
-subband created by previous pass. We use $\bar{l}$ to denote the highest-numbered subband. In this
-paper, $\bar{l}=21$ (in 3D), corresponding to three passes of transform.
+In \autoref{sec:data-streaming-framework} we discuss the mechanism of converting original data into
+a set of packets. \autoref{sec:static-dynamic-streams} is about packet streams that correspond to
+common data reduction schemes. \autoref{sec:data_dep_streams} presents a greedy algorithm to
+approximate the optimal packet stream for the data and the analysis task at hand. Finally,
+\autoref{sec:stream-signature} introduces a novel concept called \emph{stream signature} that can be
+used to study and compare the characteristics of different packet streams.
+
+\subsection{Decomposition of data into packets}
+\label{sec:data-streaming-framework}
+Each packet is supposed to improve data's resolution and/or precision. To introduce the concept of
+resolution, we use the popular CDF5/3 discrete wavelet transform [CITE]. Although there exists other
+transforms that separates a signal into discrete bands of frequencies/scales/resolutions, such that
+the discrete Fourier transform, we choose wavelet because wavelet coefficients are spatially
+localized. This enables spatial adaptivity, allowing finer resolution in regions containing
+important features, at the expense of coarser resolution elsewhere. The hierarchical-Z indexing
+scheme [CITE] also produces a multi-resolution representation, but unlike wavelet, it offers no
+interpolation mechanism for low-resolution grids. The CDF5/3 wavelet is chosen for its balance
+between simplicity and effectiveness at decorrelating the input signal. It is also one of the two
+transforms of choice in the JPEG2000 standard [CITE].
+
+The typical multi-dimensional wavelet transform can be performed in multiple passes, which
+eventually results in the original domain being partitioned into several \emph{subbands}, each can
+be thought of as a resolution level. One transform pass creates four subbands in 2D, and eight in
+3D, of which the first is a smoothed, downsampled version of the original data. The next seven
+subbands (in 3D) add fine details in each subset of the dimensions. A subsequent transform pass
+typically recurs on the first subband created by the previous pass, leaving the other seven subbands
+intact. We frequently use $l$ to index the subbands, which starts from 0 (referring to the coarsest
+subband), and use $\bar{l}$ to denote the highest-indexed subband. In this paper, $\bar{l}=21$ (in
+3D), corresponding to three passes of transform.
 
 For precision, we quantize floating-point wavelet coefficients to $\bar{b}$-bit signed integers. For
 most of the experiments in this paper, $\bar{b}=16$. This quantization eliminates the exponent bits,
@@ -32,8 +52,9 @@ so that every bit (except the sign bit) can be associated with a bit plane $b$ (
 \bar{b}-1$), contributing $2^b$ in absolute value to its coefficient's value. To further avoid
 treating the sign bit specially, we convert quantized coefficients from two's complement form to
 negabinary form, in which integers are represented in base negative two (i.e.,
-$v=\sum_{i=0}^{B}{c_i(-2)^i}$ with $c_i\in \{0,1\}$). This transformation increases the number of
-bit planes by one to compensate for the absence of the sign bit.
+$\sum_{i=0}^{B}{c_i(-2)^i}$ with $c_i\in \{0,1\}$). This transformation increases the number of bit
+planes by one, to compensate for the absence of the sign bit. We use $b$, which starts from 0, to
+index the bit planes, with the convention that higher-indexed bit planes are less significant.
 
 \begin{figure}[h]
   \centering
@@ -46,37 +67,44 @@ bit planes by one to compensate for the absence of the sign bit.
   \label{fig:pipeline}
 \end{figure}
 
-As mentioned earlier, our unit for streaming is called a \emph{packet} of bits. Precisely, a packet
-consists of bits that belong to the same bit plane, from a group of $g^3$ negabinary wavelet
-coefficients in the same subband. In this paper, $g=16$, meaning a packet contains $16$ bits. This
-choice is based on the fact that, for performance reason, bits are often read and transmitted in
-bunch in practice. We have also found that using a packet size of 16 significantly speeds up
-experiments without affecting the results in a meaningful way. From its definition, a packet can
-always be associated with a subband $l$ ($0\leq l\leq \bar{l}$) and a bit plane $b$ ($0\leq b\leq
-\bar{b}$). Different streams can thus be compared based on whether they prioritize packets belonging
-to finer subbands (which improves resolution) or packets belonging to lower-ordered bit planes
-(which improve precision). The rest of the paper discusses different streams for various analysis
-tasks, and compare them on this basis. We use the convention that higher subband is finer (so $l=0$
-means the coarsest subband), and higher bit plane is more precise (so $b=0$ is the most significant
-bit plane).
+As mentioned earlier, in our framework, the smallest unit of data is called a \emph{packet}.
+Precisely, a packet consists of bits on the same bit plane, from a \emph{block} of negabinary
+wavelet coefficients. A block is a $g\times g\times g$ grid of adjacent coefficients on the same
+subband. We let $g$ be a constant, so that finer-resolution subbands contain more packets. This
+enables the natural tradeoff between wider (but coarser) coverage and finer (but more local)
+details, for the same number of packets. In this paper, a packet always contains $4096$ bits (i.e.,
+$g=16$), following the common practice of reading bits in batch for performance reason. This choice
+of $g$ also accelarates our experiments significantly, without affecting the results in a meaningful
+way. From its definition, a packet can always be associated with a subband $l$ ($0\leq l\leq
+\bar{l}$) and a bit plane $b$ ($0\leq b\leq \bar{b}$).
+
+A data reduction scheme can be modeled as an ``inverse'' stream of packets, where the original data
+contains all packets, and any reduction step removes certain packets based on some criteria (more
+details in \autoref{sec:static-dynamic-streams}). In our data streaming model, there is a ``server''
+which serves data and a ``client'' which receives data from the server. At any point, the client is
+assumed to have received a subset of packets from the server, so it can reconstruct the original
+function from these packets (using the inverse wavelet transform). Therefore, to compare a set of
+streams, we can extract the same number of packets to reconstruct the original data from each, and
+perform analysis tasks on each of these (approximate) reconstructions. A stream is better suited for
+an anlysis task if it produces results that are closer to reference results computed from the
+original data.
 
 \subsection{Data-dependent and data-independent streams}
 \label{sec:static-dynamic-streams}
 
-In our data streaming model, there is a ``server'' which serves data and a ``client'' which receives
-data from the server. While they can be on the same machine, the server has full knowledge of the
-data, but the client does not. Thus, when the client receives a chunk, it might not know where the
-chunk should be deposited. A common solution to this problem is to have both the client and the
-server agree beforehand on a static ordering of chunks, regardless of the data. We use the term
+While they can be on the same machine, the server has full knowledge of the data, but the client
+does not. Thus, when the client receives a chunk, it might not know where the chunk should be
+deposited. A common solution to this problem is to have both the client and the server agree
+beforehand on a static ordering of chunks, regardless of the data. We use the term
 \emph{static stream} to refer to streams using this solution. In constrast, a \emph{dynamic stream}
 is one in which the client is assumed to ``magically'' know the positions of chunks without any
 prior agreement with the server. In theory, dynamic streams perform better than static streams
 because they can use actual chunk values, not just chunk positions, to better prioritize important
-chunks. However, including positions also means that dynamic streams are ill-suited for implementations, because in
-practice, the cost associated with sending position information likely outweights any potential
-benefit gained from better prioritization of chunks. Despite that, dynamic streams are studied in
-this paper because they can serve as a benchmark to evaluate the performance of their static
-counterparts.
+chunks. However, including positions also means that dynamic streams are ill-suited for
+implementations, because in practice, the cost associated with sending position information likely
+outweights any potential benefit gained from better prioritization of chunks. Despite that, dynamic
+streams are studied in this paper because they can serve as a benchmark to evaluate the performance
+of their static counterparts.
 
 A stream can be viewed as a collection of chunks, sorted in descending order by weight
 associated with each chunk $c$. In the literature, two of the most common orderings are \emph{by
@@ -89,10 +117,10 @@ underlying data, the chunks naturally follow the row-major order. The other comm
 $W_2(c)=\bar{b}-B(c)$, where $B$ is a function that map a chunk $c$ to the corresponding bit plane
 and $\bar{b}$ is the total number of bit planes, with $0$ being the most significant.
 
-The \emph{by level} and \emph{by bit plane} streams are designed to mimic the way data is progressively
-accessed in traditional methods that work either in resolution (\emph{by level}) or in
-precision (\emph{by bit plane}). We also define a third stream, called \emph{by
-wavelet norm}, which combines these two dimensions. The \emph{by wavelet norm} stream orders chunks using
+The \emph{by level} and \emph{by bit plane} streams are designed to mimic the way data is
+progressively accessed in traditional methods that work either in resolution (\emph{by level}) or in
+precision (\emph{by bit plane}). We also define a third stream, called \emph{by wavelet norm}, which
+combines these two dimensions. The \emph{by wavelet norm} stream orders chunks using
 $W_3(c)=2^{\bar{b}-1-B(c)}\times \norm{\omega_{L(c)}}^2$. The term $2^{\bar{b}-1-B(c)}$ captures the
 contribution of a bit on bit plane $B(c)$, while the term $\norm{\omega_{L(c)}}^2$ captures the
 contribution of a coefficient on subband $L(c)$, where $\omega_{L(c)}$ refers to the wavelet basis
@@ -115,52 +143,52 @@ Section \ref{sec:stream-signature} gives a detailed discussion of the signature 
 \label{sec:data_dep_streams}
 
 Each analysis task potentially requires a fundamentally different stream for optimal results. This
-section aims to solve the problem of finding the optimal stream, given a data set and
-an error metric associated with the analysis task. An error metric is a function
-$E(Q(f'),Q(f))$ that returns the distance between its two arguments. $f$ is the original data field
-and $f'$ is a reconstructed version of $f$ using a subset of the bits. $Q$ is a quantity of interest
-(e.g., histogram, isocontour, etc) derived from $f$ or $f'$. There can be multiple error functions
-$E$ for the same $Q$. We choose to use only one error metric with
-each quantity, one which is either common, or intuitive and simple while generalizable.
-The list of quantity-optimized streams studied in this paper includes \emph{rmse-optimized} (Section
-\ref{sec:rmse-optimized}), \emph{gradient-optimized} (Section \ref{sec:gradient}),
-\emph{laplacian-optimized} (Section \ref{sec:laplacian}), \emph{histogram-optimized} (Section
-\ref{sec:histogram}), and \emph{isocontour-optimized} (Section \ref{sec:isocontour}).
+section aims to solve the problem of finding the optimal stream, given a data set and an error
+metric associated with the analysis task. An error metric is a function $E(Q(f'),Q(f))$ that returns
+the distance between its two arguments. $f$ is the original data field and $f'$ is a reconstructed
+version of $f$ using a subset of the bits. $Q$ is a quantity of interest (e.g., histogram,
+isocontour, etc) derived from $f$ or $f'$. There can be multiple error functions $E$ for the same
+$Q$. We choose to use only one error metric with each quantity, one which is either common, or
+intuitive and simple while generalizable. The list of quantity-optimized streams studied in this
+paper includes \emph{rmse-optimized} (Section \ref{sec:rmse-optimized}), \emph{gradient-optimized}
+(Section \ref{sec:gradient}), \emph{laplacian-optimized} (Section \ref{sec:laplacian}),
+\emph{histogram-optimized} (Section \ref{sec:histogram}), and \emph{isocontour-optimized} (Section
+\ref{sec:isocontour}).
 
 Studying a (data-dependent) quantity-optimized stream is important because such a stream serves both
 as a benchmark, and a source of insights for other, more practical streams for the same quantity.
 One way to define the ``optimal'' stream for a quantity $Q$ could be the stream that incurs the
 minimum error $E$ at every point. However, in trying to realize it, our experience has been that
 such a stream does not exist. Assume otherwise that the optimal stream exists, then by definition,
-it must be possible to construct this stream using the following greedy algorithm\pavol{the algorithm
-may fail to construct optimal stream}: start with a pool
-of all chunks (and correspondingly an all-zero $f'$\pavol{zeroed?}, and a presumably very high error $E$), pick
-the chunk that when enabled, would minimize $E$, and remove it from the pool. Repeatedly pick and
-remove the next chunk that minimizes $E$, until the pool is empty. This algorithm can
-encounter a situation in which the next chunk that minimizes the error is on a low-ordered bit plane
-of a fine-scale coefficient, which contributes almost nothing to the reconstructed function. The
-error is minimized because it is kept approximately constant. In this case, it is actually better to
-pick a chunk that increases the error slightly, but otherwise contributes a lot more to the
-function. In optimization terms, it is necessary to move in a direction that increases the error to
-avoid ending in a local minimum.
+it must be possible to construct this stream using the following greedy algorithm\pavol{the
+algorithm may fail to construct optimal stream}: start with a pool of all chunks (and
+correspondingly an all-zero $f'$\pavol{zeroed?}, and a presumably very high error $E$), pick the
+chunk that when enabled, would minimize $E$, and remove it from the pool. Repeatedly pick and remove
+the next chunk that minimizes $E$, until the pool is empty. This algorithm can encounter a situation
+in which the next chunk that minimizes the error is on a low-ordered bit plane of a fine-scale
+coefficient, which contributes almost nothing to the reconstructed function. The error is minimized
+because it is kept approximately constant. In this case, it is actually better to pick a chunk that
+increases the error slightly, but otherwise contributes a lot more to the function. In optimization
+terms, it is necessary to move in a direction that increases the error to avoid ending in a local
+minimum.
 
 The optimal stream for an error metric can also be defined as the stream such that the area bounded
 by its plotted error curve and the horizontal axis is the smallest. However, the usefulness of such
 a definition is limited in practice, because a stream should be able to be terminated at any point
 and still be expected to produce an error as small as possible. Therefore, instead of using this
 definition of ``optimality'', we slightly modify the greedy algorithm stated above to avoid the
-problem of ending in a local minimum. We start with a pool consisting of all the chunks and an
-empty stream, and build this stream back-to-front. In particular, at each step, the chunk whose
-removal from the pool has the least impact on the error $E$ is removed and inserted to the beginning
-of the current stream. This algorithm solves the problem of unimportant chunks being picked too
-early in the original algorithm, because here, chunks picked early are at the end of the
-stream, not the beginning.
+problem of ending in a local minimum. We start with a pool consisting of all the chunks and an empty
+stream, and build this stream back-to-front. In particular, at each step, the chunk whose removal
+from the pool has the least impact on the error $E$ is removed and inserted to the beginning of the
+current stream. This algorithm solves the problem of unimportant chunks being picked too early in
+the original algorithm, because here, chunks picked early are at the end of the stream, not the
+beginning.
 
-For our experiments, however, this back-to-front greedy algorithm is too costly. Ignoring
-all the steps done in each iteration, this algorithm amounts to a 2-level nested loop running for
-$n^2$ iterations, where $n$ is the number of chunks. In 2D, with a $256^2$ data set, a chunk size
-that spans $16$ coefficients, and $16$ bits of quantization, $n^2$ would be in the billions, which
-we have found to be prohibitively large. We have therefore adopted a simplified version of this
+For our experiments, however, this back-to-front greedy algorithm is too costly. Ignoring all the
+steps done in each iteration, this algorithm amounts to a 2-level nested loop running for $n^2$
+iterations, where $n$ is the number of chunks. In 2D, with a $256^2$ data set, a chunk size that
+spans $16$ coefficients, and $16$ bits of quantization, $n^2$ would be in the billions, which we
+have found to be prohibitively large. We have therefore adopted a simplified version of this
 algorithm, where only one pass through the set of $n$ chunks is needed, reducing the number of
 iterations from $n^2$ to $n$. The modified algorithm works as follows. We disable (set to zero) a
 new chunk $c_i$ in iteration $i$, then compute and record the error $E_i$ due to chunk $c_i$
@@ -190,6 +218,7 @@ output stream. The pseudocode of the algorithm is presented in Algorithm~\ref{al
 	\end{algorithmic}
 	\label{alg:greedy}
 \end{algorithm}
+
 \subsection{Data sets}
 \label{sec:data-sets}
 
@@ -197,7 +226,8 @@ Table~\ref{tbl:data-sets} contains all the data sets used for experiment in this
 during pre-processing, all fields are converted to double-precision floating-point values before
 quantization takes place. For ease of demonstration, as well as performance reason, the majority of
 our experiments use 2D data sets. Often, these are slices from 3D volumes.
-Section~\ref{sec:3d_results} presents our main results for 3D data sets. \pavol{we switched all to 3D right?}
+Section~\ref{sec:3d_results} presents our main results for 3D data sets. \pavol{we switched all to
+3D right?}
 
 \begin{table*}[t]
   \caption{Data sets used in experiments}
