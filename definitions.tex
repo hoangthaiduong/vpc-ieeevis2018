@@ -1,5 +1,4 @@
-\section{Packet streams}
-\label{sec:terminologies}
+\section{Packet streams}\label{sec:terminologies}
 
 To fairly compare different data reduction techniques is challenging. One popular method is to
 restrict the techniques to the same data size, and compare data quality. It is however difficult to
@@ -23,8 +22,7 @@ approximate the optimal packet stream for the data and the analysis task at hand
 \autoref{sec:stream-signature} introduces a novel concept called \emph{stream signature} that can be
 used to study and compare the characteristics of different packet streams.
 
-\subsection{Decomposition of data into packets}
-\label{sec:data-streaming-framework}
+\subsection{Decomposition of data into packets}\label{sec:data-streaming-framework}
 Each packet is supposed to improve data's resolution and/or precision. To introduce the concept of
 resolution, we use the popular CDF5/3 discrete wavelet transform [CITE]. Although there exists other
 transforms that separates a signal into discrete bands of frequencies/scales/resolutions, such that
@@ -43,18 +41,18 @@ be thought of as a resolution level. One transform pass creates four subbands in
 subbands (in 3D) add fine details in each subset of the dimensions. A subsequent transform pass
 typically recurs on the first subband created by the previous pass, leaving the other seven subbands
 intact. We frequently use $l$ to index the subbands, which starts from 0 (referring to the coarsest
-subband), and use $\bar{l}$ to denote the highest-indexed subband. In this paper, $\bar{l}=21$ (in
-3D), corresponding to three passes of transform.
+subband), and use $L$ to denote the highest-indexed subband. In this paper, $L=21$ (in 3D),
+corresponding to three passes of transform.
 
-For precision, we quantize floating-point wavelet coefficients to $\bar{b}$-bit signed integers. For
-most of the experiments in this paper, $\bar{b}=16$. This quantization eliminates the exponent bits,
-so that every bit (except the sign bit) can be associated with a bit plane $b$ ($0\leq b\leq
-\bar{b}-1$), contributing $2^b$ in absolute value to its coefficient's value. To further avoid
-treating the sign bit specially, we convert quantized coefficients from two's complement form to
-negabinary form, in which integers are represented in base negative two (i.e.,
-$\sum_{i=0}^{B}{c_i(-2)^i}$ with $c_i\in \{0,1\}$). This transformation increases the number of bit
-planes by one, to compensate for the absence of the sign bit. We use $b$, which starts from 0, to
-index the bit planes, with the convention that higher-indexed bit planes are less significant.
+For precision, we quantize floating-point wavelet coefficients to $B$-bit signed integers. For most
+of the experiments in this paper, $B=16$. This quantization eliminates the exponent bits, so that
+every bit (except the sign bit) can be associated with a bit plane $b$ ($0\leq b\leq B-1$),
+contributing $2^b$ in absolute value to its coefficient's value. To further avoid treating the sign
+bit specially, we convert quantized coefficients from two's complement form to negabinary form, in
+which integers are represented in base negative two (i.e., $\sum_{i=0}^{B}{c_i(-2)^i}$ with $c_i\in
+\{0,1\}$). This transformation increases the number of bit planes by one, to compensate for the
+absence of the sign bit. We use $b$, which starts from 0, to index the bit planes, with the
+convention that higher-indexed bit planes are less significant.
 
 As mentioned earlier, in our framework, the smallest unit of data is called a \emph{packet}.
 Precisely, a packet consists of bits on the same bit plane, from a \emph{block} of negabinary
@@ -83,37 +81,30 @@ it produces results that are closer to reference results computed from the origi
   \caption{Our data streaming model (in 2D). The input is a regular grid of floating-point samples,
   the output is a stream of packets. Different data reduction schemes generate different streams.
   The wavelet subbands are separated by blue lines in the second image, with the coarsest subband at
-  the top left corner. TODO: revise this figure}
-\label{fig:pipeline}
+  the top left corner. TODO: revise this figure}\label{fig:pipeline}
 \end{figure}
 
-\subsection{Data-dependent and data-independent streams}
-\label{sec:static-dynamic-streams}
+\subsection{Data-dependent and data-independent streams}\label{sec:static-dynamic-streams}
 
-While they can be on the same machine, the server has full knowledge of the data, but the client
-does not. Thus, when the client receives a chunk, it might not know where the chunk should be
-deposited. A common solution to this problem is to have both the client and the server agree
-beforehand on a static ordering of chunks, regardless of the data. We use the term
-\emph{static stream} to refer to streams using this solution. In constrast, a \emph{dynamic stream}
-is one in which the client is assumed to ``magically'' know the positions of chunks without any
-prior agreement with the server. In theory, dynamic streams perform better than static streams
-because they can use actual chunk values, not just chunk positions, to better prioritize important
-chunks. However, including positions also means that dynamic streams are ill-suited for
-implementations, because in practice, the cost associated with sending position information likely
-outweights any potential benefit gained from better prioritization of chunks. Despite that, dynamic
-streams are studied in this paper because they can serve as a benchmark to evaluate the performance
-of their static counterparts.
+In our model, while both the server and the client can be on the same machine, only the server has
+full knowledge of the data. Thus, when the client receives a packet, it might not know where that
+packet should be deposited. A common solution is to have both the client and the server agree
+beforehand on a static ordering of packets, independent of the data. We use the term
+\emph{data-independent streams} to refer to streams using this solution. In constrast, for
+\emph{data-dependent streams}, the client is assumed to ``magically'' know the positions of packets
+without receiving this information from the server.
 
-A stream can be viewed as a collection of chunks, sorted in descending order by weight
-associated with each chunk $c$. In the literature, two of the most common orderings are \emph{by
-level} and \emph{by bit plane}. The \emph{by level} stream orders the chunks strictly from coarser
-to finer resolution levels. The weight function used by this stream is $W_1(c)=\bar{l}-L(c)$, where
-$L$ is a function that returns the subband of a given chunk $c$ (with $0$ being the coarsest), and
-$\bar{l}$ is the total number of subbands. Within the same subband, without any assumption on the
-underlying data, the chunks naturally follow the row-major order. The other common ordering,
-\emph{by bit plane}, proceeds strictly from higher-ordered to lower-ordered bit planes. That is,
-$W_2(c)=\bar{b}-B(c)$, where $B$ is a function that map a chunk $c$ to the corresponding bit plane
-and $\bar{b}$ is the total number of bit planes, with $0$ being the most significant.
+A stream is a collection of packets, sorted in descending order of some weight associated with each
+packet $p$. Two sorting criteria, corresponding to two common data reduction schemes in the
+literature, are \emph{by level} and \emph{by bit plane}. The \emph{by level} stream orders the
+packets strictly from coarser to finer resolution levels. The weight function in this case is
+$W_l(p)=L-l_p$, where $l_p$ is the subband index of $p$, and $L$ is the total number of subbands.
+Within the same subband, without any assumption on the underlying data, packets follow the row-major
+order of coefficients, then bit plane order (from 0 to $B$) within each coefficient. The other
+common ordering, \emph{by bit plane}, proceeds strictly from higher-ordered to lower-ordered bit
+planes. That is, $W_b(p)=B-b_p$, where $b_p$ is the bit plane index of $p$, and $B$ is the
+total number of bit planes. Within the same bit plane, packets follow the subband order (from 0 to
+$L$), then row-major order in each subband.
 
 The \emph{by level} and \emph{by bit plane} streams are designed to mimic the way data is
 progressively accessed in traditional methods that work either in resolution (\emph{by level}) or in
@@ -137,21 +128,24 @@ pairs $<l,b>$ for $0\leq l \leq \bar{l}$ and $0\leq b \leq \bar{b}$. We will sho
 such signatures can sometimes result in significant improvements over using purely static streams.
 Section \ref{sec:stream-signature} gives a detailed discussion of the signature concept.
 
-\subsection{Constructing data-dependent, task-optimized streams}
-\label{sec:data_dep_streams}
+\subsection{Constructing data-dependent, task-optimized streams}\label{sec:data_dep_streams}
 
-Each analysis task potentially requires a fundamentally different stream for optimal results. This
-section aims to solve the problem of finding the optimal stream, given a data set and an error
-metric associated with the analysis task. An error metric is a function $E(Q(f'),Q(f))$ that returns
-the distance between its two arguments. $f$ is the original data field and $f'$ is a reconstructed
-version of $f$ using a subset of the bits. $Q$ is a quantity of interest (e.g., histogram,
-isocontour, etc) derived from $f$ or $f'$. There can be multiple error functions $E$ for the same
-$Q$. We choose to use only one error metric with each quantity, one which is either common, or
-intuitive and simple while generalizable. The list of quantity-optimized streams studied in this
-paper includes \emph{rmse-optimized} (Section \ref{sec:rmse-optimized}), \emph{gradient-optimized}
-(Section \ref{sec:gradient}), \emph{laplacian-optimized} (Section \ref{sec:laplacian}),
-\emph{histogram-optimized} (Section \ref{sec:histogram}), and \emph{isocontour-optimized} (Section
-\ref{sec:isocontour}).
+Data-dependent streams are better in theory, because they can prioritize important chunks based on
+the actual data. However, they are ill-suited for implementations, because the cost of sending
+position information likely outweights any potential benefit. Despite that, data-dependent streams
+are studied in this paper because they can serve as a benchmark to evaluate the performance of their
+static counterparts. Each analysis task potentially requires a fundamentally different stream for
+optimal results. This section aims to solve the problem of finding the optimal stream, given a data
+set and an error metric associated with the analysis task. An error metric is a function
+$E(Q(f'),Q(f))$ that returns the distance between its two arguments. $f$ is the original data field
+and $f'$ is a reconstructed version of $f$ using a subset of the bits. $Q$ is a quantity of interest
+(e.g., histogram, isocontour, etc) derived from $f$ or $f'$. There can be multiple error functions
+$E$ for the same $Q$. We choose to use only one error metric with each quantity, one which is either
+common, or intuitive and simple while generalizable. The list of quantity-optimized streams studied
+in this paper includes \emph{rmse-optimized} (Section \ref{sec:rmse-optimized}),
+\emph{gradient-optimized} (Section \ref{sec:gradient}), \emph{laplacian-optimized} (Section
+\ref{sec:laplacian}), \emph{histogram-optimized} (Section \ref{sec:histogram}), and
+\emph{isocontour-optimized} (Section \ref{sec:isocontour}).
 
 Studying a (data-dependent) quantity-optimized stream is important because such a stream serves both
 as a benchmark, and a source of insights for other, more practical streams for the same quantity.
