@@ -1,45 +1,37 @@
 
 \subsection{Isocontour extraction}
 \label{sec:isocontour}
-If histograms provide statistical overviews of the range space of data, isocontour (isosurface)
-extraction reveals data's structures and features of interest, such as objects or organs in medical
-imaging, or a flame's front in combustion simulation. Sequences of isocontours can reveal important
-topological structures in data. Extraction of isocontour is therefore an essential task in any
-visualization and analysis system. In this section we study the characteristics of bit streams that
-minimize errors in the reconstructed contour at all time.
+Another common visualization task is display of boundaries, usually done using isosurfaces. For example,
+isosurface of OH concentration can separate burning and extinguished regions in a combustion simulation or
+organs can be extracted from medical imaging by threshold on a CT scalars. Moreover, topological methods such as Reeb Graph is
+defined by contracting isosurfaces to a point and building the structure from equivalence classes of isosurfaces.
+Extraction of isosurfaces is therefore an essential task in any
+visualization and analysis system. We thus study the characteristics of bit streams that
+minimize errors in the reconstructed isosurfaces and compare those streams quantitatively and qualitatively.
 
-As before, we begin by defining an error metric two compare two contours. A popular metric is the
-Hausdorff distance [CITE] between two curves (in 2D) or two surfaces (in 3D), but we have found that
-using the number of misclassified samples result is a more robust mertic. This metric can be
-computed without actually extracting contours. Given two grid of values $G_1$ and $C_2$, and an
-isovalue $v$, we classify each sample of each grid with a binary label, $0$ means the sample's value
-is less than $v$, and $1$ means the opposite. Then, we perform an element-wise XOR of the resulting
-two binary grids, and count the number of $1$'s in the result. This number is the number of samples
-that were classified differently between the two grids, and in our experience, is a close proxy to
-how different the two corresponding isocontours would be from each other.
-
-Using just the number of misclassified voxels as the error metric in Algorithm [REF] is
-insufficient, however. We have found that in step TODO of the algorithm, if the error caused by
+\pavol{potentially weak point as we do not use any standard error metric here; is the relative surface area fudge
+necessary for higher resolution datasets?}
+As before, we begin by defining an error metric to compare isosurfaces. Commonly used metric is a Hausdorff
+distance that measures the shortest path from a point on one surface to the other, and then taking maximum
+of all those paths. Unfortunately, the distance is not very robust and can vary drastically with minor changes
+in the surfaces. For example, a single perturbation in one of the two surfaces
+can result in a large distance even when the surfaces are close to identical. Therefore, we use a number of
+misclassified voxels as our distance which can be computed by counting all voxels that are either in surface $S_1$
+and not surface $S_2$ or the other way. \pavol{not sure if following is needed}We have found that if the error caused by
 switching off a chunk is too small (in orders of sub-pixel/sub-voxel), then the importance of the
 chunk cannot be properly measured. We therefore amend the error metric by adding to it the relative
-difference in length between two contours. This relative difference is, most of the time, a number
-between $0$ and $1$,computed by the formula $|L(C_1)-L(C_2)|/L(C_1)$, where $L(C)$ is the length of
-a contour $C$. The idea is that when the number number of misclassified voxels is less than $1$, the
-error -- which is at the sub-pixel level -- is captured by the relative difference in contour length
+difference in area between two isosurfaces. This relative difference is, most of the time, a number
+between $0$ and $1$, computed by the formula $|A(S_1)-A(S_2)|/A(S_1)$, where $A(S)$ is the area of
+an isosurface $S$. The idea is that when the number number of misclassified voxels is less than $1$, the
+error -- which is at the sub-voxel level -- is captured by the relative difference in contour length
 instead.
 
-With an error metric defined, we can compute an \emph{isocontour-optimized} stream for a data set,
-given an isovalue. However, it is not straightforward to compare an \emph{isocontour-optimized}
-stream to an \emph{rmse-optimized} stream in any contour error metric, because in practice, an
-isocontour occupies an order of magnitude fewer grid cells, compared to the whole grid. An
-\emph{rmse-optimized} stream has no reason to prioritize these cells, which is what an
-\emph{isocontour-optimized} stream would do. In other words, the \emph{isocontour-optimized} stream
-is spatially adaptive to a much higher degree than the \emph{rmse-optimized} stream is, and this
-makes a direct comparison less meaningful. One way to solve this problem is to isolate the spatial
-adaptivity aspect of a stream from its core characteristics (i.e., its tendency to favor precision
-or resolution). Our solution is to divide space into regions, and study the relative order in which
-a stream consumes bits within a region (in a way similar to how we construct a stream's signature),
-while keeping the ordering of regions constant across streams.
+With an error metric defined, we can compute an \emph{isocontour-optimized} stream for each data set in addition
+to the other streams that are data independent. The hypothesis is resolving an isosurface is primarily affected
+by the domain resolution.
+Both resolution and precision streams are bounded by Nquist limit, a fine isosurface detail may fail
+to be resolved either due low resolution or precision.
+\pavol{expand}
 
 \begin{figure}
 	\centering
@@ -51,25 +43,15 @@ while keeping the ordering of regions constant across streams.
 	{\includegraphics[width=0.48\linewidth]{isocontour/isocontour-optimized-plasma}}
 	\subcaptionbox{diffusivity}
 	{\includegraphics[width=0.48\linewidth]{isocontour/isocontour-optimized-diffusivity}}
-	\caption{Isocontour errors for \emph{rmse-optimized}, \emph{isocontour-optimized}, and their
-	hybrid streams. The vertical axis is log-scaled. The bit rates are capped to highlight differences
+	\caption{Isocontour errors for \emph{isocontour-optimized}. The bit rates are capped to highlight differences
 	among streams.}
 	\label{fig:isocontour-plots}
 \end{figure}
 
-The first thing to observe from Figure \ref{fig:isocontour-plots} is that the \emph{hybrid
-isocontour-rmse} stream improves on \emph{rmse-optimized}, as expected. However, it underperforms
-\emph{isocontour-optimized} by a considerable degree. This could be due to the fact that
-\emph{hybrid isocontour-rmse} is more spatially adaptive to the contour, or that \emph{hybrid
-isocontour-rmse} is fundamentally different than \emph{rmse-optimized}. To answer this question, we
-form a special stream 
-
-figure 3: show isocontour rendering for the three streams at some low bit rates where the errors are
-apparent. Ideally the difference between isocontour and hybrid is not noticeable.
-
-We argue that different isovalues will require different stream signatures, but thanks to the
-similarity between hybrid and isocontour streams, the rmse stream can be used to extract isocontour
-too, provided that it is paired with a method to localize the contour (e.g. min-max octrees etc).
+Qualitatively, we studied isosurfaces at specific bit rates for all streams. We were especially interested
+at bit rates where the error is not exponentially decaying - the low bit rate isosurfaces do not resemble
+the reference full data set isosurfaces. For example, at bit rate 0.4 the error curves are mostly flat and the gaps between
+them result in isosurfaces with visible differences (\Cref{fig:isocontour-surfaces})).
 
 \begin{figure}[h]
 	\centering
@@ -83,13 +65,22 @@ too, provided that it is paired with a method to localize the contour (e.g. min-
 	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-pressure-magnitude}}
 	\subcaptionbox{\emph{groundtruth}}
 	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-pressure-groundtruth}}
-	\caption{pressure, 0.4 bps}
-	\label{fig:isocontour-plots}
+	\caption{Miranda pressure field isosurfaces at bitrate of 0.4 bps.\pavol{what isovalue?} Both {\em by level}
+        and {\em by magnitude} stream exhibit severe blocking artifacts compared to the groundtruth. The other streams
+        still show smear artifacts, but the overall structure of the isosurfaces is more round and closer to the
+        reference.}
+	\label{fig:isocontour-surfaces}
 \end{figure}
 
-Figure 5: We show that the hybrid and isocontour can diverge somewhat for low-gradient contour.
-Valerio suggested here we coudl also build a "ramp" dataset at different angles and see if the two
-diverges more as the ramp become flatter.
+%Figure 5: We show that the hybrid and isocontour can diverge somewhat for low-gradient contour.
+%Valerio suggested here we coudl also build a "ramp" dataset at different angles and see if the two
+%diverges more as the ramp become flatter.
 
-We argue that if the gradient is low, some noise bits at the end will make an impact, the isocontour
-is very sensitive to noise, and is in general not interesting or meaninfgul to extract.
+%We argue that if the gradient is low, some noise bits at the end will make an impact, the isocontour
+%is very sensitive to noise, and is in general not interesting or meaninfgul to extract.
+
+
+In this section, we looked at isosurface results for all six streams. The {\em by level} and {\em by magnitude} streams
+show blocking artifacts compared to the less severe smearing of {\em by wavelet norm} and {\em by precisio} streams. Therefore,
+it seems that one of those latter streams combined with a spatial adaptivity would perform well when isosurface
+extraction is desired.
