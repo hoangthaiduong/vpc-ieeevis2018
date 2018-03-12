@@ -99,35 +99,37 @@ A stream can be viewed a collection of packets, sorted in descending order of so
 with each packet $p$. Two sorting criteria, corresponding to two common data reduction schemes in
 the literature, are \emph{by level} and \emph{by bit plane}. The \emph{by level} stream orders the
 packets strictly from coarser to finer resolution levels. The weight function in this case is
-$W_l(p)=L-l(p)$, where $l(p)$ is the subband index of $p$, and $L$ is the total number of subbands.
-Within the same subband, without any assumption on the underlying data, packets follow the row-major
-order of coefficients, then bit plane order (from 0 to $B$) within each coefficient. The other
-common ordering, \emph{by bit plane}, proceeds strictly from higher-ordered to lower-ordered bit
-planes. That is, $W_b(p)=B-b(p)$, where $b(p)$ is the bit plane index of $p$, and $B$ is the total
-number of bit planes. Within the same bit plane, packets follow the subband order (from 0 to $L$),
-then row-major order in each subband.
+$W_{lvl}(p)=L-l(p)$, where $l(p)$ is the subband index of $p$, and $L$ is the total number of
+subbands. Within the same subband, without any assumption on the underlying data, packets follow the
+row-major order of coefficients, then bit plane order (from 0 to $B$) within each coefficient. The
+other common ordering, \emph{by bit plane}, proceeds strictly from higher-ordered to lower-ordered
+bit planes. That is, $W_{bit}(p)=B-b(p)$, where $b(p)$ is the bit plane index of $p$, and $B$ is the
+total number of bit planes. Within the same bit plane, packets follow the subband order (from 0 to
+$L$), then row-major order in each subband. We use $s_{lvl}$ and $s_{bit}$ to denote the \emph{by
+level} and the \emph{by bit plane} streams.
 
-The \emph{by level} and \emph{by bit plane} streams are designed to mimic the way data is accessed
-in traditional methods that work either in resolution (\emph{by level}) or in precision (\emph{by
-bit plane}). We also define a third stream, called \emph{by wavelet norm}, which combines these two
-dimensions. The \emph{by wavelet norm} stream orders packets using $W_w(p)=2^{B-1-b(p)}\times
-\norm{\omega_{l(p)}}^2$. The first term captures the contribution of a bit on bit plane $b(p)$,
-while the second term captures the contribution of a wavelet coefficient on subband $l(p)$, where
-$\omega_{l(p)}$ refers to a wavelet basis function on subband $l(p)$. In the wavelet representation,
-a function $f$ is written as a linear sum of wavelet basis functions $\omega_i$:
-$f=\sum{c_i\omega_i}$, where $c_i$ are the coefficients. Since basis functions in the same subband
-share the same norm, $W_w(p)$ is simply the contribution (in $L_2$ norm) of a bit on bit plane $b_p$
-and subband $l_p$, to the whole function $f$. To our knowledge, a data reduction scheme based on
-\emph{by wavelet norm} was hinted at in [CITE]. \duong{if there is enough space, include here the
-formula to compute the norm of basis functions, else put it in the appendix}
+$s_{lvl}$ and $s_{bit}$ are designed to mimic the way data is accessed in traditional methods that
+work either in resolution ($s_{lvl}$) or in precision ($s_{bit}$). We also define a third stream,
+called \emph{by wavelet norm} and denoted as $s_{wav}$, which combines these two dimensions.
+$s_{wav}$ orders packets using $W_{wav}(p)=2^{B-1-b(p)}\times \norm{\omega_{l(p)}}^2$. The first
+term captures the contribution of a bit on bit plane $b(p)$, while the second term captures the
+contribution of a wavelet coefficient on subband $l(p)$, where $\omega_{l(p)}$ refers to a wavelet
+basis function on subband $l(p)$. In the wavelet representation, a function $f$ is written as a
+linear sum of wavelet basis functions $\omega_i$: $f=\sum{c_i\omega_i}$, where $c_i$ are the
+coefficients. Since basis functions in the same subband share the same norm, $W_{wav}(p)$ is simply
+the contribution (in $L_2$ norm) of a bit on bit plane $b_p$ and subband $l_p$, to the whole
+function $f$. To our knowledge, a data reduction scheme based on \emph{by wavelet norm} was hinted
+at in [CITE]. \duong{if there is enough space, include here the formula to compute the norm of basis
+functions, else put it in the appendix}
 
 Another data common reduction technique, especially for transform-based data, is one in which
 truncation happens by by leaving out coefficients of smallest magnitudes. We model this scheme with
-a stream called \emph{by magnitude}. Here, the weight function is $W_m(p)=\sum_{c\in
+a stream called \emph{by magnitude}. Here, the weight function is $W_{mag}(p)=\sum_{c\in
 block(p)}\norm{c}^2$ (the sum is over all coefficients in the block that contains packet $p$). If
 two packets have the same weight, they are ordered by subband index, then by bit plane. Unlike
 \emph{by level} and \emph{by bit plane}, \emph{by magnitude} is data-dependent, because the
-coefficient magnitudes are not known until after the data has gone through the wavelet transform.
+coefficient magnitudes are not known until after the data has gone through the wavelet transform. We
+use $s_{mag}$ to denote this stream.
 
 In general, data-dependent streams are better than data-independent streams in theory, because they
 can prioritize important packets based on the actual data. However, data-dependent streams are
@@ -193,8 +195,8 @@ packet $p_i$ in $f'$, then compute and record the incurred error $e_i$. $p_i$ is
 $f'$ at the end of iteration $i$. After $n$ iterations, each packet has an associated weight $e_i$.
 $s_{opt}$, then, is simply the sorted list of packets in decreasing order of the weights. This
 simplified algorithm brings the running time from days down to minutes, while (by observation)
-retaining the same quality for $s_{opt}$. The pseudocode of the algorithm is presented in Algorithm
-\autoref{alg:greedy}.
+retaining the same quality for $s_{opt}$. The pseudocode of the algorithm is presented in
+Algorithm~\autoref{alg:greedy}.
 
 \begin{algorithm}[h]
   \small
@@ -269,44 +271,13 @@ lists the steps in detail.
 	\label{alg:signature}
 \end{algorithm}
 
-Finally, a signature can be used to construct a ``semi'' data-independent stream. This is done by
-iterating through each element $A(l,b)$ in ascending order, and adding to the end of the stream all
-the packets in $P_{l,b}$. This stream is similar to purely data-independent streams, in that the
-ordering of packets in the $S_{l,b}$ space is deterministic (governed by the signature). However,
-this deterministic ordering must be established between the client and the server through the
-transmission of the signature. This is not a hurdle in practice, because the size of the signature
-should be negligible compared to the size of the data itself. In 3D, assuming 22 subbands and 32-bit
-quantized coefficients, a signature contains $1408 (=22\times 32\times 2)$ bytes. A signature-based
-stream has no element of spatial-adaptivity, hence it can serve as a bridge when comparing the
-resolution-versus-precision tradeoffs between data-independent and data-dependent streams.
-
-\subsection{Data sets}
-\label{sec:data-sets}
-
-Table~\ref{tbl:data-sets} contains all the data sets used for experiment in this paper. Note that
-during pre-processing, all fields are converted to double-precision floating-point values before
-quantization takes place. For ease of demonstration, as well as performance reason, the majority of
-our experiments use 2D data sets. Often, these are slices from 3D volumes.
-Section~\ref{sec:3d_results} presents our main results for 3D data sets. \pavol{we switched all to
-3D right?}
-
-\begin{table*}[t]
-  \caption{Data sets used in experiments}
-  \centering
-  \begin{tabular}{p{0.15\linewidth}p{0.20\linewidth}p{0.15\linewidth}p{0.10\linewidth}p{0.15\linewidth}}
-  \hline
-  Name & Source & Slice dimension & Type & Citation\\
-  \hline
-  boiler & combustion simulation& $140\times 148$ & float64 &\\
-  euler & fluid simulation& $256\times 1024$ & float64 &\\
-  kingsnake & CT scan & $1024\times 795$ & uint8 &\\
-  plasma & magnetic reconnection simulation& $512\times 512$ & float32 &\\
-  marschner-lobb & analytical function& $256\times 256$ & float64 &\\
-  diffusivity & hydrodynamics simulation& $384\times 384$ & float64 &\\
-  pressure & hydrodynamics simulation& $384\times 384$ & float64 &\\
-  velocityz & hydrodynamics simulation& $384\times 384$ & float64 &\\
-  turbulence & fluid dynamics simulation& $256\times 256$ & float32 &\\
-  \hline
-  \end{tabular}
-\label{tbl:data-sets}
-\end{table*}
+Finally, a signature can be used to construct a ``semi'' data-independent stream, denoted as
+$s_{sig}$. This is done by iterating through each element $A(l,b)$ in ascending order, and adding
+end of $s_{sig}$ all the packets in $P_{l,b}$. $s_{sig}$ is similar to purely data-independent
+streams, in that the ordering of packets in the $S_{l,b}$ space is deterministic (governed by the
+signature). However, this deterministic ordering must be established between the client and the
+server through the transmission of the signature. This is not a hurdle in practice, because the size
+of the signature should be negligible compared to the size of the data itself. In 3D, assuming 22
+subbands and 32-bit quantized coefficients, a signature contains $1408 (=22\times 32\times 2)$
+bytes. $s_{sig}$ has no element of spatial-adaptivity, hence it can serve as a bridge when comparing
+the resolution-versus-precision tradeoffs between data-independent and data-dependent streams.
