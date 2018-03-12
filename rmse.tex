@@ -45,13 +45,13 @@ they not been removed, would have penalized $s_{bit}$ heavily, as this stream fa
 most.
 
 This difference in contribution is magnified when the data contains more fine-scale features, as is
-the case for the \emph{plasma} data set. In Figure~\ref{fig:rmse-rendering}, we render this field at
+the case for the \emph{plasma} data set. We render this field at
 0.74 bits per sample (bps) for all three streams, and compare these rendering with that of the
-groundtruth data. \emph{by level} results in heavy artifacts that are not seen by \emph{by bit
+groundtruth data~(\Cref{fig:rmse-rendering}). \emph{by level} results in heavy artifacts that are not seen by \emph{by bit
 plane} and \emph{by wavelet norm}. \emph{by wavelet norm} performs slightly better than \emph{by bit
-plane} here and in all other cases. In Figure~\ref{fig:precision-map-rmse}, it can be observed that
+plane} here and in all other cases. We observe that
 the distribution of bits per subband of the \emph{rmse signature} stream (and hence, the
-\emph{rmse-optimized} stream) closely resembles that of \emph{by wavelet norm}. These results
+\emph{rmse-optimized} stream) closely resembles that of \emph{by wavelet norm}~(\Cref{fig:precision-map-rmse}). These results
 suggest that in practice, \emph{by wavelet norm} is a near-optimal way to stream data that minimizes
 root-mean-square errors, regardless of the data.
 

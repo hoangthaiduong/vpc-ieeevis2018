@@ -6,7 +6,7 @@ A histogram succinctly and meaningfully summarizes the data, thus histogram comp
 common analysis task. In this section, we study bit streams that aim to reproduce the most accurate
 histogram possible at any bit rate. It is necessary to first define a criteria to compare two
 histograms. We choose to use the popular Earth mover's distance as the distance metric for
-histograms [CITE]. With the error metric defined, Algorithm [REF] gives us a
+histograms [CITE]. With the error metric defined, \Cref{alg:signature} computes a
 \emph{histogram-optimized} stream, given an input data set. To understand the characteristics of an
 \emph{histogram-optimized} stream that make it suitable for histogram computation, we compare it
 with the \emph{rmse-optimized} stream for the same data set. We also include their corresponding
