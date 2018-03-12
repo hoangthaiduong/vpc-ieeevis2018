@@ -1,5 +1,4 @@
-
-\subsection{Isocontour extraction}
+\subsection{Isosurface extraction\pavol{update plot text to isosurface}}
 \label{sec:isocontour}
 Another common visualization task is display of boundaries, usually done using isosurfaces. For example,
 isosurface of OH concentration can separate burning and extinguished regions in a combustion simulation or
@@ -26,12 +25,15 @@ an isosurface $S$. The idea is that when the number number of misclassified voxe
 error -- which is at the sub-voxel level -- is captured by the relative difference in contour length
 instead.
 
-With an error metric defined, we can compute an \emph{isocontour-optimized} stream for each data set in addition
-to the other streams that are data independent. The hypothesis is resolving an isosurface is primarily affected
-by the domain resolution.
+With an error metric defined, we can compute an \emph{isosurface-optimized} stream for each data set in addition
+to the other streams that are data independent (\Cref{fig:isocontour-plots}). The hypothesis is resolving an
+isosurface is primarily affected by the domain resolution.
 Both resolution and precision streams are bounded by Nquist limit, a fine isosurface detail may fail
-to be resolved either due low resolution or precision.
-\pavol{expand}
+to be resolved either due low resolution or precision. As expected, the {\em isosurface-optimize} stream performs
+the best as it has the most freedom when reordering chunks. We observed close to no difference between {\em by bit
+plane}, {\em by wavelet norm}, and {\em isosurface signature} streams. This result is primarily caused by the need for
+resolution when extracting isosurfaces. For example, {\em by bit plane} stream will always load full resolution data and
+vary only precision.
 
 \begin{figure}
 	\centering
@@ -43,8 +45,10 @@ to be resolved either due low resolution or precision.
 	{\includegraphics[width=0.48\linewidth]{isocontour/isocontour-optimized-plasma}}
 	\subcaptionbox{diffusivity}
 	{\includegraphics[width=0.48\linewidth]{isocontour/isocontour-optimized-diffusivity}}
-	\caption{Isocontour errors for \emph{isocontour-optimized}. The bit rates are capped to highlight differences
-	among streams.}
+	\caption{Isosurface errors for data-independent, \emph{isosurface-optimized}, and
+                 {\em isosurface signature} streams. The bit rates are capped to highlight differences
+                 among streams. The {\em by level} and {\em by magnitude} streams performs worst and the other remaining
+                 streams have similar performance.}
 	\label{fig:isocontour-plots}
 \end{figure}
 
