@@ -130,7 +130,7 @@ two packets have the same weight, they are ordered by subband index, then by bit
 coefficient magnitudes are not known until after the data has gone through the wavelet transform.
 
 In general, data-dependent streams are better than data-independent streams in theory, because they
-can prioritize important chunks based on the actual data. However, data-dependent streams are
+can prioritize important packets based on the actual data. However, data-dependent streams are
 ill-suited for practical purposes, because the cost of sending position information likely
 outweights any potential benefit. Despite that, we study them for various reasons. First, the
 \emph{by magnitude} scheme is well-known in the literature. Second, data-dependent streams can serve
@@ -250,17 +250,17 @@ lists the steps in detail.
   \caption{Computing a stream signature}
   \begin{algorithmic}[1]
     \Inputs{
-			A stream $C=\{c_i\}, i\in\{0,\dots,n-1\}$\\}
-		\Initialize{Per-region signature matrix $A_r\gets 0, r\in\{0,\dots\bar{r}-1\}$\\
-		Global signature matrix $A \gets 0$}
-		\For{each chunk $c_i$}
-			\State Let $r$, $b$, $l$ be the region, bit plane, and subband that $c_i$ belongs
-			\State $A_r(l,b) \gets A_r(l,b)+i$
+			A stream $P=\{p_i\}$\\}
+		\Initialize{Per-region signature matrix $A_r:= 0$\\
+		Global signature matrix $A := 0$}
+		\For{each packet $p_i$ in $P$}
+			\State Let $r$, $b$, $l$ be the region, bit plane, and subband that $p_i$ belongs
+			\State $A_r(l,b) := A_r(l,b)+i$
 		\EndFor
 		\For{each region $r$}
 			\State Sort the elements of $A_r$
 			\State Assign each element of $A_r$ its index after sorting
-			\State $A \gets A+A_r$
+			\State $A := A+A_r$
 		\EndFor
 		\State Sort the elements of $A$
 		\State Assign each element of $A$ its index after sorting
