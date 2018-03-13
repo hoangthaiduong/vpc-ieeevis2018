@@ -1,12 +1,22 @@
-
 \subsection{Histogram computation}
 \label{sec:histogram}
 
-A histogram succinctly and meaningfully summarizes the data, thus histogram computation is a very
+\pavol{motivate query; expand with examples}
+A histogram succinctly and meaningfully summarizes the data by calculating its distribution, making it a
 common analysis task. In this section, we study bit streams that aim to reproduce the most accurate
-histogram possible at any bit rate. It is necessary to first define a criteria to compare two
-histograms. We choose to use the popular Earth mover's distance as the distance metric for
-histograms [CITE]. With the error metric defined, \Cref{alg:signature} computes a
+histogram possible at any bit rate.
+
+\pavol{discuss error metrics and why we chose the histogram intersection}
+It is necessary to first define a criteria to compare two
+histograms. There are several options and we explored two of them: Earth Mover's Distance~\cite{emd1998} and
+histogram intersection~\cite{histogram_intersection1991}. The Earth Mover's Distance represents
+the smallest possible amount of work needed to morph one histogram to another. The work is defined as the
+amount of change ($y$-axis) times the distance ($x$-axis). The histogram intersection simply computes for each
+bin how much it matches the other histogram's bin and does not consider the distance between bins in domain.
+We choose histogram intersection because we consider the bin mismatch to be more important than a transform between two histograms.
+
+\pavol{explain results in the curve plots}
+With the error metric defined, \Cref{alg:signature} computes a
 \emph{histogram-optimized} stream, given an input data set. To understand the characteristics of an
 \emph{histogram-optimized} stream that make it suitable for histogram computation, we compare it
 with the \emph{rmse-optimized} stream for the same data set. We also include their corresponding
@@ -43,6 +53,8 @@ outperform \emph{rmse-optimized} and \emph{by wavelet norm} respectively. For ex
 \ref{fig:histogram-comparison-low-bit-rate-slz} shows the four reconstructed histograms at 0.1 bits
 per sample, with leading zero bits removed, for the diffusivity data set.
 
+\pavol{explain visual results}
+
 \begin{figure}[h]
 	\centering
 	\subcaptionbox{\emph{by level}}{
@@ -60,6 +72,8 @@ per sample, with leading zero bits removed, for the diffusivity data set.
 	\caption{\emph{boiler}, 0.08 bps}
 	\label{fig:histogram-stream-comparison}
 \end{figure}
+
+\pavol{summarize subsection}
 
 % \begin{figure}
 % 	\centering
