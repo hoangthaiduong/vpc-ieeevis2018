@@ -98,28 +98,17 @@ our experiments, as low as 0.25 bps and as high as 2.39 bps are needed for this 
 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{\emph{by level}}{
-	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-level}}}
-	\subcaptionbox{\emph{by bit plane}}{
-	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-bit-plane}}}
-	\subcaptionbox{\emph{by magnitude}}{
-	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-magnitude}}}
-	\subcaptionbox{\emph{by wavelet norm}}{
-	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-wavelet-norm}}}
-	\subcaptionbox{\emph{by signature}}{
-	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-signature.png}}}
-	\subcaptionbox{\emph{groundtruth}}{
-	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-groundtruth.png}}}
-	\caption{\emph{turbulence}, 0.2 bps}\label{fig:gradient-rendering-diff}
-\end{figure}
-
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{\emph{by bit plane}}{
+	\subcaptionbox{$s_{bit}$}{
 	{\includegraphics[width=0.48\linewidth]{gradient/gradient-bit-plane}}}
-	\subcaptionbox{\emph{by	wavelet norm}}{
+	\subcaptionbox{$s_{wav}$}{
 	{\includegraphics[width=0.48\linewidth]{gradient/gradient-wavelet-norm}}}
-	\caption{\emph{turbulence}, 0.2 bps}\label{fig:gradient-rendering-diff}
+	\caption{A 1D line extracted from \emph{plasma}, and reconstructed using $s_{bit}$ and $s_{wav}$ at
+	0.6 bps. The original data is in orange, whille the reconstructions are in blue. $s_{wav}$ captures
+	well the function values in low-gradient regions, where $s_{bit}$ struggles (red arrows).
+	However, $s_{bit}$ retains the shape of the original function well in areas of both low and high
+	gradients, where $s_{wav}$ instead produces smooth approximations (blue arrows). $s_{bit}$
+	therefore is better for	derivative computations, where a function's shape (or its relative
+	values), matter more than its absolute values.}\label{fig:gradient-rendering-diff}
 \end{figure}
 
 \subsubsection{Laplacian}\label{sec:laplacian}
