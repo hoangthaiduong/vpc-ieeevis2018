@@ -2,12 +2,15 @@
 \label{sec:histogram}
 
 \pavol{motivate query; expand with examples}
-A histogram succinctly and meaningfully summarizes the data by calculating its distribution, making it a
-common analysis task. In this section, we study bit streams that aim to reproduce the most accurate
+
+Histogram succinctly summarizes the data by calculating its distribution, making it a
+common analysis task. For example, a transfer function widget usually displays the histogram
+of a data set as a background to help guide the color and opacity selection.
+In this section, we study bit streams that aim to reproduce the most accurate
 histogram possible at any bit rate.
 
 \pavol{discuss error metrics and why we chose the histogram intersection}
-It is necessary to first define a criteria to compare two
+It is necessary to first define a criterion to compare two
 histograms. There are several options and we explored two of them: Earth Mover's Distance~\cite{emd1998} and
 histogram intersection~\cite{histogram_intersection1991}. The Earth Mover's Distance represents
 the smallest possible amount of work needed to morph one histogram to another. The work is defined as the
@@ -16,14 +19,14 @@ bin how much it matches the other histogram's bin and does not consider the dist
 We choose histogram intersection because we consider the bin mismatch to be more important than a transform between two histograms.
 
 \pavol{explain results in the curve plots}
-With the error metric defined, \Cref{alg:signature} computes a
-\emph{histogram-optimized} stream, given an input data set. To understand the characteristics of an
-\emph{histogram-optimized} stream that make it suitable for histogram computation, we compare it
-with the \emph{rmse-optimized} stream for the same data set. We also include their corresponding
-data-independent analouges, namely \emph{histogram signature} and \emph{by wavelet norm} (the
-concept of a signature is defined in Section [REF]). Figures \ref{fig:histogram-stream-comparison}
-are plots of the EMD errors for these streams on four data sets.
-
+With the error metric defined, we compute the {\em histogram-optimized} and {\em histogram signature} streams.
+The remaining streams are static and we use ones from previous sections. For every stream we compute the histogram
+intersection error and plot the results~(\Cref{fig:histogram-stream-comparison}). The main difference between histogram query
+and the other queries is that the {\em by level} stream outperforms both {\em by bit plane} and {\em by magnitude} streams.
+This outcome is caused by the nature of a histogram, where its computation is primarily dependant on the precision of the samples,
+i.e., even a small error in a sample value may cause it to change bin in the histogram. The {\em by level} stream benefits from
+loading lower resolutions at full precision as it can resolve the bins well. Moreover, since the subsampling is uniform, it does
+not bias the histogram and preserves its shape well.
 
 
 \begin{figure}[h]
@@ -44,24 +47,26 @@ are plots of the EMD errors for these streams on four data sets.
 	\label{fig:histogram-stream-comparison}
 \end{figure}
 
-First, compared to \emph{rmse-optimized}, the \emph{histogram-optimized} stream produces
-consistently better histograms. Second, between the two data-independent streams, \emph{histogram
-signature} outperforms \emph{by wavelet norm}. To better understand how the Earth mover's distance
-translates to visual differences, we visualize the histograms produced by the different streams, at
-low bit rates, in Figure \ref{fig:histogram-comparison-low-bit-rate}. These plots confirm our
-observations.
-\emph{histogram-optimized} and \emph{histogram signature}
-outperform \emph{rmse-optimized} and \emph{by wavelet norm} respectively. For example, Figure
-\ref{fig:histogram-comparison-low-bit-rate-slz} shows the four reconstructed histograms at 0.1 bits
-per sample, with leading zero bits removed, for the diffusivity data set.
+%First, compared to \emph{rmse-optimized}, the \emph{histogram-optimized} stream produces
+%consistently better histograms. Second, between the two data-independent streams, \emph{histogram
+%signature} outperforms \emph{by wavelet norm}. To better understand how the Earth mover's distance
+%translates to visual differences, we visualize the histograms produced by the different streams, at
+%low bit rates, in Figure \ref{fig:histogram-comparison-low-bit-rate}. These plots confirm our
+%observations.
+%\emph{histogram-optimized} and \emph{histogram signature}
+%outperform \emph{rmse-optimized} and \emph{by wavelet norm} respectively. For example, Figure
+%\ref{fig:histogram-comparison-low-bit-rate-slz} shows the four reconstructed histograms at 0.1 bits
+%per sample, with leading zero bits removed, for the diffusivity data set.
 
 \pavol{explain visual results}
 Additionally to computing the error curves, we explored several bit rates after the curves exhibit
 reasonable error and the histograms are not wildy different from the groundtruth. For example, the {\em boiler}
 data set's histogram for each streams confirms the results from the error curves~(\Cref{fig:histograms-boiler}).
 The {\em by bit plane} stream or the {\em by magnitude} stream has vastly different shape and scale than the other
-streams. The primary cause is that histograms require precision more than resolution, and since these streams\pavol{todo: by magnitude}
+streams. As mentioned before, the primary cause is that histograms require precision more than resolution, and since these streams\pavol{todo: by magnitude}
 always load full resolution but at limited precision, they spent large portion of the bit budget on the resolution part.
+Any fo the remaining streams provides good histogram and thus the choice from these streams should depend on the other
+desired queries.
 
 \begin{figure}[h]
 	\centering
