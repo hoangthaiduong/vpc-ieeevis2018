@@ -87,8 +87,7 @@ beside an accurate gradient field, the task also requires an accurate function i
 	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-signature.png}}}
 	\subcaptionbox{\emph{groundtruth}}{
 	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-groundtruth.png}}}
-	\caption{\emph{turbulence}, 0.2 bps}
-  \label{fig:gradient-rendering-diff}
+	\caption{\emph{turbulence}, 0.2 bps}\label{fig:gradient-rendering-diff}
 \end{figure}
 
 Although \emph{gradient-optimized} and \emph{}
@@ -97,8 +96,33 @@ Figure~\ref{fig:gradient-renderings} gives a crude idea on the range of bit rate
 reconstruct a gradient field that is visually close to the ground-truth. For the data sets used in
 our experiments, as low as 0.25 bps and as high as 2.39 bps are needed for this purpose.
 
-\subsubsection{Laplacian}
-\label{sec:laplacian}
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{\emph{by level}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-level}}}
+	\subcaptionbox{\emph{by bit plane}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-bit-plane}}}
+	\subcaptionbox{\emph{by magnitude}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-magnitude}}}
+	\subcaptionbox{\emph{by wavelet norm}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-wavelet-norm}}}
+	\subcaptionbox{\emph{by signature}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-signature.png}}}
+	\subcaptionbox{\emph{groundtruth}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-groundtruth.png}}}
+	\caption{\emph{turbulence}, 0.2 bps}\label{fig:gradient-rendering-diff}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{\emph{by bit plane}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-bit-plane}}}
+	\subcaptionbox{\emph{by	wavelet norm}}{
+	{\includegraphics[width=0.31\linewidth]{gradient/gradient-wavelet-norm}}}
+	\caption{\emph{turbulence}, 0.2 bps}\label{fig:gradient-rendering-diff}
+\end{figure}
+
+\subsubsection{Laplacian}\label{sec:laplacian}
 
 The Laplace operator is a second-order differential operator, defined as the divergence of the
 gradient field. It can be computed by summing second partial derivatives in all dimensions, for

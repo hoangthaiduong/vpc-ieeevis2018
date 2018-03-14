@@ -10,7 +10,8 @@ signature of $s_{opt}$. We compare $s_{lvl}$, $s_{bit}$, $s_{wav}$, $s_{mag}$, $
 $s_{opt}$ by plotting the error as a function of the number of packets received. To mimic the
 effects of entropy compression commonly used in practice, we remove all packets that contain only
 leading zero bits from each stream, before plotting. This comparison is performed on a variety of
-data sets, listed in \autoref{tbl:data-sets}.
+data sets, listed in \autoref{tbl:data-sets}. \duong{add the discussion about reconstructing the
+whole data at full resolution before performing any analysis task.}
 
 \begin{table*}[t]
   \caption{Data sets used in experiments \duong{Update this table}}
@@ -29,8 +30,7 @@ data sets, listed in \autoref{tbl:data-sets}.
   velocityz & hydrodynamics simulation& $384\times 384$ & float64 &\\
   turbulence & fluid dynamics simulation& $256\times 256$ & float32 &\\
   \hline
-  \end{tabular}
-\label{tbl:data-sets}
+  \end{tabular}\label{tbl:data-sets}
 \end{table*}
 
 \subsection{Function reconstruction}\label{sec:rmse-optimized}
@@ -44,49 +44,40 @@ in magnitude. Hence, these coefficients contain the majority of the leading zero
 they not been removed, would have penalized $s_{bit}$ heavily, as this stream favors resolution the
 most.
 
-This difference in contribution is magnified when the data contains more fine-scale features, as is
-the case for the \emph{plasma} data set. In Figure~\ref{fig:rmse-rendering}, we render this field at
-0.74 bits per sample (bps) for all three streams, and compare these rendering with that of the
-groundtruth data. \emph{by level} results in heavy artifacts that are not seen by \emph{by bit
-plane} and \emph{by wavelet norm}. \emph{by wavelet norm} performs slightly better than \emph{by bit
-plane} here and in all other cases. In Figure~\ref{fig:precision-map-rmse}, it can be observed that
-the distribution of bits per subband of the \emph{rmse signature} stream (and hence, the
-\emph{rmse-optimized} stream) closely resembles that of \emph{by wavelet norm}. These results
-suggest that in practice, \emph{by wavelet norm} is a near-optimal way to stream data that minimizes
-root-mean-square errors, regardless of the data.
+Since $s_{wav}$ is designed to minimize function error in $L_2$ norm, it unsurprisingly outperforms
+both $s_{lvl}$ and $s_{bit}$ in terms of RMSE. In \autoref{fig:rmse-rendering} we render the
+\emph{plasma} data set at 0.1 bits per sample. Bits per sample (bps) are calculated by dividing the
+total size of received packets (in bits) by the total number of samples. The \duong{mention that
+$s_{opt}$ gives }
 
 \begin{figure}[h]
   \centering
-	\subcaptionbox{Boiler}{
-		{\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-boiler}}}
-  \subcaptionbox{Diffusivity}{
-		{\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-diffusivity}}} 
-	\subcaptionbox{Plasma}{
-		{\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-plasma}}}
-	\subcaptionbox{Turbulence}{
-	  {\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-turbulence}}}
-  \caption{Root-mean-square error of reconstructed functions for the three data-agnostic streams
-  defined in Section \ref{sec:motivation}, and the \emph{rmse-optimized} stream. Lower is better.
-  The streams are truncated to highlight the differences, without omitting important information.
-  \emph{rmse-optimized} performs best, followed closely by \emph{by wavelet norm}, \emph{rmse
-  signature} and \emph{by bit plane}. TODO:explain any ``strange'' behavior in the
-  plot.}\label{fig:rmse-optimized}
+	\subcaptionbox{\emph{boiler}}{ {\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-boiler}}}
+		\subcaptionbox{\emph{diffusivity}}{
+		{\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-diffusivity}}}
+		\subcaptionbox{\emph{plasma}}{ {\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-plasma}}}
+		\subcaptionbox{\emph{turbulence}}{
+		{\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-turbulence}}}
+		\caption{Root-mean-square error of reconstructed functions for different streams and data sets.
+		Lower is better. The streams are truncated to highlight the differences, without omitting
+		important information. Leading zero packets are not used for plotting. In all cases, the
+		ordering of performance, from best to worst, is $s_{opt} > s_{sig} > s_{wav} > s_{bit} > s_{mag}
+		> s_{lvl}$.}\label{fig:rmse-optimized}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{\emph{by level}}{
-	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-level}}}
-	\subcaptionbox{\emph{by bit plane}}{
-	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-bit-plane}}}
-	\subcaptionbox{\emph{by magnitude}}{
-	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-magnitude}}}
-	\subcaptionbox{\emph{by wavelet norm}}{
-	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-wavelet-norm}}}
-	\subcaptionbox{\emph{by signature}}{
-	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-signature}}}
-	\subcaptionbox{\emph{groundtruth}}{
-	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-groundtruth}}}
-	\caption{\emph{boiler} data reconstructed at 0.03 bps}
- 	\label{fig:rmse-rendering}
+	\subcaptionbox{\emph{by level} ($s_{lvl}$)}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-level}}} \subcaptionbox{\emph{by bit
+	plane ($s_{bit}$)}}{ {\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-bit-plane}}}
+	\subcaptionbox{\emph{by magnitude ($s_{mag}$)}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-magnitude}}} \subcaptionbox{\emph{by
+	wavelet norm ($s_{wav}$)}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-wavelet-norm}}} \subcaptionbox{\emph{by
+	signature ($s_{sig}$)}}{ {\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-signature}}}
+	\subcaptionbox{\emph{reference}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-groundtruth}}} \caption{Volume renderings
+	of \emph{plasma} at 0.1 bps. $s_{lvl}$ captures the background (purple-blue) well, while $s_{bit}$
+	captures the fine details better. $s_{wav}$ combines the strength of both. $s_{sig}$ produces the
+	most accurate rendering.}\label{fig:rmse-rendering}
 \end{figure}
