@@ -76,6 +76,20 @@ them result in isosurfaces with visible differences (\Cref{fig:isocontour-surfac
 	\label{fig:isocontour-surfaces}
 \end{figure}
 
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{\emph{reference}}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-groundtruth}}
+	\subcaptionbox{\emph{by bit plane}}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-bit-plane}}
+	\subcaptionbox{\emph{by wavelet norm}}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-wavelet-norm}}
+	\caption{Miranda pressure field isosurfaces at bitrate of 0.4 bps.\pavol{what isovalue?} Both {\em by level}
+        and {\em by magnitude} stream exhibit severe blocking artifacts compared to the groundtruth. The other streams
+        still show smear artifacts, but the overall structure of the isosurfaces is more round and closer to the
+        reference.}
+	\label{fig:isocontour-surfaces}
+\end{figure}
 %Figure 5: We show that the hybrid and isocontour can diverge somewhat for low-gradient contour.
 %Valerio suggested here we coudl also build a "ramp" dataset at different angles and see if the two
 %diverges more as the ramp become flatter.
