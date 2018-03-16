@@ -1,5 +1,22 @@
 \section{Analysis tasks}\label{sec:analysis-tasks}
 
+\begin{table*}[t]
+  \caption{Data sets used in experiments \duong{Update this table}}
+  \centering
+  \begin{tabular}{p{0.15\linewidth}p{0.20\linewidth}p{0.15\linewidth}p{0.10\linewidth}p{0.15\linewidth}}
+  \hline
+  Name & Source & Slice dimension & Type & Citation\\
+  \hline
+  boiler & combustion simulation& $140\times 148$ & float64 &\\
+  plasma & magnetic reconnection simulation& $512\times 512$ & float32 &\\
+  diffusivity & hydrodynamics simulation& $384\times 384$ & float64 &\\
+  pressure & hydrodynamics simulation& $384\times 384$ & float64 &\\
+  velocityz & hydrodynamics simulation& $384\times 384$ & float64 &\\
+  turbulence & fluid dynamics simulation& $256\times 256$ & float32 &\\
+  \hline
+  \end{tabular}\label{tbl:data-sets}
+\end{table*}
+
 In this section, we study a gamut of fundamental analysis tasks, namely function reconstruction
 (\autoref{sec:rmse-optimized}), derivative computation (\autoref{sec:gradient} and
 \autoref{sec:laplacian}), histogram computation (\autoref{sec:histogram}), and isocontour extraction
@@ -12,26 +29,6 @@ effects of entropy compression commonly used in practice, we remove all packets 
 leading zero bits from each stream, before plotting. This comparison is performed on a variety of
 data sets, listed in \autoref{tbl:data-sets}. \duong{add the discussion about reconstructing the
 whole data at full resolution before performing any analysis task.}
-
-\begin{table*}[t]
-  \caption{Data sets used in experiments \duong{Update this table}}
-  \centering
-  \begin{tabular}{p{0.15\linewidth}p{0.20\linewidth}p{0.15\linewidth}p{0.10\linewidth}p{0.15\linewidth}}
-  \hline
-  Name & Source & Slice dimension & Type & Citation\\
-  \hline
-  boiler & combustion simulation& $140\times 148$ & float64 &\\
-  euler & fluid simulation& $256\times 1024$ & float64 &\\
-  kingsnake & CT scan & $1024\times 795$ & uint8 &\\
-  plasma & magnetic reconnection simulation& $512\times 512$ & float32 &\\
-  marschner-lobb & analytical function& $256\times 256$ & float64 &\\
-  diffusivity & hydrodynamics simulation& $384\times 384$ & float64 &\\
-  pressure & hydrodynamics simulation& $384\times 384$ & float64 &\\
-  velocityz & hydrodynamics simulation& $384\times 384$ & float64 &\\
-  turbulence & fluid dynamics simulation& $256\times 256$ & float32 &\\
-  \hline
-  \end{tabular}\label{tbl:data-sets}
-\end{table*}
 
 \subsection{Function reconstruction}\label{sec:rmse-optimized}
 

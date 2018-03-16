@@ -1,43 +1,44 @@
-\subsection{Histogram computation}
-\label{sec:histogram}
+\subsection{Histogram computation}\label{sec:histogram}
 
 \pavol{motivate query; expand with examples}
+\duong{what does this mean?}
 
-Histogram succinctly summarizes the data by calculating its distribution, making it a
-common analysis task. For example, a transfer function widget usually displays the histogram
-of a data set as a background to help guide the color and opacity selection.
-In this section, we study bit streams that aim to reproduce the most accurate
-histogram possible at any bit rate.
+The computation of a histogram is one of the most common tasks in data analysis. A histogram
+succinctly summarizes the distribution of sample values, and thus is useful as a cursory ``look''
+into the data, and in guiding further analysis. For example, it can be used to guide the selection
+of colors and opacities in transfer functions.
 
-\pavol{discuss error metrics and why we chose the histogram intersection}
-It is necessary to first define a criterion to compare two
-histograms. There are several options and we explored two of them: Earth Mover's Distance~\cite{emd1998} and
-histogram intersection~\cite{histogram_intersection1991}. The Earth Mover's Distance represents
-the smallest possible amount of work needed to morph one histogram to another. The work is defined as the
-amount of change ($y$-axis) times the distance ($x$-axis). The histogram intersection simply computes for each
-bin how much it matches the other histogram's bin and does not consider the distance between bins in domain.
-We choose histogram intersection because we consider the bin mismatch to be more important than a transform between two histograms.
+There are several metrics proposed in the literature to measure the distance between two
+distributions. We have experimented with the most common ones, namely Kolmogorov-Smirnov [CITE],
+Kullback-Leibler [CITE], Hellinger [CITE], Total variation [CITE], Chi-square [CITE], Bhattacharyya
+[CITE], Earth Mover's Distance~\cite{emd1998}, $L_1$ norm, and
+Intersection~\cite{histogram_intersection1991}. We have found that the relative ordering of streams'
+performance do not vary across the distance metrics. Also, it is interesting to note that among the
+$s_{opt}$'s streams, the one using the Earth Mover's Distance has the least RMSE. However, we choose
+Intersection as the metric of choice, because it is fast to compute, and is the least sensitive to
+slight changes in precision.
 
 \pavol{explain results in the curve plots}
-With the error metric defined, we compute the {\em histogram-optimized} and {\em histogram signature} streams.
-The remaining streams are static and we use ones from previous sections. For every stream we compute the histogram
-intersection error and plot the results~(\Cref{fig:histogram-stream-comparison}). The main difference between histogram query
-and the other queries is that the {\em by level} stream outperforms both {\em by bit plane} and {\em by magnitude} streams.
-This outcome is caused by the nature of a histogram, where its computation is primarily dependant on the precision of the samples,
-i.e., even a small error in a sample value may cause it to change bin in the histogram. The {\em by level} stream benefits from
-loading lower resolutions at full precision as it can resolve the bins well. Moreover, since the subsampling is uniform, it does
-not bias the histogram and preserves its shape well.
-
+With the error metric defined, we compute the {\em histogram-optimized} and {\em histogram
+signature} streams. The remaining streams are static and we use ones from previous sections. For
+every stream we compute the histogram intersection error and plot the
+results~(\Cref{fig:histogram-stream-comparison}). The main difference between histogram query and
+the other queries is that the {\em by level} stream outperforms both {\em by bit plane} and {\em by
+magnitude} streams. This outcome is caused by the nature of a histogram, where its computation is
+primarily dependant on the precision of the samples, i.e., even a small error in a sample value may
+cause it to change bin in the histogram. The {\em by level} stream benefits from loading lower
+resolutions at full precision as it can resolve the bins well. Moreover, since the subsampling is
+uniform, it does not bias the histogram and preserves its shape well.
 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{\emph{boiler}, 64 bins}
+	\subcaptionbox{\emph{boiler}}
 	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-boiler}}
-	\subcaptionbox{\emph{diffusivity}, 64 bins}
+	\subcaptionbox{\emph{diffusivity}}
 	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-diffusivity}}
-	\subcaptionbox{\emph{plasma}, 64 bins}
+	\subcaptionbox{\emph{plasma}}
 	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-plasma}}
-	\subcaptionbox{\emph{turbulence}, 64 bins}
+	\subcaptionbox{\emph{turbulence}}
 	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-turbulence}}
 	\caption{Histogram error comparison among four streams \emph{histogram-optimized},
 	\emph{rmse-optimized}, \emph{by wavelet norm}, and \emph{histogram signature}, without the leading
