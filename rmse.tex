@@ -37,18 +37,21 @@ whole data at full resolution before performing any analysis task.}
 
 The most fundamental analysis task is that of reconstructing the original function itself. The most
 common error metric in this case is the root-mean-square error (RMSE). The plots that compare the
-streams are in \autoref{fig:rmse-optimized}. $s_{lvl}$ performs significantly worse than $s_{bit}$,
-which can be attributed to the fact that $s_{bit}$ benefits more from our removal of leading zero
-packets. This is because, wavelet coefficients on finer-scale subbands are relatively much smaller
-in magnitude. Hence, these coefficients contain the majority of the leading zero bits, which, had
-they not been removed, would have penalized $s_{bit}$ heavily, as this stream favors resolution the
-most.
+streams are in \autoref{fig:rmse-optimized}. The main trend in all cases, is $s_{opt} > s_{sig} >
+s_{wav} > s_{bit} > s_{mag} > s_{lvl}$, where ``$>$'' means producing lower RMSE errors.
 
-Since $s_{wav}$ is designed to minimize function error in $L_2$ norm, it unsurprisingly outperforms
-both $s_{lvl}$ and $s_{bit}$ in terms of RMSE. In \autoref{fig:rmse-rendering} we render the
-\emph{plasma} data set at 0.1 bits per sample. Bits per sample (bps) are calculated by dividing the
-total size of received packets (in bits) by the total number of samples. The \duong{mention that
-$s_{opt}$ gives }
+$s_{bit}$ performs significantly better than $s_{lvl}$, which can be attributed partly to our
+removal of leading zero packets. This is because, wavelet coefficients on finer-scale subbands are
+much smaller in magnitude. They contain the majority of the leading zero bits, whose removal
+benefits $s_{bit}$ the most, as it touches fine-resolution bits the most early. $s_{mag}$
+underperforms for the same reason that $s_{lvl}$ does, but to a lesser extent, due to it being
+adaptive to the data. $s_{wav}$ outperforms both $s_{lvl}$ and $s_{bit}$, because it follows the
+optimal (data-independent) bit ordering in $S_{L,B}$ in the $L_2$ norm, which is also the norm that
+the RMSE is based on. $s_{opt}$ unsurprisingly outperforms the rest, being the most data-adaptive.
+$s_{sig}$ is the second best stream, as it follows the bit ordering of $s_{opt}$ in $S_{L,B}$. In
+general, $s_{wav}$ and $s_{sig}$ are close in performance. In some cases (e.g., \emph{plasma} and
+\emph{diffusivity}), the $s_{sig}$ stream is able to adapt more to the data, thus outperforming
+$s_{wav}$ by a larger margin.
 
 \begin{figure}[h]
   \centering
@@ -65,6 +68,18 @@ $s_{opt}$ gives }
 		> s_{lvl}$.}\label{fig:rmse-optimized}
 \end{figure}
 
+In \autoref{fig:rmse-rendering} we volume render the \emph{plasma} data set at 0.1 bits per sample,
+for all streams. Bits per sample (bps) are calculated by dividing the total size of received packets
+(in bits) by the total number of samples. Although $s_{lvl}$ has the precision to obtain an accurate
+background, it lacks resolution to resolve the fine details. $s_{bit}$, instead, lacks the precision
+to reconstruct the (mostly smooth) background, but has enough resolution to capture the fine details
+well. $s_{wav}$ balances both precision and resolution, producing a more accurate picture as a
+whole. In this case, the $s_sig$ stream manages to produce the most accurate rendering. In general,
+$s_{sig}$ benefits more from ``anisotropic'' data, such as \emph{plasma}, where most features lie on
+a thin ``surface''. For such data, wavelet coefficients along one dimension are often larger in
+magnitude compared to those along other dimensions, which $s_{opt}$, and hence $s_{sig}$, can take
+advantage of, but not $s_{wav}$.
+
 \begin{figure}[h]
 	\centering
 	\subcaptionbox{\emph{by level} ($s_{lvl}$)}{
@@ -77,7 +92,8 @@ $s_{opt}$ gives }
 	signature ($s_{sig}$)}}{ {\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-signature}}}
 	\subcaptionbox{\emph{reference}}{
 	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-groundtruth}}} \caption{Volume renderings
-	of \emph{plasma} at 0.1 bps. $s_{lvl}$ captures the background (purple-blue) well, while $s_{bit}$
-	captures the fine details better. $s_{wav}$ combines the strength of both. $s_{sig}$ produces the
-	most accurate rendering.}\label{fig:rmse-rendering}
+	of a $64^3$ region of \emph{plasma} at 0.1 bps. $s_{lvl}$ captures the background (purple-blue)
+	well, while $s_{bit}$ captures the fine details better. $s_{wav}$ combines the strength of both.
+	$s_{sig}$, however, produces the most accurate rendering (compare, e.g., yellow
+	features).}\label{fig:rmse-rendering}
 \end{figure}
