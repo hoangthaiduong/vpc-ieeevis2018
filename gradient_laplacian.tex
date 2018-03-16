@@ -45,6 +45,7 @@ which cancels any constant shift. $s_{bit}$, therefore, works better than $s_{wa
 computation, thanks to its virtue of being able to better retain sharp features.
 
 \duong{talk about the by-level, by-magnitude, and signature}.
+\duong{explain the ``bumpiness'' in the by wavelet norm}
 
 \begin{figure}[h]
 	\centering
@@ -100,17 +101,21 @@ computation, thanks to its virtue of being able to better retain sharp features.
 
 The Laplace operator is a second-order differential operator, defined as the divergence of the
 gradient field. It can be computed by summing second partial derivatives in all dimensions, for
-example, in 2D: $\Delta f=(\frac{{\partial}^2}{\partial{x^2}}+\frac{{\partial}^2}{\partial{y^2}})f$.
-To approximate the Laplacian for data on a grid, we use the three-point finite difference to
-approximate the second derivative in each dimension: $\frac{{\partial}^2}{\partial{x^2}}f(x,y)
-\approx f(x-1,y)-2f(x,y)+f(x+1,y)$. The Laplacian error is defined as the root-mean-square error
-between the Laplacian of the reconstructed scalar field and the Laplacian of the original scalar
-field, that is, $E_g(\Delta f_b,\Delta f)=RMSE(\Delta f_b,\Delta f)$. For each data set, Algorithm
-[REF] is used to compute a \emph{laplacian-optimized} bit stream that minimizes $E_g$ at any bit
-rate. From this stream, we obtain its signature and construct the \emph{laplacian signature} stream,
-which, unlike \emph{laplacian-optimized}, is considered static and hence can be implemented in
-practice. In Figure \ref{fig:laplacian-error-comparison} we compare these two stream against all the
-previously defined streams, including \emph{gradient-optimized} using $E_g$ as the metric.
+example, in 3D: $\Delta
+f=(\frac{{\partial}^2}{\partial{x^2}}+\frac{{\partial}^2}{\partial{y^2}}+\frac{{\partial}^2}{\partial{y^2}})f$.
+To compute the Laplacian, we use the five-point finite difference to approximate the second
+derivative in each dimension: $\frac{{\partial}^2}{\partial{x^2}}f(x,y,z) \approx
+-\frac{1}{12}f(x-2,y,z)+\frac{4}{3}f(x-1,y,z)+\frac{-5}{2}f(x,y,z)+\frac{4}{3}f(x+1,y,z)-\frac{1}{12}f(x+2,y,z)$.
+To compare two Laplacian fields, we use the root-mean-square error, that is, $e(\Delta
+\tilde{f},\Delta f)=RMSE(\Delta \tilde{f},\Delta f)$. As usual, we use Algorithm \autoref{alg:greedy}
+to compute a \emph{laplacian-optimized} ($s_{lap-opt}$) stream that minimizes $e$, and an
+$s_{lap-sig}$ stream from its signature. \autoref{fig:laplacian-error-comparison} plots the error
+curves for all relevant streams. The plots here largely follow the one in
+\autoref{fig:gradient-error-comparison}, in terms of relative performance among the streams, with
+one minor discrepancy. $s_{bit}$ consistenly underperforms $s_{lap-sig}$ by a small margin, and
+produces ``bumpier'' error curves. In \autoref{fig:laplacian-renderings}, we render the
+reconstructed Laplacian fields for the \emph{pressure} field at 0.9 bps, which shows how differences
+in Laplacian RMSE among the streams translate to visual differences.
 
 \begin{figure}[h]
 	\centering
@@ -123,66 +128,25 @@ previously defined streams, including \emph{gradient-optimized} using $E_g$ as t
 	\subcaptionbox{pressure}
 	{\includegraphics[width=0.48\linewidth]{laplacian/laplacian-optimized-pressure}}
 	\caption{Laplacian error comparison among streams, using the three-point stencil. The plots are
-	truncated so as to better highlight differences without discarding important information. In all cases, \emph{laplacian}}
-	\label{fig:laplacian-error-comparison}
+	truncated so as to better highlight differences without discarding important information. In all
+	cases, \emph{laplacian}}\label{fig:laplacian-error-comparison}
 \end{figure}
-
-It can be observed that unlike the case for gradient, there exists significant differences between
-the \emph{rmse-optimized} and \emph{laplacian-optimized} streams with regards. To understand these
-differences we plot the precision of every wavelet coefficients at a low bit rate in Figure
-\ref{fig:laplacian-precision-comparison} (a and b). When cross refererencing this Figure with Figure
-\ref{fig:gradient-comparison}b we see that the \emph{laplacian-optimized} stream priotizes
-finer-resolution bits where the sharp shockwave is, unlike the \emph{rmse-optimized} stream which
-prefers lower-ordered, coarse-resolution bits. This effect makes sense intuitively, as the
-derivative operator makes functions less smooth, hence amplifing hard edges. This happens in the
-gradient case too, but to a much lesser degree.
 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{\emph{by level}}
+	\subcaptionbox{\emph{by level} ($s_{lvl}$)}
 	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-level}}
-	\subcaptionbox{\emph{by bit plane}}
+	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}
 	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-bit-plane}}
-	\subcaptionbox{\emph{by magnitude}}
+	\subcaptionbox{\emph{by magnitude} ($s_{mag}$)}
 	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-magnitude}}
-	\subcaptionbox{\emph{by wavelet norm}}
+	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}
 	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-wavelet-norm}}
-	\subcaptionbox{\emph{by signature}}
+	\subcaptionbox{\emph{by signature} ($s_{lap-sig}$)}
 	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-signature}}
-	\subcaptionbox{\emph{groundtruth}}
+	\subcaptionbox{\emph{reference}}
 	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-groundtruth}}
-	\caption{pressure, laplacian, 0.9 bps}
-	\label{fig:laplacian-precision-comparison}
+	\caption{Renderings of recontructed Laplacian fields for a $64^3$ region in \emph{pressure}, at 0.9 bps.
+	In terms of image quality, $s_{lap-sig} > s_{bit} > s_{wav} > s_{mag} > s_{lvl}$.}
+	\label{fig:laplacian-renderings}
 \end{figure}
-
-\emph{rmse-optimized}, \emph{laplacian-optimized}, and also \emph{gradient-optimized} for the euler
-data set are visualized in Figure \ref{fig:signature-comparison}. 
-
-TODO: add comparison of stream signatures
-% \begin{figure}[h]
-% 	\centering
-% 	\subcaptionbox{\emph{rmse-optimized}}
-% 	{\includegraphics[width=0.32\linewidth]{img/gradient-laplacian/SIG-GREEDY-(rmse).png}}
-% 	\subcaptionbox{\emph{laplacian-optimized}}
-% 	{\includegraphics[width=0.32\linewidth]{img/gradient-laplacian/SIG-GREEDY-(laplacian).png}}
-% 	\subcaptionbox{\emph{gradient-optimized}}
-% 	{\includegraphics[width=0.32\linewidth]{img/gradient-laplacian/SIG-GREEDY-(gradient).png}}
-% 	\caption{Stream signatures visualized through a linear-blue color map (brighter is higher
-% 	priority). From left to right: higher-ordered to lower-ordered bit planes. From top to bottom:
-% 	coarser to finer subbands. Note that the streams from which the signatures are extracted do not
-% 	contain leading zero bits, which explains the very dark cells }
-% 	\label{fig:signature-comparison}
-% \end{figure}
-
-Using the signature for \emph{laplacian-optimized}, we are able construct a data-independent stream
-(in the sense that once the signature is computed and is given, the ordering of the bits follows the
-the signature only). This stream, called \emph{laplacian signature}, performs at least as well as,
-and often better, than \emph{rmse-optimized} for all data sets (see Figure
-\ref{fig:laplacian-comparison}). The reason \emph{laplacian signature} does not always outperform
-\emph{rmse-optimized}, and that there is still a gap between itself and \emph{laplacian-optimized}
-is that the signature is computed essentially by `'averaging'' local signatures, a process that
-lessen the effectiveness of the signature when the data is highly inhomogenous (e.g., the euler data
-set with its sharp shockwaves). Nevertheless, even with one signature for the whole domain, we are
-able to reconstruct more accurate Laplacian in all cases in experiment. In practice, the signature
-is a tiny piece of meta information that can be pre-computed, stored, and transmitted before any
-value bits to help `'steer'' the data stream, whenever Laplacian is the quantity of interest.
