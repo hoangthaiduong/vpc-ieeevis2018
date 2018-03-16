@@ -1,43 +1,48 @@
-\subsection{Computation of derivatives}
-\label{sec:derivatives}
-
+\subsection{Computation of derivatives}\label{sec:derivatives}
 Computation of derivative quantities such as gradient and Laplacian is of fundamental importance in
-data analysis. In this section, we study streams that aim to minimize errors of derivative fields.
-For the experiments in this section, we quantize the data to $32$ instead of $16$ bits, to ensure
-enough precision for the purpose of taking derivatives using finite differences of floating-point
-values. Note that in this paper, for the purpose of derivative computation, we always perform finite
-differences on the finest (original) resolution. This is possible since the wavelet transform allows
-for reconstruction of the function at the original resolution. The reason for this decision is to
-avoid the problem of computing distances between quantities across grids of different dimensions
-(e.g., computing the root-mean-square error between a (down-sampled) $n\times n$ grid and a
-$2n\times 2n$ grid), because we are unaware of widely accepted solutions to this problem. In the
-following sections, we perform experiments with two of the most common types of derivative, namely
-gradient (Section~\ref{sec:gradient}) and Laplacian (Section~\ref{sec:laplacian}).
+data analysis. Since simulation data can rarely be captured by closed-form formulas, we use finite
+differences. In this section, we use 32 bits (instead of 16) for quantization, to ensure enough
+precision for finite differences. We always perform finite differences on the finest (original)
+resolution. This decision avoids the problem of computing distances between quantities defined on
+grids of different sizes, because we are unaware of any widely accepted solutions to this problem.
+\autoref{sec:gradient} discusses gradient computation, and \autoref{sec:laplacian} discusses
+computation of the Laplacian.
 
-\subsubsection{Gradient}
-\label{sec:gradient}
+\subsubsection{Gradient}\label{sec:gradient}
+For the gradient, we have experimented with three popular finite difference schemes using stencil
+sizes of two, three, and five points in each dimension. We have foundno tangible differences in the
+results, and therefore present results for the five-point stencil exlusively: $\frac{\partial
+f}{\partial x}\approx \frac{1}{12}f(x-2)-\frac{2}{3}f(x-1)+\frac{2}{3}f(x+1)-\frac{1}{12}f(x+2)$. In
+3D, the gradient at grid point $(x,y,z)$ is the vector $(\frac{\partial f}{\partial
+x},\frac{\partial f}{\partial y}, \frac{\partial f}{\partial y})$. We use Algorithm~\ref{alg:greedy}
+to compute a \emph{gradient-optimized} ($s_{grad-opt}$) stream that minimizes the difference between
+the reconstructed gradient field and the original gradient field. The error at each grid point $x_i$
+is the squared Euclidean length of the difference between two gradient vectors, that is,
+$\norm{\nabla \tilde{f}(x_i)-\nabla f(x_i)}^2$, where $\tilde{f}$ is an approximation of $f$
+at low bit rates. The overall error, defined over the whole field, is $e(\nabla \tilde{f},\nabla
+f)=\sqrt{\frac{1}{n}\sum_{i=1}^{n}{\norm{\nabla \tilde{f}(x_i)-\nabla f(x_i)}^2}}$.
 
-Since simulation data can rarely be captured by closed-form formulas, we use finite difference to
-compute gradients. We experiment with three popular finite difference schemes using stencil size
-widths of two, three, and five points in each dimension, but found no tangible differences in the
-results. We have therefore decided to use the five-point stencil exlusively in this paper:
-$\frac{\partial f}{\partial x}\approx
-\frac{1}{12}f(x-2)-\frac{2}{3}f(x-1)+\frac{2}{3}f(x+1)-\frac{1}{12}f(x+2)$. In 2D, the gradient at
-each grid point $(x,y)$ is the vector $(\frac{\partial f}{\partial x},\frac{\partial f}{\partial
-y})$. We use Algorithm~\ref{alg:greedy} to compute a \emph{gradient-optimized} stream that minimizes
-the difference between the gradient field of $f_b$ (the reconstructed function using $b$ bits per
-sample) and that of the original function ($f$). At each grid point $p$, we compute an error $e(p)$,
-defined to be the squared Euclidean length of the difference between two gradient vectors at $p$,
-that is $e(p)=\norm{\nabla f_b(p)-\nabla f(p)}^2$. The overall error metric over the whole field,
-$E_g$, is defined as $E_g(\nabla f_b,\nabla f)=\sqrt{\frac{1}{n}\sum_{i=1}^{n}{e(p_i)}}$.
+Using four data sets, we plot gradient error curves produced by $s_{lvl}$, $s_{bit}$, $s_{mag}$,
+$s_{wav}$, $s_{grad-opt}$, and $s_{grad-sig}$ in \autoref{fig:gradient-error-comparison}. In
+general, $s_{grad-opt} > s_{grad-sig} \approx s_{bit} > s_{wav} > s_{mag} > s_{lvl}$. This ordering
+can also be seen in \autoref{fig:gradient-rendering-diff}, where the x-component of the gradient
+field for \emph{tuburlence} is reconstructed and rendered, at 0.2 bps. Unlike in the RMSE case,
+$s_{bit}$ produces better approximations of the gradient field, compared to $s_{wav}$. This
+phenomenon is explained in \autoref{fig:bit-plane-vs-wavelet-norm-gradient}.
 
-We plot the gradient error curves produced by the \emph{by level}, \emph{by bit plane}, \emph{by
-wavelet norm}, \emph{gradient-optimized}, and \emph{gradient signature} streams, for six data sets
-(Figure~\ref{fig:gradient-error-comparison}). \emph{gradient-optimized} performs far better than all
-the static streams, due to the fact that, with the knowledge of the data, this stream is able to
-prioritize regions that would benefit the most from additional bits. Among the static streams,
-\emph{by level} performs the worst, while \emph{by wavelet norm} performs slightly worse than the
-other two streams. 
+In \autoref{fig:bit-plane-vs-wavelet-norm-gradient}, a 1D line is extracted from \emph{plasma}, and
+reconstructed using $s_{bit}$ and $s_{wav}$ at 0.6 bps. Because the coarse-scale coefficients in
+$s_{bit}$ are not accurate enough, the reconstruction from $s_{bit}$ is inaccurate in areas of low
+gradients. In constrast, the $s_{wav}$'s reconstruction is accurate in low-gradient areas, but lacks
+the resolution to resolve the high-gradient areas. This is because $s_{wav}$ frequently intersperses
+bits that improve resolution and bits that improve precision, unlike $s_{bit}$, which always stream
+bits that improve resolution first. As such, $s_{wav}$ tends to produce a ``smoother''
+reconstruction that, \emph{on average} (i.e., in terms of RMSE), is close to the original function.
+$s_{bit}$, on the other hand, tends to capture well the function's shape (due to fine-scale bits),
+but the whole function can be ``shifted'' slightly due to the lack of precision in coarse-scale
+coefficients. However, the error caused by this shifting reduces significantly when taking gradient,
+which cancels any constant shift. $s_{bit}$, therefore, works better than $s_{wav}$ for gradient
+computation, thanks to its virtue of being able to better retain sharp features.
 
 \begin{figure}[h]
 	\centering
@@ -48,49 +53,31 @@ other two streams.
 	\subcaptionbox{turbulence}{
 	{\includegraphics[width=0.48\linewidth]{gradient/gradient-optimized-turbulence}}}
 	\subcaptionbox{pressure}{
-	{\includegraphics[width=0.48\linewidth]{gradient/gradient-optimized-pressure}}}
-	\caption{Gradient error comparison among different streams, using the five-point stencil. The
-	plots are truncated in the same way as in Figure \ref{fig:gradient-stencil-comparison}. In all
-	cases, \emph{by wavelet norm} performs slightly worse than \emph{by bit plane} and \emph{gradient
-	signature} do, but the differences are largely negligible. \emph{by level} performs the worst.}
+	{\includegraphics[width=0.48\linewidth]{gradient/gradient-optimized-pressure}}} \caption{Gradient
+	error of reconstructed functions. Lower is better. Leading zero packets are removed, and the plots
+	are truncated in the same way as in Figure \ref{fig:rmse-optimized}. The trend, in all cases, is
+	$s_{grad-opt} > s_{grad-sig} \approx s_{bit} > s_{wav} > s_{mag} > s_{lvl}$.}
 	\label{fig:gradient-error-comparison}
 \end{figure}
 
-The differences in gradient errors among the \emph{by bit plane}, \emph{by wavelet norm}, and
-\emph{gradient signature} streams are negligible. As an example, in
-Figure~\ref{fig:gradient-rendering-diff} we visualize the three reconstructed gradient fields, as
-well as the groundtruth gradient field for the \emph{velocityz} data set, at 0.35 bps, where the
-streams diverge the most. This figure shows that the differences among reconstructed gradient fields
-are barely visible. For this reason, in practice, any static stream would likely suffice for the
-purpose of computing gradient. However, \emph{by bit plane} is significantly cheaper to compute
-compared to \emph{gradient signature}, because the latter requires obtaining
-\emph{gradient-optimized} first. \emph{by wavelet norm} is also a reasonable alternative, especially
-if the bits are stored on disk in the same order, for example, to optimize for root-mean-square
-errors (see Section~\ref{sec:motivation}. Finally, \emph{by wavelet norm} is also preferrable if,
-beside an accurate gradient field, the task also requires an accurate function itself.
-
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{\emph{by level}}{
+	\subcaptionbox{\emph{by level} ($s_{lvl}$)}{
 	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-level}}}
-	\subcaptionbox{\emph{by bit plane}}{
+	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}{
 	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-bit-plane}}}
-	\subcaptionbox{\emph{by wavelet norm}}{
+	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}{
 	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-wavelet-norm}}}
-	\subcaptionbox{\emph{by magnitude}}{
+	\subcaptionbox{\emph{by magnitude} ($s_{mag}$)}{
 	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-magnitude}}}
-	\subcaptionbox{\emph{by signature}}{
+	\subcaptionbox{\emph{by signature} ($s_{grad-sig}$)}{
 	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-signature.png}}}
-	\subcaptionbox{\emph{groundtruth}}{
+	\subcaptionbox{\emph{reference}}{
 	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-groundtruth.png}}}
-	\caption{\emph{turbulence}, 0.2 bps}\label{fig:gradient-rendering-diff}
+	\caption{x-component of the ($64^3$) gradient field of \emph{turbulence}, reconstructed at 0.2
+	bps. The gradient field produced by $s_{bit}$ is more accurate than one produced by either
+	$s_{wav}$ or $s_{grad-sig}$ (compare orange features).}\label{fig:gradient-rendering-diff}
 \end{figure}
-
-Although \emph{gradient-optimized} and \emph{}
-
-Figure~\ref{fig:gradient-renderings} gives a crude idea on the range of bit rates needed to
-reconstruct a gradient field that is visually close to the ground-truth. For the data sets used in
-our experiments, as low as 0.25 bps and as high as 2.39 bps are needed for this purpose.
 
 \begin{figure}[h]
 	\centering
@@ -104,7 +91,7 @@ our experiments, as low as 0.25 bps and as high as 2.39 bps are needed for this 
 	However, $s_{bit}$ retains the shape of the original function well in areas of both low and high
 	gradients, where $s_{wav}$ instead produces smooth approximations (blue arrows). $s_{bit}$
 	therefore is better for	derivative computations, where a function's shape (or its relative
-	values), matter more than its absolute values.}\label{fig:gradient-rendering-diff}
+	values), matter more than its absolute values.}\label{fig:bit-plane-vs-wavelet-norm-gradient}
 \end{figure}
 
 \subsubsection{Laplacian}\label{sec:laplacian}

@@ -53,18 +53,6 @@ general, $s_{wav}$ and $s_{sig}$ are close in performance. In some cases (e.g., 
 \emph{diffusivity}), the $s_{sig}$ stream is able to adapt more to the data, thus outperforming
 $s_{wav}$ by a larger margin.
 
-In \autoref{fig:rmse-rendering} we volume render the \emph{plasma} data set at 0.1 bits per sample,
-for all streams. Bits per sample (bps) are calculated by dividing the total size of received packets
-(in bits) by the total number of samples. Although $s_{lvl}$ has the precision to obtain an accurate
-background, it lacks resolution to resolve the fine details. $s_{bit}$, instead, lacks the precision
-to reconstruct the (mostly smooth) background, but has enough resolution to capture the fine details
-well. $s_{wav}$ balances both precision and resolution, producing a more accurate picture as a
-whole. In this case, the $s_sig$ stream manages to produce the most accurate rendering. In general,
-$s_{sig}$ benefits more from ``anisotropic'' data, such as \emph{plasma}, where most features lie on
-a thin ``surface''. For such data, wavelet coefficients along one dimension are often larger in
-magnitude compared to those along other dimensions, which $s_{opt}$, and hence $s_{sig}$, can take
-advantage of, but not $s_{wav}$.
-
 \begin{figure}[h]
   \centering
 	\subcaptionbox{\emph{boiler}}{ {\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-boiler}}}
@@ -79,6 +67,18 @@ advantage of, but not $s_{wav}$.
 		ordering of performance, from best to worst, is $s_{opt} > s_{sig} > s_{wav} > s_{bit} > s_{mag}
 		> s_{lvl}$.}\label{fig:rmse-optimized}
 \end{figure}
+
+In \autoref{fig:rmse-rendering} we volume render the \emph{plasma} data set at 0.1 bits per sample,
+for all streams. Bits per sample (bps) are calculated by dividing the total size of received packets
+(in bits) by the total number of samples. Although $s_{lvl}$ has the precision to obtain an accurate
+background, it lacks resolution to resolve the fine details. $s_{bit}$, instead, lacks the precision
+to reconstruct the (mostly smooth) background, but has enough resolution to capture the fine details
+well. $s_{wav}$ balances both precision and resolution, producing a more accurate picture as a
+whole. In this case, the $s_sig$ stream manages to produce the most accurate rendering. In general,
+$s_{sig}$ benefits more from ``anisotropic'' data, such as \emph{plasma}, where most features lie on
+a thin ``surface''. For such data, wavelet coefficients along one dimension are often larger in
+magnitude compared to those along other dimensions, which $s_{opt}$, and hence $s_{sig}$, can take
+advantage of, but not $s_{wav}$.
 
 \begin{figure}[h]
 	\centering
