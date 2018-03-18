@@ -47,7 +47,7 @@ computation, thanks to its virtue of being able to better retain sharp features.
 \duong{talk about the by-level, by-magnitude, and signature}.
 \duong{explain the ``bumpiness'' in the by wavelet norm}
 
-\begin{figure}[h]
+\begin{figure}[t]
 	\centering
 	\subcaptionbox{\emph{boiler}}{
 	{\includegraphics[width=0.48\linewidth]{gradient/gradient-optimized-boiler}}}
@@ -63,7 +63,22 @@ computation, thanks to its virtue of being able to better retain sharp features.
 	\label{fig:gradient-error-comparison}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[t]
+	\centering
+	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}{
+	{\includegraphics[width=0.48\linewidth]{gradient/gradient-bit-plane}}}
+	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}{
+	{\includegraphics[width=0.48\linewidth]{gradient/gradient-wavelet-norm}}}
+	\caption{A 1D line extracted from \emph{plasma}, and reconstructed using $s_{bit}$ and $s_{wav}$ at
+	0.6 bps. The original data is in orange, whille the reconstructions are in blue. $s_{wav}$ captures
+	well the function values in low-gradient regions, where $s_{bit}$ struggles (red arrows).
+	However, $s_{bit}$ retains the shape of the original function well in areas of both low and high
+	gradients, where $s_{wav}$ instead produces smooth approximations (blue arrows). $s_{bit}$
+	therefore is better for	derivative computations, where a function's shape (or its relative
+	values), matter more than its absolute values.}\label{fig:bit-plane-vs-wavelet-norm-gradient}
+\end{figure}
+
+\begin{figure}[t]
 	\centering
 	\subcaptionbox{\emph{by level} ($s_{lvl}$)}{
 	{\includegraphics[width=0.31\linewidth]{gradient/gradient-turbulence-level}}}
@@ -82,22 +97,22 @@ computation, thanks to its virtue of being able to better retain sharp features.
 	$s_{wav}$ or $s_{grad-sig}$ (compare orange features).}\label{fig:gradient-rendering-diff}
 \end{figure}
 
+\subsubsection{Laplacian}\label{sec:laplacian}
+
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}{
-	{\includegraphics[width=0.48\linewidth]{gradient/gradient-bit-plane}}}
-	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}{
-	{\includegraphics[width=0.48\linewidth]{gradient/gradient-wavelet-norm}}}
-	\caption{A 1D line extracted from \emph{plasma}, and reconstructed using $s_{bit}$ and $s_{wav}$ at
-	0.6 bps. The original data is in orange, whille the reconstructions are in blue. $s_{wav}$ captures
-	well the function values in low-gradient regions, where $s_{bit}$ struggles (red arrows).
-	However, $s_{bit}$ retains the shape of the original function well in areas of both low and high
-	gradients, where $s_{wav}$ instead produces smooth approximations (blue arrows). $s_{bit}$
-	therefore is better for	derivative computations, where a function's shape (or its relative
-	values), matter more than its absolute values.}\label{fig:bit-plane-vs-wavelet-norm-gradient}
+	\subcaptionbox{\emph{boiler}}
+	{\includegraphics[width=0.48\linewidth]{laplacian/laplacian-optimized-boiler}}
+	\subcaptionbox{\emph{diffusivity}}
+	{\includegraphics[width=0.48\linewidth]{laplacian/laplacian-optimized-diffusivity}}
+	\subcaptionbox{\emph{turbulence}}
+	{\includegraphics[width=0.48\linewidth]{laplacian/laplacian-optimized-turbulence}}
+	\subcaptionbox{\emph{pressure}}
+	{\includegraphics[width=0.48\linewidth]{laplacian/laplacian-optimized-pressure}}
+	\caption{Laplacian error comparison among streams, using the three-point stencil. The plots are
+	truncated so as to better highlight differences without discarding important information. In all
+	cases, \emph{laplacian}}\label{fig:laplacian-error-comparison}
 \end{figure}
-
-\subsubsection{Laplacian}\label{sec:laplacian}
 
 \duong{give an example of where to use the LAplacian?}
 The Laplace operator is a second-order differential operator, defined as the divergence of the
@@ -119,36 +134,21 @@ produces ``bumpier'' error curves. In \autoref{fig:laplacian-renderings}, we ren
 reconstructed Laplacian fields for the \emph{pressure} field at 0.9 bps, which shows how differences
 in Laplacian RMSE among the streams translate to visual differences.
 
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{\emph{boiler}}
-	{\includegraphics[width=0.48\linewidth]{laplacian/laplacian-optimized-boiler}}
-	\subcaptionbox{\emph{diffusivity}}
-	{\includegraphics[width=0.48\linewidth]{laplacian/laplacian-optimized-diffusivity}}
-	\subcaptionbox{\emph{turbulence}}
-	{\includegraphics[width=0.48\linewidth]{laplacian/laplacian-optimized-turbulence}}
-	\subcaptionbox{\emph{pressure}}
-	{\includegraphics[width=0.48\linewidth]{laplacian/laplacian-optimized-pressure}}
-	\caption{Laplacian error comparison among streams, using the three-point stencil. The plots are
-	truncated so as to better highlight differences without discarding important information. In all
-	cases, \emph{laplacian}}\label{fig:laplacian-error-comparison}
-\end{figure}
-
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{\emph{by level} ($s_{lvl}$)}
-	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-level}}
-	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}
-	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-bit-plane}}
-	\subcaptionbox{\emph{by magnitude} ($s_{mag}$)}
-	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-magnitude}}
-	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}
-	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-wavelet-norm}}
-	\subcaptionbox{\emph{by signature} ($s_{lap-sig}$)}
-	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-signature}}
-	\subcaptionbox{\emph{reference}}
-	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-groundtruth}}
-	\caption{Renderings of recontructed Laplacian fields for a $64^3$ region in \emph{pressure}, at 0.9 bps.
-	In terms of image quality, $s_{lap-sig} > s_{bit} > s_{wav} > s_{mag} > s_{lvl}$.}
-	\label{fig:laplacian-renderings}
-\end{figure}
+% \begin{figure}[t]
+% 	\centering
+% 	\subcaptionbox{\emph{by level} ($s_{lvl}$)}
+% 	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-level}}
+% 	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}
+% 	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-bit-plane}}
+% 	\subcaptionbox{\emph{by magnitude} ($s_{mag}$)}
+% 	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-magnitude}}
+% 	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}
+% 	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-wavelet-norm}}
+% 	\subcaptionbox{\emph{by signature} ($s_{lap-sig}$)}
+% 	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-signature}}
+% 	\subcaptionbox{\emph{reference}}
+% 	{\includegraphics[width=0.31\linewidth]{laplacian/laplacian-pressure-groundtruth}}
+% 	\caption{Renderings of recontructed Laplacian fields for a $64^3$ region in \emph{pressure}, at 0.9 bps.
+% 	In terms of image quality, $s_{lap-sig} > s_{bit} > s_{wav} > s_{mag} > s_{lvl}$.}
+% 	\label{fig:laplacian-renderings}
+% \end{figure}

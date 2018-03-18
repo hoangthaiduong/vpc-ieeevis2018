@@ -16,21 +16,43 @@ Intersection~\cite{histogram_intersection1991}. We have found that the relative 
 performance do not vary across the distance metrics. Also, it is interesting to note that among the
 $s_{opt}$'s streams, the one using the Earth Mover's Distance has the least RMSE. However, we choose
 Intersection as the metric of choice, because it is fast to compute, and is the least sensitive to
-slight changes in precision.
+slight changes in precision. The intersection distance between two histograms $H_1$ and $H_2$ is
+defined as $e(H_1,H_2)=\sum_{i}{\min{(H_1(i),H_2(i))}}$ (the sum is over all bins $i$). We normalize
+$e$ by dividing it by the total number of samples in the data. Our error metric takes into account
+not only the shapes but also the value ranges of histograms. Therefore, when computing the histogram
+of a reconstructed function, we clamp its range of values to that of the original function's, so
+that corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same range.
 
-\pavol{explain results in the curve plots}
-With the error metric defined, we compute the {\em histogram-optimized} and {\em histogram
-signature} streams. The remaining streams are static and we use ones from previous sections. For
-every stream we compute the histogram intersection error and plot the
-results~(\Cref{fig:histogram-stream-comparison}). The main difference between histogram query and
-the other queries is that the {\em by level} stream outperforms both {\em by bit plane} and {\em by
-magnitude} streams. This outcome is caused by the nature of a histogram, where its computation is
-primarily dependant on the precision of the samples, i.e., even a small error in a sample value may
-cause it to change bin in the histogram. The {\em by level} stream benefits from loading lower
-resolutions at full precision as it can resolve the bins well. Moreover, since the subsampling is
-uniform, it does not bias the histogram and preserves its shape well.
+As before, for each data set, we use Algorithm\autoref{alg:greedy} to compute an $s_{hist-opt}$
+stream, optimized for histogram error, and an $s_{hist-sig}$ from its signature.
+\autoref{fig:histogram-stream-comparison} plots the error curves for all relevant streams using the
+error metric just defined. We use 64 for the number of bins, but note that there exists no
+meaningful differences across a wide range of number of bins (from 64 to 512) in our experiments. In
+all cases, the group consisting of $s_{bit}$, $s_{lvl}$, and $s_{mag}$ underperforms the other group
+by a large margin.
 
-\begin{figure}[h]
+Among the former group, $s_{lvl}$ generally outperforms $s_{bit}$ at low bit rates, although there
+are several crossover points between the two curves. These crossover points are explained in
+\autoref{fig:histogram-explain}. When leading zero packets are present, $s_{lvl}$ absolutely
+outperforms $s_{bit}$, because increasing resolution does not help producing an accurate histogram
+as much as increasing precision. The histogram is oblivious to spatial locations of samples (which
+requires resolution to resolve), but it is sensitive to sample values (which requires precision).
+However, when leading zero packets are removed, as is the case when using compression, $s_{bit}$
+benefits significantly more than $s_{lvl}$ does (for the same reason explained in
+\autoref{sec:rmse-optimized}), resulting in the observed crossovers. Finally, $s_{mag}$ performs
+poorly, because it ignores regions of smooth variations, which nevertheless counts towards the
+distribution.
+
+In the other group, $s_{wav}$'s and $s_{hist-sig}$'s (and even $s_{hist-opt}$'s) performances
+differ by negligible amount. This observation is confirmed in \autoref{fig:histograms-boiler}, where
+we plot various histograms, reconstructed at 0.08 bps, for the \emph{boiler} data set. The histograms
+produced by $s_{wav}$ and $s_{hist-sig}$ have approximately the same shape, and are the closest to
+the reference histogram. The next best histogram is produced by $s_{lvl}$, followed by the one
+produced by $s_{bit}$, and finally $s_{mag}$. These results suggests that histogram computation is
+among analysis tasks that benefit significantly from a bit ordering that combines both resolution
+and precision, not one that adheres to either exclusively.
+
+\begin{figure}[t]
 	\centering
 	\subcaptionbox{\emph{boiler}}
 	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-boiler}}
@@ -40,138 +62,59 @@ uniform, it does not bias the histogram and preserves its shape well.
 	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-plasma}}
 	\subcaptionbox{\emph{turbulence}}
 	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-turbulence}}
-	\caption{Histogram error comparison among four streams \emph{histogram-optimized},
-	\emph{rmse-optimized}, \emph{by wavelet norm}, and \emph{histogram signature}, without the leading
-	zero bits. The plots are truncated to make the differences large enough for visual inspection, and
-	truncation points are chosen so that the best among the reconstructed histograms is visually the
-	same as the groundtruth histogram. }
+	\caption{Comparison of histogram errors among streams. Plots are truncated to highlight
+	differences without hiding important trends. In general, $s_{hist-opt}\approx s_{hist-sig}\approx
+	s_{wav} > s_{lvl} > s_{bit} > s_{mag}$. Crossover points between $s_{bit}$ and $s_{lvl}$ are
+	explained in \autoref{fig:histogram-explain}}.
 	\label{fig:histogram-stream-comparison}
 \end{figure}
 
-%First, compared to \emph{rmse-optimized}, the \emph{histogram-optimized} stream produces
-%consistently better histograms. Second, between the two data-independent streams, \emph{histogram
-%signature} outperforms \emph{by wavelet norm}. To better understand how the Earth mover's distance
-%translates to visual differences, we visualize the histograms produced by the different streams, at
-%low bit rates, in Figure \ref{fig:histogram-comparison-low-bit-rate}. These plots confirm our
-%observations.
-%\emph{histogram-optimized} and \emph{histogram signature}
-%outperform \emph{rmse-optimized} and \emph{by wavelet norm} respectively. For example, Figure
-%\ref{fig:histogram-comparison-low-bit-rate-slz} shows the four reconstructed histograms at 0.1 bits
-%per sample, with leading zero bits removed, for the diffusivity data set.
-
-\pavol{explain visual results}
-Additionally to computing the error curves, we explored several bit rates after the curves exhibit
-reasonable error and the histograms are not wildy different from the groundtruth. For example, the {\em boiler}
-data set's histogram for each streams confirms the results from the error curves~(\Cref{fig:histograms-boiler}).
-The {\em by bit plane} stream or the {\em by magnitude} stream has vastly different shape and scale than the other
-streams. As mentioned before, the primary cause is that histograms require precision more than resolution, and since these streams\pavol{todo: by magnitude}
-always load full resolution but at limited precision, they spent large portion of the bit budget on the resolution part.
-Any fo the remaining streams provides good histogram and thus the choice from these streams should depend on the other
-desired queries.
-
-\begin{figure}[h]
+\begin{figure}[t]
 	\centering
-	\subcaptionbox{\emph{by level}}{
+	\subcaptionbox{with leading zero packets}
+	{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler-wlz}}
+	\subcaptionbox{without leading zero packets}
+	{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler}} \caption{Comparison
+	of histogram error curves produced by $s_{bit}$ and $s_{lvl}$, for \emph{boiler}, with and without
+	leading zero bits. The vertical axis is in log scale. The error for $s_{bit}$ reduces in a
+	stair-step fashion, in which each step corresponds to a new bit plane streamed. $s_{bit}$ benefits
+	significantly more from the removal of leading zero bits (from (a) to (b), the blue curve shifts
+	more to the left).}
+	\label{fig:histogram-explain}
+\end{figure}
+
+\begin{figure}[t]
+	\centering
+	\subcaptionbox{\emph{by level} ($s_{lvl}$)}{
 	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-level.png}}}
-	\subcaptionbox{\emph{by bit plane}}{
+	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}{
 	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-bit-plane.png}}}
-	\subcaptionbox{\emph{by magnitude}}{
+	\subcaptionbox{\emph{by magnitude} ($s_{mag}$)}{
 	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-magnitude.png}}}
-	\subcaptionbox{\emph{by wavelet norm}}{
+	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}{
 	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-wavelet-norm.png}}}
-	\subcaptionbox{\emph{by signature}}{
+	\subcaptionbox{\emph{by signature} ($s_{hist-sig}$)}{
 	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-signature.png}}}
-	\subcaptionbox{\emph{groundtruth}}{
+	\subcaptionbox{\emph{reference}}{
 	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-groundtruth.png}}}
-	\caption{Histograms of different streams of the \emph{boiler} data set at 0.08 bps. The
-        {\em by level}, {\em by wavelet norm}, and {\em by signature}~\pavol{elsewhere histogram signature} streams
-        produce histograms that have similar shape to the {\em groundtruth} histogram with most of the peaks and valleys
-        preserved. In contrast, even though the {\em by bit plane} stream has similar mass distribution, it has one spurious
-        peak that is not present in the {\em groundtruth} histogram.
-        \pavol{are all those histograms normalized? why is there no greedy histogram?}}
+	\caption{Histograms of the \emph{boiler} data set, reconstructed at 0.08 bps. $s_{lvl}$,
+	$s_{wav}$, and $s_{hist-sig}$ produce histograms share similar shape to the reference histogram,
+	with most of the peaks and valleys preserved. In contrast, $s_{bit}$ produces a spurious peak not
+	found in the reference. Finally, $s_{mag}$'s histogram has a widely skewed distribution where too
+	many values fall into the first bin.}
 	\label{fig:histograms-boiler}
 \end{figure}
 
-\pavol{summarize subsection}
-In summary, we have evaluated six data sets, for each using different histogram streams, and
-compared results with respect to the histogram intersection error and the visual differences. Interestingly, the
-order of streams differs from all the other queries, where {\em by level} stream performed poorly, but for
-histograms it outperforms both {\em by magnitude} and {\em by bit plane} streams.
-The idea of signature works for histograms as well, and could be employed as a practical streaming
-format, where the sender would first send the signature to the receiver at small cost (few integer
-values). However, {\em by wavelet norm} stream has similar performance and does not require any extra
-data transfered (such as signature), and thus we conclude that from
-considered streams it has best properties.
+% \pavol{summarize subsection}
+% In summary, we have evaluated six data sets, for each using different histogram streams, and
+% compared results with respect to the histogram intersection error and the visual differences.
+% Interestingly, the order of streams differs from all the other queries, where {\em by level} stream
+% performed poorly, but for histograms it outperforms both {\em by magnitude} and {\em by bit plane}
+% streams. The idea of signature works for histograms as well, and could be employed as a practical
+% streaming format, where the sender would first send the signature to the receiver at small cost (few
+% integer values). However, {\em by wavelet norm} stream has similar performance and does not require
+% any extra data transfered (such as signature), and thus we conclude that from considered streams it
+% has best properties.
 
-% \begin{figure}
-% 	\centering
-% 	\subcaptionbox{\emph{histogram-optimized}}
-% 	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-signature.png}}
-% 	\subcaptionbox{\emph{rmse-optimized}}
-% 	{\includegraphics[width=0.48\linewidth]{img/histogram/histogram-by-wavelet-norm.png}}
-% 	\caption{euler's histograms at 0.18 bps. The groundtruth histogram is rendered in red, while the
-% 	reconstructed histogram is rendered in green. The dark yellow regions are where the two overlap.}
-% 	\label{fig:histogram-comparison-low-bit-rate-slz}
-% \end{figure}
-
-
-\pavol{The visualization of the subbands is missing, but I think it was quite interesting and maybe we
-should find a way to include it as it makes the discussion more interesting.}
-%The main difference between the \emph{histogram-optimized} and the \emph{rmse-optimized} streams is
-%that \emph{histogram-optimized} favors low-ordered bits of coarse-level coefficients, while,
-%\emph{rmse-optimized} relatively favors high-ordered bits of fine-level coefficients. This is
-%evident in Figure \ref{fig:histogram-signature-comparison} (b and d): for
-%\emph{histogram-optimized}, the bright blue cells extend more toward the right (lower-ordered bit
-%planes) and less toward the bottom (finer resolution levels). The histogram experiments in this
-%Section are performed with 256 bins, but this fact holds for a wide range of number of bins. Figures
-%\ref{fig:histogram-signature-comparison} (a, b, c) show that varying the number of bins from 128 to
-%512 only affects the relative ordering among the low-ordered bits on very fine resolution levels
-%(the dark blue cells at the bottom right of the signature). These are bits that come at the end of a
-%stream, and thus matter little to the data quality. 
-
-%The streams in Figure \ref{fig:histogram-comparison-low-bit-rate} (b, d, f, h) are truncated where
-%the EMD errors of the \emph{histogram-optimized} streams are negligible, suggesting that it is often
-%possible to achieve near lossless histograms with just 1 bit per sample. The boiler data set is a
-%peculiar case, where the \emph{histogram-optimized} stream outperforms the rest of the streams by a
-%large margin in the second half of the bit rate range. Looking at the precision maps (defined in
-%Section [REF]) for the \emph{histogram-optimized} stream, as well as its reconstructed histogram
-%(Figure \ref{fig:precision-map-histogram}, (a)), we see that the bit distribution is heavily
-%concentrated in regions corresponding to one particular histogram bin that contains vastly more
-%samples than other bins do. This situtation happens when there are many samples having essentially
-%the same value but they are distributed irregularly in space (otherwise they would form constant
-%regions which would be captured very well with just a few precision bits of wavelet coefficients --
-%this is the case for the flame data set). In this case a stream needs to be more spatially adaptive
-%to resolve well the histogram bin with the most samples, and among the tested streams, only
-%\emph{histogram-optimized} is spatially adaptive to EMD (\emph{rmse-optimized} is spatially
-%adaptive, but to RMSE, and the other two streams are data-independent).
-
-% \begin{figure}[h]
-% 	\centering
-% 	\subcaptionbox{}
-% 	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-histogram_resize-vert.png}}
-% 	\subcaptionbox{}
-% 	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-rmse_resize-vert.png}}
-% 	\subcaptionbox{}
-% 	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-signature_resize-vert.png}}
-% 	\subcaptionbox{}
-% 	{\includegraphics[width=0.24\linewidth]{img/histogram/boiler/prec-wavenorm_resize-vert.png}}
-% 	\caption{(top) Precision distribution of wavelet coefficients, and (bottom) reconstructed
-% 	histograms, for \emph{histogram-optimized}, \emph{rmse-optimized}, \emph{by wavelet norm}, and
-% 	\emph{histogram signature} streams, at 6.47 bits per sample, without leading zero bits.}
-% 	\label{fig:precision-map-histogram}
-% \end{figure}
-
-\duong{Discuss the case of not using compression, where the signature plays a more important role.}
-
-%In this section we have shown that histogram computation requires a different ordering of bits than
-%reconstructing the function itself. We have also proposed a practical heuristic, based on stream
-%signatures, to capture the main characteristics of this ordering. In practice, the histogram
-%signature can be pre-computed once and stored on disk. A signature's size is negligible (170
-%integers in 2D and 374 integers in 3D in the case of four wavelet levels in each dimension), and can
-%also be further compressed. Therefore it can be transmitted first, and the receiver of the data can
-%ultilize the signature to smartly query the bits so as to reconstruct the data's histogram with as
-%few bits as possible.
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "template"
-%%% End:
+% \pavol{The visualization of the subbands is missing, but I think it was quite interesting and maybe we
+% should find a way to include it as it makes the discussion more interesting.}
