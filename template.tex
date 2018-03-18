@@ -62,6 +62,7 @@
 \usepackage{algpseudocode}
 \usepackage{algorithm}
 \usepackage{xcolor}
+\usepackage{xspace}
 \algnewcommand{\Inputs}[1]{%
   \State \textbf{Inputs:}
   \Statex \hspace*{\algorithmicindent}\parbox[t]{.8\linewidth}{\raggedright #1}
@@ -120,16 +121,26 @@
 %% Abstract section.
 \abstract{Performing scientific analysis on large data commonly found nowadays is an onerous task
 due to the prohibitive cost of data transfer. Currently, this issue is alleviated by working with
-reduced-resolution or reduced-precision data. This paper brings together techniques that reduce data
+reduced-resolution or reduced-precision data.
+\peter{Mention progressive access here?}
+This paper brings together techniques that reduce data
 in resolution, precision, or both, into a common framework in which they can be studied and
-compared. The error patterns of these techniques are compared with regards to fundamental metrics, namely L2 norm,
+compared. The error patterns of these techniques are compared with regards to fundamental error metrics on function values (e.g., L2 norm),
 first and second derivatives, histograms, and isocontours. We also compute and study
-metric-dependent streams which serve as empirical bounds on the limit to which
+metric-dependent streams
+\peter{streams optimized for different metrics?}
+that serve as empirical bounds on the limit to which
 reduction can happen, given an error tolerance for the analysis task at hand. Finally, based on the
-observed characteristics of those streams, we propose practical heuristics to minimize the amount of
-data needed to perform a given analysis task. The insights and heuristics presented here can be
-leveraged to implement data-optimal\pavol{"optimal" or other word?} representations and querying systems to facilitate interactive
+observed characteristics of those streams, we propose practical heuristics to minimize the amount of data
+needed to perform a given analysis task. The insights and heuristics presented here can be
+leveraged to implement data-optimal\pavol{"optimal" or other word?}
+\peter{what does data-optimal representations of data mean?}
+representations and querying systems
+\peter{query systems?  I.e., a noun, not a verb?}
+to facilitate interactive
 exploration as well as cursory analysis of enormous data.%
+\peter{The abstract does not make it clear what it is we're optimizing,
+i.e. ordering of bits.}
 } % end of abstract
 
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
@@ -196,12 +207,14 @@ exploration as well as cursory analysis of enormous data.%
     \marginpar{\notetext{#1}}%
   \fi%
 }
+\providecommand{\etal}{et al.\@\xspace}
 
 \newcommand{\ptb}[1]{{\textcolor{red}{(PTB: #1)}}}
 \newcommand{\pavol}[1]{{\textcolor{cyan}{}}}%(Pavol: #1)}}}
 \newcommand{\hb}[1]{{\textcolor{blue}{(HB: #1)}}}
 %\newcommand{\duong}[1]{{\textcolor{purple}{(Duong: #1)}}}
 \newcommand{\duong}[1]{{\textcolor{purple}{}}} % this disable comments
+\newcommand{\peter}[1]{{\textcolor{green}{(PL: #1)}}} % this disable comments
 
 
 %% Copyright space is enabled by default as required by guidelines.

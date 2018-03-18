@@ -2,16 +2,27 @@ As the gap between the available compute power and the cost of data movement inc
 transfer, whether from cache, main memory, or disk, is becoming the major bottleneck of many
 workflows. However, it is well known that often not every bit of data is necessary to answer
 scientific questions at required accuracy. In particular, for techniques at the end of scientific
-workflows, such as visualization and data analysis, much coarser approximations of the data often
+workflows, such as visualization and data analysis, lower fidelity
+representations of the data often
 provide adequate approximations~\cite{woodring2011,covra2012,compression_sim2013}, and even during
-simulation some loss in precision is often acceptable~\cite{compression_sim2013}. As a result, a
+simulation some loss in precision is often
+acceptable~\cite{compression_sim2013,doi:10.1177/1094342018762036}.
+As a result, a
 host of different techniques have been proposed to reduce the size of data. Generally, these
 techniques can be classified into approaches that reduce the data resolution, i.e., the number of
-data points stored, and techniques that reduce the precision of each data point.
+data points stored,
+\peter{e.g., not i.e.?  We reduce the number of wavelet coefficients, not the
+number of data points.}
+and techniques that reduce the precision of each data point.
 
 Examples of the former are adaptive mesh refinement~\cite{amr1989}, octrees or other tree
-structures~\cite{hierarchical1984}, and of the latter compression~\cite{zfp2014} or
-quantization~\cite{vq1992}. Traditionally, multi-resolution structures have been used to accelerate
+structures~\cite{hierarchical1984},
+\peter{What about subsampling, as in IDX?  And what about wavelets and other
+multires structures?}
+and of the latter
+compression~\cite{fpzip,isabela,zfp2014,sz} or
+quantization~\cite{vq1992,hvq,sqe}.
+Traditionally, multi-resolution structures have been used to accelerate
 dynamic queries, for example, in rendering~\cite{multires_octree1999}, since discarding data points
 based on the view point or data complexity can result in significant speed-ups. Compression based on
 uniform quantization on the other hand is more common when storing data, where in the absence of
@@ -22,14 +33,16 @@ need the corresponding data samples at full precision to adequately approximate 
 geometry. Conversely, we may need high precision values to accumulate accurate statistics, yet a
 lower-resolution subset of points may be sufficient to do so. 
 
-In general, there exists a wide range of potential analysis and visualization tasks all of which may
+In general, there exists a wide range of potential analysis and visualization tasks, all of which may
 prefer different combinations of resolution and precision, and for many, these requirements will be
 data-dependent. Consequently, we do not expect any particular data organization to be ideal for all
 cases. Instead, we consider a progressive setting in which some initial data is loaded and processed,
 and new data is requested selectively based on the requirement of the current task and the
 characteristics of the data already loaded. The result is a stream of bits that should minimize
 the error of the task at hand. However, while intuitively there are almost certainly advantages in
-adapting both resolution and precision, it is unclear how big the potential gains could be and how
+adapting both resolution and precision, it is unclear how big the potential gains could be
+\peter{The gains of what, specifically? An ``optimal'' ordering?}
+and how
 much of the benefits can be realized with practical algorithms. This paper aims to answer these
 important questions through extensive, empirical experiments. Our contributions are:
 
@@ -37,21 +50,32 @@ important questions through extensive, empirical experiments. Our contributions 
 \item We present a framework that allows systematic studies of the resolution-versus-precision
   tradeoffs for fundamental data analysis and visualization tasks. The core idea is to represent
   various data reduction techniques as data streams that improve data quality in either resolution
-  or precision in each step (\autoref{sec:terminologies}). We can thus compare these techniques
+  or precision in each step (\autoref{sec:terminologies}).
+\peter{autoref is showing this as ``Sect. [section][3][]3'' for me.  I prefer
+the cleveref package.}
+We can thus compare these techniques
   fairly, by comparing the corresponding data streams.
    
-\item We provide empirical evidence on how jointly optimizing resolution and precision can provide
+\item We provide empirical evidence that jointly optimizing resolution and precision can provide
   significant improvements on the results of analysis tasks over adjusting either independently.
   This claim is demonstrated using a collection of data sets and data analysis tasks. We also show
   how different types of data analysis might require substantially different data streams for
   optimal results.
 
-\item We estimate lower bounds of error for various analysis tasks using a greedy aprroach that
-  jointly optimizes resolution and precision (\autoref{sec:data_dep_streams}). In addition, we also
+\item We estimate lower bounds of error
+\peter{You either estimate the error or provide a bound---not both.}
+for various analysis tasks using a greedy approach that
+  jointly optimizes resolution and precision (\autoref{sec:data_dep_streams}).
+\peter{Too much going on here.  An error bound, a greedy algorithm,
+joint ``optimization'' of precision and resolution---whatever that might
+mean.  How are these all related?}
+In addition, we also
   identify practical streams that closely approximate these bounds for each task
   (\autoref{sec:rmse-optimized}, \autoref{sec:derivatives}, \autoref{sec:histogram}, and
   \autoref{sec:isocontour}), using a novel concept called \emph{stream signature}
   (\autoref{sec:stream-signature}).
+\peter{Add one sentence that gives a concise description of what a
+``stream signature'' is.}
 \end{itemize}
 
 %%% Local Variables:
