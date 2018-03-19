@@ -18,23 +18,23 @@
 % \end{table*}
 
 In this section, we study a gamut of fundamental analysis tasks, namely function reconstruction
-(\autoref{sec:rmse-optimized}), derivative computation (\autoref{sec:gradient} and
-\autoref{sec:laplacian}), histogram computation (\autoref{sec:histogram}), and isocontour extraction
-(\autoref{sec:isocontour}). For each task, we define an error metric $e$ that is the basis for
+(\cref{sec:rmse-optimized}), derivative computation (\cref{sec:gradient} and
+\cref{sec:laplacian}), histogram computation (\cref{sec:histogram}), and isocontour extraction
+(\cref{sec:isocontour}). For each task, we define an error metric $e$ that is the basis for
 evaluating performance of different streams on the task. We use Algorithm~\ref{alg:greedy} to
 compute a stream $s_{opt}$ that is optimized for each task. An $s_{sig}$ stream is computed from the
 signature of $s_{opt}$. We compare $s_{lvl}$, $s_{bit}$, $s_{wav}$, $s_{mag}$, $s_{sig}$, and
 $s_{opt}$ by plotting the error as a function of the number of packets received. To mimic the
 effects of entropy compression commonly used in practice, we remove all packets that contain only
 leading zero bits from each stream, before plotting. This comparison is performed on a variety of
-data sets, listed in \autoref{tbl:data-sets}. \duong{add the discussion about reconstructing the
+data sets, listed in \cref{tbl:data-sets}. \duong{add the discussion about reconstructing the
 whole data at full resolution before performing any analysis task.}
 
 \subsection{Function reconstruction}\label{sec:rmse-optimized}
 
 The most fundamental analysis task is that of reconstructing the original function itself. The most
 common error metric in this case is the root-mean-square error (RMSE). The plots that compare the
-streams are in \autoref{fig:rmse-optimized}. The main trend in all cases, is $s_{opt} > s_{sig} >
+streams are in \cref{fig:rmse-optimized}. The main trend in all cases, is $s_{opt} > s_{sig} >
 s_{wav} > s_{bit} > s_{mag} > s_{lvl}$, where ``$>$'' means producing lower RMSE errors.
 
 $s_{bit}$ performs significantly better than $s_{lvl}$, which can be attributed partly to our
@@ -65,7 +65,7 @@ $s_{wav}$ by a larger margin.
 		> s_{lvl}$.}\label{fig:rmse-optimized}
 \end{figure}
 
-In \autoref{fig:rmse-rendering} we volume render the \emph{plasma} data set at 0.1 bits per sample,
+In \cref{fig:rmse-rendering} we volume render the \emph{plasma} data set at 0.1 bits per sample,
 for all streams. Bits per sample (bps) are calculated by dividing the total size of received packets
 (in bits) by the total number of samples. Although $s_{lvl}$ has the precision to obtain an accurate
 background, it lacks resolution to resolve the fine details. $s_{bit}$, instead, lacks the precision

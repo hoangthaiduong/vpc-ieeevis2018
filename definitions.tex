@@ -15,11 +15,11 @@ data reduction schemes become different orderings of packets from a data set, or
 multi-resolution scheme would stream packets by resolution. By forcing the different schemes to use
 the same number of packets, we can compare data quality across the schemes more fairly.
 
-In \autoref{sec:data-streaming-framework} we discuss the mechanism of converting original data into
-a set of packets. \autoref{sec:static-dynamic-streams} is about packet streams that correspond to
-common data reduction schemes. \autoref{sec:data_dep_streams} presents a greedy algorithm to
+In \cref{sec:data-streaming-framework} we discuss the mechanism of converting original data into
+a set of packets. \cref{sec:static-dynamic-streams} is about packet streams that correspond to
+common data reduction schemes. \cref{sec:data_dep_streams} presents a greedy algorithm to
 approximate the optimal packet stream for the data and the analysis task at hand. Finally,
-\autoref{sec:stream-signature} introduces a novel concept called \emph{stream signature} that can be
+\cref{sec:stream-signature} introduces a novel concept called \emph{stream signature} that can be
 used to study and compare the characteristics of different packet streams.
 
 \subsection{Decomposition of data into packets}\label{sec:data-streaming-framework}
@@ -66,14 +66,14 @@ way.
 
 A data reduction scheme can be modeled as an ``inverse'' stream of packets, where the original data
 contains all packets, and any reduction step removes certain packets based on some criteria (more
-details in \autoref{sec:static-dynamic-streams}). In our data streaming model, there is a ``server''
+details in \cref{sec:static-dynamic-streams}). In our data streaming model, there is a ``server''
 which serves data and a ``client'' which receives data from the server. At any point, the client is
 assumed to have received a subset of packets from the server, which it can use to reconstruct the
 original function (using the inverse wavelet transform). Therefore, to compare different streams, we
 can reconstruct the original data using the same number of packets from each, and perform analysis
 tasks on each of the (approximate) reconstructions. A stream is better suited for an anlysis task if
 it produces results that are closer to reference results computed from the original data.
-\autoref{fig:pipeline} gives a schematic view of our data streaming model.
+\cref{fig:pipeline} gives a schematic view of our data streaming model.
 
 \begin{figure}[h]
   \centering
@@ -138,7 +138,7 @@ outweights any potential benefit. Despite that, we study them for various reason
 \emph{by magnitude} scheme is well-known in the literature. Second, data-dependent streams can serve
 as a benchmark to evaluate the performance of their data-independent counterparts. Finally, in
 addition to being data-dependent, streams can also be task-dependent
-(\autoref{sec:data_dep_streams}), which may provide insights on how data should be queried to
+(\cref{sec:data_dep_streams}), which may provide insights on how data should be queried to
 perform certain analysis tasks.
 
 \subsection{Constructing data-dependent, task-optimized streams}\label{sec:data_dep_streams}
@@ -196,7 +196,7 @@ $f'$ at the end of iteration $i$. After $n$ iterations, each packet has an assoc
 $s_{opt}$, then, is simply the sorted list of packets in decreasing order of the weights. This
 simplified algorithm brings the running time from days down to minutes, while (by observation)
 retaining the same quality for $s_{opt}$. The pseudocode of the algorithm is presented in
-Algorithm~\autoref{alg:greedy}.
+Algorithm~\cref{alg:greedy}.
 
 \begin{algorithm}[h]
   \small

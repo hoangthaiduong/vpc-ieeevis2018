@@ -5,7 +5,7 @@ differences. In this section, we use 32 bits (instead of 16) for quantization, t
 precision for finite differences. We always perform finite differences on the finest (original)
 resolution. This decision avoids the problem of computing distances between quantities defined on
 grids of different sizes, because we are unaware of any widely accepted solutions to this problem.
-\autoref{sec:gradient} discusses gradient computation, and \autoref{sec:laplacian} discusses
+\cref{sec:gradient} discusses gradient computation, and \cref{sec:laplacian} discusses
 computation of the Laplacian.
 
 \subsubsection{Gradient}\label{sec:gradient}
@@ -23,14 +23,14 @@ at low bit rates. The overall error, defined over the whole field, is $e(\nabla 
 f)=\sqrt{\frac{1}{n}\sum_{i=1}^{n}{\norm{\nabla \tilde{f}(x_i)-\nabla f(x_i)}^2}}$.
 
 Using four data sets, we plot gradient error curves produced by $s_{lvl}$, $s_{bit}$, $s_{mag}$,
-$s_{wav}$, $s_{grad-opt}$, and $s_{grad-sig}$ in \autoref{fig:gradient-error-comparison}. In
+$s_{wav}$, $s_{grad-opt}$, and $s_{grad-sig}$ in \cref{fig:gradient-error-comparison}. In
 general, $s_{grad-opt} > s_{grad-sig} \approx s_{bit} > s_{wav} > s_{mag} > s_{lvl}$. This ordering
-can also be seen in \autoref{fig:gradient-rendering-diff}, where the x-component of the gradient
+can also be seen in \cref{fig:gradient-rendering-diff}, where the x-component of the gradient
 field for \emph{tuburlence} is reconstructed and rendered, at 0.2 bps. Unlike in the RMSE case,
 $s_{bit}$ produces better approximations of the gradient field, compared to $s_{wav}$. This
-phenomenon is explained in \autoref{fig:bit-plane-vs-wavelet-norm-gradient}.
+phenomenon is explained in \cref{fig:bit-plane-vs-wavelet-norm-gradient}.
 
-In \autoref{fig:bit-plane-vs-wavelet-norm-gradient}, a 1D line is extracted from \emph{plasma}, and
+In \cref{fig:bit-plane-vs-wavelet-norm-gradient}, a 1D line is extracted from \emph{plasma}, and
 reconstructed using $s_{bit}$ and $s_{wav}$ at 0.6 bps. Because the coarse-scale coefficients in
 $s_{bit}$ are not accurate enough, the reconstruction from $s_{bit}$ is inaccurate in areas of low
 gradients. In constrast, the $s_{wav}$'s reconstruction is accurate in low-gradient areas, but lacks
@@ -124,15 +124,15 @@ Laplacian, we use the five-point finite difference to approximate the second der
 dimension: $\frac{{\partial}^2}{\partial{x^2}}f(x,y,z) \approx
 -\frac{1}{12}f(x-2,y,z)+\frac{4}{3}f(x-1,y,z)+\frac{-5}{2}f(x,y,z)+\frac{4}{3}f(x+1,y,z)-\frac{1}{12}f(x+2,y,z)$.
 To compare two Laplacian fields, we use the root-mean-square error, that is, $e(\Delta
-\tilde{f},\Delta f)=RMSE(\Delta \tilde{f},\Delta f)$. As usual, we use Algorithm \autoref{alg:greedy}
+\tilde{f},\Delta f)=RMSE(\Delta \tilde{f},\Delta f)$. As usual, we use Algorithm \cref{alg:greedy}
 to compute a \emph{laplacian-optimized} ($s_{lap-opt}$) stream that minimizes $e$, and an
-$s_{lap-sig}$ stream from its signature. \autoref{fig:laplacian-error-comparison} plots the error
+$s_{lap-sig}$ stream from its signature. \cref{fig:laplacian-error-comparison} plots the error
 curves for all relevant streams. The plots here largely follow the one in
-\autoref{fig:gradient-error-comparison}, in terms of relative performance among the streams, with
-one minor discrepancy. $s_{bit}$ consistenly underperforms $s_{lap-sig}$ by a small margin, and
-produces ``bumpier'' error curves. In \autoref{fig:laplacian-renderings}, we render the
-reconstructed Laplacian fields for the \emph{pressure} field at 0.9 bps, which shows how differences
-in Laplacian RMSE among the streams translate to visual differences.
+\cref{fig:gradient-error-comparison}, in terms of relative performance among the streams, with one
+minor discrepancy. $s_{bit}$ consistenly underperforms $s_{lap-sig}$ by a small margin, and produces
+``bumpier'' error curves. In \cref{fig:laplacian-renderings}, we render the reconstructed Laplacian
+fields for the \emph{pressure} field at 0.9 bps, which shows how differences in Laplacian RMSE among
+the streams translate to visual differences.
 
 \begin{figure}[t]
 	\centering

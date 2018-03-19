@@ -390,37 +390,195 @@ month={Dec},}
 }
 
 @article{fpzip,
-  doi = "10.1109/TVCG.2006.143"
+ author = {Lindstrom, Peter and Isenburg, Martin},
+ title = {Fast and Efficient Compression of Floating-Point Data},
+ journal = {IEEE Transactions on Visualization and Computer Graphics},
+ issue_date = {September 2006},
+ volume = {12},
+ number = {5},
+ month = sep,
+ year = {2006},
+ issn = {1077-2626},
+ pages = {1245--1250},
+ numpages = {6},
+ url = {http://dx.doi.org/10.1109/TVCG.2006.143},
+ doi = {10.1109/TVCG.2006.143},
+ acmid = {1187859},
+ publisher = {IEEE Educational Activities Department},
+ address = {Piscataway, NJ, USA},
+ keywords = {High throughput, High throughput, lossless compression, file compaction for I/O efficiency, fast entropy coding, range coder, predictive coding, large scale simulation and visualization., fast entropy coding, file compaction for I/O efficiency, large scale simulation and visualization., lossless compression, predictive coding, range coder},
+} 
+
+@INPROCEEDINGS{sz, 
+	author={D. Tao and S. Di and Z. Chen and F. Cappello}, 
+	booktitle={2017 IEEE International Parallel and Distributed Processing Symposium (IPDPS)}, 
+	title={Significantly Improving Lossy Compression for Scientific Data Sets Based on Multidimensional Prediction and Error-Controlled Quantization}, 
+	year={2017}, 
+	volume={}, 
+	number={}, 
+	pages={1129-1139}, 
+	keywords={data compression;parallel processing;HPC applications;adaptive error-controlled quantization encoder;error-controlled lossy compression algorithm;multidimensional prediction;multilayer prediction formulas;normalized root mean squared error;scientific data sets;Adaptation models;Compression algorithms;Data models;Encoding;Measurement;Predictive models;Quantization (signal)}, 
+	doi={10.1109/IPDPS.2017.115}, 
+	ISSN={}, 
+	month={May},
 }
-@incproceedings{sz,
-  doi = "10.1109/IPDPS.2017.115"
+
+@INPROCEEDINGS{hvg, 
+	author={J. Schneider and R. Westermann}, 
+	booktitle={IEEE Visualization, 2003. VIS 2003.}, 
+	title={Compression domain volume rendering}, 
+	year={2003}, 
+	volume={}, 
+	number={}, 
+	pages={293-300}, 
+	keywords={computer graphic equipment;image texture;rendering (computer graphics);vector quantisation;CPU;GPU;commodity graphics hardware;compression domain volume rendering;data transfer;gigabyte data sets;graphics processing unit;hierarchical quantization;multiresolution covariance analysis;programmable hardware;real-time rendering;temporal coherence;texture mapping hardware;texture memory;time-varying volumetric data set;vector quantization;Central Processing Unit;Computer graphics;Data visualization;Decoding;Encoding;Hardware;Large-scale systems;Rendering (computer graphics);Shock waves;Vector quantization}, 
+	doi={10.1109/VISUAL.2003.1250385}, 
+	ISSN={}, 
+	month={Oct},
 }
-@inproceedings{hvq,
-  doi = "10.1109/VISUAL.2003.1250385"
+
+@InProceedings{isabela,
+	author="Lakshminarasimhan, Sriram
+	and Shah, Neil
+	and Ethier, Stephane
+	and Klasky, Scott
+	and Latham, Rob
+	and Ross, Rob
+	and Samatova, Nagiza F.",
+	editor="Jeannot, Emmanuel
+	and Namyst, Raymond
+	and Roman, Jean",
+	title="Compressing the Incompressible with ISABELA: In-situ Reduction of Spatio-temporal Data",
+	booktitle="Euro-Par 2011 Parallel Processing",
+	year="2011",
+	publisher="Springer Berlin Heidelberg",
+	address="Berlin, Heidelberg",
+	pages="366--379",
+	abstract="Modern large-scale scientific simulations running on HPC systems generate data in the order of terabytes during a single run. To lessen the I/O load during a simulation run, scientists are forced to capture data infrequently, thereby making data collection an inherently lossy process. Yet, lossless compression techniques are hardly suitable for scientific data due to its inherently random nature; for the applications used here, they offer less than 10{\%} compression rate. They also impose significant overhead during decompression, making them unsuitable for data analysis and visualization that require repeated data access.",
+	isbn="978-3-642-23400-2"
 }
-@inproceedings{isabela,
-  doi = "10.1007/978-3-642-23400-2_34"
-}
+
 @inproceedings{sqe,
-  doi = "10.1007/978-3-642-32820-6_83"
+	author = {Iverson, Jeremy and Kamath, Chandrika and Karypis, George},
+	title = {Fast and Effective Lossy Compression Algorithms for Scientific Datasets},
+	booktitle = {Proceedings of the 18th International Conference on Parallel Processing},
+	series = {Euro-Par'12},
+	year = {2012},
+	isbn = {978-3-642-32819-0},
+	location = {Rhodes Island, Greece},
+	pages = {843--856},
+	numpages = {14},
+	url = {http://dx.doi.org/10.1007/978-3-642-32820-6_83},
+	doi = {10.1007/978-3-642-32820-6_83},
+	acmid = {2402519},
+	publisher = {Springer-Verlag},
+	address = {Berlin, Heidelberg},
+} 
+
+@InProceedings{codar,
+	author="Foster, Ian
+	and Ainsworth, Mark
+	and Allen, Bryce
+	and Bessac, Julie
+	and Cappello, Franck
+	and Choi, Jong Youl
+	and Constantinescu, Emil
+	and Davis, Philip E.
+	and Di, Sheng
+	and Di, Wendy
+	and Guo, Hanqi
+	and Klasky, Scott
+	and Van Dam, Kerstin Kleese
+	and Kurc, Tahsin
+	and Liu, Qing
+	and Malik, Abid
+	and Mehta, Kshitij
+	and Mueller, Klaus
+	and Munson, Todd
+	and Ostouchov, George
+	and Parashar, Manish
+	and Peterka, Tom
+	and Pouchard, Line
+	and Tao, Dingwen
+	and Tugluk, Ozan
+	and Wild, Stefan
+	and Wolf, Matthew
+	and Wozniak, Justin M.
+	and Xu, Wei
+	and Yoo, Shinjae",
+	editor="Rivera, Francisco F.
+	and Pena, Tom{\'a}s F.
+	and Cabaleiro, Jos{\'e} C.",
+	title="Computing Just What You Need: Online Data Analysis and Reduction at Extreme Scales",
+	booktitle="Euro-Par 2017: Parallel Processing",
+	year="2017",
+	publisher="Springer International Publishing",
+	address="Cham",
+	pages="3--19",
+	abstract="A growing disparity between supercomputer computation speeds and I/O rates makes it increasingly infeasible for applications to save all results for offline analysis. Instead, applications must analyze and reduce data online so as to output only those results needed to answer target scientific question(s). This change in focus complicates application and experiment design and introduces algorithmic, implementation, and programming model challenges that are unfamiliar to many scientists and that have major implications for the design of various elements of supercomputer systems. We review these challenges and describe methods and tools that we are developing to enable experimental exploration of algorithmic, software, and system design alternatives.",
+	isbn="978-3-319-64203-1"
 }
-@inproceedings{codar,
-  doi = "10.1007/978-3-319-64203-1_1"
-}
+
+
+
 @article{li2018,
   title = "Data Reduction Techniques for Scientific Visualization and Data Analysis",
   url = "https://pdfs.semanticscholar.org/e555/db81c878deb01f0e8003bc90a30898e3d518.pdf",
   note = "CGF submission in review?"
 }
-@article{laplacian-pyramid,
-  doi = "10.1109/TCOM.1983.1095851"
+
+@ARTICLE{laplacian-pyramid, 
+	author={P. Burt and E. Adelson}, 
+	journal={IEEE Transactions on Communications}, 
+	title={The Laplacian Pyramid as a Compact Image Code}, 
+	year={1983}, 
+	volume={31}, 
+	number={4}, 
+	pages={532-540}, 
+	keywords={Image coding;Data compression;Data structures;Entropy;Frequency;Image coding;Image sampling;Laplace equations;Low pass filters;Pixel;Shape}, 
+	doi={10.1109/TCOM.1983.1095851}, 
+	ISSN={0090-6778}, 
+	month={Apr},
 }
-@article{weiss,
-  doi = "10.1109/TVCG.2015.2467412"
+
+@ARTICLE{weiss, 
+	author={K. Weiss and P. Lindstrom}, 
+	journal={IEEE Transactions on Visualization and Computer Graphics}, 
+	title={Adaptive Multilinear Tensor Product Wavelets}, 
+	year={2016}, 
+	volume={22}, 
+	number={1}, 
+	pages={985-994}, 
+	keywords={data visualisation;interpolation;inverse transforms;mesh generation;octrees;piecewise linear techniques;quadtrees;rendering (computer graphics);splines (mathematics);tensors;adaptive mesh elements;adaptive multilinear tensor product wavelets;adaptive nonconforming quadtree mesh;adaptive regular refinement;crack-free quadtree mesh;direct volume rendering;foundational visualization techniques;globally continuous functions;inverse wavelet transform;isosurfacing;linear B-splines;multilinear cells;nonzero wavelet coefficients;octree mesh;piecewise multilinear interpolation;texture mapping;Interpolation;Octrees;Splines (mathematics);Tensile stress;Wavelet domain;Wavelet transforms;Multilinear interpolation;adaptive wavelets;continuous reconstruction;multiresolution models;octrees}, 
+	doi={10.1109/TVCG.2015.2467412}, 
+	ISSN={1077-2626}, 
+	month={Jan},
 }
-@article{ezw,
-  doi = "10.1109/78.258085"
+
+@ARTICLE{ezw, 
+	author={J. M. Shapiro}, 
+	journal={IEEE Transactions on Signal Processing}, 
+	title={Embedded image coding using zerotrees of wavelet coefficients}, 
+	year={1993}, 
+	volume={41}, 
+	number={12}, 
+	pages={3445-3462}, 
+	keywords={binary sequences;codecs;data compression;image coding;trees (mathematics);video equipment;wavelet transforms;EZW;adaptive arithmetic coding;binary decisions sequence;bit stream;discrete wavelet transform;embedded zerotree wavelet algorithm;entropy-coded successive-approximation quantization;fully embedded code;hierarchical subband decomposition;image compression algorithm;self-similarity;target distortion metric;target rate;universal lossless data compression;wavelet coefficients;Bit rate;Compression algorithms;Decoding;Discrete wavelet transforms;Image coding;Quantization;Rate distortion theory;Streaming media;Testing;Wavelet coefficients}, 
+	doi={10.1109/78.258085}, 
+	ISSN={1053-587X}, 
+	month={Dec},
 }
-@article{treib,
-  doi = "10.1109/TVCG.2012.274"
+
+@ARTICLE{treib, 
+	author={M. Treib and K. Bürger and F. Reichl and C. Meneveau and A. Szalay and R. Westermann}, 
+	journal={IEEE Transactions on Visualization and Computer Graphics}, 
+	title={Turbulence Visualization at the Terascale on Desktop PCs}, 
+	year={2012}, 
+	volume={18}, 
+	number={12}, 
+	pages={2169-2177}, 
+	keywords={computational fluid dynamics;data visualisation;encoding;entropy;graphics processing units;ray tracing;turbulence;GPU memory;GPU system;bandwidth capacities;brick-based volume ray-casting;compressed flow field representation;desktop computers;entropy encoding;feature-based turbulence visualization;interactive selection;large-scale turbulent motions;memory capacities;run-length;simultaneous visualization;small-scale turbulent motions;spatio-temporal resolution;terascale on desktop PCs;turbulence properties;turbulence small-scale structure;unsteady turbulence simulations;velocity gradient tensor;visually guided exploration;wavelet-based compression scheme;Data visualization;Encoding;Graphics processing unit;Memory management;Rendering (computer graphics);Tensile stress;Vectors;Visualization system and toolkit design;data compression;data streaming;vector fields;volume rendering}, 
+	doi={10.1109/TVCG.2012.274}, 
+	ISSN={1077-2626}, 
+	month={Dec},
 }

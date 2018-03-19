@@ -23,9 +23,9 @@ not only the shapes but also the value ranges of histograms. Therefore, when com
 of a reconstructed function, we clamp its range of values to that of the original function's, so
 that corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same range.
 
-As before, for each data set, we use Algorithm\autoref{alg:greedy} to compute an $s_{hist-opt}$
+As before, for each data set, we use Algorithm\cref{alg:greedy} to compute an $s_{hist-opt}$
 stream, optimized for histogram error, and an $s_{hist-sig}$ from its signature.
-\autoref{fig:histogram-stream-comparison} plots the error curves for all relevant streams using the
+\cref{fig:histogram-stream-comparison} plots the error curves for all relevant streams using the
 error metric just defined. We use 64 for the number of bins, but note that there exists no
 meaningful differences across a wide range of number of bins (from 64 to 512) in our experiments. In
 all cases, the group consisting of $s_{bit}$, $s_{lvl}$, and $s_{mag}$ underperforms the other group
@@ -33,18 +33,18 @@ by a large margin.
 
 Among the former group, $s_{lvl}$ generally outperforms $s_{bit}$ at low bit rates, although there
 are several crossover points between the two curves. These crossover points are explained in
-\autoref{fig:histogram-explain}. When leading zero packets are present, $s_{lvl}$ absolutely
+\cref{fig:histogram-explain}. When leading zero packets are present, $s_{lvl}$ absolutely
 outperforms $s_{bit}$, because increasing resolution does not help producing an accurate histogram
 as much as increasing precision. The histogram is oblivious to spatial locations of samples (which
 requires resolution to resolve), but it is sensitive to sample values (which requires precision).
 However, when leading zero packets are removed, as is the case when using compression, $s_{bit}$
 benefits significantly more than $s_{lvl}$ does (for the same reason explained in
-\autoref{sec:rmse-optimized}), resulting in the observed crossovers. Finally, $s_{mag}$ performs
+\cref{sec:rmse-optimized}), resulting in the observed crossovers. Finally, $s_{mag}$ performs
 poorly, because it ignores regions of smooth variations, which nevertheless counts towards the
 distribution.
 
 In the other group, $s_{wav}$'s and $s_{hist-sig}$'s (and even $s_{hist-opt}$'s) performances
-differ by negligible amount. This observation is confirmed in \autoref{fig:histograms-boiler}, where
+differ by negligible amount. This observation is confirmed in \cref{fig:histograms-boiler}, where
 we plot various histograms, reconstructed at 0.08 bps, for the \emph{boiler} data set. The histograms
 produced by $s_{wav}$ and $s_{hist-sig}$ have approximately the same shape, and are the closest to
 the reference histogram. The next best histogram is produced by $s_{lvl}$, followed by the one
@@ -65,7 +65,7 @@ and precision, not one that adheres to either exclusively.
 	\caption{Comparison of histogram errors among streams. Plots are truncated to highlight
 	differences without hiding important trends. In general, $s_{hist-opt}\approx s_{hist-sig}\approx
 	s_{wav} > s_{lvl} > s_{bit} > s_{mag}$. Crossover points between $s_{bit}$ and $s_{lvl}$ are
-	explained in \autoref{fig:histogram-explain}}.
+	explained in \cref{fig:histogram-explain}}.
 	\label{fig:histogram-stream-comparison}
 \end{figure}
 
