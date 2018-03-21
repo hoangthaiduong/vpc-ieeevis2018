@@ -1,29 +1,21 @@
 \subsection{Isosurface extraction\pavol{update plot text to isosurface}}\label{sec:isocontour}
-Another common visualization task is display of boundaries, usually done using isosurfaces. For
-example, isosurface of OH concentration can separate burning and extinguished regions in a
-combustion simulation or organs can be extracted from medical imaging by threshold on a CT scalars.
-Moreover, topological methods such as Reeb Graph is defined by contracting isosurfaces to a point
-and building the structure from equivalence classes of isosurfaces. Extraction of isosurfaces is
-therefore an essential task in any visualization and analysis system. We thus study the
-characteristics of bit streams that minimize errors in the reconstructed isosurfaces and compare
-those streams quantitatively and qualitatively.
+Extraction of isosurfaces is an essential task in any visualization and analysis system. For
+example, in a combustion simulation, isosurfaces of OH concentration can separate burning and
+extinguished regions. In medical imaging, organs can also be separated from the background with
+isosurface extraction. Beyond visualization, topological methods such as Reeb Graph [CITE] is built
+from equivalence classes of isosurfaces.
 
-\pavol{potentially weak point as we do not use any standard error metric here; is the relative
-surface area fudge necessary for higher resolution datasets? discuss what other metrics could be
-used} As before, we begin by defining an error metric to compare isosurfaces. Commonly used metric
-is a Hausdorff distance that measures the shortest path from a point on one surface to the other,
-and then taking maximum of all those paths. Unfortunately, the distance is not very robust and can
-vary drastically with minor changes in the surfaces. For example, a single perturbation in one of
-the two surfaces can result in a large distance even when the surfaces are close to identical.
-Therefore, we use a number of misclassified voxels as our distance which can be computed by counting
-all voxels that are either in surface $S_1$ and not surface $S_2$ or the other way. \pavol{not sure
-if following is needed}We have found that if the error caused by switching off a chunk is too small
-(in orders of sub-pixel/sub-voxel), then the importance of the chunk cannot be properly measured. We
-therefore amend the error metric by adding to it the relative difference in area between two
-isosurfaces. This relative difference is, most of the time, a number between $0$ and $1$, computed
-by the formula $|A(S_1)-A(S_2)|/A(S_1)$, where $A(S)$ is the area of an isosurface $S$. The idea is
-that when the number number of misclassified voxels is less than $1$, the error -- which is at the
-sub-voxel level -- is captured by the relative difference in contour length instead.
+In attempting to define an error metric to compare isosurfaces, we have found that the popular
+Hausdorff distance [CITE] is not very robust --- it varies drastically with minor changes in the
+surfaces. ore, we use a number of misclassified voxels as our distance which can be computed by
+counting all voxels that are either in surface $S_1$ and not surface $S_2$ or the other way.
+\pavol{not sure if following is needed}We have found that if the error caused by switching off a
+chunk is too small (in orders of sub-pixel/sub-voxel), then the importance of the chunk cannot be
+properly measured. We therefore amend the error metric by adding to it the relative difference in
+area between two isosurfaces. This relative difference is, most of the time, a number between $0$
+and $1$, computed by the formula $|A(S_1)-A(S_2)|/A(S_1)$, where $A(S)$ is the area of an isosurface
+$S$. The idea is that when the number number of misclassified voxels is less than $1$, the error --
+which is at the sub-voxel level -- is captured by the relative difference in contour length instead.
 
 With an error metric defined, we can compute an \emph{isosurface-optimized} stream for each data set
 in addition to the other streams that are data independent (\Cref{fig:isocontour-plots}). The

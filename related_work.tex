@@ -1,138 +1,99 @@
 \section{Related work}
 
-The previous work primarily focuses on multiresolution and precision
-reduction independently and we will discuss both directions
-(TODO: JPEG, wavelets is sort of both).
+Techniques that reduce data in resolution typically build a tree-shape hierarchy over the data,
+which is often originally stored in a regular grid. Gaussian and Laplacian
+pyramids~\cite{laplacian-pyramid} store multiple copies of the data at various resolutions.
+Lower-resolution copies are constructed from higher-resolution ones through filtering and
+subsampling. Other techniques do not store redundant copies of data, but instead adapt more to the
+data by varying the resolution over the domain, allocating more data samples to important regions.
+For example, adaptive refinement meshes~\cite{amr1989}, sparse grids~\cite{spgrid2014}, sparse
+octrees~\cite{gigavoxels} and other trees~\cite{vdb2013} . 
 
+~\cite{gigavoxels}
+~\cite{large‐scale-volume}
 
-\subsection{Adaptivity in Resolution}
-Multiresolution techniques are commonly employed to improve performance or
-reduce aliasing (MIPMAPs).
-\peter{Confusing---IDX is a multires technique that uses subsampling, which
-introduces aliasing.  *Filtering* when already doing multires is what
-reduces aliasing.}
-Especially popular are approaches that create
-multiple levels of detail
-\peter{levels of detail, not level of details}
-such as multiresolution octrees~\cite{multires_octree1999},
-AMR meshes~\cite{amr1989}, or sparse grids~\cite{vdb2013, spgrid2014}. In these data structures,
-the data can be stored multiple times at different levels created by application of a kernel
-(such as averaging). 
+, space-filling curves~\cite{idx2001}, , and wavelets~\cite{treib,multires_toolkit2003,
+vapor2007,woodring2011}. In these data structures, the data can be stored multiple times at
+different levels created by application of a kernel (such as averaging). Gaussian and Laplacian
+pyramids, which unlike wavelets use redundant storage~\cite{laplacian-pyramid}
 
-\peter{Discuss Gaussian and Laplacian pyramids, which unlike wavelets use
-redundant storage~\cite{laplacian-pyramid}.}
+For example, the Compression-domain Output-sensitive Volume Rendering Architecture
+(COVRA)~\cite{covra2012} constructs a level-of-detail pyramid in a precomputation stage to reduce
+memory usage for blocks that are far from the viewpoint. Moreover, COVRA further compresses the
+blocks of the pyramid to reduce the data transfer time, either to the GPU or over a network.
+However, this redundant level-of-detail representation increases data size, which may be undesirable
+for some tasks.
 
-For example, the Compression-domain Output-sensitive Volume Rendering Architecture (COVRA)~\cite{covra2012}
-constructs a level-of-detail pyramid in a precomputation stage to reduce memory usage for blocks that
-are far from the viewpoint. Moreover, COVRA further compresses the blocks of
-the pyramid to reduce the data transfer time, either to the GPU or over a
-network. However, this redundant level-of-detail representation increases
-data size, which may be undesirable for some tasks.
+IDX
 
-Alternatives such as IDX~\cite{idx2001} primarily focus on reordering the data for better spatial locality to enable faster queries. Row-major order is optimal only for slicing
-along one axis, but slicing along the other two axes leads to poor cache
-utilization. In contrast, Hilbert
-and Morton order are not optimal for any one axis, but on average outperform
-the row-major
-order. Combined with tiling, Morton order can be highly efficient [CITE texture units] as
-it can utilize fast CPU instructions for conversion to xyz index space~\cite{spgrid2014}.
-Moreover, the order can be changed such that it becomes hierarchical, thus providing
-level-of-detail access via subsampling without the need for additional storage~\cite{idx2001}. Unfortunately,
-subsampling introduces aliasing and interpolation issues where commonly used trilinear interpolation
-is no longer correct.
+Alternatives such as IDX~\cite{idx2001} primarily focus on reordering the data for better spatial
+locality to enable faster queries. Row-major order is optimal only for slicing along one axis, but
+slicing along the other two axes leads to poor cache utilization. In contrast, Hilbert and Morton
+order are not optimal for any one axis, but on average outperform the row-major order. Combined with
+tiling, Morton order can be highly efficient [CITE texture units] as it can utilize fast CPU
+instructions for conversion to xyz index space~\cite{spgrid2014}. Moreover, the order can be changed
+such that it becomes hierarchical, thus providing level-of-detail access via subsampling without the
+need for additional storage~\cite{idx2001}. Unfortunately, subsampling introduces aliasing and
+interpolation issues where commonly used trilinear interpolation is no longer correct.
 
-The wavelet transform constructs a hierarchy of resolution levels via
-low and high bandpass filters.  The transform is recursively applied to the
-lower-resolution band, resulting in a hierarchy of ``details'' at varying
-resolution.  One benefit of wavelets over redundant representations
-like Laplacian pyramids is that the wavelet transform is merely a change of
-basis that like reordering techniques does not increase the data size.
-Another benefit over AMR and other tree-like techniques is that the wavelet
-basis functions are defined everywhere in space, requiring no special
-interpolation rules when given some arbitrary subset of wavelet coefficients
-and basis functions.
-One disadvantage of the wavelet transform is non-constant time random access
-cost, though acceleration structures have been proposed to speed up
-local queries~\cite{weiss}.
+The wavelet transform constructs a hierarchy of resolution levels via low and high bandpass filters.
+The transform is recursively applied to the lower-resolution band, resulting in a hierarchy of
+``details'' at varying resolution. One benefit of wavelets over redundant representations like
+Laplacian pyramids is that the wavelet transform is merely a change of basis that like reordering
+techniques does not increase the data size. Another benefit over AMR and other tree-like techniques
+is that the wavelet basis functions are defined everywhere in space, requiring no special
+interpolation rules when given some arbitrary subset of wavelet coefficients and basis functions.
+One disadvantage of the wavelet transform is non-constant time random access cost, though
+acceleration structures have been proposed to speed up local queries~\cite{weiss}.
 
-Spatial adaptivity in resolution can be achieved
-by tiling the wavelet coefficients of individual subbands. 
-For example, the Visualization and Analysis Platform for Ocean, Atmosphere, and Solar Researchers
-(VAPOR) toolkit~\cite{multires_toolkit2003, vapor2007} incorporates a multiresolution file
-format based on a wavelets to allow data analysis on commodity hardware, and stores individual tiles in
-separate files to allow loading of the region of interest.
-However, the authors only leverage the resolution control without exploring the precision axis,
-which can potentially further reduce data transfer.
+Spatial adaptivity in resolution can be achieved by tiling the wavelet coefficients of individual
+subbands. For example, the Visualization and Analysis Platform for Ocean, Atmosphere, and Solar
+Researchers (VAPOR) toolkit~\cite{multires_toolkit2003, vapor2007} incorporates a multiresolution
+file format based on a wavelets to allow data analysis on commodity hardware, and stores individual
+tiles in separate files to allow loading of the region of interest. However, the authors only
+leverage the resolution control without exploring the precision axis, which can potentially further
+reduce data transfer.
 
-\peter{Maybe mention QCCPACK (http://qccpack.sourceforge.net), which
-supports (patented) SPIHT coding.}
-
-\subsection{Adaptivity in Precision}
 Reducing precision of the samples is primarily used in data compression techniques. 
 
-The SPIHT~\cite{spiht1996} wavelet coefficient coding algorithm hierarchically
-partitions sets of spatially related wavelet coefficients, exploiting the
-property that ``parent'' coefficients are often larger in magnitude than
-``child'' coefficients.
-This format allows regions to be progressively refined in precision by coding
-more significant bitplanes before less significant ones.
-
+The SPIHT~\cite{spiht1996} wavelet coefficient coding algorithm hierarchically partitions sets of
+spatially related wavelet coefficients, exploiting the property that ``parent'' coefficients are
+often larger in magnitude than ``child'' coefficients. This format allows regions to be
+progressively refined in precision by coding more significant bitplanes before less significant
+ones.
 
 SBHP~\cite{sbhp2000}
-
 JPEG2000~\cite{jpeg2001}
-
 by bit plane streams~\cite{compression_techniques1991} (this is what SPIHT paper cites).
-
-
 by magnitude streams~\cite{image_compression1992}
-
 \peter{I'm not familiar with these last two papers.  Instead, point out that
 SPIHT improves on embedded zerotree coding~\cite{ezw}.}
-
 
 The other major research focus is precision reduction to compress the data. Quantization and
 truncation.
 
-\peter{Discuss scalar~\cite{sqe} vs. vector quantization~\cite{hvq}.
-SZ performs residual scalar quantization~\cite{sz}. \cite{fpzip}
-truncates floats, which can be seen as nonuniform scalar quantization.}
-
+\peter{Discuss scalar~\cite{sqe} vs. vector quantization~\cite{hvq}. SZ performs residual scalar
+quantization~\cite{sz}. \cite{fpzip} truncates floats, which can be seen as nonuniform scalar
+quantization.}
 
 \newcommand{\zfp}{\textsc{zfp}\xspace}
-Block transform-based techniques such as \zfp~\cite{zfp2014} partition the
-domain---a structured grid---into small (e.g. $4 \times 4 \times 4$)
-independent blocks and thus allow for localized decompression. Moreover,
-\zfp supports fixed-rate compression, which facilitates random access to
-the data. Its fast transform and caching of decompressed data allows it to
-achieve not only high throughput decompression~\cite{hvq}, but also fast
-inline compression.
-Extensions of \zfp allow it to vary either the bit rate or precision spatially
-over the domain, albeit at fixed resolution.
+Block transform-based techniques such as \zfp~\cite{zfp2014} partition the domain---a structured
+grid---into small (e.g., $4 \times 4 \times 4$) independent blocks and thus allow for localized
+decompression. Moreover, \zfp supports fixed-rate compression, which facilitates random access to
+the data. Its fast transform and caching of decompressed data allows it to achieve not only high
+throughput decompression~\cite{hvq}, but also fast inline compression. Extensions of \zfp allow it
+to vary either the bit rate or precision spatially over the domain, albeit at fixed resolution.
 \peter{Not sure if we want to cite my ARC poster on this: https://computation.llnl.gov/sites/default/files/public//llnl-post-728998.pdf}
 
-\peter{Should the following go in a section on ``hybrid'' precision and
-resolution techniques?}
+\peter{Should the following go in a section on ``hybrid'' precision and resolution techniques?}
 
-Woodring \etal~\cite{woodring2011} use the JPEG2000 image format to store
-floating point data.  Since most JPEG2000 implementations are limited
-to integer data, the authors apply uniform scalar quantization to convert
-floating point data to integer form. Even though JPEG2000 supports varying
-both resolution and precision, the authors do not explore this capability
-but focus only on setting a bit rate 
+Woodring \etal~\cite{woodring2011} use the JPEG2000 image format to store floating point data.
+Since most JPEG2000 implementations are limited to integer data, the authors apply uniform scalar
+quantization to convert floating point data to integer form. Even though JPEG2000 supports varying
+both resolution and precision, the authors do not explore this capability but focus only on setting
+a bit rate.
 
 \peter{Another wavelet paper relevant to VIS: \cite{treib}}.
-
-
-SPECK~\cite{speck2004}
-\peter{SPECK is just a simpler version of SPIHT.  We can cite it, but
-needs no furhter discussion.}
-
-
-
-Volume rendering stuff
-Compression domain volume rendering~\cite{compression_domain2003}
-\peter{This is \cite{hvq} above.}
 
 Transfer function adaptive decompression~\cite{tf_decompression2004}
 
@@ -141,5 +102,4 @@ Transform Coding for HW-accel DVR~\cite{hw_dvr2007}
 Tensor approximation for DVR~\cite{tensor_dvr2015}
 \peter{This can be both resolution and precision.}
 
-\peter{We might want to cite~\cite{codar} and~\cite{li} for surveys
-on data reduction.}
+\peter{We might want to cite~\cite{codar} and~\cite{li} for surveys on data reduction.}
