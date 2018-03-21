@@ -49,24 +49,26 @@ With the error metric defined, we compute a data-dependent stream optimized for 
 and~\cref{alg:signature}. \cref{fig:isocontour-plots} compares the performances of these two
 streams, along with $s_{bit}$, $s_{lvl}$, $s_{wav}$, and $s_{mag}$. Both $s_{lvl}$ and $s_{mag}$
 performs poorly, indicating that isosurface extraction favors resolution over precision. There are
-crossovers between $s_{bit}$ and $s_{wav}$ for the \emph{plasma} data set. For this data set, the
-isosurface is extracted from a region with low gradient, which means the surface is very sensitive
-to low-ordered bits (i.e., a slight change in values moves the isosurface by larger distance). For
-this reason, the $s_{wav}$ stream initially performs better, as it streams more precision bits. As
-$s_{bit}$ acquires enough precision, however, it starts to resolve the fine-scale geometry of the
-surface better than $s_{wav}$ does (from~\cref{fig:bit-plane-vs-wavelet-norm-gradient}
-in~\cref{sec:gradient}, we learned that $s_{wav}$ tends to reconstruct a smoother function
-everywhere). In~\cref{fig:isocontour-surfaces-plasma} we render the surfaces reconstructed by
-$s_{bit}$ and $s_{wav}$ at 0.3 bps, which confirms that $s_{bit}$ is able to preserve better the
-fine-scale featureas on the surface.
+crossovers between $s_{bit}$ and $s_{wav}$ for the \emph{plasma} data set.
 
-For the \emph{turbulence}
+For this data set, the isosurface is extracted from a region with low gradient, which means the
+surface is very sensitive to low-ordered bits (i.e., a slight change in values moves the isosurface
+by larger distance). For this reason, the $s_{wav}$ stream initially performs better, as it streams
+more precision bits. As $s_{bit}$ acquires enough precision, however, it starts to resolve the
+fine-scale geometry of the surface better than $s_{wav}$ does
+(from~\cref{fig:bit-plane-vs-wavelet-norm-gradient} in~\cref{sec:gradient}, we learned that
+$s_{wav}$ tends to reconstruct a smoother function everywhere).
 
-Qualitatively, we studied isosurfaces at specific bit rates for all streams. We were especially
-interested at bit rates where the error is not exponentially decaying - the low bit rate isosurfaces
-do not resemble the reference full data set isosurfaces. For example, at bit rate 0.4 the error
-curves are mostly flat and the gaps between them result in isosurfaces with visible differences
-(\Cref{fig:isocontour-surfaces})).
+In~\cref{fig:isocontour-surfaces-plasma} we render the surfaces reconstructed by $s_{bit}$ and
+$s_{wav}$ at 0.3 bps, which confirms that $s_{bit}$ is able to preserve better the fine-scale
+featureas on the surface. For the \emph{turbulence} field, the isosurface is extracted from a
+high-gradient region, thus precision bits matter less, and $s_{bit}$ outperforms $s_{wav}$ from the
+beginning. $s_{bit}$ also outperforms $s_{iso-sig}$ in this case, because local signatures coming
+from regions where the isosurface does not intersect will dilute those coming from regions where it
+does. This phenomenon makes the signature less useful for tasks that involve localization in spatial
+domain, such as isosurface extraction. Here, it happens in various degrees for every data sets but
+is especially relevant in the case of \emph{turbulence}, since the surface occupies very little of
+the whole volume.
 
 \begin{figure}[h]
 	\centering
