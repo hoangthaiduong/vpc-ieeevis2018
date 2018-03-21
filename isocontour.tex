@@ -1,47 +1,66 @@
 \subsection{Isosurface extraction\pavol{update plot text to isosurface}}\label{sec:isocontour}
+
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{\em pressure, isovalue=0.2}
+	{\includegraphics[width=0.48\linewidth]{isocontour/isocontour-optimized-pressure}}
+	\subcaptionbox{\em turbulence, isovalue=5}
+	{\includegraphics[width=0.48\linewidth]{isocontour/isocontour-optimized-turbulence}}
+	\subcaptionbox{\em plasma, isovalue=2}
+	{\includegraphics[width=0.48\linewidth]{isocontour/isocontour-optimized-plasma}}
+	\subcaptionbox{\em diffusivity, isovalue=-0.05}
+	{\includegraphics[width=0.48\linewidth]{isocontour/isocontour-optimized-diffusivity}}
+	\caption{Comparison of isocontour errors among streams. Plots are truncated to highlight
+	differences without hiding important trends. In all cases, $s_{lvl}$ and $s_{mag}$ perform
+	significantly worse than the rest. For \emph{pressure} and \emph{diffusivity}, $s_{iso-sig}
+	\approx s_{wav} > s_{bit}$. For \emph{plasma}, there are crossovers between $s_{bit}$ and
+	$s_{wav}$. Finally, for \emph{turbulence}, $s_{bit} > s_{wav}\approx
+	s_{sig}$.}\label{fig:isocontour-plots}
+\end{figure}
+
 Extraction of isosurfaces is an essential task in any visualization and analysis system. For
 example, in a combustion simulation, isosurfaces of OH concentration can separate burning and
 extinguished regions. In medical imaging, organs can also be separated from the background with
-isosurface extraction. Beyond visualization, topological methods such as Reeb Graph [CITE] is built
-from equivalence classes of isosurfaces.
+isosurface extraction. Beyond visualization, topological methods such as Reeb graph [CITE] show the
+evolution of level sets by identifying equivalence classes of isosurfaces. Among other applications,
+Reeb graphs are used in topological simplification and surface segmentation.
 
 In attempting to define an error metric to compare isosurfaces, we have found that the popular
 Hausdorff distance [CITE] is not very robust --- it varies drastically with minor changes in the
-surfaces. ore, we use a number of misclassified voxels as our distance which can be computed by
-counting all voxels that are either in surface $S_1$ and not surface $S_2$ or the other way.
-\pavol{not sure if following is needed}We have found that if the error caused by switching off a
-chunk is too small (in orders of sub-pixel/sub-voxel), then the importance of the chunk cannot be
-properly measured. We therefore amend the error metric by adding to it the relative difference in
-area between two isosurfaces. This relative difference is, most of the time, a number between $0$
-and $1$, computed by the formula $|A(S_1)-A(S_2)|/A(S_1)$, where $A(S)$ is the area of an isosurface
-$S$. The idea is that when the number number of misclassified voxels is less than $1$, the error --
-which is at the sub-voxel level -- is captured by the relative difference in contour length instead.
+surfaces. Etiene \etal propose using several geometrical~\cite{verifiable-isosurface} and
+topological~\cite{topology-verification-isosurface} metrics for verification of isosurfaces. In this
+paper, we have chosen a simple metric that assumes nothing about the surfaces, that is the number of
+misclassified voxels in the volume. Given a volume and an isovalue, we assign the label 0 to samples
+that are less than or equal to the isovalue, and label 1 to the rest. Samples of the reconstructed
+volume are labeled the same way. The distance between the two isosurfaces is then the number of
+voxels that are labeled differently between the two volumes.
 
-With an error metric defined, we can compute an \emph{isosurface-optimized} stream for each data set
-in addition to the other streams that are data independent (\Cref{fig:isocontour-plots}). The
-hypothesis is resolving an isosurface is primarily affected by the domain resolution. Both
-resolution and precision streams are bounded by Nquist limit, a fine isosurface detail may fail to
-be resolved either due low resolution or precision. As expected, the {\em isosurface-optimize}
-stream performs the best as it has the most freedom when reordering chunks. We observed close to no
-difference between {\em by bit plane}, {\em by wavelet norm}, and {\em isosurface signature}
-streams. This result is primarily caused by the need for resolution when extracting isosurfaces. For
-example, {\em by bit plane} stream will always load full resolution data and vary only precision.
+The metric defined above, however, does not properly measure the importance of a packet, if the
+error caused by switching off a packet is too small (in orders of sub-voxel). Obtaining accurate
+measurements of such errors is a crucial step in Algorithm~\cref{alg:greedy}. We therefore amend the
+error metric based on misclassified voxels, by adding to it the relative difference in area between
+the two isosurfaces. This relative difference is computed using the formula $|A_1-A_2|/A(_1)$, where
+$A_1$ and $A_2$ are isosurface reas. The normalization reduces the range of this term to $[0, 1]$.
+The idea is that when the number of misclassified voxels is less than $1$, the sub-voxel error is
+instead captured by this relative difference in surface areas.
 
-\begin{figure}[t]
-	\centering
-	\subcaptionbox{pressure}
-	{\includegraphics[width=0.48\linewidth]{isocontour/isocontour-optimized-pressure}}
-	\subcaptionbox{turbulence}
-	{\includegraphics[width=0.48\linewidth]{isocontour/isocontour-optimized-turbulence}}
-	\subcaptionbox{plasma}
-	{\includegraphics[width=0.48\linewidth]{isocontour/isocontour-optimized-plasma}}
-	\subcaptionbox{diffusivity}
-	{\includegraphics[width=0.48\linewidth]{isocontour/isocontour-optimized-diffusivity}}
-	\caption{Isosurface errors for data-independent, \emph{isosurface-optimized}, and {\em isosurface
-	signature} streams. The bit rates are capped to highlight differences among streams. The {\em by
-	level} and {\em by magnitude} streams performs worst and the other remaining streams have similar
-	performance.}\label{fig:isocontour-plots}
-\end{figure}
+With the error metric defined, we compute a data-dependent stream optimized for that metric
+($s_{iso-opt}$) and a stream based on its signature ($s_{iso-sig}$) using ~\cref{alg:greedy}
+and~\cref{alg:signature}. \cref{fig:isocontour-plots} compares the performances of these two
+streams, along with $s_{bit}$, $s_{lvl}$, $s_{wav}$, and $s_{mag}$. Both $s_{lvl}$ and $s_{mag}$
+performs poorly, indicating that isosurface extraction favors resolution over precision. There are
+crossovers between $s_{bit}$ and $s_{wav}$ for the \emph{plasma} data set. For this data set, the
+isosurface is extracted from a region with low gradient, which means the surface is very sensitive
+to low-ordered bits (i.e., a slight change in values moves the isosurface by larger distance). For
+this reason, the $s_{wav}$ stream initially performs better, as it streams more precision bits. As
+$s_{bit}$ acquires enough precision, however, it starts to resolve the fine-scale geometry of the
+surface better than $s_{wav}$ does (from~\cref{fig:bit-plane-vs-wavelet-norm-gradient}
+in~\cref{sec:gradient}, we learned that $s_{wav}$ tends to reconstruct a smoother function
+everywhere). In~\cref{fig:isocontour-surfaces-plasma} we render the surfaces reconstructed by
+$s_{bit}$ and $s_{wav}$ at 0.3 bps, which confirms that $s_{bit}$ is able to preserve better the
+fine-scale featureas on the surface.
+
+For the \emph{turbulence}
 
 Qualitatively, we studied isosurfaces at specific bit rates for all streams. We were especially
 interested at bit rates where the error is not exponentially decaying - the low bit rate isosurfaces
@@ -49,49 +68,38 @@ do not resemble the reference full data set isosurfaces. For example, at bit rat
 curves are mostly flat and the gaps between them result in isosurfaces with visible differences
 (\Cref{fig:isocontour-surfaces})).
 
-\begin{figure}[t]
+\begin{figure}[h]
 	\centering
-	\subcaptionbox{\emph{by level}}
+	\subcaptionbox{\emph{by level} ($s_{lvl}$)}
 	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-level}}
-	\subcaptionbox{\emph{by bit plane}}
+	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}
 	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-bit-plane}}
-	\subcaptionbox{\emph{by wavelet norm}}
+	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}
 	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-wavelet-norm}}
-	\subcaptionbox{\emph{by magnitude}}
+	\subcaptionbox{\emph{by magnitude} ($s_{mag}$)}
 	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-magnitude}}
-	\subcaptionbox{\emph{by signature}}
+	\subcaptionbox{\emph{by signature} ($s_{iso-sig}$)}
 	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-signature}}
-	\subcaptionbox{\emph{groundtruth}}
+	\subcaptionbox{\emph{reference}}
 	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-groundtruth}}
 	\caption{Miranda pressure field isosurfaces at bitrate of 0.4 bps.\pavol{what isovalue?} Both {\em by level}
         and {\em by magnitude} stream exhibit severe blocking artifacts compared to the groundtruth.
         The other streams still show smear artifacts, but the overall structure of the isosurfaces
         is more round and closer to the reference.}
-	\label{fig:isocontour-surfaces}
+	\label{fig:isocontour-surfaces-pressure}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[h]
 	\centering
+	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-bit-plane}}
+	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-wavelet-norm}}
 	\subcaptionbox{\emph{reference}}
 	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-groundtruth}}
-	\subcaptionbox{\emph{by bit plane}}
-	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-bit-plane}}
-	\subcaptionbox{\emph{by wavelet norm}}
-	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-wavelet-norm}}
-	\caption{Miranda pressure field isosurfaces at bitrate of 0.4 bps.\pavol{what isovalue?} Both {\em by level}
-        and {\em by magnitude} stream exhibit severe blocking artifacts compared to the groundtruth.
-        The other streams still show smear artifacts, but the overall structure of the isosurfaces
-        is more round and closer to the reference.}
-	\label{fig:isocontour-surfaces}
+	\caption{\emph{plasma}'s isosurface reconstructed at 0.3 bps.}
+	\label{fig:isocontour-surfaces-plasma}
 \end{figure}
-%Figure 5: We show that the hybrid and isocontour can diverge somewhat for low-gradient contour.
-%Valerio suggested here we coudl also build a "ramp" dataset at different angles and see if the two
-%diverges more as the ramp become flatter.
 
-%We argue that if the gradient is low, some noise bits at the end will make an impact, the isocontour
-%is very sensitive to noise, and is in general not interesting or meaninfgul to extract.
-
-In this section, we looked at isosurface results for all six streams. The {\em by level} and {\em by
-magnitude} streams show blocking artifacts compared to the less severe smearing of {\em by wavelet
-norm} and {\em by precisio} streams. Therefore, it seems that one of those latter streams combined
-with a spatial adaptivity would perform well when isosurface extraction is desired.
+%We argue that if the gradient is low, some noise bits at the end will make an impact, the
+%isocontour is very sensitive to noise, and is in general not interesting or meaninfgul to extract.

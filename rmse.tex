@@ -32,6 +32,40 @@ whole data at full resolution before performing any analysis task.}
 
 \subsection{Function reconstruction}\label{sec:rmse-optimized}
 
+\begin{figure}[t]
+  \centering
+	\subcaptionbox{\emph{boiler}}{ {\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-boiler}}}
+		\subcaptionbox{\emph{diffusivity}}{
+		{\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-diffusivity}}}
+		\subcaptionbox{\emph{plasma}}{ {\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-plasma}}}
+		\subcaptionbox{\emph{turbulence}}{
+		{\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-turbulence}}}
+		\caption{Root-mean-square error of reconstructed functions for different streams and data sets.
+		Lower is better. The streams are truncated to highlight the differences, without omitting
+		important information. Leading zero packets are not used for plotting. In all cases, the
+		ordering of performance, from best to worst, is $s_{opt} > s_{sig} > s_{wav} > s_{bit} > s_{mag}
+		> s_{lvl}$.}\label{fig:rmse-optimized}
+\end{figure}
+
+\begin{figure}[t]
+	\centering
+	\subcaptionbox{\emph{by level} ($s_{lvl}$)}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-level}}}
+	\subcaptionbox{\emph{by bit	plane ($s_{bit}$)}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-bit-plane}}}
+	\subcaptionbox{\emph{by	wavelet norm ($s_{wav}$)}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-wavelet-norm}}}
+	\subcaptionbox{\emph{by magnitude ($s_{mag}$)}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-magnitude}}}
+	\subcaptionbox{\emph{by	signature ($s_{sig}$)}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-signature}}}
+	\subcaptionbox{\emph{reference}}{
+	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-groundtruth}}}
+	\caption{Volume renderings of a $64^3$ region of \emph{plasma} at 0.1 bps. $s_{lvl}$ captures the background (purple-blue) well, while $s_{bit}$ captures the fine details better. $s_{wav}$
+	combines the strength of both. $s_{sig}$, however, produces the most accurate rendering (compare,
+	e.g., yellow features).}\label{fig:rmse-rendering}
+\end{figure}
+
 The most fundamental analysis task is that of reconstructing the original function itself. The most
 common error metric in this case is the root-mean-square error (RMSE). The plots that compare the
 streams are in \cref{fig:rmse-optimized}. The main trend in all cases, is $s_{opt} > s_{sig} >
@@ -50,21 +84,6 @@ general, $s_{wav}$ and $s_{sig}$ are close in performance. In some cases (e.g., 
 \emph{diffusivity}), the $s_{sig}$ stream is able to adapt more to the data, thus outperforming
 $s_{wav}$ by a larger margin.
 
-\begin{figure}[t]
-  \centering
-	\subcaptionbox{\emph{boiler}}{ {\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-boiler}}}
-		\subcaptionbox{\emph{diffusivity}}{
-		{\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-diffusivity}}}
-		\subcaptionbox{\emph{plasma}}{ {\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-plasma}}}
-		\subcaptionbox{\emph{turbulence}}{
-		{\includegraphics[width=0.48\linewidth]{rmse/rmse-optimized-turbulence}}}
-		\caption{Root-mean-square error of reconstructed functions for different streams and data sets.
-		Lower is better. The streams are truncated to highlight the differences, without omitting
-		important information. Leading zero packets are not used for plotting. In all cases, the
-		ordering of performance, from best to worst, is $s_{opt} > s_{sig} > s_{wav} > s_{bit} > s_{mag}
-		> s_{lvl}$.}\label{fig:rmse-optimized}
-\end{figure}
-
 In \cref{fig:rmse-rendering} we volume render the \emph{plasma} data set at 0.1 bits per sample,
 for all streams. Bits per sample (bps) are calculated by dividing the total size of received packets
 (in bits) by the total number of samples. Although $s_{lvl}$ has the precision to obtain an accurate
@@ -76,21 +95,3 @@ $s_{sig}$ benefits more from ``anisotropic'' data, such as \emph{plasma}, where 
 a thin ``surface''. For such data, wavelet coefficients along one dimension are often larger in
 magnitude compared to those along other dimensions, which $s_{opt}$, and hence $s_{sig}$, can take
 advantage of, but not $s_{wav}$.
-
-\begin{figure}[t]
-	\centering
-	\subcaptionbox{\emph{by level} ($s_{lvl}$)}{
-	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-level}}} \subcaptionbox{\emph{by bit
-	plane ($s_{bit}$)}}{ {\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-bit-plane}}}
-	\subcaptionbox{\emph{by magnitude ($s_{mag}$)}}{
-	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-magnitude}}} \subcaptionbox{\emph{by
-	wavelet norm ($s_{wav}$)}}{
-	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-wavelet-norm}}} \subcaptionbox{\emph{by
-	signature ($s_{sig}$)}}{ {\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-signature}}}
-	\subcaptionbox{\emph{reference}}{
-	{\includegraphics[width=0.31\linewidth]{rmse/rmse-plasma-groundtruth}}} \caption{Volume renderings
-	of a $64^3$ region of \emph{plasma} at 0.1 bps. $s_{lvl}$ captures the background (purple-blue)
-	well, while $s_{bit}$ captures the fine details better. $s_{wav}$ combines the strength of both.
-	$s_{sig}$, however, produces the most accurate rendering (compare, e.g., yellow
-	features).}\label{fig:rmse-rendering}
-\end{figure}
