@@ -18,6 +18,37 @@
 	s_{sig}$.}\label{fig:isocontour-plots}
 \end{figure}
 
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{\emph{by level} ($s_{lvl}$)}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-level}}
+	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-bit-plane}}
+	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-wavelet-norm}}
+	\subcaptionbox{\emph{by magnitude} ($s_{mag}$)}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-magnitude}}
+	\subcaptionbox{\emph{by signature} ($s_{iso-sig}$)}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-signature}}
+	\subcaptionbox{\emph{reference}}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-groundtruth}} \caption{Rendering of
+	isosurfaces at isovalue of 0.2, at 0.4 bps. The surfaces are colored by the x component of the
+	normal vector at each point. The surfaces reconstructed by $s_{wav}$ and $s_{iso-sig}$ are closest to the reference, followed by $s_{bit}$, $s_{mag}$, and $s_{lvl}$.}
+	\label{fig:isocontour-surfaces-pressure}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-bit-plane}}
+	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-wavelet-norm}}
+	\subcaptionbox{\emph{reference}}
+	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-groundtruth}}
+	\caption{\emph{plasma}'s isosurface reconstructed at 0.3 bps.}
+	\label{fig:isocontour-surfaces-plasma}
+\end{figure}
+
 Extraction of isosurfaces is an essential task in any visualization and analysis system. For
 example, in a combustion simulation, isosurfaces of OH concentration can separate burning and
 extinguished regions. In medical imaging, organs can also be separated from the background with
@@ -67,41 +98,12 @@ beginning. $s_{bit}$ also outperforms $s_{iso-sig}$ in this case, because local 
 from regions where the isosurface does not intersect will dilute those coming from regions where it
 does. This phenomenon makes the signature less useful for tasks that involve localization in spatial
 domain, such as isosurface extraction. Here, it happens in various degrees for every data sets but
-is especially relevant in the case of \emph{turbulence}, since the surface occupies very little of
-the whole volume.
+is especially relevant in the case of \emph{turbulence}, since the surface is confined to very small
+regions of the whole volume.
 
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{\emph{by level} ($s_{lvl}$)}
-	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-level}}
-	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}
-	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-bit-plane}}
-	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}
-	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-wavelet-norm}}
-	\subcaptionbox{\emph{by magnitude} ($s_{mag}$)}
-	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-magnitude}}
-	\subcaptionbox{\emph{by signature} ($s_{iso-sig}$)}
-	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-signature}}
-	\subcaptionbox{\emph{reference}}
-	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour-groundtruth}}
-	\caption{Miranda pressure field isosurfaces at bitrate of 0.4 bps.\pavol{what isovalue?} Both {\em by level}
-        and {\em by magnitude} stream exhibit severe blocking artifacts compared to the groundtruth.
-        The other streams still show smear artifacts, but the overall structure of the isosurfaces
-        is more round and closer to the reference.}
-	\label{fig:isocontour-surfaces-pressure}
-\end{figure}
-
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}
-	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-bit-plane}}
-	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}
-	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-wavelet-norm}}
-	\subcaptionbox{\emph{reference}}
-	{\includegraphics[width=0.31\linewidth]{isocontour/isocontour2-groundtruth}}
-	\caption{\emph{plasma}'s isosurface reconstructed at 0.3 bps.}
-	\label{fig:isocontour-surfaces-plasma}
-\end{figure}
-
-%We argue that if the gradient is low, some noise bits at the end will make an impact, the
-%isocontour is very sensitive to noise, and is in general not interesting or meaninfgul to extract.
+For a typical isosurface that is relatively smooth and is not too confined to small regions, such as
+\emph{pressure} with an isovalue of 0.2, $s_{wav}$ typically outperforms $s_{bit}$
+(see~\Cref{fig:isocontour-surfaces-pressure}). This Figure renders the isosurfaces reconstructed at
+0.4 bps for all streams. In terms of the quality of the reconstructed surfaces, $s_{iso-sig} \approx
+s_{wav} > s_{bit} > s_{mag} > s_{lvl}$, which agrees with the curves in
+~\Cref{fig:isocontour-plots}a. 

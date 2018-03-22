@@ -15,11 +15,11 @@ the $s_{opt}$'s streams, the one using the Earth Mover's Distance has the least 
 in the data so it is clear it is not on the histogram bins?}. However, we choose Intersection as the
 metric of choice, because it is fast to compute, and is the least sensitive to slight changes in
 precision. The intersection distance between two histograms $H_1$ and $H_2$ is defined as
-$e(H_1,H_2)=\sum_{i}{\min{(H_1(i),H_2(i))}}$ (the sum is over all bins $i$). We normalize $e$ by
-dividing it by the total number of samples in the data. Our error metric takes into account not only
-the shapes but also the value ranges of histograms. Therefore, when computing the histogram of a
-reconstructed function, we clamp its range of values to that of the original function, so that
-corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same range.
+$e(H_1,H_2)=\sum_{i}{\min{(H_1(i),H_2(i))}}$ (the sum is over all bins $i$). Every histogram is
+normalized by dividing each bin by the total number of samples in the volume. Our error metric takes
+into account not only the shapes but also the value ranges of histograms. Therefore, when computing
+the histogram of a reconstructed function, we clamp its range of values to that of the original
+function, so that corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same range.
 
 As before, for each data set, we use~\Cref{alg:greedy} to compute an $s_{hist-opt}$ stream,
 optimized for histogram error, and an $s_{hist-sig}$ from its signature. We plot the error curves
