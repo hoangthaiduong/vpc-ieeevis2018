@@ -20,6 +20,7 @@ normalized by dividing each bin by the total number of samples in the volume. Ou
 into account not only the shapes but also the value ranges of histograms. Therefore, when computing
 the histogram of a reconstructed function, we clamp its range of values to that of the original
 function, so that corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same range.
+TODO: add that the histogram intersection is insensitive to the number of bins
 
 As before, for each data set, we use~\Cref{alg:greedy} to compute an $s_{hist-opt}$ stream,
 optimized for histogram error, and an $s_{hist-sig}$ from its signature. We plot the error curves

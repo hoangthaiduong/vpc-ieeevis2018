@@ -7,18 +7,18 @@
   \hline
   Name & Type & Dimension & Data type & Function & Gradient & Laplacian & Histogram & Isosurface & P or D\\
   \hline
-  boiler & combustion simulation& $218\times 130 \times 150$ & float64 & x & x & x & x & x & D(running) \\
+  boiler & combustion simulation& $218\times 130 \times 150$ & float64 & x & x & x & x & x & Done \\
   plasma & magnetic reconnection simulation& $256\times 256 \times 256$ & float32 & x & x & x & x & x & P\\
   diffusivity & hydrodynamics simulation& $256\times 256\times 256$ & float64 & x & x & x & x & x & P\\
   pressure & hydrodynamics simulation& $256\times 256 \times 256$ & float64 & x & x & x & x & x & D(running)\\
-  velocityz & hydrodynamics simulation& $256\times 256\times 256$ & float64 & x & x & x & x & x & D\\
+  velocityz & hydrodynamics simulation& $256\times 256\times 256$ & float64 & x & x & x & x & x & D(running)\\
 	turbulence & fluid dynamics simulation& $256\times 256 \times 256$ & float32 & x & x & x & x & x &
 	P(running)\\
-	kingsnake & fluid dynamics simulation& $256\times 256 \times 256$ & float32 & x & x & x & x & x & D(done)\\
+	kingsnake & fluid dynamics simulation& $256\times 256 \times 256$ & float32 & x & x & x & x & x & Done\\
 	flame & fluid dynamics simulation& $256\times 256 \times 256$ & float32 & x & x & x & x & x & D(running)\\
 	csafe & fluid dynamics simulation& $256\times 256 \times 256$ & float32 & x & x & x & x & x & D\\
 	enzo-v & fluid dynamics simulation& $256\times 256 \times 256$ & float32 & x & x & x & x & x & D\\
-	brain & fluid dynamics simulation& $256\times 256 \times 256$ & uint16 & x & x & x & x & x & P\\
+	brain & fluid dynamics simulation& $256\times 256 \times 256$ & uint16 & x & x & x & x & x & D\\
 	foam & fluid dynamics simulation& $256\times 256 \times 256$ & uint8 & x & x & x & x & x & P\\
 	vismale & fluid dynamics simulation& $128\times 128 \times 128$ & uint8 & x & x & x & x & x & P\\
 	karfs	& fluid dynamics simulation& $256\times 256 \times 256$ & float32 & x & x & x & x & x & D\\

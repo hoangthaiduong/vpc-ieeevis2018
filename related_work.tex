@@ -6,11 +6,89 @@ pyramids~\cite{laplacian-pyramid} store multiple copies of the data at various r
 Lower-resolution copies are constructed from higher-resolution ones through filtering and
 subsampling. Other techniques do not store redundant copies of data, but instead adapt more to the
 data by varying the resolution over the domain, allocating more data samples to important regions.
-For example, adaptive refinement meshes~\cite{amr1989}, sparse grids~\cite{spgrid2014}, sparse
-octrees~\cite{gigavoxels} and other trees~\cite{vdb2013} . 
+For example, adaptive refinement meshes~\cite{amr1989}, sparse octrees~\cite{gigavoxels} and other
+trees~\cite{vdb2013}.
 
+Multiresolution:
+- Octrees and other trees
+- adaptive mesh refinement
+- wavelets
+-
+
+wavelets:
+~\cite{treib}
+~\cite{multires-framework}
+~\cite{compression-domain-volume-rendering}
+~\cite{interactive-rendering-large-volume}
+~\cite{rapid-compression-volume}
+~\cite{survey-multires}
+~\cite{multires_toolkit2003}
+~\cite{wavelet-compression-interactive-vis}
+
+resolution
+~\cite{multires-volume-rendering}
+~\cite{in-situ-sampling-particle}
+
+tensor:
+~\cite{tensor_dvr2015}
+~\cite{multiscale-tensor}
+~\cite{tamresh}
+
+mipmaps
+~\cite{multires_octree1999} (lod selection)
+~\cite{interactive-exploration-ct-scans}
+
+Octrees:
+~\cite{sph-octree} (octree + wavelet compression)
+
+Other trees:
+~\cite{vdb2013}
+~\cite{fogal-kdtree}
+
+Error analysis:
+~\cite{evaluating-compression-climate}
+~\cite{compression_sim2013}
+~\cite{statistical-volume-quality}
+~\cite{evaluating-efficacy-wavelet}
+~\cite{topology-verification-isosurface}
+~\cite{verifiable-isosurface}
+~\cite{verifying-volume-rendering}
+~\cite{statistical-volume-quality}
+
+vector quantization:
+~\cite{vq1992}
+~\cite{hw_dvr2007} (VQ on transfrom domain)
+~\cite{compression_domain2003} (VQ after Haar-like transform)
+~\cite{covra2012} octrees of bricks with sparse representations
+
+error-guided: 
+~\cite{tf_decompression2004} (based on transfer function)
+
+ray-guided (gigavoxels style):
+~\cite{Gobbetti2008}
 ~\cite{gigavoxels}
 ~\cite{large‐scale-volume}
+~\cite{Fogal:2013:RayGuided}
+~\cite{visualization-driven}
+
+~\cite{spgrid2014}
+
+surveys:
+~\cite{state-of-the-art-compressed-volume} (compressed volume rendering)
+~\cite{li2018} data reduction techniques
+
+compression:
+~\cite{isabela}
+~\cite{fpzip}
+~\cite{sz}
+~\cite{zfp2014}
+
+precision:
+~\cite{ezw}
+~\cite{spiht1996}
+~\cite{mloc}
+~\cite{sbhp2000}
+~\cite{jpeg2001}
 
 , space-filling curves~\cite{idx2001}, , and wavelets~\cite{treib,multires_toolkit2003,
 vapor2007,woodring2011}. In these data structures, the data can be stored multiple times at
