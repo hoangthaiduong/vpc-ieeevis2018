@@ -1,19 +1,41 @@
 \section{Related work}
 
-Techniques that reduce data in resolution typically build a tree-shape hierarchy over the data,
-which is often originally stored in a regular grid. Gaussian and Laplacian
-pyramids~\cite{laplacian-pyramid} store multiple copies of the data at various resolutions.
-Lower-resolution copies are constructed from higher-resolution ones through filtering and
-subsampling. Other techniques do not store redundant copies of data, but instead adapt more to the
-data by varying the resolution over the domain, allocating more data samples to important regions.
-For example, adaptive refinement meshes~\cite{amr1989}, sparse octrees~\cite{gigavoxels} and other
-trees~\cite{vdb2013}.
+Techniques that reduce data in resolution typically build a tree-shape hierarchy over the data. A
+very common scheme to genearte such a hierarchy is to construct low-resolution copies of the data
+from higher-resolution ones through filtering and subsampling. Examples include Gaussian and
+Laplacian pyramids~\cite{laplacian-pyramid},
+mipmaps~\cite{multires_octree1999,interactive-exploration-ct-scans}. Often times, the data is stored
+in blocks on each resolution level. To save bandwidth, low-resolution blocks can be streamed during
+rendering, if the points being queried project to less than a pixel on screen. However, these methods
+increase storage requirements, making them unsuitable for very large data.
 
-Multiresolution:
-- Octrees and other trees
-- adaptive mesh refinement
-- wavelets
--
+Recent multi-resolution techniques save storage by adapting to the data in such a way that different
+regions of the data are stored in different resolutions, depending on how ``homogeneous'' the region
+is. Fast-varying regions are stored at higher resolution. A very popular approach is sparse voxel
+octrees (SVO), pioneered by Crassin \etal~\cite{gigavoxels} and Gobbetti \etal~\cite{Gobbetti2008},
+and variations of which are found in~\cite{Fogal-2013-RayGuided,visualization-driven}. Sparsity
+comes from the fact that smooth-varying regions are stored at coarser octree levels, which
+significantly reduces storage. During rendering, blocks of samples are streamed from an appropriate
+resolution, determined by how far the queried samples are from the eye/camera. Beyer
+\etal~\cite{large‐scale-volume} gives a comprehensive overview of this family of techniques.
+
+Other trees such as B+ tree~\cite{vdb2013} and kd-tree~\cite{fogal-kdtree} can also be used in lieu
+of octrees to build a sparse hierarchy. Alternatively, space-filling curves such as the hierarhical
+Z curve~\cite{idx2001} can be used to reorder data samples to form a hierarchy without any filtering
+steps or redundant samples, as low-resolution levels are constructed via subsampling. Unfortunately,
+subsampling can introduce heavy aliasing artifacts.
+
+\duong{continue from here}
+A sparse multiresolution hierarchy offers level-of-detail access, which reduces bandwidth. 
+
+wavelets~\cite{treib,multires_toolkit2003,vapor2007,woodring2011}.
+
+For example, the Compression-domain Output-sensitive Volume Rendering Architecture
+(COVRA)~\cite{covra2012} constructs a level-of-detail pyramid in a precomputation stage to reduce
+memory usage for blocks that are far from the viewpoint. Moreover, COVRA further compresses the
+blocks of the pyramid to reduce the data transfer time, either to the GPU or over a network.
+However, this redundant level-of-detail representation increases data size, which may be undesirable
+for some tasks.
 
 wavelets:
 ~\cite{treib}
@@ -26,7 +48,7 @@ wavelets:
 ~\cite{wavelet-compression-interactive-vis}
 
 resolution
-~\cite{multires-volume-rendering}
+~\cite{multires-volume-rendering} (wavelet, level of detail)
 ~\cite{in-situ-sampling-particle}
 
 tensor:
@@ -34,16 +56,10 @@ tensor:
 ~\cite{multiscale-tensor}
 ~\cite{tamresh}
 
-mipmaps
-~\cite{multires_octree1999} (lod selection)
-~\cite{interactive-exploration-ct-scans}
-
 Octrees:
 ~\cite{sph-octree} (octree + wavelet compression)
 
 Other trees:
-~\cite{vdb2013}
-~\cite{fogal-kdtree}
 
 Error analysis:
 ~\cite{evaluating-compression-climate}
@@ -64,13 +80,6 @@ vector quantization:
 error-guided: 
 ~\cite{tf_decompression2004} (based on transfer function)
 
-ray-guided (gigavoxels style):
-~\cite{Gobbetti2008}
-~\cite{gigavoxels}
-~\cite{large‐scale-volume}
-~\cite{Fogal:2013:RayGuided}
-~\cite{visualization-driven}
-
 ~\cite{spgrid2014}
 
 surveys:
@@ -89,30 +98,6 @@ precision:
 ~\cite{mloc}
 ~\cite{sbhp2000}
 ~\cite{jpeg2001}
-
-, space-filling curves~\cite{idx2001}, , and wavelets~\cite{treib,multires_toolkit2003,
-vapor2007,woodring2011}. In these data structures, the data can be stored multiple times at
-different levels created by application of a kernel (such as averaging). Gaussian and Laplacian
-pyramids, which unlike wavelets use redundant storage~\cite{laplacian-pyramid}
-
-For example, the Compression-domain Output-sensitive Volume Rendering Architecture
-(COVRA)~\cite{covra2012} constructs a level-of-detail pyramid in a precomputation stage to reduce
-memory usage for blocks that are far from the viewpoint. Moreover, COVRA further compresses the
-blocks of the pyramid to reduce the data transfer time, either to the GPU or over a network.
-However, this redundant level-of-detail representation increases data size, which may be undesirable
-for some tasks.
-
-IDX
-
-Alternatives such as IDX~\cite{idx2001} primarily focus on reordering the data for better spatial
-locality to enable faster queries. Row-major order is optimal only for slicing along one axis, but
-slicing along the other two axes leads to poor cache utilization. In contrast, Hilbert and Morton
-order are not optimal for any one axis, but on average outperform the row-major order. Combined with
-tiling, Morton order can be highly efficient [CITE texture units] as it can utilize fast CPU
-instructions for conversion to xyz index space~\cite{spgrid2014}. Moreover, the order can be changed
-such that it becomes hierarchical, thus providing level-of-detail access via subsampling without the
-need for additional storage~\cite{idx2001}. Unfortunately, subsampling introduces aliasing and
-interpolation issues where commonly used trilinear interpolation is no longer correct.
 
 The wavelet transform constructs a hierarchy of resolution levels via low and high bandpass filters.
 The transform is recursively applied to the lower-resolution band, resulting in a hierarchy of
