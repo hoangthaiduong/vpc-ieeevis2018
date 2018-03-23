@@ -1,11 +1,11 @@
 \section{Packet streaming}\label{sec:terminologies}
 
-To fairly compare different data reduction techniques is challenging. One popular method is to
+A fair comparison of different data reduction techniques is challenging. One popular method is to
 restrict the techniques to the same data size, and compare data quality. It is however difficult to
 enforce, for example, that a multi-resolution scheme uses the same amount of data as a quantization
-scheme does. This is because going down one step in resolution decreases the data size by a
-different amount from removing one more bit from each data sample. To avoid this mismatch of data
-increment/decrement units, we model each reduction scheme as a stream of equal-size \emph{packets}.
+scheme, bbecause going down one step in resolution decreases the data size by a
+different amount than when removing one more bit from each data sample. To avoid this mismatch of data
+increment/decrement units, we model each reduction scheme as a stream of equally-sized \emph{packets}.
 A packet forms the smallest unit of data increment/decrement in our framework, and each consists of
 a relatively small number of bits from a data set. To study the resolution-versus-precision
 tradeoffs, we associate a packet with a resolution level and a precision level (i.e., bit plane), so
@@ -15,34 +15,34 @@ data reduction schemes become different orderings of packets from a data set, or
 multi-resolution scheme would stream packets by resolution. By forcing the different schemes to use
 the same number of packets, we can compare data quality across the schemes more fairly.
 
-In \cref{sec:data-streaming-framework} we discuss the mechanism of converting original data into
-a set of packets. \cref{sec:static-dynamic-streams} is about packet streams that correspond to
-common data reduction schemes. \cref{sec:data_dep_streams} presents a greedy algorithm to
+In \Cref{sec:data-streaming-framework} we discuss the mechanism of converting original data into
+a set of packets. \Cref{sec:static-dynamic-streams} is about packet streams that correspond to
+common data reduction schemes. \Cref{sec:data_dep_streams} presents a greedy algorithm to
 approximate the optimal packet stream for the data and the analysis task at hand. Finally,
-\cref{sec:stream-signature} introduces a novel concept called \emph{stream signature} that can be
+\Cref{sec:stream-signature} introduces a novel concept called \emph{stream signature} that can be
 used to study and compare the characteristics of different packet streams.
 
 \subsection{Decomposition of data into packets}\label{sec:data-streaming-framework}
 Each packet is supposed to improve data's resolution and/or precision. To introduce the concept of
 resolution, we use the popular CDF5/3 discrete wavelet transform [CITE]. Although there exists other
-transforms that separates a signal into discrete bands of frequencies/scales/resolutions, such that
-the discrete Fourier transform, we choose wavelet because wavelet coefficients are spatially
-localized. This enables spatial adaptivity, allowing finer resolution in regions containing
+transforms that separates a signal into discrete bands of frequencies/scales/resolutions, such as
+the discrete Fourier transform, we choose wavelet transform because wavelet coefficients are spatially
+localized. This localization enables spatial adaptivity, allowing finer resolution in regions that contain
 important features, at the expense of coarser resolution elsewhere. The hierarchical-Z indexing
 scheme [CITE] also produces a multi-resolution representation, but unlike wavelet, it offers no
-interpolation mechanism for low-resolution grids. The CDF5/3 wavelet is chosen for its balance
+interpolation mechanism for low-resolution grids. We choose the CDF5/3 wavelet for its balance
 between simplicity and effectiveness at decorrelating the input signal. It is also one of the two
-transforms of choice in the JPEG2000 standard [CITE].
+transforms of choice in the JPEG2000 standard~\cite{jpeg2001}.
 
 The typical multi-dimensional wavelet transform can be performed in multiple passes, which
-eventually results in the original domain being partitioned into several \emph{subbands}, each can
+eventually results in the original domain being partitioned into several \emph{subbands}. Each subband can
 be thought of as a resolution level. One transform pass creates four subbands in 2D, and eight in
 3D, of which the first is a smoothed, downsampled version of the original data. The next seven
 subbands (in 3D) add fine details in each subset of the dimensions. A subsequent transform pass
-typically recurs on the first subband created by the previous pass, leaving the other seven subbands
+typically recurses on the first subband created by the previous pass, leaving the other seven subbands
 intact. We frequently use $l$ to index the subbands, which starts from 0 (referring to the coarsest
 subband), and use $L$ to denote the highest-indexed subband. In this paper, $L=21$ (in 3D),
-corresponding to three passes of transform.
+corresponding to three passes of the wavelet transform.
 
 For precision, we quantize floating-point wavelet coefficients to $B$-bit signed integers. For most
 of the experiments in this paper, $B=16$. This quantization eliminates the exponent bits, so that
