@@ -17,49 +17,66 @@ and variations of which are found in~\cite{Fogal-2013-RayGuided,visualization-dr
 comes from the fact that smooth-varying regions are stored at coarser octree levels, which
 significantly reduces storage. During rendering, blocks of samples are streamed from an appropriate
 resolution, determined by how far the queried samples are from the eye/camera. Beyer
-\etal~\cite{large‐scale-volume} gives a comprehensive overview of this family of techniques.
+\etal~\cite{large‐scale-volume} gives a comprehensive overview of state-of-the-art GPU-based
+out-of-core ray-casting techniques.
 
-Other trees such as B+ tree~\cite{vdb2013} and kd-tree~\cite{fogal-kdtree} can also be used in lieu
-of octrees to build a sparse hierarchy. Alternatively, space-filling curves such as the hierarhical
-Z curve~\cite{idx2001} can be used to reorder data samples to form a hierarchy without any filtering
-steps or redundant samples, as low-resolution levels are constructed via subsampling. Unfortunately,
-subsampling can introduce heavy aliasing artifacts.
+Beside octrees, other trees such as B+ tree~\cite{vdb2013} and
+kd-tree~\cite{fogal-kdtree,in-situ-sampling-particle} can also be used to build a sparse hierarchy.
+Alternatively, space-filling curves such as the hierarhical Z curve~\cite{idx2001} can be used to
+reorder data samples to form a hierarchy without any filtering steps or redundant samples, as
+low-resolution levels are constructed via subsampling. Unfortunately, subsampling can introduce
+heavy aliasing artifacts.
 
-\duong{continue from here}
-A sparse multiresolution hierarchy offers level-of-detail access, which reduces bandwidth. 
+Other multiresolution approaches reduce data by transform-based compression. For example,
+COVRA~\cite{covra2012} constructs an octrees of bricks, which are further subdivided blocks.
+Compression is done by learning a sparse representation for the blocks in terms of prototype (basis)
+blocks. Similarly, Fout\etal~\cite{hw_dvr2007} transform each block in the volume using the KLT
+transform, which produces several classes of partitions (each can be thought of as one resolution
+level). They compress the transform coefficients using vector quantization~\cite{vq1992}, by
+constructing one codebook for each paritition class. Schneider\etal~\cite{compression_domain2003}
+also uses vector quantization on transform coefficients, but with a simple Haar-like transform that
+separates each block of $2^3$ voxels into one average and seven differences.
 
-wavelets~\cite{treib,multires_toolkit2003,vapor2007,woodring2011}.
+Analogous to the KLT transform in 2D, the Tucker decomposition~\cite{tensor_dvr2015} in
+$n$-dimensional space decomposes the input data (stored as a tensor) into $n$ matrices of basis
+vectors and one core tensor. Reduction in storage and in transmission bandwidth comes from the fact
+that the basis matrices can be downsampled (resulting in a lower-resolution representation), the
+core tensor can be rank-truncated (resulting in coarse-scale representations of
+features)~\cite{tamresh,tucker-thresholding,multiscale-tensor}. Furthermore, elements in the basis
+matrices and the core tensor can be thresholded~\cite{tucker-thresholding} or
+quantized~\cite{tamresh,multiscale-tensor}. Tensor decomposition can work for higher-dimensional
+data, and can achieve very high ratios of quality over data size. However, the transform step is
+highly data-dependent, thus relatively costly.
 
-For example, the Compression-domain Output-sensitive Volume Rendering Architecture
-(COVRA)~\cite{covra2012} constructs a level-of-detail pyramid in a precomputation stage to reduce
-memory usage for blocks that are far from the viewpoint. Moreover, COVRA further compresses the
-blocks of the pyramid to reduce the data transfer time, either to the GPU or over a network.
-However, this redundant level-of-detail representation increases data size, which may be undesirable
-for some tasks.
+Transforms that use fixed bases avoid such high computation cost, at the expense of slightly less
+effective compression. Perhaps the most popular transform that uses a fixed basis is the (discrete)
+wavelet transform (DWT). The DWT constructs a hierarchy of resolution levels via low and high
+bandpass filters. The transform is recursively applied to the lower-resolution band, resulting in a
+hierarchy of ``details'' at varying resolution. One benefit of wavelets over redundant
+representations such as Laplacian pyramids is that the wavelet transform is merely a change of basis
+that like reordering techniques does not increase the data size. Another benefit over adaptive
+refinement meshes and other tree-like techniques is that the wavelet basis functions are defined
+everywhere in space, requiring no special interpolation rules when given some arbitrary subset of
+wavelet coefficients and basis functions. One disadvantage of the wavelet transform is non-constant
+time random access cost, though acceleration structures have been proposed to speed up local
+queries~\cite{weiss}.
 
-wavelets:
-~\cite{treib}
-~\cite{multires-framework}
-~\cite{compression-domain-volume-rendering}
-~\cite{interactive-rendering-large-volume}
-~\cite{rapid-compression-volume}
-~\cite{survey-multires}
-~\cite{multires_toolkit2003}
-~\cite{wavelet-compression-interactive-vis}
+Beside offering a multiresolution decomposition, enabling data streaming with level-of-detail
+support, wavelets also offer ample opportunities for compression. As the magnitude of wavelet
+coefficients decay rapidly for a typical volume [CITE], they are especially amenable to thresholding
+or entropy compression. In the context of storing and visualizing scientific data, wavelets (with
+compression) are used in a wide variety of systems
+(~\cite{multires_toolkit2003,vapor2007,woodring2011}), and applications (volume rendering with
+level-of-detail~\cite{wavelet-compression-interactive-vis,multires-framework,rapid-compression-volume,interactive-rendering-large-volume,multires-volume-rendering},
+turbulence visualization~\cite{treib}, particle visualization~\cite{sph-octree}). Note that these
+techniques often do not perform error analysis on progressive data streaming. Mention the use of
+blocking for random access.
 
-resolution
-~\cite{multires-volume-rendering} (wavelet, level of detail)
-~\cite{in-situ-sampling-particle}
+multires-volume-rendering: error estimation to increase resolution on the fly
 
-tensor:
-~\cite{tensor_dvr2015}
-~\cite{multiscale-tensor}
-~\cite{tamresh}
-
-Octrees:
-~\cite{sph-octree} (octree + wavelet compression)
-
-Other trees:
+Transfer function adaptive decompression~\cite{tf_decompression2004}
+Transform Coding for HW-accel DVR~\cite{hw_dvr2007}
+\peter{We might want to cite~\cite{codar} and~\cite{li} for surveys on data reduction.}
 
 Error analysis:
 ~\cite{evaluating-compression-climate}
@@ -71,16 +88,8 @@ Error analysis:
 ~\cite{verifying-volume-rendering}
 ~\cite{statistical-volume-quality}
 
-vector quantization:
-~\cite{vq1992}
-~\cite{hw_dvr2007} (VQ on transfrom domain)
-~\cite{compression_domain2003} (VQ after Haar-like transform)
-~\cite{covra2012} octrees of bricks with sparse representations
-
 error-guided: 
 ~\cite{tf_decompression2004} (based on transfer function)
-
-~\cite{spgrid2014}
 
 surveys:
 ~\cite{state-of-the-art-compressed-volume} (compressed volume rendering)
@@ -99,16 +108,6 @@ precision:
 ~\cite{sbhp2000}
 ~\cite{jpeg2001}
 
-The wavelet transform constructs a hierarchy of resolution levels via low and high bandpass filters.
-The transform is recursively applied to the lower-resolution band, resulting in a hierarchy of
-``details'' at varying resolution. One benefit of wavelets over redundant representations like
-Laplacian pyramids is that the wavelet transform is merely a change of basis that like reordering
-techniques does not increase the data size. Another benefit over AMR and other tree-like techniques
-is that the wavelet basis functions are defined everywhere in space, requiring no special
-interpolation rules when given some arbitrary subset of wavelet coefficients and basis functions.
-One disadvantage of the wavelet transform is non-constant time random access cost, though
-acceleration structures have been proposed to speed up local queries~\cite{weiss}.
-
 Spatial adaptivity in resolution can be achieved by tiling the wavelet coefficients of individual
 subbands. For example, the Visualization and Analysis Platform for Ocean, Atmosphere, and Solar
 Researchers (VAPOR) toolkit~\cite{multires_toolkit2003, vapor2007} incorporates a multiresolution
@@ -116,8 +115,6 @@ file format based on a wavelets to allow data analysis on commodity hardware, an
 tiles in separate files to allow loading of the region of interest. However, the authors only
 leverage the resolution control without exploring the precision axis, which can potentially further
 reduce data transfer.
-
-Reducing precision of the samples is primarily used in data compression techniques. 
 
 The SPIHT~\cite{spiht1996} wavelet coefficient coding algorithm hierarchically partitions sets of
 spatially related wavelet coefficients, exploiting the property that ``parent'' coefficients are
@@ -131,9 +128,6 @@ by bit plane streams~\cite{compression_techniques1991} (this is what SPIHT paper
 by magnitude streams~\cite{image_compression1992}
 \peter{I'm not familiar with these last two papers.  Instead, point out that
 SPIHT improves on embedded zerotree coding~\cite{ezw}.}
-
-The other major research focus is precision reduction to compress the data. Quantization and
-truncation.
 
 \peter{Discuss scalar~\cite{sqe} vs. vector quantization~\cite{hvq}. SZ performs residual scalar
 quantization~\cite{sz}. \cite{fpzip} truncates floats, which can be seen as nonuniform scalar
@@ -155,14 +149,3 @@ Since most JPEG2000 implementations are limited to integer data, the authors app
 quantization to convert floating point data to integer form. Even though JPEG2000 supports varying
 both resolution and precision, the authors do not explore this capability but focus only on setting
 a bit rate.
-
-\peter{Another wavelet paper relevant to VIS: \cite{treib}}.
-
-Transfer function adaptive decompression~\cite{tf_decompression2004}
-
-Transform Coding for HW-accel DVR~\cite{hw_dvr2007}
-
-Tensor approximation for DVR~\cite{tensor_dvr2015}
-\peter{This can be both resolution and precision.}
-
-\peter{We might want to cite~\cite{codar} and~\cite{li} for surveys on data reduction.}
