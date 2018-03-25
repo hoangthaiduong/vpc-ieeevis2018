@@ -1,88 +1,125 @@
 \section{Packet streaming}\label{sec:terminologies}
 
-A fair comparison of different data reduction techniques is challenging. One popular method is to
-restrict the techniques to the same data size, and compare data quality. It is however difficult to
-enforce, for example, that a multi-resolution scheme uses the same amount of data as a quantization
-scheme, bbecause going down one step in resolution decreases the data size by a
-different amount than when removing one more bit from each data sample. To avoid this mismatch of data
-increment/decrement units, we model each reduction scheme as a stream of equally-sized \emph{packets}.
-A packet forms the smallest unit of data increment/decrement in our framework, and each consists of
-a relatively small number of bits from a data set. To study the resolution-versus-precision
-tradeoffs, we associate a packet with a resolution level and a precision level (i.e., bit plane), so
-that each packet can improve either data's resolution or precision. In this framework, different
-data reduction schemes become different orderings of packets from a data set, or different packet
-\emph{streams}. For example, a quantization scheme would stream packets by precision, while a
-multi-resolution scheme would stream packets by resolution. By forcing the different schemes to use
-the same number of packets, we can compare data quality across the schemes more fairly.
+\hbadd{In order to systematically study the resolution-versus-precision
+tradeoffs, it is important to compare different data reduction techniques.}
+%A fair comparison of data reduction techniques is challenging. 
+One popular method is to restrict the techniques to the same data size, and
+compare data quality. However, it is difficult to enforce that a
+multi-resolution scheme uses the same amount of data as a quantization scheme,
+because \hbadd{the amount of data change in one step of multi-resolution
+simplification may be different from removing one bit in the quantization of
+every data sample.} \hbdel{going down one step in resolution decreases the data
+size by a different amount than when removing one more bit from each data
+sample.} To avoid such mismatch of data increment/decrement units, we model
+each reduction scheme as a stream of equally-sized \emph{packets}.  We define a
+packet as the smallest unit of data increment/decrement in our framework, with
+each packet consisting of a relatively small number of bits from a data set. To
+study the resolution-versus-precision tradeoffs, we associate a packet with a
+resolution level and a precision level (i.e., bit plane), so that each packet
+can improve either data's resolution or its precision. In this framework,
+different data reduction schemes become different orderings of packets from a
+data set, or different packet \emph{streams}.  For example, a quantization
+scheme would stream packets by precision, while a multi-resolution scheme would
+stream packets by resolution. By forcing the different schemes to use the same
+number of packets, we can compare data quality across the schemes fairly.
 
-In \Cref{sec:data-streaming-framework} we discuss the mechanism of converting original data into
-a set of packets. \Cref{sec:static-dynamic-streams} is about packet streams that correspond to
-common data reduction schemes. \Cref{sec:data_dep_streams} presents a greedy algorithm to
-approximate the optimal packet stream for the data and the analysis task at hand. Finally,
-\Cref{sec:stream-signature} introduces a novel concept called \emph{stream signature} that can be
-used to study and compare the characteristics of different packet streams.
+In \Cref{sec:data-streaming-framework}, we discuss the mechanism of converting
+original data into a set of packets. \Cref{sec:static-dynamic-streams}
+describes packet streams that correspond to common data reduction schemes.
+\Cref{sec:data_dep_streams} presents a greedy algorithm to approximate the
+optimal packet stream for the data and the analysis task at hand. Finally,
+\Cref{sec:stream-signature} introduces a novel concept called \emph{stream
+signature} that can be used to study and compare the characteristics of
+different packet streams.
 
 \subsection{Decomposition of data into packets}\label{sec:data-streaming-framework}
-Each packet is supposed to improve data's resolution and/or precision. To introduce the concept of
-resolution, we use the popular CDF5/3 discrete wavelet transform [CITE]. Although there exists other
-transforms that separates a signal into discrete bands of frequencies/scales/resolutions, such as
-the discrete Fourier transform, we choose wavelet transform because wavelet coefficients are spatially
-localized. This localization enables spatial adaptivity, allowing finer resolution in regions that contain
-important features, at the expense of coarser resolution elsewhere. The hierarchical-Z indexing
-scheme [CITE] also produces a multi-resolution representation, but unlike wavelet, it offers no
-interpolation mechanism for low-resolution grids. We choose the CDF5/3 wavelet for its balance
-between simplicity and effectiveness at decorrelating the input signal. It is also one of the two
+
+Each new packet adds to the data's resolution and/or precision. To introduce
+the concept of resolution, we use the popular CDF5/3 discrete wavelet transform
+\todo{[CITE]}.  Although there exist other transforms that separates a signal
+into discrete bands of frequencies/scales/resolutions, such as the discrete
+Fourier transform, we choose wavelet transform because wavelet coefficients are
+spatially localized. This localization enables spatial adaptivity, allowing
+finer resolution in regions that contain \hbadd{sharp} \hbdel{important}
+features, at the expense of coarser resolution elsewhere. The hierarchical-Z
+indexing scheme \todo{[CITE]} also produces a multi-resolution representation,
+but unlike wavelets, it offers no interpolation mechanism for low-resolution
+grids. We choose the CDF5/3 wavelet for its balance between simplicity and
+effectiveness at decorrelating the input signal. It is also one of the two
 transforms of choice in the JPEG2000 standard~\cite{jpeg2001}.
 
-The typical multi-dimensional wavelet transform can be performed in multiple passes, which
-eventually results in the original domain being partitioned into several \emph{subbands}. Each subband can
-be thought of as a resolution level. One transform pass creates four subbands in 2D, and eight in
-3D, of which the first is a smoothed, downsampled version of the original data. The next seven
-subbands (in 3D) add fine details in each subset of the dimensions. A subsequent transform pass
-typically recurses on the first subband created by the previous pass, leaving the other seven subbands
-intact. We frequently use $l$ to index the subbands, which starts from 0 (referring to the coarsest
-subband), and use $L$ to denote the highest-indexed subband. In this paper, $L=21$ (in 3D),
-corresponding to three passes of the wavelet transform.
+The \hbdel{typical} multi-dimensional wavelet transform can be performed in
+multiple passes, which eventually results in the original domain being
+partitioned into several \emph{subbands}. Each subband can be thought of as a
+resolution level. One transform pass creates four subbands in 2D, and eight in
+3D, of which the first is a smoothed, downsampled version of the original data.
+The next seven subbands (in 3D) add fine details in each subset of the
+dimensions. A subsequent transform pass \hbdel{typically} recurses on the first
+subband created by the previous pass, leaving the other seven subbands intact.
+We \hbdel{frequently} use $l$ $(0 \leq l < L)$ to index the subbands, with $l =
+0$ referring to the coarsest subband, and $L$ \hbadd{denotes the number of
+subbands.} \hbdel{to denote the highest-indexed subband.} In this paper, we use
+\hbadd{$L=22$} \hbdel{$L=21$} (in 3D), corresponding to three passes of the
+wavelet transform. \hb{changed the defn of $L$ to make it consistent with $B$
+in the next paragraph}
 
-For precision, we quantize floating-point wavelet coefficients to $B$-bit signed integers. For most
-of the experiments in this paper, $B=16$. This quantization eliminates the exponent bits, so that
-every bit (except the sign bit) can be associated with a bit plane $b$ ($0\leq b\leq B-1$),
-contributing $2^b$ in absolute value to its coefficient's value. To further avoid treating the sign
-bit specially, we convert quantized coefficients from two's complement form to negabinary form, in
-which integers are represented in base negative two (i.e., $\sum_{i=0}^{B}{c_i(-2)^i}$ with $c_i\in
-\{0,1\}$). This transformation increases the number of bit planes by one, to compensate for the
-absence of the sign bit. We use $b$, which starts from 0, to index the bit planes, with the
-convention that higher-indexed bit planes are less significant.
+For \hbadd{creating packets corresponding to different} precision, we quantize
+floating-point wavelet coefficients to $B$-bit signed integers. For most of the
+experiments in this paper, $B=16$. This quantization eliminates the exponent
+bits, such that every bit (except the sign bit) can be associated with a bit
+plane $b$ ($0\leq b < B$), contributing $2^b$ in absolute value to its
+coefficient's value. To further avoid treating the sign bit specially, we
+convert quantized coefficients from two's complement form to negabinary form,
+in which integers are represented in base $-2$, i.e.,
+$\sum_{i=0}^{B}{c_i(-2)^i}$ with $c_i\in \{0,1\}$. This transformation
+increases the number of bit planes by one, to compensate for the absence of the
+sign bit.  \hbadd{In the negabinary form, the higher-indexed bit planes are
+less significant.} \hbdel{We use $b$, which starts from 0, to index the bit
+planes, with the convention that higher-indexed bit planes are less
+significant.} \hb{$b$ as the index is already defined, so no need to repeat.
+however, if i understand correctly, the meaning of $b$ changes after converting
+to negabinary, so that needs pointing out}
 
-As mentioned earlier, in our framework, the smallest unit of data is called a \emph{packet}.
-Precisely, a packet consists of bits on the same bit plane, from a \emph{block} of negabinary
-wavelet coefficients. A block is a $g\times g\times g$ grid of adjacent coefficients on the same
-subband. We let $g$ be a constant, so that finer-resolution subbands contain more packets. This
-enables the natural tradeoff between wider (but coarser) coverage and finer (but more local)
-details, for the same number of packets. In this paper, a packet always contains $4096$ bits (i.e.,
-$g=16$), following the common practice of reading bits in batch for performance reason. This choice
-of $g$ also accelarates our experiments significantly, without affecting the results in a meaningful
-way.
+As mentioned earlier, the smallest unit of data in our framework is called a
+\emph{packet}.  More precisely, a packet consists of bits on the same bit
+plane, from a \emph{block} of negabinary wavelet coefficients. A block is a
+$g\times g\times g$ grid of adjacent coefficients on the same subband. We let
+$g$ be a constant, so that finer-resolution subbands contain more packets. This
+enables the natural tradeoff between wider (but coarser) coverage and finer
+(but more local) details, for the same number of packets. In this paper, a
+packet always contains $4096$ bits (i.e., $g=16$), following the common
+practice of reading bits in batch for performance reason. This choice of $g$
+also accelarates our experiments significantly, without affecting the results
+in a meaningful way. \hb{this paragraph has some info missing. here, a packet
+combinse both resolution and precision, right. i can rephrase after some
+clarification.}
 
-A data reduction scheme can be modeled as an ``inverse'' stream of packets, where the original data
-contains all packets, and any reduction step removes certain packets based on some criteria (more
-details in \cref{sec:static-dynamic-streams}). In our data streaming model, there is a ``server''
-which serves data and a ``client'' which receives data from the server. At any point, the client is
-assumed to have received a subset of packets from the server, which it can use to reconstruct the
-original function (using the inverse wavelet transform). Therefore, to compare different streams, we
-can reconstruct the original data using the same number of packets from each, and perform analysis
-tasks on each of the (approximate) reconstructions. A stream is better suited for an anlysis task if
-it produces results that are closer to reference results computed from the original data.
-\cref{fig:pipeline} gives a schematic view of our data streaming model.
+A data reduction scheme can be modeled as an ``inverse'' stream of packets,
+where the original data contains all packets, and any reduction step removes
+certain packets based on some criteria (details in
+\Cref{sec:static-dynamic-streams}).  \hbadd{These data streams are provided
+using a client-server model.} \hbdel{In our data streaming model, there is a
+``server'' which serves data and a ``client'' which receives data from the
+server.} At any point, the client is assumed to have received a subset of
+packets from the server, which it can use to reconstruct the original function
+(using the inverse wavelet transform). Therefore, to compare different streams,
+we can reconstruct the original data using the same number of packets from
+each, and perform analysis tasks on each of the (approximate) reconstructions.
+A stream is better suited for a given analysis task if it produces results that
+are closer to \hbadd{the ``ground truth'', i.e.,} the reference results
+computed from the original data.  \Cref{fig:pipeline} gives a schematic view of
+our data streaming model.
 
 \begin{figure}[h]
-  \centering
-  \includegraphics[width=\linewidth]{img/pipeline.png}
-  \caption{Our data streaming model (in 2D). The input is a regular grid of floating-point samples,
-  the output is a stream of packets. Different data reduction schemes generate different streams.
-  The wavelet subbands are separated by blue lines in the second image, with the coarsest subband at
-  the top left corner. Although not showed here, quantization and negabinary convesion happen
-  immediately after wavelet transform. TODO: revise this figure}\label{fig:pipeline}
+\centering
+\includegraphics[width=\linewidth]{img/pipeline.png}
+\caption{Our data streaming model (in 2D). The input is a regular grid of
+floating-point samples, the output is a stream of packets. Different data
+reduction schemes generate different streams.  The wavelet subbands are
+separated by blue lines in the second image, with the coarsest subband at the
+top left corner. Although not showed here, quantization and negabinary
+convesion happen immediately after wavelet transform. \todo{TODO: revise this
+figure}}\label{fig:pipeline}
 \end{figure}
 
 \subsection{Data-dependent and data-independent streams}\label{sec:static-dynamic-streams}
