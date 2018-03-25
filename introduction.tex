@@ -18,7 +18,7 @@ adaptive mesh refinement~\cite{amr1989}, octrees or other tree
 structures~\cite{hierarchical1984}, \peter{What about subsampling, as in IDX?
 And what about wavelets and other multires structures?}, and those of the
 latter are compression~\cite{fpzip,isabela,zfp2014,sz} or
-quantization~\cite{vq1992,compression_domain2003,sqe}. \hb{missing reference} Traditionally,
+quantization~\cite{vq1992,compression_domain2003,sqe}. Traditionally,
 multi-resolution structures have been used to accelerate dynamic queries, e.g.,
 in rendering~\cite{multires_octree1999}, since discarding data points based on
 the view point or data complexity can result in significant speed-up.
@@ -32,15 +32,15 @@ less than full precision to adequately approximate the geometry.  Conversely,
 accumulating accurate statistics may require high precision values, yet
 lower-resolution subset of points may be sufficient for the task. 
 
-In general, all types of analysis and visualization tasks may prefer different
-combinations of \hb{replace `combinations of' with `levels of adaptivity in'?}
+In general, different types of analysis and visualization tasks may prefer different
+\hbadd{levels of adaptivity in}\hbdel{combinations of} 
 resolution and precision, and for many, these requirements will be
 data-dependent. Consequently, an ideal-for-all data organization may not exist. 
 %we do not expect any particular data organization to be ideal for all cases. 
 Instead, we consider a progressive setting in which some initial data is loaded
 and processed, and new data is requested selectively based on the requirement
-of the current task and the characteristics of the data already loaded. The
-result is a stream of bits that minimizes the error in the task at hand.
+of the current task as well as the characteristics of the data already loaded. The
+result is a stream of bits that minimizes the error, considering the task at hand.
 However, although intuitively there are almost certainly advantages in adapting
 both resolution and precision, it is unclear how big the potential gains could
 be \hb{the previous sentence is not convincing} \peter{The gains of what,
@@ -55,7 +55,7 @@ listed below.
 resolution-versus-precision tradeoffs for fundamental data analysis and
 visualization tasks. The core idea is to represent various data reduction
 techniques as data streams that improve data quality in either resolution or
-precision in each step (\autoref{sec:terminologies}). We can
+precision in each step (\Cref{sec:terminologies}). We can
 thus compare these techniques fairly, by comparing the corresponding data
 streams.
 %  
@@ -68,13 +68,13 @@ optimal results.
 %
 \item We estimate lower bounds of error \peter{You either estimate the error or
 provide a bound---not both.} for various analysis tasks using a greedy approach
-that jointly optimizes resolution and precision (\autoref{sec:data_dep_streams}).
+that jointly optimizes resolution and precision (\Cref{sec:data_dep_streams}).
 \peter{Too much going on here.  An error bound, a greedy algorithm, joint
 ``optimization'' of precision and resolution---whatever that might mean.  How
 are these all related?} In addition, we also identify practical streams that
-closely approximate these bounds for each task (\autoref{sec:rmse-optimized},
-\autoref{sec:derivatives}, \autoref{sec:histogram}, and \autoref{sec:isocontour}), using
-a novel concept called \emph{stream signature} (\autoref{sec:stream-signature}).
+closely approximate these bounds for each task (\Cref{sec:rmse-optimized},
+\Cref{sec:derivatives}, \Cref{sec:histogram}, and \Cref{sec:isocontour}), using
+a novel concept called \emph{stream signature} (\Cref{sec:stream-signature}).
 \peter{Add one sentence that gives a concise description of what a ``stream
 signature'' is.}
 \end{itemize}
