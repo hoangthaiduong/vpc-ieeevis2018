@@ -2,7 +2,7 @@
 
 The computation of a histogram is one of the most common tasks in data analysis. A histogram
 succinctly summarizes the distribution of sample values, and thus is useful as a cursory ``look''
-into the data, and in guiding further analysis. For example, it can be used to guide the selection
+into the data and in guiding further analysis. For example, it can be used to guide the selection
 of colors and opacities in transfer functions.
 
 There are several metrics proposed in the literature to measure the distance between two
@@ -13,11 +13,11 @@ Intersection~\cite{histogram_intersection1991}. We have found that the relative 
 performance does not vary across the distance metrics. Also, it is interesting to note that among
 the $s_{opt}$'s streams, the one using the Earth Mover's Distance has the least RMSE\pavol{maybe add
 in the data so it is clear it is not on the histogram bins?}. However, we choose Intersection as the
-metric of choice, because it is fast to compute, and is the least sensitive to slight changes in
+metric of choice, because it is fast to compute and is the least sensitive to slight changes in
 precision. The intersection distance between two histograms $H_1$ and $H_2$ is defined as
 $e(H_1,H_2)=\sum_{i}{\min{(H_1(i),H_2(i))}}$ (the sum is over all bins $i$). Every histogram is
 normalized by dividing each bin by the total number of samples in the volume. Our error metric takes
-into account not only the shapes but also the value ranges of histograms. Therefore, when computing
+into account not only the shapes but also the value ranges of the histograms. Therefore, when computing
 the histogram of a reconstructed function, we clamp its range of values to that of the original
 function, so that corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same range.
 TODO: add that the histogram intersection is insensitive to the number of bins
@@ -25,30 +25,31 @@ TODO: add that the histogram intersection is insensitive to the number of bins
 As before, for each data set, we use~\Cref{alg:greedy} to compute an $s_{hist-opt}$ stream,
 optimized for histogram error, and an $s_{hist-sig}$ from its signature. We plot the error curves
 for all relevant streams using the error metric just
-defined~(\Cref{fig:histogram-stream-comparison}). We use 64 for the number of bins, but note that
-there exists no meaningful differences across a wide range of number of bins (from 64 to 512) in our
+defined~(compare \Cref{fig:histogram-stream-comparison}). We use 64 for the number of bins, but note that
+there exist no meaningful differences across a wide range of number of bins (from 64 to 512) in our
 experiments. In all cases, the group consisting of $s_{bit}$, $s_{lvl}$, and $s_{mag}$ underperforms
 the other group by a large margin.
 
 Among the former group, $s_{lvl}$ generally outperforms $s_{bit}$ at low bit rates, although there
 are several crossover points between the two curves. These crossover points are explained
 in~\Cref{fig:histogram-explain}. When leading zero packets are present, $s_{lvl}$
-absolutely\pavol{"always" maybe instead?} outperforms $s_{bit}$, because increasing resolution does
+outperforms $s_{bit}$, because increasing resolution does
 not help producing an accurate histogram as much as increasing precision. The histogram is oblivious
 to spatial locations of samples (which requires resolution to resolve), but it is sensitive to
 sample values (which requires precision). However, when leading zero packets are removed, as is the
 case when using compression, $s_{bit}$ benefits significantly more than $s_{lvl}$ does (for the same
 reason explained in~\Cref{sec:rmse-optimized}), resulting in the observed crossovers. Finally,
 $s_{mag}$ performs poorly, because it ignores regions of smooth variations, which nevertheless count
-towards the distribution.
+toward the distribution.
 
 In the other group, the performances of $s_{wav}$ and $s_{hist-sig}$ (and even $s_{hist-opt}$)
-differ by negligible amount. This observation is confirmed in~\Cref{fig:histograms-boiler}, where we
+differ by negligible amount. This observation is confirmed in~\Cref{fig:histograms-boiler}\pavol{Fig. as the figure
+labels are like that), where we
 plot various histograms, reconstructed at 0.08 bps, for the \emph{boiler} data set. The histograms
 produced by $s_{wav}$ and $s_{hist-sig}$ have approximately the same shape, and are the closest to
 the reference histogram. The next best histogram is produced by $s_{lvl}$, followed by the one
-produced by $s_{bit}$, and finally $s_{mag}$. These results suggests that histogram computation is
-among analysis tasks that benefit significantly from a bit ordering that combines both resolution
+produced by $s_{bit}$, and finally $s_{mag}$. These results suggest that histogram computation is
+among the analysis tasks that benefit significantly from a bit ordering that combines both resolution
 and precision, not one that adheres to either exclusively.
 
 \begin{figure}[h]
@@ -97,7 +98,7 @@ and precision, not one that adheres to either exclusively.
 	\subcaptionbox{\emph{reference}}{
 	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-groundtruth.png}}}
 	\caption{Histograms of the \emph{boiler} data set, reconstructed at 0.08 bps. $s_{lvl}$,
-	$s_{wav}$, and $s_{hist-sig}$ produce histograms share similar shape to the reference histogram,
+	$s_{wav}$, and $s_{hist-sig}$ produce histograms that share a shape similar to the reference histogram,
 	with most of the peaks and valleys preserved. In contrast, $s_{bit}$ produces a spurious peak not
 	found in the reference. Finally, $s_{mag}$'s histogram has a widely skewed distribution where too
 	many values fall into the first bin.}

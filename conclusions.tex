@@ -1,7 +1,7 @@
 \section{Conclusion}
 We presented a study of tradeoff between resolution and precision for commonly used derived
-scientific quantities such as RMSE, gradient, laplacian, histogram, and isosurface.
-During this study we covered gamut of scientific data sets, ranging from simulations
+scientific quantities such as RMSE, gradient, Laplacian, histogram, and isosurface.
+During this study, we covered gamut of scientific data sets, ranging from simulations
 with smooth features or fine small detail to image data with noisy parts.
 We showed that one stream type does not fit all analysis tasks, but some streams perform well
 in most of them and may be useful in a new file format design.
@@ -10,28 +10,28 @@ in most of them and may be useful in a new file format design.
 
 
 
-We started with evaluation of contemporary techniques for reducing resolution or precision.
+We started with an evaluation of contemporary techniques for reducing resolution or precision.
 The experiments showed that streaming only in resolution or precision is suboptimal for all
 tested queries. We thus developed a tractable greedy algorithm for computing adaptive stream order
 based on the particular task. The produced stream significantly outperforms any stream that has
-fixed streaming order.
+a fixed streaming order.
 
 After establishing the greedy algorithm for computing a stream, we focused on each query and
-investigated which queries have similar stream. This approach is important, as if two streams
+investigated which queries have similar streams. This approach is important because if two streams
 are very similar, we can precompute the stream order and apply the same ordering to different
 queries.
 
-For example, we learned that RMSE stream is akin to the gradient stream, and thus only one
+For example, we learned that the RMSE stream is akin to the gradient stream, and thus only one
 needs to be compute. Moreover, since RMSE optimizes for the function, the stream alongside
-good gradient approaches the function itself. In contrast, gradient ignores the constant offest
-of all samples resulting in inferior RMSE.
+a good gradient approaches the function itself. In contrast, the gradient ignores the constant offest
+of all samples, resulting in an inferior RMSE.
 
 
 These results should be considered when designing a file format for scientic data. As future work,
 we plan to create new file format that will incorporate the stream ordering techniques we presented.
-Additionally, such file format needs to support compression and spatial adaptivity to handle large
-scale data and fast queries. In fact, we are investigating if signatures can be used to handle
-the spatial adaptial adaptivity. For example, we could extend the signature matrix to tensor with
+Additionally, such file format needs to support compression and spatial adaptivity to handle large-scale
+data and fast queries. In fact, we are investigating if signatures can be used to handle
+the spatial adaptial adaptivity. For example, we could extend the signature matrix to the tensor, with
 spatial index being the third dimension.
 
 
