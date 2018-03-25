@@ -1,5 +1,5 @@
-\documentclass[journal]{vgtc}                % final (journal style)
-%\documentclass[review,journal]{vgtc}         % review (journal style)
+%\documentclass[journal]{vgtc}                % final (journal style)
+\documentclass[review,journal]{vgtc}         % review (journal style)
 %\documentclass[widereview]{vgtc}             % wide-spaced review
 %\documentclass[preprint,journal]{vgtc}       % preprint (journal style)
 
@@ -52,15 +52,15 @@
 \usepackage{cite}                      % needed to automatically sort the references
 \usepackage{tabu}                      % only used for the table example
 \usepackage{booktabs}                  % only used for the table example
-% \usepackage[]{algorithm2e}
 \usepackage{color}
 %\usepackage{algorithmic}
+% \usepackage[]{algorithm2e}
 %\usepackage[algo2e]{algorithm2e} 
 \usepackage{amsmath}
-\usepackage{amsmath}
+\usepackage{amsfonts}
 \usepackage{algorithm,algpseudocode}
-\usepackage{algpseudocode}
-\usepackage{algorithm}
+%\usepackage{algpseudocode}
+%\usepackage{algorithm}
 \usepackage{xcolor}
 \usepackage{xspace}
 \algnewcommand{\Inputs}[1]{%
@@ -86,7 +86,7 @@
 %% If you are submitting a paper to a conference for review with a double
 %% blind reviewing process, please replace the value ``0'' below with your
 %% OnlineID. Otherwise, you may safely leave it at ``0''.
-\onlineid{0}
+\onlineid{1207}
 
 %% declare the category of your paper, only shown in review mode
 \vgtccategory{Research}
@@ -97,10 +97,11 @@
 %% * evaluation
 %% * system
 %% * theory/model
-\vgtcpapertype{please specify}
+\vgtcpapertype{Evaluation}
 
 %% Paper title.
-\title{A Study of Task-dependent, Precision-adaptive Data Streams for Scientific Analytics\pavol{analysis?}}
+%\title{A Study of Task-dependent, Precision-adaptive Data Streams for Scientific Analytics\pavol{analysis?}}
+\title{A Study of the Tradeoff between Reduced Precision and Resolution for Scientific Data Analysis and Visualization}
 
 %% This is how authors are specified in the journal style
 
@@ -115,8 +116,7 @@
 }
 
 %other entries to be set up for journal
-\shortauthortitle{Biv \MakeLowercase{\textit{et al.}}: Global Illumination for Fun and Profit}
-%\shortauthortitle{Firstauthor \MakeLowercase{\textit{et al.}}: Paper Title}
+\shortauthortitle{Hoang \MakeLowercase{\textit{et al.}}: A Study of the Tradeoff between Reduced Precision and Resolution for Scientific Data Analysis and Visualization}
 
 %% Abstract section.
 \abstract{Performing scientific analysis on large data commonly found nowadays is an onerous task
@@ -209,13 +209,23 @@ i.e. ordering of bits.}
 }
 \providecommand{\etal}{et al.\@\xspace}
 
+\usepackage[normalem]{ulem}
 \newcommand{\ptb}[1]{{\textcolor{red}{(PTB: #1)}}}
 \newcommand{\pavol}[1]{{\textcolor{cyan}{(Pavol: #1)}}}
 \newcommand{\hb}[1]{{\textcolor{blue}{(HB: #1)}}}
+\newcommand{\hbadd}[1]{{\textcolor{blue}{#1}}}
+\newcommand{\hbdel}[1]{{\textcolor{red}{\sout{#1}}}}
+\newcommand{\todo}[1]{{\textcolor{red}{#1}}}
 %\newcommand{\duong}[1]{{\textcolor{purple}{(Duong: #1)}}}
 \newcommand{\duong}[1]{{\textcolor{purple}{}}} % this disable comments
 \newcommand{\peter}[1]{{\textcolor{green}{(PL: #1)}}} % this disable comments
 
+% prevent hyphenation
+\usepackage[none]{hyphenat}
+\sloppy
+
+% ignore figures for fast compilation
+%\usepackage[allfiguresdraft]{draftfigure}
 
 %% Copyright space is enabled by default as required by guidelines.
 %% It is disabled by the 'review' option or via the following command:

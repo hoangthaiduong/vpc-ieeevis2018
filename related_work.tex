@@ -1,5 +1,6 @@
 \section{Related work}
 
+\hb{can we easily do subsections or paragraphs in this to categorize this large section?}
 Techniques that reduce data in resolution typically build a tree-shape hierarchy over the data. A
 very common scheme to genearte such a hierarchy is to construct low-resolution copies of the data
 from higher-resolution ones through filtering and subsampling. Examples include Gaussian and
@@ -22,10 +23,10 @@ out-of-core ray-casting techniques.
 
 Beside octrees, other trees such as B+ tree~\cite{vdb2013} and
 kd-tree~\cite{fogal-kdtree,in-situ-sampling-particle} can also be used to build a sparse hierarchy.
-Alternatively, space-filling curves such as the hierarhical Z curve~\cite{idx2001} can be used to
-reorder data samples to form a hierarchy without any filtering steps or redundant samples, as
-low-resolution levels are constructed via subsampling. Unfortunately, subsampling can introduce
-heavy aliasing artifacts.
+Alternatively, space-filling curves such as the hierarhical Z curve~\cite{idx2001} or the Hillbert
+curve~\cite{mloc} can be used to reorder data samples to form a hierarchy without any filtering
+steps or redundant samples, as low-resolution levels are constructed via subsampling. Unfortunately,
+subsampling can introduce heavy aliasing artifacts.
 
 Other multiresolution approaches reduce data by transform-based compression. For example,
 COVRA~\cite{covra2012} constructs an octrees of bricks, which are further subdivided blocks.
@@ -68,18 +69,72 @@ or entropy compression. In the context of storing and visualizing scientific dat
 compression) are used in a wide variety of systems
 (~\cite{multires_toolkit2003,vapor2007,woodring2011}), and applications (volume rendering with
 level-of-detail~\cite{wavelet-compression-interactive-vis,multires-framework,rapid-compression-volume,interactive-rendering-large-volume,multires-volume-rendering},
-turbulence visualization~\cite{treib}, particle visualization~\cite{sph-octree}). Note that these
-techniques often do not perform error analysis on progressive data streaming. Mention the use of
-blocking for random access.
+turbulence visualization~\cite{treib}, particle visualization~\cite{sph-octree}).
 
-multires-volume-rendering: error estimation to increase resolution on the fly
+Most wavelet-based techniques employ tiling of wavelet coefficients in individual subands to
+facilitate random access, and spatial adaptivity in resolution. For example, the VAPOR
+toolkit~\cite{vapor2007} incorporates a multiresolution file format based on a wavelets to allow
+data analysis on commodity hardware, and stores individual tiles in separate files to allow loading
+of the region of interest. However, like most multiresolution work, only the resolution control is
+leveraged. The precision axis, which can potentially further reduce data transfer, is left
+unexplored.
+
+Most work that explores the precision axis comes from state-of-the-art coders for wavelet
+coefficients in image compression. Wavelet coefficients in corresponding regions across subbands can
+be thought of as belonging to a ``tree'', with the root being a single coefficient at the lowest
+subband. The Embedded Zero Trees (EZW) coder exploits the property that in such trees, ``parent''
+coefficients are often larger in magnitude than ``child'' coefficients. It locates trees of wavelet
+coefficients that are insignificant with regard to (i.e., less than in magnitude) a threshold. Such
+a tree is encoded with one single symbol, resulting in significant compression. The threshold is
+typically set at each bit plane, starting from the most significant one. In this way, the data can
+be progressively refined in precision during decompression. The SPIHT coder~\cite{spiht1996}
+improves on EZW by locating more general types of zero trees~\cite{quantifying-coding-performance}.
+SPECK~\cite{speck2004} extends SPIHT to exploit also spatial correlations among nearby coefficients
+on the same subband.
+
+\newcommand{\zfp}{\textsc{zfp}\xspace}
+The \zfp compression scheme~\cite{zfp2014} also codes transform coefficients by bit plane, in order
+of decreasing significance. \zfp partitions the domain---a structured grid---into small (e.g., $4
+\times 4 \times 4$) independent blocks and thus allow for localized decompression. Moreover, \zfp
+supports fixed-rate compression, which facilitates random access to the data. Its fast transform and
+caching of decompressed data allows it to achieve not only high throughput decompression, but also
+fast inline compression. Extensions of \zfp allow it to vary either the bit rate or precision
+spatially over the domain, albeit at fixed resolution~\cite{zfp-arc}. Other notable compression
+schemes for scientific data include ISABELA~\cite{isabela}, SZ~\cite{sz}, and FPZIP~\cite{fpzip}.
+All three techniques employ prediction and compress the residuals. ISABELA and SZ perform residual
+scalar quantization, while FPZIP truncates floats, which can be seen as nonuniform scalar
+quantization. Another work that uses scalar quantization is~\cite{sqe}. Similar to FPZIP, the
+Precision-based Level of Details (PLoD) scheme proposed in MLOC~\cite{mloc} also truncates floats by
+dividing a double-precision number into seven parts, of which the first part contains the first two
+bytes, and each of the other six parts contains one byte for additional precision. MLOC also
+proposes a multiresolution scheme based on Hillbert curves, but this scheme (based on resolution)
+and the PLoD scheme (based on precision) are exclusive.
+
+Schemes that allow progressive data access in both resolution and precision include
+SBHP~\cite{sbhp2000} and JPEG2000~\cite{jpeg2000}. Both partition each subband into blocks and code
+each block independently, in bit plane order. By interleaving compressed bits across blocks, one can
+construct a purely resolution-progressive or a purely precision-progressive stream, or anything in
+between. Outside out image compression, JPEG2000 has found use in compression of scientific data.
+For example, Woodring \etal~\cite{woodring2011} use JPEG2000 to store floating point data. Since
+most JPEG2000 implementations are limited to integer data, the authors apply uniform scalar
+quantization to convert floating point data to integer form. Even though JPEG2000 supports varying
+both resolution and precision, the authors do not explore this capability but focus only on setting
+a bit rate. In general, there has not been work that studies the resolution-versus-precision
+tradeoffs, as well as the various orderings of bits in the context of data analysis and
+visualization.
+
+There have been several works that aim at quantifying the error incurred by data reduction, by
+compression or otherwise, to results of analysis tasks. Baker
+\etal~\cite{evauating-compression-climate} evaluates several compressors (FPZIP~\cite{fpzip},
+APAX~\cite{apax}, ISABELA~\cite{isabela}) on ensembles of climate simulation data, using the
+root-mean-square z-score (RMSZ) as the error metric. 
+
+by magnitude streams~\cite{image_compression1992}
 
 Transfer function adaptive decompression~\cite{tf_decompression2004}
-Transform Coding for HW-accel DVR~\cite{hw_dvr2007}
-\peter{We might want to cite~\cite{codar} and~\cite{li} for surveys on data reduction.}
+\peter{We might want to cite~\cite{codar} for surveys on data reduction.}
 
 Error analysis:
-~\cite{evaluating-compression-climate}
 ~\cite{compression_sim2013}
 ~\cite{statistical-volume-quality}
 ~\cite{evaluating-efficacy-wavelet}
@@ -94,58 +149,3 @@ error-guided:
 surveys:
 ~\cite{state-of-the-art-compressed-volume} (compressed volume rendering)
 ~\cite{li2018} data reduction techniques
-
-compression:
-~\cite{isabela}
-~\cite{fpzip}
-~\cite{sz}
-~\cite{zfp2014}
-
-precision:
-~\cite{ezw}
-~\cite{spiht1996}
-~\cite{mloc}
-~\cite{sbhp2000}
-~\cite{jpeg2001}
-
-Spatial adaptivity in resolution can be achieved by tiling the wavelet coefficients of individual
-subbands. For example, the Visualization and Analysis Platform for Ocean, Atmosphere, and Solar
-Researchers (VAPOR) toolkit~\cite{multires_toolkit2003, vapor2007} incorporates a multiresolution
-file format based on a wavelets to allow data analysis on commodity hardware, and stores individual
-tiles in separate files to allow loading of the region of interest. However, the authors only
-leverage the resolution control without exploring the precision axis, which can potentially further
-reduce data transfer.
-
-The SPIHT~\cite{spiht1996} wavelet coefficient coding algorithm hierarchically partitions sets of
-spatially related wavelet coefficients, exploiting the property that ``parent'' coefficients are
-often larger in magnitude than ``child'' coefficients. This format allows regions to be
-progressively refined in precision by coding more significant bitplanes before less significant
-ones.
-
-SBHP~\cite{sbhp2000}
-JPEG2000~\cite{jpeg2001}
-by bit plane streams~\cite{compression_techniques1991} (this is what SPIHT paper cites).
-by magnitude streams~\cite{image_compression1992}
-\peter{I'm not familiar with these last two papers.  Instead, point out that
-SPIHT improves on embedded zerotree coding~\cite{ezw}.}
-
-\peter{Discuss scalar~\cite{sqe} vs. vector quantization~\cite{hvq}. SZ performs residual scalar
-quantization~\cite{sz}. \cite{fpzip} truncates floats, which can be seen as nonuniform scalar
-quantization.}
-
-\newcommand{\zfp}{\textsc{zfp}\xspace}
-Block transform-based techniques such as \zfp~\cite{zfp2014} partition the domain---a structured
-grid---into small (e.g., $4 \times 4 \times 4$) independent blocks and thus allow for localized
-decompression. Moreover, \zfp supports fixed-rate compression, which facilitates random access to
-the data. Its fast transform and caching of decompressed data allows it to achieve not only high
-throughput decompression~\cite{hvq}, but also fast inline compression. Extensions of \zfp allow it
-to vary either the bit rate or precision spatially over the domain, albeit at fixed resolution.
-\peter{Not sure if we want to cite my ARC poster on this: https://computation.llnl.gov/sites/default/files/public//llnl-post-728998.pdf}
-
-\peter{Should the following go in a section on ``hybrid'' precision and resolution techniques?}
-
-Woodring \etal~\cite{woodring2011} use the JPEG2000 image format to store floating point data.
-Since most JPEG2000 implementations are limited to integer data, the authors apply uniform scalar
-quantization to convert floating point data to integer form. Even though JPEG2000 supports varying
-both resolution and precision, the authors do not explore this capability but focus only on setting
-a bit rate.
