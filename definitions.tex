@@ -1,4 +1,4 @@
-\section{Packet streaming}\label{sec:terminologies}
+\section{Packet Streaming} \label{sec:terminologies}
 
 \hbadd{In order to systematically study the resolution-versus-precision
 tradeoffs, it is important to compare different data reduction techniques.}
@@ -32,7 +32,7 @@ optimal packet stream for the data and the analysis task at hand. Finally,
 signature} that can be used to study and compare the characteristics of
 different packet streams.
 
-\subsection{Decomposition of data into packets}\label{sec:data-streaming-framework}
+\subsection{Decomposition of Data into Packets} \label{sec:data-streaming-framework}
 
 Each new packet adds to the data's resolution and/or precision. To introduce
 the concept of resolution, we use the popular CDF5/3 discrete wavelet transform
@@ -122,63 +122,92 @@ convesion happen immediately after wavelet transform. \todo{TODO: revise this
 figure}}\label{fig:pipeline}
 \end{figure}
 
-\subsection{Data-dependent and data-independent streams}\label{sec:static-dynamic-streams}
+\subsection{Data-dependent and Data-independent Streams} \label{sec:static-dynamic-streams}
 
-While both the server and the client in our model can be on the same physical machine, only the
-server has full knowledge of the data. Thus, when the client receives a packet, it might not know
-where that packet should be deposited. A common solution is to have both the client and the server
-agree beforehand on a static ordering of packets, independent of the data. We use the term
-\emph{data-independent streams} to refer to streams using this solution. In constrast, for
-\emph{data-dependent streams}, the client is assumed to ``magically'' know the positions of packets
-without receiving this information from the server.
+\newcommand {\mm}[1] {\ifmmode{#1}\else{\mbox{\(#1\)}}\fi}
 
-A stream can be viewed a collection of packets, sorted in descending order of some weight associated
-with each packet $p$. Two sorting criteria, corresponding to two common data reduction schemes in
-the literature, are \emph{by level} and \emph{by bit plane}. The \emph{by level} stream orders the
-packets strictly from coarser to finer resolution levels. The weight function in this case is
-$W_{lvl}(p)=L-l(p)$, where $l(p)$ is the subband index of $p$, and $L$ is the total number of
-subbands. Within the same subband, without any assumption on the underlying data, packets follow the
-row-major order of coefficients, then bit plane order (from 0 to $B$) within each coefficient. The
-other common ordering, \emph{by bit plane}, proceeds strictly from higher-ordered to lower-ordered
-bit planes. That is, $W_{bit}(p)=B-b(p)$, where $b(p)$ is the bit plane index of $p$, and $B$ is the
-total number of bit planes. Within the same bit plane, packets follow the subband order (from 0 to
-$L$), then row-major order in each subband. We use $s_{lvl}$ and $s_{bit}$ to denote the \emph{by
-level} and the \emph{by bit plane} streams.
+\newcommand{\slvl}        {\mm{{S_{\text{lvl}}}}\xspace}
+\newcommand{\sbit}        {\mm{{S_{\text{bit}}}}\xspace}
+\newcommand{\swav}        {\mm{{S_{\text{wav}}}}\xspace}
+\newcommand{\smag}        {\mm{{S_{\text{mag}}}}\xspace}
+\newcommand{\wlvl}        {\mm{{W_{\text{lvl}}}}\xspace}
+\newcommand{\wbit}        {\mm{{W_{\text{bit}}}}\xspace}
+\newcommand{\wwav}        {\mm{{W_{\text{wav}}}}\xspace}
+\newcommand{\wmag}        {\mm{{W_{\text{mag}}}}\xspace}
 
-$s_{lvl}$ and $s_{bit}$ are designed to mimic the way data is accessed in traditional methods that
-work either in resolution ($s_{lvl}$) or in precision ($s_{bit}$). We also define a third stream,
-called \emph{by wavelet norm} and denoted as $s_{wav}$, which combines these two dimensions.
-$s_{wav}$ orders packets using $W_{wav}(p)=2^{B-1-b(p)}\times \norm{\omega_{l(p)}}^2$. The first
-term captures the contribution of a bit on bit plane $b(p)$, while the second term captures the
-contribution of a wavelet coefficient on subband $l(p)$, where $\omega_{l(p)}$ refers to a wavelet
-basis function on subband $l(p)$. In the wavelet representation, a function $f$ is written as a
-linear sum of wavelet basis functions $\omega_i$: $f=\sum{c_i\omega_i}$, where $c_i$ are the
-coefficients. Since basis functions in the same subband share the same norm, $W_{wav}(p)$ is simply
-the contribution (in $L_2$ norm) of a bit on bit plane $b_p$ and subband $l_p$, to the whole
-function $f$. To our knowledge, a data reduction scheme based on \emph{by wavelet norm} was hinted
-at in [CITE]. \duong{if there is enough space, include here the formula to compute the norm of basis
-functions, else put it in the appendix}
+While both the server and the client in our model can be on the same physical
+machine, only the server has full knowledge of the data. Thus, when the client
+receives a packet, it might not know where that packet should be deposited. A
+common solution is to have both the client and the server agree beforehand on a
+static ordering of packets, independent of the data. We use the term
+\emph{data-independent streams} to refer to streams using this solution. In
+contrast, for \emph{data-dependent streams}, \hbadd{additional mechanism is
+needed to inform the client about the position of incoming packets.} \hbdel{the
+client is assumed to ``magically'' know the positions of packets without
+receiving this information from the server.}
 
-Another data common reduction technique, especially for transform-based data, is one in which
-truncation happens by by leaving out coefficients of smallest magnitudes. We model this scheme with
-a stream called \emph{by magnitude}. Here, the weight function is $W_{mag}(p)=\sum_{c\in
-block(p)}\norm{c}^2$ (the sum is over all coefficients in the block that contains packet $p$). If
-two packets have the same weight, they are ordered by subband index, then by bit plane. Unlike
-\emph{by level} and \emph{by bit plane}, \emph{by magnitude} is data-dependent, because the
-coefficient magnitudes are not known until after the data has gone through the wavelet transform. We
-use $s_{mag}$ to denote this stream.
+A stream is an ordered collection of packets, $p_i$, sorted in descending order
+of some associated weight, $W_i$. Thus, a stream can be characterized using a
+weighting function.
+%
+We call the two sorting criteria, corresponding to two common data reduction
+schemes in the literature, as \emph{by level} and \emph{by bit plane}.  The
+\emph{by level} stream, \slvl, orders the packets strictly from coarser to
+finer resolution levels. The weight function in this case is $\wlvl(p)=L-l(p)$,
+where $l(p)$ is the subband index of $p$, and $L$ is the total number of
+subbands. Within the same subband, without any assumption on the underlying
+data, packets follow the row-major order of coefficients, then bit plane order
+(from 0 to $B$) within each coefficient. The other common ordering, \emph{by
+bit plane}, denoted as \sbit, proceeds strictly from higher-ordered to
+lower-ordered bit planes. That is, $\wbit(p)=B-b(p)$, where $b(p)$ is the bit
+plane index of $p$, and $B$ is the total number of bit planes. Within the same
+bit plane, packets follow the subband order (from 0 to $L$), then row-major
+order in each subband. 
+%
+The streams \slvl and \sbit are designed to mimic the way data is accessed in
+traditional methods that work either in resolution (\slvl) or in precision
+(\sbit). 
 
-In general, data-dependent streams are better than data-independent streams in theory, because they
-can prioritize important packets based on the actual data. However, data-dependent streams are
-ill-suited for practical purposes, because the cost of sending position information likely
-outweights any potential benefit. Despite that, we study them for various reasons. First, the
-\emph{by magnitude} scheme is well-known in the literature. Second, data-dependent streams can serve
-as a benchmark to evaluate the performance of their data-independent counterparts. Finally, in
-addition to being data-dependent, streams can also be task-dependent
-(\cref{sec:data_dep_streams}), which may provide insights on how data should be queried to
-perform certain analysis tasks.
+We also define a third stream, which combines these two dimensions, and refer
+to it as \emph{by wavelet norm}, \swav.  This stream orders packets using
+weights $\wwav(p)=2^{B-1-b(p)}\times \norm{\omega_{l(p)}}^2$. The first term
+captures the contribution of a bit on bit plane $b(p)$, while the second term
+captures the contribution of a wavelet coefficient on subband $l(p)$, where
+$\omega_{l(p)}$ refers to a wavelet basis function on subband $l(p)$. In the
+wavelet representation, a function $f$ is written as a linear sum of wavelet
+basis functions $\omega_i$: $f=\sum{c_i\omega_i}$, where $c_i$ are the
+coefficients. Since basis functions in the same subband share the same norm,
+$\wwav(p)$ is simply the contribution (in $L_2$ norm) of a bit on bit plane
+$b_p$ and subband $l_p$, to the whole function $f$. To our knowledge, a data
+reduction scheme based on \emph{by wavelet norm} was hinted at in
+\todo{[CITE]}. \duong{if there is enough space, include here the formula to
+compute the norm of basis functions, else put it in the appendix}
+
+Another common data reduction technique, especially for transform-based data,
+is one in which truncation happens by leaving out coefficients of smallest
+magnitudes. We model this scheme with a stream called \emph{by magnitude},
+\smag. Here, the weight function is $\wmag(p)=\sum_{c\in
+\text{block}(p)}\norm{c}^2$ (the sum is over all coefficients in the block that
+contains packet $p$). If two packets have the same weight, they are ordered by
+subband index, then by bit plane. Unlike \slvl and \sbit, \smag
+%\emph{by level} and \emph{by bit plane}, \emph{by magnitude} 
+is data-dependent, because the coefficient magnitudes are not known until after
+the data has gone through the wavelet transform.
+
+In general, data-dependent streams are better than data-independent streams in
+theory, because they can prioritize important packets based on the actual data.
+However, data-dependent streams are ill-suited for practical purposes, because
+the cost of sending position information likely outweights any potential
+benefit. Nevertheless, we study them for various reasons. First, the \emph{by
+magnitude} scheme is well-known in the literature. Second, data-dependent
+streams can serve as a benchmark to evaluate the performance of their
+data-independent counterparts. Finally, in addition to being data-dependent,
+streams can also be task-dependent (\Cref{sec:data_dep_streams}), which may
+provide insights on how data should be queried to perform certain analysis
+tasks.
 
 \subsection{Constructing data-dependent, task-optimized streams}\label{sec:data_dep_streams}
+
 Each analysis task potentially requires a fundamentally different stream for optimal results. Two
 streams can be compared on the basis of how well they work for an analysis task, provided that an
 error metric for that task is well defined. This section aims to solve the problem of finding the
