@@ -3,7 +3,8 @@
 For surveys of data reduction techniques in general, we refer the readers to the work of
 Rodr\'{\i}guez \etal~\cite{state-of-the-art-compressed-volume} and Li \etal~\cite{li2018}.
 
-\paragraph{\textbf{Tree-based multiresolution hierarchies}}
+%\paragraph{\textbf{Tree-based multiresolution hierarchies}}
+\para{Tree-based multiresolution hierarchies.}
 Techniques that reduce data in resolution typically build a tree-shape hierarchy over the data. A
 very common scheme to genearte such a hierarchy is to construct low-resolution copies of the data
 from higher-resolution ones through filtering and subsampling. Examples include Gaussian and
@@ -31,7 +32,8 @@ curve~\cite{mloc} can be used to reorder data samples to form a hierarchy withou
 steps or redundant samples, as low-resolution levels are constructed via subsampling. Unfortunately,
 subsampling can introduce heavy aliasing artifacts.
 
-\paragraph{\textbf{Transform-based multiresolution hierarchies}}
+%\paragraph{\textbf{Transform-based multiresolution hierarchies}}
+\para{Transform-based multiresolution hierarchies.}
 Other multiresolution approaches reduce data by transform-based compression. For example,
 COVRA~\cite{covra2012} constructs an octrees of bricks, which are further subdivided blocks.
 Compression is done by learning a sparse representation for the blocks in terms of prototype (basis)
@@ -53,7 +55,8 @@ quantized~\cite{tamresh,multiscale-tensor}. Tensor decomposition can work for hi
 data, and can achieve very high ratios of quality over data size. However, the transform step is
 highly data-dependent, thus relatively costly.
 
-\paragraph{\textbf{Wavelets}}
+%\paragraph{\textbf{Wavelets}}
+\para{Wavelets.}
 Transforms that use fixed bases avoid such high computation cost, at the expense of slightly less
 effective compression. Perhaps the most popular transform that uses a fixed basis is the (discrete)
 wavelet transform (DWT). The DWT constructs a hierarchy of resolution levels via low and high
@@ -84,7 +87,8 @@ of the region of interest. However, like most multiresolution work, only the res
 leveraged. The precision axis, which can potentially further reduce data transfer, is left
 unexplored.
 
-\paragraph{\textbf{Wavelet coders}}
+%\paragraph{\textbf{Wavelet coders}}
+\para{Wavelet coders.}
 Most work that explores the precision axis comes from state-of-the-art coders for wavelet
 coefficients in image compression. Wavelet coefficients in corresponding regions across subbands can
 be thought of as belonging to a ``tree'', with the root being a single coefficient at the lowest
@@ -98,7 +102,8 @@ improves on EZW by locating more general types of zero trees~\cite{quantifying-c
 SPECK~\cite{speck2004} extends SPIHT to exploit also spatial correlations among nearby coefficients
 on the same subband.
 
-\paragraph{\textbf{Floating-point compression}}
+%\paragraph{\textbf{Floating-point compression}}
+\para{Floating-point compression.}
 \newcommand{\zfp}{\textsc{zfp}\xspace}
 The \zfp compression scheme~\cite{zfp2014} also codes transform coefficients by bit plane, in order
 of decreasing significance. \zfp partitions the domain---a structured grid---into small (e.g., $4
@@ -117,7 +122,8 @@ bytes, and each of the other six parts contains one byte for additional precisio
 proposes a multiresolution scheme based on Hillbert curves, but this scheme (based on resolution)
 and the PLoD scheme (based on precision) are exclusive.
 
-\paragraph{\textbf{Mixing resolution and precision}}
+%\paragraph{\textbf{Mixing resolution and precision}}
+\para{Mixing resolution and precision.}
 Schemes that allow progressive data access in both resolution and precision include
 SBHP~\cite{sbhp2000} and JPEG2000~\cite{jpeg2000}. Both partition each subband into blocks and code
 each block independently, in bit plane order. By interleaving compressed bits across blocks, one can
@@ -131,7 +137,8 @@ a bit rate. In general, although there exists mechanisms to do so, simultaneousl
 axes of data reduction, especially for the purpose of scientific data analysis, has not been a
 well-studied problem.
 
-\paragraph{\textbf{Error quantification}}
+%\paragraph{\textbf{Error quantification}}
+\para{Error quantification.}
 There have been several works that aim at quantifying the error incurred by data reduction, by
 compression or otherwise, to results of analysis tasks. Baker
 \etal~\cite{evaluating-compression-climate} evaluates several compressors (FPZIP~\cite{fpzip},
