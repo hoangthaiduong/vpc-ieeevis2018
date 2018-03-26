@@ -125,11 +125,14 @@ figure}}\label{fig:pipeline}
 
 \newcommand {\mm}[1] {\ifmmode{#1}\else{\mbox{\(#1\)}}\fi}
 
-\newcommand{\sopt}        {\mm{S_{\text{opt}}}\xspace}
-\newcommand{\slvl}        {\mm{S_{\text{lvl}}}\xspace}
-\newcommand{\sbit}        {\mm{S_{\text{bit}}}\xspace}
-\newcommand{\swav}        {\mm{S_{\text{wav}}}\xspace}
-\newcommand{\smag}        {\mm{S_{\text{mag}}}\xspace}
+\newcommand{\strm}        {\mm{S}\xspace}
+\newcommand{\sgn}		  {\mm{A}\xspace}
+\newcommand{\sopt}        {\mm{\strm_{\text{opt}}}\xspace}
+\newcommand{\slvl}        {\mm{\strm_{\text{lvl}}}\xspace}
+\newcommand{\sbit}        {\mm{\strm_{\text{bit}}}\xspace}
+\newcommand{\swav}        {\mm{\strm_{\text{wav}}}\xspace}
+\newcommand{\smag}        {\mm{\strm_{\text{mag}}}\xspace}
+\newcommand{\ssig}        {\mm{\strm_{\text{sig}}}\xspace}
 \newcommand{\wlvl}        {\mm{W_{\text{lvl}}}\xspace}
 \newcommand{\wbit}        {\mm{W_{\text{bit}}}\xspace}
 \newcommand{\wwav}        {\mm{W_{\text{wav}}}\xspace}
@@ -209,7 +212,7 @@ tasks.
 
 \subsection{Data-dependent, Task-optimized Streams} \label{sec:data_dep_streams}
 
-\hb{this section is almost rewritten. please compare the pdf with a previous
+\hb{this section is almost completely rewritten. please compare the pdf with a previous
 version.  there was too much coloring keeping both versions in}
 
 Each analysis task potentially requires a fundamentally different stream for
@@ -261,6 +264,7 @@ $\err_i$.  The stream $\sopt$, then, is simply the sorted list of packets in
 decreasing order of the weights. This simplified algorithm brings the running
 time from days down to minutes, while (by observation) retaining the same
 quality for $\sopt$. \Cref{alg:greedy} outlines the approach described above.
+\todo{can we use the normal font for the algorithm. why is it so small?}
 
 \begin{algorithm}[h]
   \small
@@ -270,13 +274,13 @@ quality for $\sopt$. \Cref{alg:greedy} outlines the approach described above.
     \Inputs{
 			An original function $f$\\
 			An unordered set of $n$ packets $P = \{p_i\}$, produced from $f$\\
-			A quantity of interest $q$, and an error function $e$}
+			A quantity of interest $q$, and an error function $\err$}
 		\Initialize{A set of $n$ weights $\Gamma = \{\gamma_i\}$ }
 		\For{each packet $p_i$}
 			\State $p_i := 0$
       \State $P \rightarrow$ wavelet coefficients $W$ (inverse quantization and inverse negabinary transform)
 			\State $W \rightarrow f'$ (inverse wavelet transform)
-			\State $\gamma_i := e(q(f'),q(f))$			
+			\State $\gamma_i := \err(q(f'),q(f))$			
 			\State Restore $p_i$
 		\EndFor
 		\State Sort the $p_i$'s in descending order of $\gamma_i$.
@@ -287,29 +291,65 @@ quality for $\sopt$. \Cref{alg:greedy} outlines the approach described above.
 
 \subsection{Stream Signatures} \label{sec:stream-signature}
 
-Denote the 2D space of bit planes versus subbands (or precision versus resolution) as $S_{L,B}$
-(i.e., $S_{L,B}=\{(l,b) | 0\leq l\leq L, 0\leq b\leq B\}$). Unlike data-independent streams,
-data-dependent streams do not impose a static ordering of packets in this space. Therefore, to
-analyze this aspect of a data-dependent stream, we introduce the concept of a \emph{stream
-signature}. Given a stream, a signature $A_{L,B}$ is an $L \times B$ matrix, whose $(l,b)$ element
-is associated with $P_{l,b}$ --- the set of packets belonging to subband $l$ and bit plane $b$. In
-particular, $A(l,b)$ is an integer in the $[0, B\times L)$ range that indicates, on average, the
-position in which $P_{l,b}$ appear in the given stream. For example, the signature $A=\bigl[
-\begin{smallmatrix}0 & 1 & 4\\ 2 & 3 & 5\end{smallmatrix}\bigr]$ indicates that the stream begins
-with packets that lie on the first bit plane of the first subband, as $A(0,0)=0$. Those are followed
-by packets on the second bit plane of the first subband ($A(0,1)=1$), and then the first bit plane of
-the second subband ($A(1,0)=2$). Finally, the last group of packets comes from the third bit plane
-of the second subband ($A(1,2)=5$). A stream's signature shows how the stream traverses the space
-$S_{L,B}$. In this way, the signature concept can reveal the potentially different
-resolution-versus-precision tradeoffs among $s_{opt}$ streams optimized for different tasks.
+\hbadd{
+Unlike data-independent streams, data-dependent streams do not impose a static
+ordering of packets in this space. To concisely represent and characterize the
+dynamic ordering of data-dependent streams, we introduce the concept of a
+\emph{stream signature}.  Any data-dependent stream can be represented with
+respect to the two-dimensional space of resolution (subbands) and precision
+(bit planes), i.e., \mbox{$\strm = \strm_{L,B}=\{(l,b)\ |\ 0\leq l < L,\ 0\leq
+b < B\}$.} \todo{changed $\leq$ to $<$.}
+}
 
-To compute a stream signature, we partition the whole domain (not individual subbands) into several
-\emph{regions}, compute one signature per region, and average these local signatures. It is
-only when packets are relatively well localized that their relative ordering in the $S_{L,B}$ space
-becomes meaningful. For example, a packet at one corner of the domain can be streamed before one at
-an opposite corner, but this fact contains no useful information. We define a region to be the
-spatial volume that is covered by a packet in the coarsest subband. Algorithm~\ref{alg:signature}
-lists the steps in detail.
+\hbadd{
+Given a stream, we define its signature $\sgn_{L,B}$ as the $L \times B$
+matrix, whose $(l,b)$ element is associated with $P_{l,b}$---the set of packets
+belonging to subband $l$ and bit plane $b$. In particular, $\sgn(l,b)$ is an
+integer in the range $[0, B\times L)$, and indicates, on average, the position
+at which packet $P_{l,b}$ appear in the given stream. For example, the
+signature $\sgn=\bigl[ \begin{smallmatrix}0 & 1 & 4\\ 2 & 3 &
+5\end{smallmatrix}\bigr]$ indicates that the stream begins with packets that
+lie on the first bit plane of the first subband, as $\sgn(0,0)=0$. Those are
+followed by packets on the second bit plane of the first subband
+($\sgn(0,1)=1$), and then the first bit plane of the second subband
+($\sgn(1,0)=2$). Finally, the last group of packets comes from the third bit
+plane of the second subband ($\sgn(1,2)=5$). Thus, aA stream's signature shows
+how the stream traverses the space $\strm_{L,B}$, and highlight the different
+resolution-versus-precision tradeoffs among $\sopt$ optimized for different
+tasks.
+}
+
+% Harsh split this para into the two above
+%Denote the 2D space of bit planes versus subbands (or precision versus
+%resolution) as $S_{L,B}$ (i.e., $S_{L,B}=\{(l,b) | 0\leq l\leq L, 0\leq b\leq
+%B\}$). Unlike data-independent streams, data-dependent streams do not impose a
+%static ordering of packets in this space. Therefore, to analyze this aspect of
+%a data-dependent stream, we introduce the concept of a \emph{stream
+%signature}. Given a stream, a signature $A_{L,B}$ is an $L \times B$ matrix,
+%whose $(l,b)$ element is associated with $P_{l,b}$ --- the set of packets
+%belonging to subband $l$ and bit plane $b$. In particular, $A(l,b)$ is an
+%integer in the $[0, B\times L)$ range that indicates, on average, the position
+%in which $P_{l,b}$ appear in the given stream. For example, the signature
+%$A=\bigl[ \begin{smallmatrix}0 & 1 & 4\\ 2 & 3 & 5\end{smallmatrix}\bigr]$
+%indicates that the stream begins with packets that lie on the first bit plane
+%of the first subband, as $A(0,0)=0$. Those are followed by packets on the
+%second bit plane of the first subband ($A(0,1)=1$), and then the first bit
+%plane of the second subband ($A(1,0)=2$). Finally, the last group of packets
+%comes from the third bit plane of the second subband ($A(1,2)=5$). A stream's
+%signature shows how the stream traverses the space $S_{L,B}$. In this way, the
+%signature concept can reveal the potentially different
+%resolution-versus-precision tradeoffs among $s_{opt}$ streams optimized for
+%different tasks.
+
+To compute a stream signature, we partition the whole domain (not individual
+subbands) into several \emph{regions}, compute one signature per region, and
+average these local signatures. It is only when packets are relatively well
+localized that their relative ordering in the $\strm_{L,B}$ space becomes
+meaningful. For example, a packet at one corner of the domain may be streamed
+before one at an opposite corner, but this fact contains no useful information.
+We define a region to be the spatial volume that is covered by a packet in the
+coarsest subband. Algorithm~\ref{alg:signature} lists the steps in our
+approach.
 
 \begin{algorithm}[h]
   \small
@@ -335,13 +375,16 @@ lists the steps in detail.
 	\label{alg:signature}
 \end{algorithm}
 
-Finally, a signature can be used to construct a ``semi''-data-independent stream, denoted as
-$s_{sig}$. This construction is done by iterating through each element $A(l,b)$ in ascending order, and adding
-end of $s_{sig}$ all the packets in $P_{l,b}$. $s_{sig}$ is similar to purely data-independent
-streams, in that the ordering of packets in the $S_{l,b}$ space is deterministic (governed by the
-signature). However, this deterministic ordering must be established between the client and the
-server through the transmission of the signature. This is not a hurdle in practice, because the size
-of the signature should be negligible compared to the size of the data itself. In 3D, assuming 22
-subbands and 32-bit quantized coefficients, a signature contains $1408 (=22\times 32\times 2)$
-bytes. $s_{sig}$ has no element of spatial-adaptivity; hence it can serve as a bridge when comparing
-the resolution-versus-precision tradeoffs between data-independent and data-dependent streams.
+Finally, a signature can be used to construct a ``semi''-data-independent
+stream, denoted as $\ssig$. This construction is done by iterating through
+each element $\sgn(l,b)$ in ascending order, and adding end of $\ssig$ all the
+packets in $P_{l,b}$. $\ssig$ is similar to purely data-independent streams,
+in that the ordering of packets in the $\strm_{l,b}$ space is deterministic
+(governed by the signature). However, this deterministic ordering must be
+established between the client and the server through the transmission of the
+signature. This is not a hurdle in practice, because the size of the signature
+is negligible compared to the size of the data itself. In 3D, assuming
+22 subbands and 32-bit quantized coefficients, a signature contains $1408
+(=22\times 32\times 2)$ bytes. $\ssig$ has no element of spatial-adaptivity;
+hence it can serve as a bridge when comparing the resolution-versus-precision
+tradeoffs between data-independent and data-dependent streams.
