@@ -209,78 +209,58 @@ tasks.
 
 \subsection{Data-dependent, Task-optimized Streams} \label{sec:data_dep_streams}
 
-Each analysis task potentially requires a fundamentally different stream for optimal results. Two
-streams can be compared on the basis of how well they work for a given analysis task, provided that an
-error metric for that task is well defined. This section aims to solve the problem of finding the
-optimal (and data-dependent) stream, given a data set and such an error metric. Studying such a
-stream is important because it serves not only as a benchmark, but also as a source of insights for
-other, more practical streams for the same task.
+\hb{this section is almost rewritten. please compare the pdf with a previous
+version.  there was too much coloring keeping both versions in}
 
-Given the original data $f$ and its reconstructed approximation $f'$ using a subset of packets, 
-let $q$ represent some quantity of interest (e.g., histogram, isocontour, etc.) computed on 
-$f$ or $f'$. In
-this paper, we use the terms ``quantity of interest'' and ``task'' interchangebly, with the
-understanding that, e.g., if the task is extracting isocontours, then the quantity of interest is 
-isocontours. For a given task $q$, we define an error metric $\err(q(f'),q(f))$ that is either common
-or intuitive and simple while generalizable \hb{why do we need common, intuitive, or simple?}. Given a data set $f$, a task $q$, and an error metric $\err$, 
-our goal is to generate a stream $\sopt$ that is optimal for $q$ with respect to $\err$.
+Each analysis task potentially requires a fundamentally different stream for
+optimal results.  Studying such an ``optimal'' (and data-dependent) is
+important because not only does it serve as a benchmark, but can also provide
+insights into other, more practical streams for the same task.
 
-\hbdel{
-One way to define the ``optimal'' stream could be one that incurs the minimum error $\err$ at every
-point. In trying to realize this definition, however, our experience has been that such a stream does not exist. 
-Assume otherwise that the optimal stream exists; then by definition, it must be possible to
-construct this stream (called $\sopt$) using the following greedy algorithm. Start with a pool
-consisting of all packets, an all-zero function $f'$, and an empty $\sopt$. From the pool, pick
-one packet $p$ that when applied to the current $f'$, would minimize $\err$. Remove $p$ from the pool,
-add it to the end of $\sopt$, and update $f'$ using $p$. Repeat this process until the pool is
-empty. This algorithm can encounter a situation in which the chosen packet $p$ contributes almost
-nothing to $f'$, yet the error is minimized because it is kept approximately constant. In this case,
-it is actually better to pick another packet that increases the error slightly, but otherwise
-contributes more to $f'$. In optimization terms, it is necessary to follow a search direction
-that increases the error slightly to avoid being stuck in a local minimum. This contradiction shows
-that $s_{opt}$ does not exist, using the aforementioned definition of optimality.}
-\hb{rephrased this paragraph as below}
+Given the original data $f$ and its reconstructed approximation $f'$ using a
+subset of packets, let $q$ represent some quantity of interest\footnote{In this
+paper, we use the terms ``quantity of interest'' and ``task'' interchangebly,
+with the understanding that, e.g., if the task is extracting isocontours, then
+the quantity of interest is isocontours.}, e.g., histogram, isocontour, etc.,
+computed on $f$ or $f'$. For a given task $q$, a well-defined error metric
+$\err(q(f'),q(f))$ is needed. Given a data set $f$, a task $q$, and an error
+metric $\err$, our goal is to generate an \emph{optimal} (and data-dependent)
+stream, $\sopt$, for $q$ with respect to $\err$.
 
-\hbadd{One way to define the ``optimal'' stream could be one that incurs the minimum error $\err$ at every
-intermediate $f'$. However, such a stream assumes the existence of a single global optimum, and may not 
-exist. \todo{(don't think we need to describe the algorithm. just saying the greedy 
-can get stuck in local minima should be sufficient.)}
-Consider the following greedy algorithm for the construction of such a hypothetical stream.
-Starting with an all-zero function $f'$, and an empty stream, append a new packet $p$ to the stream 
-that when included in the current $f'$, would minimize $\err$. Repeat this process until the 
-all data has been considered or the prescribed data budget has been fulfilled.
-However, such a greedy approach could lead to a local minimum, and keep picking packets that contribute
-almost nothing to $f'$.}
+We can define $\sopt$ as the stream such that the area under the curve of \err
+is minimized for all packets to be streamed. However, this definition limited
+in practice, because a stream should be able to terminate at any point, and it
+still produces an error as small as possible. 
 
-\hbadd{Instead, we consider \sopt} 
-\hbdel{We can change the definition of $s_{opt}$}
-to be a stream such that the area \hbadd{under the curve} \hbdel{bounded by its error
-curve (when plotted) and the horizontal axis} \hbadd{of \err} is the smallest \hbadd{for all packets to be streamed}. 
-However, this definition is of limited
-usefulness in practice, because a stream should be able to terminate at any point, and it still
-produces an error as small as possible. 
-\hb{ok, this is now very confusing. why do we switch back and forth? why don't we discuss the area under the curve definition first?
-leaving the rest of this subsection until we know what to do here} Therefore, instead of using this definition of optimality,
-we slightly modify the greedy algorithm above to avoid local minima. We still start with a pool
-consisting of all packets and an empty $s_{opt}$, but with a ``lossless'' $f'$ (i.e., $f'=f$), and
-we build $s_{opt}$ back to front. In each step, the packet whose removal from $f'$ has the least
-impact on the error $e$ is removed from both $f'$ and the pool, and inserted to the beginning of
-$s_{opt}$. This algorithm solves the previous problem where unimportant packets were added to
-$s_{opt}$ too early (i.e., the algorithm gets stuck in a local minimum). Here, packets chosen early
-are actually unimportant, and will be put at the end of $s_{opt}$.
+Instead, we employ a greedy approach to define the optimal stream.  A
+straightforward greedy algorithm, however, suffers from the usual limitation of
+potentially leading to a local optimum. For example, starting with an all-zero
+function $f'$, and an empty stream, we can repeatedly append new packets to the
+stream, which when included in the current $f'$, would minimize $\err$ at every
+step. Each step could potentially pick a packet that introduces low error, yet
+contributes very little to improve the quality of $f'$, potentially leading to
+a non-optimal stream at a later point.  In order to avoid local minimum, we
+modify this greedy algorithm to build the stream backwards. In other words, we
+start with a ``lossless'' $f'$ (i.e., $f'=f$), and at each step, we remove the
+packet that has the least impact on the error $\err$ from $f'$.  This
+modification solves the previous problem where less important packets were
+added to $\sopt$ too early, and ensures that the packets chosen for removal
+early on are indeed less important, and will be put at the end of $\sopt$.
 
-Unfortunately, we have found that this back-to-front greedy algorithm is too costly in practice.
-Ignoring all the steps done in each iteration, this algorithm amounts to a 2-level nested loop
-running for $n^2$ iterations, where $n$ is the total number of packets. With a $256^3$-size domain,
-a packet size that spans $16^3$ coefficients, and $16$ bits of quantization, $n$ is 65536, so $n^2$
-would be in the billions, which we have found to be prohibitively large. We have therefore adopted a
-simplified version of this algorithm, where only one pass through the set of $n$ packets is needed.
-The modified algorithm works as follows. In each iteration $i$, we disable (set to zero) a new
-packet $p_i$ in $f'$, then compute and record the incurred error $e_i$. $p_i$ is enabled again in
-$f'$ at the end of iteration $i$. After $n$ iterations, each packet has an associated weight $e_i$.
-$s_{opt}$, then, is simply the sorted list of packets in decreasing order of the weights. This
-simplified algorithm brings the running time from days down to minutes, while (by observation)
-retaining the same quality for $s_{opt}$. The pseudocode of the algorithm is presented in~\Cref{alg:greedy}.
+Unfortunately, such a greedy algorithm is expensive in practice, as its
+complexity is $\mathcal{O}(n^2)$, with $n$ being the total number of packets in
+the data.  Considering a $[256 \times 256 \times 256]$ domain,  a packet size
+that spans $16^3$ coefficients, and $16$ bits of quantization, $n = 65536$,
+leading to prohibitively large numbers. Therefore, we adopt a simplified version
+of this algorithm, where only one pass through the set of $n$ packets is
+needed.  The modified algorithm works as follows. In each iteration $i$, we
+disable (set to zero) a new packet $p_i$ in $f'$, then compute and record the
+incurred error $\err_i$. The packet is enabled again in $f'$ at the end of
+iteration $i$. After $n$ iterations, each packet has an associated weight
+$\err_i$.  The stream $\sopt$, then, is simply the sorted list of packets in
+decreasing order of the weights. This simplified algorithm brings the running
+time from days down to minutes, while (by observation) retaining the same
+quality for $\sopt$. \Cref{alg:greedy} outlines the approach described above.
 
 \begin{algorithm}[h]
   \small
