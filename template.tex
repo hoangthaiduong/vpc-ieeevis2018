@@ -227,6 +227,24 @@ i.e. ordering of bits.}
 % ignore figures for fast compilation
 %\usepackage[allfiguresdraft]{draftfigure}
 
+\usepackage[mathcal]{euscript}
+
+\newcommand {\mm}[1] {\ifmmode{#1}\else{\mbox{\(#1\)}}\fi}
+
+\newcommand{\strm}	{\mm{\mathcal{S}}\xspace}
+\newcommand{\sgn}	{\mm{\lambda}\xspace}
+\newcommand{\sopt}  {\mm{\strm_{\text{opt}}}\xspace}
+\newcommand{\slvl}  {\mm{\strm_{\text{lvl}}}\xspace}
+\newcommand{\sbit}  {\mm{\strm_{\text{bit}}}\xspace}
+\newcommand{\swav}  {\mm{\strm_{\text{wav}}}\xspace}
+\newcommand{\smag}  {\mm{\strm_{\text{mag}}}\xspace}
+\newcommand{\ssig}  {\mm{\strm_{\text{sig}}}\xspace}
+\newcommand{\wlvl}  {\mm{W_{\text{lvl}}}\xspace}
+\newcommand{\wbit}  {\mm{W_{\text{bit}}}\xspace}
+\newcommand{\wwav}  {\mm{W_{\text{wav}}}\xspace}
+\newcommand{\wmag}  {\mm{W_{\text{mag}}}\xspace}
+\newcommand{\err}   {\mm{\varepsilon}\xspace}
+
 %% Copyright space is enabled by default as required by guidelines.
 %% It is disabled by the 'review' option or via the following command:
 % \nocopyrightspace
