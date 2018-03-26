@@ -51,22 +51,43 @@ produced by $s_{bit}$, and finally $s_{mag}$. These results suggest that histogr
 among the analysis tasks that benefit significantly from a bit ordering that combines both resolution
 and precision, not one that adheres to either exclusively.
 
-\begin{figure}[h]
+\begin{figure*}[h]
 	\centering
 	\subcaptionbox{\emph{boiler}}
-	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-boiler}}
+	{\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-boiler}}
 	\subcaptionbox{\emph{diffusivity}}
-	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-diffusivity}}
+	{\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-diffusivity}}
 	\subcaptionbox{\emph{plasma}}
-	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-plasma}}
+	{\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-plasma}}
 	\subcaptionbox{\emph{turbulence}}
-	{\includegraphics[width=0.48\linewidth]{histogram/histogram-optimized-turbulence}}
+	{\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-turbulence}}
 	\caption{Comparison of histogram errors among streams. Plots are truncated to highlight
 	differences without hiding important trends. In general, $s_{hist-opt}\approx s_{hist-sig}\approx
 	s_{wav} > s_{lvl} > s_{bit} > s_{mag}$. Crossover points between $s_{bit}$ and $s_{lvl}$ are
 	explained in~\Cref{fig:histogram-explain}\pavol{figure referencing figure is ehm}}.
 	\label{fig:histogram-stream-comparison}
-\end{figure}
+\vspace{1em}
+
+	\centering
+	\subcaptionbox{\emph{by level} ($s_{lvl}$)}{
+	{\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-level.png}}}
+	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}{
+	{\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-bit-plane.png}}}
+	\subcaptionbox{\emph{by magnitude} ($s_{mag}$)}{
+	{\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-magnitude.png}}}
+	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}{
+	{\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-wavelet-norm.png}}}
+	\subcaptionbox{\emph{by signature} ($s_{hist-sig}$)}{
+	{\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-signature.png}}}
+	\subcaptionbox{\emph{reference}}{
+	{\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-groundtruth.png}}}
+	\caption{Histograms of the \emph{boiler} data set, reconstructed at 0.08 bps. $s_{lvl}$,
+	$s_{wav}$, and $s_{hist-sig}$ produce histograms that share a shape similar to the reference histogram,
+	with most of the peaks and valleys preserved. In contrast, $s_{bit}$ produces a spurious peak not
+	found in the reference. Finally, $s_{mag}$'s histogram has a widely skewed distribution where too
+	many values fall into the first bin.}
+	\label{fig:histograms-boiler}
+\end{figure*}
 
 \begin{figure}[h]
 	\centering
@@ -80,26 +101,4 @@ and precision, not one that adheres to either exclusively.
 	significantly more from the removal of leading zero bits (from (a) to (b), the blue curve shifts
 	more to the left).}
 	\label{fig:histogram-explain}
-\end{figure}
-
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{\emph{by level} ($s_{lvl}$)}{
-	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-level.png}}}
-	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}{
-	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-bit-plane.png}}}
-	\subcaptionbox{\emph{by magnitude} ($s_{mag}$)}{
-	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-magnitude.png}}}
-	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}{
-	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-wavelet-norm.png}}}
-	\subcaptionbox{\emph{by signature} ($s_{hist-sig}$)}{
-	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-signature.png}}}
-	\subcaptionbox{\emph{reference}}{
-	{\includegraphics[width=0.31\linewidth]{histogram/histogram-boiler-groundtruth.png}}}
-	\caption{Histograms of the \emph{boiler} data set, reconstructed at 0.08 bps. $s_{lvl}$,
-	$s_{wav}$, and $s_{hist-sig}$ produce histograms that share a shape similar to the reference histogram,
-	with most of the peaks and valleys preserved. In contrast, $s_{bit}$ produces a spurious peak not
-	found in the reference. Finally, $s_{mag}$'s histogram has a widely skewed distribution where too
-	many values fall into the first bin.}
-	\label{fig:histograms-boiler}
 \end{figure}
