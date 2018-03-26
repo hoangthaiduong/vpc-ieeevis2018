@@ -127,14 +127,14 @@ For example, Woodring \etal~\cite{woodring2011} use JPEG2000 to store floating p
 most JPEG2000 implementations are limited to integer data, the authors apply uniform scalar
 quantization to convert floating point data to integer form. Even though JPEG2000 supports varying
 both resolution and precision, the authors do not explore this capability but focus only on setting
-a bit rate. In general, there has not been work that studies the resolution-versus-precision
-tradeoffs, as well as the various orderings of bits in the context of data analysis and
-visualization.
+a bit rate. In general, although there exists mechanisms to do so, simultaneously leveraging both
+axes of data reduction, especially for the purpose of scientific data analysis, has not been a
+well-studied problem.
 
 \paragraph{\textbf{Error quantification}}
 There have been several works that aim at quantifying the error incurred by data reduction, by
 compression or otherwise, to results of analysis tasks. Baker
-\etal~\cite{evauating-compression-climate} evaluates several compressors (FPZIP~\cite{fpzip},
+\etal~\cite{evaluating-compression-climate} evaluates several compressors (FPZIP~\cite{fpzip},
 APAX~\cite{apax}, ISABELA~\cite{isabela}) on ensembles of climate simulation data, using the
 root-mean-square z-score (RMSZ) as the error metric. Laney \etal~\cite{compression_sim2013} study
 the effects of lossy compression (using FPZIP and APEX) on the Miranda hydrodynamic simulation code,
@@ -146,9 +146,15 @@ domain. Etiene \etal have published a series of work on verification of isosurfa
 geometrical~\cite{verifiable-isosurface} and topological~\cite{topology-verification-isosurface}
 terms, as well as verfication of volume rendered images~\cite{verifying-volume-rendering}. They
 focus on order-of-accuracy and convergence analysis, where errors are introduced mostly through
-discretization, not necessarily for the purpose of reducing data bandwidth. ~\cite{z-checker}
+discretization, not necessarily for the purpose of reducing data bandwidth. Finally, the Z-checker
+framework~\cite{z-checker} consists of many independent metrics (which are called analysis
+``kernels'') to evaluate data quality after lossy compression. The list includes min/max,
+distribution, entropy, smoothness, power spectrum, principle component analysis, and
+autocorrelation. In general, however, there has not been work that studies the
+resolution-versus-precision tradeoffs, as well as the various orderings of bits in the context of
+data analysis and visualization.
 
 %by magnitude streams~\cite{image_compression1992}
 
-Transfer function adaptive decompression~\cite{tf_decompression2004}
-\peter{We might want to cite~\cite{codar} for surveys on data reduction.}
+% Transfer function adaptive decompression~\cite{tf_decompression2004}
+% \peter{We might want to cite~\cite{codar} for surveys on data reduction.}
