@@ -1,6 +1,9 @@
 \section{Related work}
 
-\hb{can we easily do subsections or paragraphs in this to categorize this large section?}
+For surveys of data reduction techniques in general, we refer the readers to the work of
+Rodr\'{\i}guez \etal~\cite{state-of-the-art-compressed-volume} and Li \etal~\cite{li2018}.
+
+\paragraph{\textbf{Tree-based multiresolution hierarchies}}
 Techniques that reduce data in resolution typically build a tree-shape hierarchy over the data. A
 very common scheme to genearte such a hierarchy is to construct low-resolution copies of the data
 from higher-resolution ones through filtering and subsampling. Examples include Gaussian and
@@ -28,6 +31,7 @@ curve~\cite{mloc} can be used to reorder data samples to form a hierarchy withou
 steps or redundant samples, as low-resolution levels are constructed via subsampling. Unfortunately,
 subsampling can introduce heavy aliasing artifacts.
 
+\paragraph{\textbf{Transform-based multiresolution hierarchies}}
 Other multiresolution approaches reduce data by transform-based compression. For example,
 COVRA~\cite{covra2012} constructs an octrees of bricks, which are further subdivided blocks.
 Compression is done by learning a sparse representation for the blocks in terms of prototype (basis)
@@ -49,6 +53,7 @@ quantized~\cite{tamresh,multiscale-tensor}. Tensor decomposition can work for hi
 data, and can achieve very high ratios of quality over data size. However, the transform step is
 highly data-dependent, thus relatively costly.
 
+\paragraph{\textbf{Wavelets}}
 Transforms that use fixed bases avoid such high computation cost, at the expense of slightly less
 effective compression. Perhaps the most popular transform that uses a fixed basis is the (discrete)
 wavelet transform (DWT). The DWT constructs a hierarchy of resolution levels via low and high
@@ -79,6 +84,7 @@ of the region of interest. However, like most multiresolution work, only the res
 leveraged. The precision axis, which can potentially further reduce data transfer, is left
 unexplored.
 
+\paragraph{\textbf{Wavelet coders}}
 Most work that explores the precision axis comes from state-of-the-art coders for wavelet
 coefficients in image compression. Wavelet coefficients in corresponding regions across subbands can
 be thought of as belonging to a ``tree'', with the root being a single coefficient at the lowest
@@ -92,6 +98,7 @@ improves on EZW by locating more general types of zero trees~\cite{quantifying-c
 SPECK~\cite{speck2004} extends SPIHT to exploit also spatial correlations among nearby coefficients
 on the same subband.
 
+\paragraph{\textbf{Floating-point compression}}
 \newcommand{\zfp}{\textsc{zfp}\xspace}
 The \zfp compression scheme~\cite{zfp2014} also codes transform coefficients by bit plane, in order
 of decreasing significance. \zfp partitions the domain---a structured grid---into small (e.g., $4
@@ -110,6 +117,7 @@ bytes, and each of the other six parts contains one byte for additional precisio
 proposes a multiresolution scheme based on Hillbert curves, but this scheme (based on resolution)
 and the PLoD scheme (based on precision) are exclusive.
 
+\paragraph{\textbf{Mixing resolution and precision}}
 Schemes that allow progressive data access in both resolution and precision include
 SBHP~\cite{sbhp2000} and JPEG2000~\cite{jpeg2000}. Both partition each subband into blocks and code
 each block independently, in bit plane order. By interleaving compressed bits across blocks, one can
@@ -123,29 +131,24 @@ a bit rate. In general, there has not been work that studies the resolution-vers
 tradeoffs, as well as the various orderings of bits in the context of data analysis and
 visualization.
 
+\paragraph{\textbf{Error quantification}}
 There have been several works that aim at quantifying the error incurred by data reduction, by
 compression or otherwise, to results of analysis tasks. Baker
 \etal~\cite{evauating-compression-climate} evaluates several compressors (FPZIP~\cite{fpzip},
 APAX~\cite{apax}, ISABELA~\cite{isabela}) on ensembles of climate simulation data, using the
-root-mean-square z-score (RMSZ) as the error metric. 
+root-mean-square z-score (RMSZ) as the error metric. Laney \etal~\cite{compression_sim2013} study
+the effects of lossy compression (using FPZIP and APEX) on the Miranda hydrodynamic simulation code,
+using physics-based error metrics. Li \etal~\cite{evaluating-efficacy-wavelet} measure the error
+incurred by wavelet compression on turbulent-flow data, using root-mean-square error of
+radial-enstrophy profiles as the metric. Wang \etal~\cite{statistical-volume-quality} assess the
+quality of distorted data using a combination of statistical metrics in the (wavelet) transform
+domain. Etiene \etal have published a series of work on verification of isosurfaces in
+geometrical~\cite{verifiable-isosurface} and topological~\cite{topology-verification-isosurface}
+terms, as well as verfication of volume rendered images~\cite{verifying-volume-rendering}. They
+focus on order-of-accuracy and convergence analysis, where errors are introduced mostly through
+discretization, not necessarily for the purpose of reducing data bandwidth. ~\cite{z-checker}
 
-by magnitude streams~\cite{image_compression1992}
+%by magnitude streams~\cite{image_compression1992}
 
 Transfer function adaptive decompression~\cite{tf_decompression2004}
 \peter{We might want to cite~\cite{codar} for surveys on data reduction.}
-
-Error analysis:
-~\cite{compression_sim2013}
-~\cite{statistical-volume-quality}
-~\cite{evaluating-efficacy-wavelet}
-~\cite{topology-verification-isosurface}
-~\cite{verifiable-isosurface}
-~\cite{verifying-volume-rendering}
-~\cite{statistical-volume-quality}
-
-error-guided: 
-~\cite{tf_decompression2004} (based on transfer function)
-
-surveys:
-~\cite{state-of-the-art-compressed-volume} (compressed volume rendering)
-~\cite{li2018} data reduction techniques
