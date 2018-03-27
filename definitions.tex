@@ -2,31 +2,31 @@
 
 \hbadd{In order to systematically study the resolution-versus-precision
 tradeoffs, it is important to compare different data reduction techniques.}
-One popular method is to restrict the techniques to the same data size and
+One popular approach is to restrict the techniques to the same data size and
 compare data quality. It is, however, difficult to enforce that a
 multiresolution scheme uses the same amount of data as does quantization scheme,
-because \hbadd{the amount of data change in one step of multiresolution
+because \hbadd{the amount of change in one step of multiresolution
 simplification may be different from removing one bit in the quantization of
 every data sample.} \hbdel{going down one step in resolution decreases the data
 size by a different amount than when removing one more bit from each data
 sample.} To avoid such mismatch of data increment/decrement units, we model
 each reduction scheme as a stream of equally-sized \emph{packets}.  We define a
-packet as the smallest unit of data increment/decrement in our framework, with
-each packet consisting of a relatively small number of bits from a data set. To
+packet as the smallest unit of data increment/decrement in our framework, where 
+packet consists of a relatively small number of bits from a data set. To
 study the resolution-versus-precision tradeoffs, we associate a packet with a
 resolution level and a precision level (i.e., bit plane), so that each packet
 can improve either data's resolution or its precision. In this framework,
-different data reduction schemes become different orderings of packets from a
-data set, or different packet \emph{streams}.  For example, a quantization
+different data reduction schemes become different orderings of packets and
+we call the sequence of packets \emph{stream}.  For example, a quantization
 scheme would stream packets by precision, whereas a multiresolution scheme would
-stream packets by resolution. By forcing the different schemes to use the same
-number of packets, we can compare data quality across the schemes fairly.
+stream packets by resolution. The property of each stream having the same total
+number of packets allows us to perform a fair comparison.
 
 In \Cref{sec:data-streaming-framework}, we discuss the mechanism of converting
 original data into a set of packets. \Cref{sec:static-dynamic-streams}
 describes packet streams that correspond to common data reduction schemes.
-\Cref{sec:data_dep_streams} presents a greedy algorithm to approximate the
-optimal packet stream for the data and the analysis task at hand. Finally,
+\Cref{sec:data_dep_streams} presents a greedy algorithm that constructs a reference
+packet stream for the data and the analysis task at hand. Finally,
 \Cref{sec:stream-signature} introduces a novel concept called \emph{stream
 signature} that can be used to study and compare the characteristics of
 different packet streams.
@@ -35,13 +35,13 @@ different packet streams.
 
 Each new packet adds to the data's resolution and/or precision. To introduce
 the concept of resolution, we use the popular CDF5/3 discrete wavelet transform
-\todo{[CITE]}.  Although there exist other transforms that separate a signal
+\todo{[CITE]}.  Although there exist other transforms that separate signal
 into discrete bands of frequencies/scales/resolutions, such as the discrete
 Fourier transform, we choose wavelet transform because wavelet coefficients are
 spatially localized. This localization enables spatial adaptivity, allowing
 finer resolution in regions that contain \hbadd{sharp} \hbdel{important}
 features, at the expense of coarser resolution elsewhere. The hierarchical-Z
-indexing scheme \todo{[CITE]} also produces a multiresolution representation,
+indexing scheme~\cite{idx2001} also produces a multiresolution representation,
 but unlike wavelets, it offers no interpolation mechanism for low-resolution
 grids. We choose the CDF5/3 wavelet for its balance between simplicity and
 effectiveness at decorrelating the input signal. It is also one of the two
@@ -53,10 +53,10 @@ partitioned into several \emph{subbands}, each of which can be thought of as a
 resolution level. One transform pass creates four subbands in 2D and eight in
 3D, of which the first is a smoothed, downsampled version of the original data.
 The next seven subbands (in 3D) add fine details in each subset of the
-dimensions. A subsequent transform pass \hbdel{typically} recurses on the first
+dimensions\pavol{could be clearer}. A subsequent transform pass \hbdel{typically} recurses on the first
 subband created by the previous pass, leaving the other seven subbands intact.
 We \hbdel{frequently} use $l$ $(0 \leq l < L)$ to index the subbands, with $l =
-0$ referring to the coarsest subband, and $L$ \hbadd{denotes the number of
+0$ referring to the coarsest subband and $L$ \hbadd{denoting the number of
 subbands.} \hbdel{to denote the highest indexed subband.} In this paper, we use
 \hbadd{$L=22$} \hbdel{$L=21$} (in 3D), corresponding to three transform passes.
 \hb{changed the defn of $L$ to make it consistent with $B$
@@ -73,7 +73,7 @@ in which integers are represented in base $-2$, i.e.,
 $\sum_{i=0}^{B}{c_i(-2)^i}$ with $c_i\in \{0,1\}$. This transformation
 increases the number of bit planes by one, to compensate for the absence of the
 sign bit.  \hbadd{In the negabinary form, the higher indexed bit planes are
-less significant.} \hbdel{We use $b$, which starts from 0, to index the bit
+less significant.}\pavol{really?} \hbdel{We use $b$, which starts from 0, to index the bit
 planes, with the convention that higher indexed bit planes are less
 significant.} \hb{$b$ as the index is already defined, so no need to repeat.
 however, if i understand correctly, the meaning of $b$ changes after converting
@@ -87,7 +87,7 @@ $g$ be a constant, so that finer resolution subbands contain more packets. This 
 enables the natural tradeoff between wider (but coarser) coverage and finer
 (but more local) details, for the same number of packets\pavol{unclear what you mean here}. In this paper, a
 packet always contains $4096$ bits (i.e., $g=16$), following the common
-practice of reading bits in batches for performance reason. This choice of $g$
+practice of reading bits in batches for performance reasons. This choice of $g$
 also accelarates our experiments significantly, without affecting the results
 in a meaningful way. \hb{this paragraph has some info missing. here, a packet
 combinse both resolution and precision, right. i can rephrase after some
@@ -134,8 +134,8 @@ needed to inform the client about the position of incoming packets.} \hbdel{the
 client is assumed to ``magically'' know the positions of packets without
 receiving this information from the server.}
 
-A stream is an ordered collection of packets, $p_i$, sorted in descending order
-of some associated weight, $W_i$. Thus, a stream can be characterized using a
+A stream is an ordered collection of packets $p_i$ sorted in descending order
+of some associated weight $W_i$. Thus, a stream can be characterized using a
 weighting function.
 %
 We call the two sorting criteria, corresponding to two common data reduction
