@@ -101,7 +101,7 @@
 
 %% Paper title.
 %\title{A Study of Task-dependent, Precision-adaptive Data Streams for Scientific Analytics\pavol{analysis?}}
-\title{A Study of the Tradeoff between Reduced Precision and Resolution for Scientific Data Analysis and Visualization}
+\title{Studying the Tradeoff between Reducing Precision and Reducing Resolution for Data Analysis and Visualization}
 
 %% This is how authors are specified in the journal style
 
@@ -116,31 +116,40 @@
 }
 
 %other entries to be set up for journal
-\shortauthortitle{Hoang \MakeLowercase{\textit{et al.}}: A Study of the Tradeoff between Reduced Precision and Resolution for Scientific Data Analysis and Visualization}
+\shortauthortitle{Hoang \MakeLowercase{\textit{et al.}}: Studying the Tradeoff between Reducing Precision and Reducing Resolution for Data Analysis and Visualization}
 
 %% Abstract section.
-\abstract{Performing scientific analysis on large data commonly found nowadays is an onerous task
-due to the prohibitive cost of data transfer. Currently, this issue is alleviated by working with
-reduced-resolution or reduced-precision data.
-\peter{Mention progressive access here?}
-This paper brings together techniques that reduce data
-in resolution, precision, or both, into a common framework in which they can be studied and
-compared. The error patterns of these techniques are compared in terms of fundamental error metrics on function values (e.g., L2 norm),
-first and second derivatives, histograms, and isocontours. We also compute and study
-metric-dependent streams
-\peter{streams optimized for different metrics?}
-that serve as empirical bounds on the limit to which
-reduction can happen, given an error tolerance for the analysis task at hand. Finally, based on the
-observed characteristics of those streams, we propose practical heuristics to minimize the amount of data
-needed to perform a given analysis task. The insights and heuristics presented here can be
-leveraged to implement data-optimal\pavol{"optimal" or other word?}
-\peter{what does data-optimal representations of data mean?}
-representations and querying systems
-\peter{query systems?  I.e., a noun, not a verb?}
-to facilitate interactive
-exploration as well as cursory analysis of enormous data.%
-\peter{The abstract does not make it clear what it is we're optimizing,
-i.e. ordering of bits.}
+\abstract{There currently exist two dominant strategies to reduce data sizes in analysis and visualization: Reducing the {\it precision} of the data, i.e. through copmression, or reducing its {\it  resolution}, i.e. by subsampling. 
+  Both have advantages and disadvantages and both face fundamental limits at which the reduced information ceases to be useful. 
+The paper explores the additional gains that could be achieved by combining both strategies. 
+In particular, we present a common framework that allows us to study the trade-off in reducing precision and/or resolution in a principle manner.
+We represent all data as a progressive stream of information and study how various orders, i.e. by resolution, by precision etc. impact the resulting approximation error. 
+Furthermore, we compute streams optimized for different error metrics and different tasks to serve as lower bounds on the achievable error.
+Finally, using a wide range of test data an suite of different analysis task, we formulate practical heuristics to minimize the data neeed to compute a particular task with a desired accuracy.
+
+
+% Performing scientific analysis on large data commonly found nowadays is an onerous task
+% due to the prohibitive cost of data transfer. Currently, this issue is alleviated by working with
+% reduced-resolution or reduced-precision data.
+% \peter{Mention progressive access here?}
+% This paper brings together techniques that reduce data
+% in resolution, precision, or both, into a common framework in which they can be studied and
+% compared. The error patterns of these techniques are compared in terms of fundamental error metrics on function values (e.g., L2 norm),
+% first and second derivatives, histograms, and isocontours. We also compute and study
+% metric-dependent streams
+% \peter{streams optimized for different metrics?}
+% that serve as empirical bounds on the limit to which
+% reduction can happen, given an error tolerance for the analysis task at hand. Finally, based on the
+% observed characteristics of those streams, we propose practical heuristics to minimize the amount of data
+% needed to perform a given analysis task. The insights and heuristics presented here can be
+% leveraged to implement data-optimal\pavol{"optimal" or other word?}
+% \peter{what does data-optimal representations of data mean?}
+% representations and querying systems
+% \peter{query systems?  I.e., a noun, not a verb?}
+% to facilitate interactive
+% exploration as well as cursory analysis of enormous data.%
+% \peter{The abstract does not make it clear what it is we're optimizing,
+% i.e. ordering of bits.}
 } % end of abstract
 
 %% Keywords that describe your work. Will show as 'Index Terms' in journal
@@ -219,6 +228,7 @@ i.e. ordering of bits.}
 %\newcommand{\duong}[1]{{\textcolor{purple}{(Duong: #1)}}}
 \newcommand{\duong}[1]{{\textcolor{purple}{}}} % this disable comments
 \newcommand{\peter}[1]{{\textcolor{green}{(PL: #1)}}} % this disable comments
+\newcommand{\ptb}[1]{{\textcolor{darkgreen}{(PTB: #1)}}} % this disable comments
 
 % prevent hyphenation
 \usepackage[none]{hyphenat}

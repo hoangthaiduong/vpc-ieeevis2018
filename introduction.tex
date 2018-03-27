@@ -13,7 +13,7 @@ of data.
 
 Broadly, these techniques can be classified into (i) reducing the data
 resolution, e.g., the number of data points stored, and (ii) reducing the
-precision of each data point.  Examples of the former kind of approaches are
+precision of each data point.  Examples of the former kind of approaches are subsampling~\cite{Pascucci01sc},
 adaptive mesh refinement~\cite{amr1989}, octrees, or other tree
 structures~\cite{hierarchical1984}, \peter{What about subsampling, as in IDX?
 And what about wavelets and other multires structures?}, and those of the
@@ -30,28 +30,25 @@ appropriate.  For example, high spatial resolution may be needed to resolve the
 topology of an isosurface, yet the corresponding data samples may be usable at
 less than full precision to adequately approximate the geometry.  Conversely,
 accumulating accurate statistics may require high-precision values, yet
-lower resolution subset of points may be sufficient for the task. 
+a lower resolution subset of points may be sufficient for the task. 
 
 In general, different
 \hbadd{levels of adaptivity in}\hbdel{combinations of} 
 resolution and precision may be suitable for different types of analysis and visualization tasks,
 and for many, these requirements will be
-data dependent. Consequently, an ideal-for-all data organization may not exist. 
+data dependent. Consequently, a globally optimal data organization may not exist. 
 Instead, we consider a progressive setting in which some initial data is loaded
 and processed, and new data is requested selectively based on the requirement
 of the current task as well as the characteristics of the data already loaded. The
-result is a stream of bits that minimizes the error, considering the task at hand.
-However, although intuitively there are almost certainly advantages in adapting
-both resolution and precision, it is unclear how big the potential gains could
-be \hb{the previous sentence is not convincing} \peter{The gains of what,
-specifically? An ``optimal'' ordering?} and how many of the benefits can be
-realized in practice.  This paper aims to answer these important questions
-through extensive, empirical experiments. In particular, our contributions are
-listed below.
+result is a stream of bits ordered such that it minimizes the error, considering the task at hand.
+However, although intuitively there are almost certainly advantages in considering both resolution and precision in the ordering it is unclear how much the error could be reduced for a given data budget or how little data could be used to achieve the same error.
+Furthermore, optimal data dependent orderings especially may not be practical since they assume perfect knowledge of the data. It is therefore important to understand which of these potential gains are realizable.
+This paper aims to answer these important questions through extensive, empirical experiments. 
+In particular, our contributions are:
 
 \begin{itemize}
 %
-\item We present a framework that allows systematic studies of the
+\item A framework that allows systematic studies of the
 resolution-versus-precision tradeoffs for fundamental data analysis and
 visualization tasks. The core idea is to represent various data reduction
 techniques as data streams that improve data quality in either resolution or
@@ -59,15 +56,15 @@ precision in each step (\Cref{sec:terminologies}). We can
 thus compare these techniques fairly, by comparing the corresponding data
 streams.
 %  
-\item We provide empirical evidence that jointly optimizing resolution and
+\item Empirical evidence that jointly optimizing resolution and
 precision can provide significant improvements on the results of analysis tasks
 over adjusting either independently.  This claim is demonstrated using a
 collection of data sets and data analysis tasks. We also show how different
 types of data analysis might require substantially different data streams for
 optimal results.
 %
-\item We estimate lower bounds of error \peter{You either estimate the error or
-provide a bound---not both.} for various analysis tasks using a greedy approach
+\item Lower bounds of error \peter{You either estimate the error or
+provide a bound---not both.} \ptb{I am not sure I agree we have lower bounds on the error} for various analysis tasks using a greedy approach
 that jointly optimizes resolution and precision (\Cref{sec:data_dep_streams}).
 \peter{Too much going on here.  An error bound, a greedy algorithm, joint
 ``optimization'' of precision and resolution---whatever that might mean.  How
@@ -79,7 +76,8 @@ a novel concept called \emph{stream signature} (\Cref{sec:stream-signature}).
 signature'' is.}
 \end{itemize}
 
+
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: "EGauthorGuidelines-eurovis18-full"
+%%% TeX-master: "template"
 %%% End:
