@@ -7,12 +7,13 @@ Rodr\'{\i}guez \etal~\cite{state-of-the-art-compressed-volume} and Li \etal~\cit
 \para{Tree-based multiresolution hierarchies.}
 Techniques that reduce data in resolution typically build a tree-shape hierarchy over the data. A
 very common scheme to genearte such a hierarchy is to construct low-resolution copies of the data
-from higher-resolution ones through filtering and subsampling. Examples include Gaussian and
+from higher-resolution ones through filtering and subsampling\pavol{both? I think they are exclusive}. Examples include Gaussian and
 Laplacian pyramids~\cite{laplacian-pyramid},
-mipmaps~\cite{multires_octree1999,interactive-exploration-ct-scans}. Often times, the data is stored
+mipmaps~\cite{multires_octree1999,interactive-exploration-ct-scans}. Often, the data is stored
 in blocks on each resolution level. To save bandwidth, low-resolution blocks can be streamed during
 rendering, if the points being queried project to less than a pixel on screen. However, these methods
-increase storage requirements, making them unsuitable for very large data.
+increase storage requirements, making them unsuitable for very large data.\pavol{They do, but usually
+it is small fraction of the data, for example mipmap in 3D is 15\% overhead}
 
 Recent multi-resolution techniques save storage by adapting to the data in such a way that different
 regions of the data are stored in different resolutions, depending on how ``homogeneous'' the region
@@ -30,19 +31,20 @@ kd-tree~\cite{fogal-kdtree,in-situ-sampling-particle} can also be used to build 
 Alternatively, space-filling curves such as the hierarhical Z curve~\cite{idx2001} or the Hillbert
 curve~\cite{mloc} can be used to reorder data samples to form a hierarchy without any filtering
 steps or redundant samples, as low-resolution levels are constructed via subsampling. Unfortunately,
-subsampling can introduce heavy aliasing artifacts.
+subsampling can introduce heavy aliasing artifacts.\pavol{is there some paper that explores this aliasing?}
 
 %\paragraph{\textbf{Transform-based multiresolution hierarchies}}
 \para{Transform-based multiresolution hierarchies.}
 Other multiresolution approaches reduce data by transform-based compression. For example,
-COVRA~\cite{covra2012} constructs an octrees of bricks, which are further subdivided blocks.
+COVRA~\cite{covra2012} constructs an octrees of bricks\pavol{why plural? is the octree computed per brick
+or octree having bricks as leaves?}, which are further subdivided blocks\pavol{bricks are subdivided into blocks?}.
 Compression is done by learning a sparse representation for the blocks in terms of prototype (basis)
 blocks. Similarly, Fout\etal~\cite{hw_dvr2007} transform each block in the volume using the KLT
 transform, which produces several classes of partitions (each can be thought of as one resolution
-level). They compress the transform coefficients using vector quantization~\cite{vq1992}, by
+level). They compress the transform coefficients using vector quantization~\cite{vq1992} by
 constructing one codebook for each paritition class. Schneider\etal~\cite{compression_domain2003}
-also uses vector quantization on transform coefficients, but with a simple Haar-like transform that
-separates each block of $2^3$ voxels into one average and seven differences.
+also use vector quantization on transform coefficients, but with a simple Haar-like transform that
+separates each block of $2^3$ voxels into one average and seven difference coefficients.
 
 Analogous to the KLT transform in 2D, the Tucker decomposition~\cite{tensor_dvr2015} in
 $n$-dimensional space decomposes the input data (stored as a tensor) into $n$ matrices of basis
@@ -52,12 +54,12 @@ core tensor can be rank-truncated (resulting in coarse-scale representations of
 features)~\cite{tamresh,tucker-thresholding,multiscale-tensor}. Furthermore, elements in the basis
 matrices and the core tensor can be thresholded~\cite{tucker-thresholding} or
 quantized~\cite{tamresh,multiscale-tensor}. Tensor decomposition can work for higher-dimensional
-data, and can achieve very high ratios of quality over data size. However, the transform step is
-highly data-dependent, thus relatively costly.
+data and can achieve very high ratios of quality over data size\pavol{what does it mean? compression ratio?}. However, the transform step is
+highly data-dependent, thus relatively costly.\pavol{why costly? do we need to transmit something?}
 
 %\paragraph{\textbf{Wavelets}}
 \para{Wavelets.}
-Transforms that use fixed bases avoid such high computation cost, at the expense of slightly less
+Transforms that use fixed bases avoid such high computation cost at the expense of slightly less
 effective compression. Perhaps the most popular transform that uses a fixed basis is the (discrete)
 wavelet transform (DWT). The DWT constructs a hierarchy of resolution levels via low and high
 bandpass filters. The transform is recursively applied to the lower-resolution band, resulting in a
@@ -66,23 +68,22 @@ representations such as Laplacian pyramids is that the wavelet transform is mere
 that like reordering techniques does not increase the data size. Another benefit over adaptive
 refinement meshes and other tree-like techniques is that the wavelet basis functions are defined
 everywhere in space, requiring no special interpolation rules when given some arbitrary subset of
-wavelet coefficients and basis functions. One disadvantage of the wavelet transform is non-constant
-time random access cost, though acceleration structures have been proposed to speed up local
+wavelet coefficients and basis functions. One disadvantage of the wavelet transform is the random access cost
+which is not constant time. However, there has been work to develop acceleration structures to speed up local
 queries~\cite{weiss}.
 
 Beside offering a multiresolution decomposition, enabling data streaming with level-of-detail
 support, wavelets also offer ample opportunities for compression. As the magnitude of wavelet
 coefficients decay rapidly for a typical volume [CITE], they are especially amenable to thresholding
 or entropy compression. In the context of storing and visualizing scientific data, wavelets (with
-compression) are used in a wide variety of systems
-(~\cite{multires_toolkit2003,vapor2007,woodring2011}), and applications (volume rendering with
+compression) are used in a wide variety of systems~(\cite{multires_toolkit2003,vapor2007,woodring2011}), and applications (volume rendering with
 level-of-detail~\cite{wavelet-compression-interactive-vis,multires-framework,rapid-compression-volume,interactive-rendering-large-volume,multires-volume-rendering},
 turbulence visualization~\cite{treib}, particle visualization~\cite{sph-octree}).
 
 Most wavelet-based techniques employ tiling of wavelet coefficients in individual subands to
-facilitate random access, and spatial adaptivity in resolution. For example, the VAPOR
+facilitate random access and spatial adaptivity in resolution. For example, the VAPOR
 toolkit~\cite{vapor2007} incorporates a multiresolution file format based on a wavelets to allow
-data analysis on commodity hardware, and stores individual tiles in separate files to allow loading
+data analysis on commodity hardware by storing individual tiles in separate files to allow loading
 of the region of interest. However, like most multiresolution work, only the resolution control is
 leveraged. The precision axis, which can potentially further reduce data transfer, is left
 unexplored.
@@ -105,21 +106,21 @@ on the same subband.
 %\paragraph{\textbf{Floating-point compression}}
 \para{Floating-point compression.}
 \newcommand{\zfp}{\textsc{zfp}\xspace}
-The \zfp compression scheme~\cite{zfp2014} also codes transform coefficients by bit plane, in order
+The \zfp compression scheme~\cite{zfp2014} also codes transform coefficients by bit plane\pavol{encodes transformed coefficients...}, in order
 of decreasing significance. \zfp partitions the domain---a structured grid---into small (e.g., $4
-\times 4 \times 4$) independent blocks and thus allow for localized decompression. Moreover, \zfp
-supports fixed-rate compression, which facilitates random access to the data. Its fast transform and
+\times 4 \times 4$\pavol{if zfp supports only this block size, then remove e.g.,}) independent blocks and thus allows for localized decompression. Moreover, \zfp
+supports fixed-rate compression that facilitates random access to the data. Its fast transform and
 caching of decompressed data allows it to achieve not only high throughput decompression, but also
 fast inline compression. Extensions of \zfp allow it to vary either the bit rate or precision
 spatially over the domain, albeit at fixed resolution~\cite{zfp-arc}. Other notable compression
 schemes for scientific data include ISABELA~\cite{isabela}, SZ~\cite{sz}, and FPZIP~\cite{fpzip}.
 All three techniques employ prediction and compress the residuals. ISABELA and SZ perform residual
 scalar quantization, while FPZIP truncates floats, which can be seen as nonuniform scalar
-quantization. Another work that uses scalar quantization is~\cite{sqe}. Similar to FPZIP, the
+quantization. Another work that uses scalar quantization is~\cite{sqe}\pavol{expand the sentence}. Similar to FPZIP, the
 Precision-based Level of Details (PLoD) scheme proposed in MLOC~\cite{mloc} also truncates floats by
 dividing a double-precision number into seven parts, of which the first part contains the first two
-bytes, and each of the other six parts contains one byte for additional precision. MLOC also
-proposes a multiresolution scheme based on Hillbert curves, but this scheme (based on resolution)
+bytes, and each of the other six parts contains one byte for additional precision. MLOC includes
+a multiresolution scheme based on Hillbert curves, but this scheme (based on resolution)
 and the PLoD scheme (based on precision) are exclusive.
 
 %\paragraph{\textbf{Mixing resolution and precision}}
@@ -128,14 +129,14 @@ Schemes that allow progressive data access in both resolution and precision incl
 SBHP~\cite{sbhp2000} and JPEG2000~\cite{jpeg2000}. Both partition each subband into blocks and code
 each block independently, in bit plane order. By interleaving compressed bits across blocks, one can
 construct a purely resolution-progressive or a purely precision-progressive stream, or anything in
-between. Outside out image compression, JPEG2000 has found use in compression of scientific data.
+between. Outside image compression, JPEG2000 has found use in compression of scientific data.
 For example, Woodring \etal~\cite{woodring2011} use JPEG2000 to store floating point data. Since
 most JPEG2000 implementations are limited to integer data, the authors apply uniform scalar
 quantization to convert floating point data to integer form. Even though JPEG2000 supports varying
 both resolution and precision, the authors do not explore this capability but focus only on setting
-a bit rate. In general, although there exists mechanisms to do so, simultaneously leveraging both
-axes of data reduction, especially for the purpose of scientific data analysis, has not been a
-well-studied problem.
+bit rate. In general, although there exists mechanisms that simultaneously leverage both
+axes of data reduction, especially for the purpose of scientific data analysis; however these have not been
+well-studied.
 
 %\paragraph{\textbf{Error quantification}}
 \para{Error quantification.}
@@ -148,11 +149,11 @@ the effects of lossy compression (using FPZIP and APEX) on the Miranda hydrodyna
 using physics-based error metrics. Li \etal~\cite{evaluating-efficacy-wavelet} measure the error
 incurred by wavelet compression on turbulent-flow data, using root-mean-square error of
 radial-enstrophy profiles as the metric. Wang \etal~\cite{statistical-volume-quality} assess the
-quality of distorted data using a combination of statistical metrics in the (wavelet) transform
+quality of distorted data using a combination of statistical metrics in the wavelet transform
 domain. Etiene \etal have published a series of work on verification of isosurfaces in
 geometrical~\cite{verifiable-isosurface} and topological~\cite{topology-verification-isosurface}
-terms, as well as verfication of volume rendered images~\cite{verifying-volume-rendering}. They
-focus on order-of-accuracy and convergence analysis, where errors are introduced mostly through
+terms, as well as verification of volume rendered images~\cite{verifying-volume-rendering}. They
+focus on order-of-accuracy\pavol{is this $C^n$ stuff?} and convergence analysis, where errors are introduced mostly through
 discretization, not necessarily for the purpose of reducing data bandwidth. Finally, the Z-checker
 framework~\cite{z-checker} consists of many independent metrics (which are called analysis
 ``kernels'') to evaluate data quality after lossy compression. The list includes min/max,
