@@ -156,9 +156,10 @@ The streams \slvl and \sbit are designed to mimic the way data is accessed in
 traditional methods that work either in resolution (\slvl) or in precision
 (\sbit). 
 
-We also define a third stream, which combines these two dimensions, and refer
+Additionally, we define a third stream that combines these two dimensions and refer
 to it as \emph{by wavelet norm}, \swav.  This stream orders packets using
-weights $\wwav(p)=2^{B-1-b(p)}\times \norm{\omega_{l(p)}}^2$. The first term
+weights $\wwav(p)=2^{B-1-b(p)}\times \norm{\omega_{l(p)}}^2$\pavol{by bit plane does not have
+the -1 term, is this calculation correct?}. The first term
 captures the contribution of a bit on bit plane $b(p)$, and the second term
 captures the contribution of a wavelet coefficient on subband $l(p)$, where
 $\omega_{l(p)}$ refers to a wavelet basis function on subband $l(p)$. In the
@@ -171,19 +172,18 @@ reduction scheme based on \emph{by wavelet norm} was hinted at in
 \todo{[CITE]}. \duong{if there is enough space, include here the formula to
 compute the norm of basis functions, else put it in the appendix}
 
-Another common data reduction technique, especially for transform-based data,
+Another common data reduction technique, especially for transform-based data\pavol{what sort of data is it?},
 is one in which truncation happens leaving out coefficients of smallest
-magnitudes. We model this scheme with a stream called \emph{by magnitude},
+magnitudes.\pavol{ambiguous sentence, is the truncation removing whole coefficients?} We model this scheme with a stream called \emph{by magnitude},
 \smag. Here, the weight function is $\wmag(p)=\sum_{c\in
 \text{block}(p)}\norm{c}^2$ (the sum is over all coefficients in the block that
 contains packet $p$). If two packets have the same weight, they are ordered by
-subband index, and then by bit plane. Unlike \slvl and \sbit, \smag
-%\emph{by level} and \emph{by bit plane}, \emph{by magnitude} 
-is data dependent, because the coefficient magnitudes are not known until after
+subband index, and then by bit plane. Unlike \slvl, \sbit, and \swav, the \smag stream
+is data dependent because the coefficient magnitudes are not known before
 the data has gone through the wavelet transform.
 
-In general, data-dependent streams are better than data-independent streams in
-theory, because they can prioritize important packets based on the actual data.
+In theory, data-dependent streams are better than data-independent streams because
+they can prioritize important packets based on the actual data.
 However, data-dependent streams are ill-suited for practical purposes, because
 the cost of sending position information likely outweights any potential
 benefit. Nevertheless, we study them for various reasons. First, the \emph{by
@@ -194,48 +194,52 @@ streams can also be task dependent (\Cref{sec:data_dep_streams}), which may
 provide insights on how data should be queried to perform certain analysis
 tasks.
 
+
+
+
 \subsection{Data-dependent, Task-optimized Streams} \label{sec:data_dep_streams}
 
 \hb{this section is almost completely rewritten. please compare the pdf with a previous
 version.  there was too much coloring keeping both versions in}
 
 Each analysis task potentially requires a fundamentally different stream for
-optimal results.  Studying such an ``optimal'' (and data-dependent) is
+optimal results.  Studying such an ``optimal'' (and data-dependent) stream is
 important because not only does it serve as a benchmark, but can also provide
 insights into other, more practical streams for the same task.
 
-Given the original data $f$ and its reconstructed approximation $f'$ using a
+Given the original data set $f$ and its reconstructed approximation $f'$ using a
 subset of packets, let $q$ represent some quantity of interest\footnote{In this
-paper, we use the terms ``quantity of interest'' and ``task'' interchangebly,
-with the understanding that, e.g., if the task is extracting isocontours, then
-the quantity of interest is isocontours.}, e.g., histogram, isocontour, etc.,
+paper, we use the terms ``quantity of interest'' and ``task'' interchangeably,
+with the understanding that, e.g., if the task is extracting isosurface, then
+the quantity of interest is the isosurface.}, e.g., histogram, isosurface, etc.,
 computed on $f$ or $f'$. For a given task $q$, a well-defined error metric
 $\err(q(f'),q(f))$ is needed. Given a data set $f$, a task $q$, and an error
 metric $\err$, our goal is to generate an \emph{optimal} (and data-dependent)
 stream, $\sopt$, for $q$ with respect to $\err$.
 
-We can define $\sopt$ as the stream such that the area under the curve of \err
-is minimized for all packets to be streamed. However, this definition limited
-in practice, because a stream should be able to terminate at any point, and 
-still produce as small an error as possible. 
+We can define $\sopt$ as a stream such that the area under the curve of \err
+is minimized for all packets to be streamed. However, this definition is limited
+in practice because a stream should be able to terminate at any point and 
+still produce as small an error as possible. Moreover, the solution to the problem
+has exponential time complexity.
 
 Instead, we employ a greedy approach to define the optimal stream.  A
 straightforward greedy algorithm, however, suffers from the usual limitation of
 potentially leading to a local optimum. For example, starting with an all-zero
 function $f'$, and an empty stream, we can repeatedly append new packets to the
 stream, which when included in the current $f'$, would minimize $\err$ at every
-step. Each step could potentially pick a packet that introduces low error, yet
-contributes very little to improve the quality of $f'$, potentially leading to
+step. Each step might pick a packet that introduces low error, yet
+contributes very little to improve the quality of $f'$, possibly leading to
 a non-optimal stream at a later point.  In order to avoid local minimum, we
-modify this greedy algorithm to build the stream backwards. In other words, we
-start with a ``lossless'' $f'$ (i.e., $f'=f$), and at each step, we remove the
+modify this greedy algorithm to build the stream backwards.\pavol{check if it is true} In other words, we
+start with a ``lossless'' $f'$ (i.e., $f'=f$), and at each step we remove the
 packet that has the least impact on the error $\err$ from $f'$.  This
 modification solves the previous problem where less important packets were
-added to $\sopt$ too early, and ensures that the packets chosen for removal
-early on are indeed less important, and will be put at the end of $\sopt$.
+added to $\sopt$ too early. Moreover, it ensures that the packets chosen for removal
+early on are indeed less important and will be put at the end of $\sopt$.
 
 Unfortunately, such a greedy algorithm is expensive in practice, as its
-complexity is $\mathcal{O}(n^2)$, with $n$ being the total number of packets in
+complexity is $\mathcal{O}(n^2)$\pavol{technically, it is $n^3$}, with $n$ being the total number of packets in
 the data.  Considering a $[256 \times 256 \times 256]$ domain,  a packet size
 that spans $16^3$ coefficients, and $16$ bits of quantization, $n = 65536$,
 leading to prohibitively large numbers. Therefore, we adopt a simplified version
@@ -277,7 +281,7 @@ quality for $\sopt$. \Cref{alg:greedy} outlines the approach described above.
 
 \hbadd{
 Unlike data-independent streams, data-dependent streams do not impose a static
-ordering of packets in this space. To concisely represent and characterize the
+ordering of packets. To concisely represent and characterize the
 dynamic ordering of data-dependent streams, we introduce the concept of a
 \emph{stream signature}.  Any data-dependent stream can be represented with
 respect to the two-dimensional space of resolution (subbands) and precision
@@ -297,7 +301,7 @@ lie on the first bit plane of the first subband, as $\sgn(0,0)=0$. Those are
 followed by packets on the second bit plane of the first subband
 ($\sgn(0,1)=1$), and then the first bit plane of the second subband
 ($\sgn(1,0)=2$). Finally, the last group of packets comes from the third bit
-plane of the second subband ($\sgn(1,2)=5$). Thus, aA stream's signature shows
+plane of the second subband ($\sgn(1,2)=5$). Thus, a stream's signature shows
 how the stream traverses the space $\strm_{L,B}$, and highlight the different
 resolution-versus-precision tradeoffs among $\sopt$ optimized for different
 tasks.
@@ -332,7 +336,7 @@ localized that their relative ordering in the $\strm_{L,B}$ space becomes
 meaningful. For example, a packet at one corner of the domain may be streamed
 before one at an opposite corner, but this fact contains no useful information.
 We define a region to be the spatial volume that is covered by a packet in the
-coarsest subband. Algorithm~\ref{alg:signature} lists the steps in our
+coarsest subband. Algorithm~\ref{alg:signature} lists the steps of our
 approach.
 
 \begin{algorithm}[h]
@@ -369,6 +373,6 @@ established between the client and the server through the transmission of the
 signature. This is not a hurdle in practice, because the size of the signature
 is negligible compared to the size of the data itself. In 3D, assuming
 22 subbands and 32-bit quantized coefficients, a signature contains $1408
-(=22\times 32\times 2)$ bytes. $\ssig$ has no element of spatial-adaptivity;
+(=22\times 32\times 2)$ bytes. Stream $\ssig$ has no element of spatial-adaptivity;
 hence it can serve as a bridge when comparing the resolution-versus-precision
 tradeoffs between data-independent and data-dependent streams.
