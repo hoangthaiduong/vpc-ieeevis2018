@@ -1,27 +1,29 @@
 \section{\hbadd{Evaluation on Different} Analysis Tasks}\label{sec:analysis-tasks}
 
-\begin{table*}[t]
-  \caption{Data sets used in experiments \duong{Update this table}}
+\begin{table*}[t] 
+	\caption{Data sets used in experiments. More data sets are included in the
+	supplementary materials. In the main paper, every volume is of dimensions $64^3$. In the 
+	supplementary materials, most volumes are of dimensions $256^3$.}
   \centering
   \begin{tabular}{p{0.06\linewidth}p{0.24\linewidth}p{0.12\linewidth}p{0.05\linewidth}p{0.05\linewidth}p{0.05\linewidth}p{0.05\linewidth}p{0.06\linewidth}p{0.06\linewidth}p{0.06\linewidth}}
   \hline
-  Name & Type & Dimension & Data type & Function & Gradient & Laplacian & Histogram & Isosurface & P or D\\
+  Name & Type & Data type & Function & Gradient & Laplacian & Histogram & Isosurface & P or D\\
   \hline
-  boiler & combustion simulation& $218\times 130 \times 150$ & float64 & x & x & x & x &  & Done \\
-  plasma & magnetic reconnection simulation& $256\times 256 \times 256$ & float32 & x & x & x & x & x & P\\
-  diffusivity & hydrodynamics simulation& $256\times 256\times 256$ & float64 & x & x & x & x & x & P\\
-  pressure & hydrodynamics simulation& $256\times 256 \times 256$ & float64 &  &  &  &  &  & D(running)\\
-  velocityz & hydrodynamics simulation& $256\times 256\times 256$ & float64 & x & x &  & x &  & D(in queue)\\
-	turbulence & fluid dynamics simulation& $256\times 256 \times 256$ & float32 & x & x & x & x & x &
-	P(running)\\
-	kingsnake & fluid dynamics simulation& $256\times 256 \times 256$ & uint8 & x &  &  & x &  & D(in queue)\\
-	flame & fluid dynamics simulation& $256\times 256 \times 256$ & float32 & x & x & x & x & x & D(running)\\
-	csafe & fluid dynamics simulation& $256\times 256 \times 256$ & uint8 & x &  &  & x &  & D(in queue)\\
-	enzo-v & fluid dynamics simulation& $256\times 256 \times 256$ & float32 & x & x &  &  &  & D(running)\\
-	brain & fluid dynamics simulation& $256\times 256 \times 256$ & uint8 & x &  &  & x &  & D(running)\\
-	foam & fluid dynamics simulation& $256\times 256 \times 256$ & uint16 & x & x & x & x & x & P\\
-	vismale & fluid dynamics simulation& $128\times 128 \times 128$ & uint8 & x & x & x & x & x & P\\
-	karfs	& fluid dynamics simulation& $256\times 256 \times 256$ & float32 & x & x &  & x & x & Done\\
+  boiler & combustion simulation& float64 & x & x & x & x &  & Done \\
+  plasma & magnetic reconnection simulation& float32 & x & x & x & x & x & Done\\
+  diffusivity & hydrodynamics simulation& float64 & x & x & x & x & x & P(rerun)\\
+  pressure & hydrodynamics simulation& float64 & x & x & x & x & x & Done\\
+	turbulence & fluid dynamics simulation& float32 & x & x & x & x & x &	P(rerun)\\
+	kingsnake & CT scan & uint8 & x &  &  & x & x & Done\\
+	% flame & fluid dynamics simulation& float32 & x & x & x & x & x & Done\\
+	% csafe & fluid dynamics simulation& uint8 & x &  &  & x & x & Done\\
+	% enzo-v & fluid dynamics simulation& float32 & x & x &  & x &  & D(work2nd)\\
+	% brain & fluid dynamics simulation& uint8 & x &  &  & x & x & Done\\
+	% foam & fluid dynamics simulation& uint16 & x & x & x & x & x & Done\\
+	% vismale & fluid dynamics simulation& uint8 & x & x & x & x & x & P(rerun)\\
+	% karfs	& fluid dynamics simulation& float32 & x & x &  & x & x & Done\\
+	% aneurism	& fluid dynamics simulation& uint8 & x & x &  & x & x & Done\\
+  % velocityz & hydrodynamics simulation& float64 & x & x &  & x & x & D(main)\\
   \hline
   \end{tabular}\label{tbl:data-sets}
 \end{table*}
