@@ -24,7 +24,7 @@ discusses gradient computation, and~\Cref{sec:laplacian} discusses computation o
 packets are removed, and the plots are truncated in the same way as in~\Cref{fig:rmse-optimized}.
 The trend in error, in all cases, is $\sgop < \sgsg \approx \sbit < \swav < \smag < \slvl$.}
 \label{fig:gradient-error-comparison}
-%\vspace{1em}
+\vspace{1em}
 
 \centering
 \subcaptionbox{\emph{by level} (\slvl)}{%
@@ -109,9 +109,10 @@ gradient computation, because it is better able to retain sharp features.
 {\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-turbulence}}
 \subcaptionbox{\emph{pressure}}
 {\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-pressure}}
-\caption{Laplacian error comparison among streams, using the three-point \hb{or 5?}
-stencil. The plots are truncated so as to better highlight differences without
-discarding important information. In all cases, \emph{Laplacian}\pavol{finish}}
+
+\caption{Laplacian error comparison among streams. The plots are truncated so as to better highlight
+differences without discarding important information. In all cases, in terms of error,
+$\slop < \slsg < \sbit < \swav < \smag < \slvl$}.
 \label{fig:laplacian-error-comparison}
 \vspace{1em}
 
