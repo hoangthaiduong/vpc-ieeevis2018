@@ -1,12 +1,12 @@
 \subsection{Computation of derivatives} \label{sec:derivatives}
 
-Computation of derivative quantities such as gradient and Laplacian is important in data analysis.
+Computation of derivative-based quantities such as gradient and Laplacian is important in data analysis.
 Since simulation data can rarely be captured by closed-form formulae, we use finite differences. In
 this section, we use 32 bits (instead of 16) for quantization to ensure enough precision for finite
 differences. We always perform finite differences on the finest (original) resolution. This decision
-avoids the problem of computing distances between quantities defined on grids of different sizes,
-because we are unaware of any widely accepted solutions to this problem.~\Cref{sec:gradient}
-discusses gradient computation, and~\Cref{sec:laplacian} discusses computation of the Laplacian.
+avoids the problem of computing distances between quantities defined on grids of different sizes and
+we are unaware of any widely accepted solutions to this problem.~\Cref{sec:gradient}
+discusses gradient computation and~\Cref{sec:laplacian} discusses computation of the Laplacian.
 
 \subsubsection{Gradient computation} \label{sec:gradient}
 
@@ -60,32 +60,32 @@ function's shape (or its relative values) matters more than its absolute values.
 \label{fig:bit-plane-vs-wavelet-norm-gradient}
 \end{figure}
 
-The gradient of a given function 3D $f$ at a grid point \mbox{$\x = (x,y,z)$} is the vector
+The gradient of a given function $f$ at a grid point $\x = (x,y,z)$ is the vector
 $(\frac{\partial f}{\partial x},\frac{\partial f}{\partial y}, \frac{\partial f}{\partial y})$. We
-compute the derivative in each dimension using a five-point stencil, i.e., \mbox{$\frac{\partial
+compute the derivative in each dimension using a five-point stencil, i.e., $\frac{\partial
 f}{\partial x} \approx \frac{1}{12}f(x-2,y,z) - \frac{2}{3}f(x-1,y,z) + \frac{2}{3}f(x+1,y,z) -
-\frac{1}{12}f(x+2,y,z)$.} 
+\frac{1}{12}f(x+2,y,z)$. 
 Using~\Cref{alg:greedy}, we compute a \emph{gradient-optimized} stream, \sgop, that minimizes the
 difference between the reconstructed gradient field and the original gradient field. The error at
 each grid point $\x_i$ is the squared L\textsubscript{2} norm of the difference between two gradient
-vectors, i.e., $\norm{\nabla \tilde{f}(\x_i) - \nabla f(\x_i)}^2$, where $\tilde{f}$ is an
-approximation of $f$ at low bit rates. The overall error, defined over the whole field, is
+vectors, i.e., $\norm{\nabla \tilde{f}(\x_i) - \nabla f(\x_i)}^2$, where $\tilde{f}$ is a low bit rate
+approximation of $f$. The overall error, defined over the whole field, is
 $\err(\nabla \tilde{f}, \nabla f) = \sqrt{\frac{1}{n} \sum_{i=1}^{n}{\norm{\nabla
 \tilde{f}(\x_i)-\nabla f(\x_i)}^2}}$.
 
 \Cref{fig:gradient-error-comparison} shows the gradient error incurred by different streams for four
 data sets. In general, we observe the ordering of performance (from best to worst) as: \sgop, \sgsg,
 \sbit, \swav, \smag, \slvl. This ordering can also be seen in~\Cref{fig:gradient-rendering-diff},
-where the $x$-component of the gradient field for \emph{tuburlence} is reconstructed and rendered,
-at 0.2 bps. Unlike the RMSE case, \sbit produces better approximations of the gradient field,
+where the $x$-component of the gradient field for \emph{tuburlence} is reconstructed and rendered
+at 0.2 bps. Unlike the RMSE case, \sbit produces better approximations of the gradient field
 compared to \swav.
 
-To further investigate this behavior, a 1D line is extracted from \emph{plasma}, and reconstructed
-using \sbit and \swav at 0.6 bps (see~\Cref{fig:bit-plane-vs-wavelet-norm-gradient}). Because the
-coarse-scale coefficients in \sbit are not accurate enough, the reconstruction from \sbit is
+We further investigate this difference by extracting a 1D line from \emph{plasma} data set and reconstructing
+the function using \sbit and \swav at 0.6 bps (\Cref{fig:bit-plane-vs-wavelet-norm-gradient}). Because the
+coarse-scale coefficients in \sbit are using low bit rate, the reconstruction from \sbit is
 inaccurate in areas of low gradients. In contrast, the \swav's reconstruction is accurate in
 low-gradient areas, but lacks the resolution to resolve the high-gradient areas, because \swav
-frequently intersperses bits that improve resolution and bits that improve precision, unlike \sbit,
+frequently intersperses bits that improve resolution with bits that improve precision, unlike \sbit,
 which always streams bits that improve resolution first. Therefore, \swav tends to produce a
 ``smoother'' reconstruction that \emph{on average} (i.e., in terms of RMSE) is close to the original
 function. \sbit, on the other hand, tends to capture well the function's shape (due to fine-scale
@@ -134,14 +134,14 @@ $\slop < \slsg < \sbit < \swav < \smag < \slvl$}.
 > \smag > \slvl$.} \label{fig:laplacian-renderings}
 \end{figure*}
 
-The Laplace operator is a second-order differential operator, defined as the divergence of the
+The Laplace operator is a second-order differential operator defined as the divergence of the
 gradient field. It can be computed by summing second partial derivatives in all dimensions, e.g., in
 3D: $\Delta
 f=\frac{{\partial}^2}{\partial{x^2}}f+\frac{{\partial}^2}{\partial{y^2}}f+\frac{{\partial}^2}{\partial{y^2}}f$.
 To compute the Laplacian, we use the five-point finite difference to approximate the second
 derivative in each dimension: $\frac{{\partial}^2}{\partial{x^2}}f(x,y,z) \approx
 -\frac{1}{12}f(x-2,y,z)+\frac{4}{3}f(x-1,y,z)+\frac{-5}{2}f(x,y,z)+\frac{4}{3}f(x+1,y,z)-\frac{1}{12}f(x+2,y,z)$.
-To compare two Laplacian fields, we use the root-mean-square error, i.e., $\err(\Delta
+We compare two Laplacian fields using the RMSE metric, i.e., $\err(\Delta
 \tilde{f},\Delta f)=\text{RMSE}(\Delta \tilde{f},\Delta f)$. As usual, we use~\Cref{alg:greedy} to
 compute a \emph{Laplacian-optimized} stream, \slop, which minimizes $\err$, and an \slsg stream from
 its signature.~\Cref{fig:laplacian-error-comparison} plots the error curves for all relevant
