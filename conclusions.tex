@@ -2,7 +2,7 @@
 We presented a study of tradeoff between resolution and precision for commonly used derived
 scientific quantities such as RMSE, gradient, Laplacian, histogram, and isosurface.
 During this study, we covered the gamut of scientific data sets, ranging from simulations
-with smooth features or fine small detail to image data with noisy parts.
+with smooth features or fine scale detail to image data with noisy parts\pavol{do we have plot of image data?}.
 We showed that one stream type does not fit all analysis tasks, but some streams perform well
 in most of them and may be useful in a new file format design.
 
@@ -13,7 +13,8 @@ in most of them and may be useful in a new file format design.
 We started with an evaluation of contemporary techniques for reducing resolution or precision.
 The experiments showed that streaming only in resolution or precision is suboptimal for all
 tested queries. We thus developed a tractable greedy algorithm for computing adaptive stream order
-based on the particular task. The produced stream significantly outperforms any stream that has
+based on the particular task. The produced stream significantly\pavol{it would be good to quantify what
+significantly means, 2x?} outperforms any stream that has
 a fixed streaming order.
 
 After establishing the greedy algorithm for computing a stream, we focused on each query and

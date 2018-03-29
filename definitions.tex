@@ -61,7 +61,7 @@ following the common practice of reading bits in batches for performance reasons
 packet consists of bits on the same bit plane, from a \emph{block} of negabinary wavelet
 coefficients. A block is a $g\times g\times g$ grid of adjacent coefficients on the same subband.
 $g$ is always $2$ for the experiments in this paper (we use $g=16$ with larger data sets in the
-supplementary marterials). We let $g$ be a constant, so that finer resolution subbands contain more
+supplementary material)\pavol{did we decide to not do it?}. We let $g$ be a constant, so that finer resolution subbands contain more
 packets, which means there is a tradeoff between a packet that provides wider (but coarser) coverage
 and a packet that provides finer (but more local) details. Every packet comes from a bit plane $b$
 and a subband $l$. A packets improves the precision (or resolution) of a region if it comes from a
@@ -148,7 +148,7 @@ Studying such an ``optimal'' (and data-dependent) stream is important because it
 as a benchmark, but also can provide insights into other, more practical streams for the same task.
 
 Given the original data set $f$ and its reconstructed approximation $\tilde{f}$ using a subset of
-packets, let $q$ represent some quantity of interest\footnote{In this paper, we use the terms
+packets, let $q$ represent some quantity of interest\pavol{are footnotes allowed in TVCG?}\footnote{In this paper, we use the terms
 ``quantity of interest'' and ``task'' interchangeably, with the understanding that, e.g., if the
 task is extracting isosurface, then the quantity of interest is the isosurface.}, e.g., histogram,
 isosurface, etc., computed on $f$ or $f'$. For a given task $q$, a well-defined error metric
@@ -177,8 +177,8 @@ indeed less important and will be put at the end of $\sopt$.
 Unfortunately, such a greedy algorithm is still expensive in practice, as its complexity is
 $\mathcal{O}(n^3)$, with $n$ being the total number of packets in the data. The cubic time
 complexity comes from the nested loop ($O(n^2)$) of the algorithm itself, as well as the wavelet
-transform ($O(n)$) inside the innermost loop. Considering a $[256 \times 256 \times 256]$ domain, a
-packet size that spans $16^3$ coefficients, and $16$ bits of quantization, $n = 65536$, leading to
+transform ($O(n)$) inside the innermost loop. Considering a $[256 \times 256 \times 256]$\pavol{update} domain, a
+packet size that spans $16^3$\pavol{update} coefficients, and $16$ bits of quantization, $n = 65536$\pavol{update}, leading to
 prohibitively large numbers. Therefore, we adopt a simplified version of this algorithm, where only
 one pass through the set of $n$ packets is needed. The modified algorithm works as follows. In each
 iteration $i$, we disable (set to zero) a new packet $p_i$ in $\tilde{f}$, and then compute and record
@@ -213,6 +213,7 @@ for $\sopt$. \Cref{alg:greedy} outlines the approach described above.
 \end{algorithm}
 
 \subsection{Stream Signatures} \label{sec:stream-signature}
+\pavol{quite hard to read; we use same symbol for a space and for indexed set of that space}
 
 Unlike data-independent streams, data-dependent streams do not impose a static ordering of packets.
 To concisely represent and characterize the dynamic ordering of data-dependent streams, we introduce
@@ -221,7 +222,7 @@ to the two-dimensional space of resolution (subbands) and precision (bit planes)
 = \strm_{L,B}=\{(l,b)\ |\ 0\leq l < L,\ 0\leq b < B\}$.}\pavol{can be confusing as we use the same sign
 for a space and treversal of the space}
 
-Given a stream, we define its signature $\sgn_{L,B}$ as the $L \times B$ matrix, whose $(l,b)$
+Given a stream, we define its signature $\sgn_{L,B}$ as the $L \times B$ matrix, where each $(l,b)$
 element is associated with $P_{l,b}$---the set of packets belonging to subband $l$ and bit plane
 $b$. In particular, $\sgn(l,b)$ is an integer in the range $[0, B\times L)$, and indicates, on
 average, the position at which packet $P_{l,b}$ appears in the given stream. For example, the
@@ -265,15 +266,17 @@ lists the steps of our approach.
 	\label{alg:signature}
 \end{algorithm}
 
-Finally, a signature can be used to construct a ``semi''-data-independent stream, denoted as
+Finally, a signature can be used to construct a stream which lies between data-independent and data-dependent streams, denoted as
 $\ssig$. This construction is done by iterating through each element $\sgn(l,b)$ in ascending order,
 and adding end\pavol{C: at the end?} of $\ssig$ all the packets in $P_{l,b}$. $\ssig$ is similar to purely
 data-independent streams, in that the ordering of packets in the $\strm_{l,b}$ space is
 deterministic (governed by the signature). However, this deterministic ordering must be established
 between the client and the server through the transmission of the signature. This is not a hurdle in
 practice, because the size of the signature is negligible compared to the size of the data itself.
-In 3D, assuming 22 subbands and 32-bit quantized coefficients, a signature contains $1408 (=22\times
-32\times 2)$ bytes. Stream $\ssig$ is data dependent but otherwise has no element of
+In 3D, assuming 3 levels of wavelet transform generating 22 subbands \pavol{do we still do 3 levels?} and 32-bit quantized coefficients, a signature matrix has
+$22 \times 32 = 704$ elements, and
+the ordering can be represented using \emph{short}, and takes $22\times 32\times 2 = 1408$ bytes.
+Stream $\ssig$ is data dependent but otherwise has no element of
 spatial-adaptivity; hence it can serve as a bridge when comparing the resolution-versus-precision
 tradeoffs between data-independent and data-dependent streams.
 
