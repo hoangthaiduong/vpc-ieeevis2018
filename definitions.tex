@@ -218,7 +218,8 @@ Unlike data-independent streams, data-dependent streams do not impose a static o
 To concisely represent and characterize the dynamic ordering of data-dependent streams, we introduce
 the concept of a \emph{stream signature}.  Any data-dependent stream can be represented with respect
 to the two-dimensional space of resolution (subbands) and precision (bit planes), i.e., \mbox{$\strm
-= \strm_{L,B}=\{(l,b)\ |\ 0\leq l < L,\ 0\leq b < B\}$.} 
+= \strm_{L,B}=\{(l,b)\ |\ 0\leq l < L,\ 0\leq b < B\}$.}\pavol{can be confusing as we use the same sign
+for a space and treversal of the space}
 
 Given a stream, we define its signature $\sgn_{L,B}$ as the $L \times B$ matrix, whose $(l,b)$
 element is associated with $P_{l,b}$---the set of packets belonging to subband $l$ and bit plane
