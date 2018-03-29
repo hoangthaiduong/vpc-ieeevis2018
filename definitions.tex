@@ -319,6 +319,11 @@ tradeoffs between data-independent and data-dependent streams.
  \subcaptionbox{\label{fig:by-level-signature}\emph{by level} (\slvl)}{{\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-LEVEL)-(rmse)}}}
  \subcaptionbox{\label{fig:rmse:diffisivity}\emph{by bit plane} (\sbit)}{{\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-BIT-PLANE)-(rmse)}}}
  \subcaptionbox{\label{fig:rmse:plasma}\emph{by wavelet norm} (\swav)}{ {\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-WAVELET-NORM)-(rmse)}}}
-\caption{}
+\caption{Renderings of signatures for \slvl, \sbit, and \swav in 2D. Each signature is a $10\times
+17$ image, corresponding to $10$ subbands and $17$ bit planes. Each $(l,b)$ ``cell'' contains a
+unique value from $0$ to $169$, indicating its ``priority'' in stream, and which is mapped through a
+linear blue color map ($0$ is mapped to the brightest blue). It is clear that the \slvl streams bits
+by resolution (from top to bottom), \sbit streams by precision (from left to right), while \swav
+mixes precision and resolution.}
 \label{fig:example-signatures}
 \end{figure}
