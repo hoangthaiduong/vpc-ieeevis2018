@@ -5,7 +5,7 @@ scientific questions with required accuracy. In particular, for techniques at th
 workflows, such as visualization and data analysis, lower fidelity representations of the data often
 provide adequate approximations~\cite{woodring2011,covra2012,compression_sim2013}, and even during
 simulation some loss in precision is often
-acceptable~\cite{compression_sim2013,doi:10.1177/1094342018762036}. As a result, a several different
+acceptable~\cite{compression_sim2013,doi:10.1177/1094342018762036}. As a result, several different
 techniques have been proposed to reduce the size of data. 
 
 Broadly, these techniques can be classified into (i) reducing the data resolution, e.g., the number
@@ -34,9 +34,9 @@ of the data already loaded. The result is a stream of bits ordered such that the
 considering the task at hand. However, although intuitively there are almost certainly advantages in
 considering both resolution and precision in the ordering, it is unclear how much the error could be
 reduced for a given data budget or how little data could be used to achieve the same error.
-Furthermore, optimal data dependent orderings especially may not be practical since they assume
+Furthermore, optimal data-dependent orderings may be especially impractical since they assume
 perfect knowledge of the data. It is therefore important to understand which of these potential
-gains are realizable. This paper aims to answer these important questions through extensive,
+gains are realizable. This paper aims to answer these important questions about the suitable bit orderings through extensive,
 empirical experiments. In particular, our contributions are:
 
 \begin{itemize}
@@ -47,7 +47,7 @@ techniques as bit streams that improve data quality in either resolution or prec
 (\Cref{sec:terminologies}). We can thus compare these techniques fairly, by comparing the
 corresponding data streams.
 %  
-\item Empirical evidence that jointly optimizing resolution and precision can provide significant
+\item \pavol{Christine: 1st and 3rd entries are not full sentences} Empirical evidence that jointly optimizing resolution and precision can provide significant
 improvements on the results of analysis tasks over adjusting either independently. This claim is
 demonstrated using a diverse collection of data sets and data analysis tasks. We also show how
 different types of data analysis might require substantially different data streams for optimal

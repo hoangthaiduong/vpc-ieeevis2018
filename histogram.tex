@@ -26,9 +26,9 @@ group by a large margin.
 Among the former group, $s_{lvl}$ generally outperforms $s_{bit}$ at low bit rates, although there
 are several crossover points between the two curves. These crossover points are explained
 in~\Cref{fig:histogram-explain}. When leading zero packets are present, $s_{lvl}$ outperforms
-$s_{bit}$, because increasing resolution does not help producing an accurate histogram as much as
-increasing precision. The histogram is oblivious to spatial locations of samples (which requires
-resolution to resolve), but it is sensitive to sample values (which requires precision). However,
+$s_{bit}$, because increasing resolution does not help produce an accurate histogram as much as
+increasing precision. The histogram is oblivious to spatial locations of samples (which require
+resolution to resolve), but it is sensitive to sample values (which require precision). However,
 when leading zero packets are removed, as is the case when using compression, $s_{bit}$ benefits
 significantly more than $s_{lvl}$ does (for the same reason explained in~\Cref{sec:rmse-optimized}),
 resulting in the observed crossovers. Finally, $s_{mag}$ performs poorly, because it ignores regions
