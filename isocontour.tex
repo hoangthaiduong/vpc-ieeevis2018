@@ -59,9 +59,9 @@ another choice, but is not very robust as it varies drastically with minor chang
 Since isosurfaces are also commonly used to partition the domain into ``inside'' and ``outside''
 some region of interest, we opt for a simpler error metric that assumes nothing about the shape of
 the isosurfaces, but simply counts misclassified voxels. However, since such a metric does not
-capture the importance of a packet, if the error caused by discarding that packet is of subvoxel
+capture the importance of a packet, the error caused by discarding that packet is of subvoxel
 resolution. Therefore, in order to obtain an accurate error measurement to
-support~\Cref{alg:greedy}, we add to aforementioned error the relative difference in area,
+support~\Cref{alg:greedy}, we add to the aforementioned error the relative difference in area,
 $|A_1-A_2|/|A_1|$, between the two isosurfaces. The normalization reduces the range of this term to
 $[0, 1]$, so that when the number of misclassified voxels is less than $1$, the subvoxel error is
 instead captured by this relative difference in surface areas.
@@ -75,7 +75,7 @@ for the \emph{plasma} data set.
 
 For this data set, the isosurface is extracted from a region with a low gradient, which means the
 surface is very sensitive to low-ordered bits (i.e., a slight change in values moves the isosurface
-by larger distance). For this reason, \swav initially performs better, as it streams more precision
+by a larger distance). For this reason, \swav initially performs better, as it streams more precision
 bits. As \sbit acquires enough precision, however, it starts to resolve the fine-scale geometry of
 the surface better than \swav does (from~\autoref{fig:bit-plane-vs-wavelet-norm-gradient}
 in~\Cref{sec:gradient}, we learn that \swav tends to reconstruct a smoother function everywhere).
@@ -86,7 +86,7 @@ on the surface. For the \emph{turbulence} field, the isosurface is extracted fro
 region; thus precision bits matter less, and \sbit outperforms \swav from the beginning. \sbit also
 outperforms \sisg in this case, because local signatures coming from regions where the isosurface
 does not intersect can dilute those coming from regions where it does. This phenomenon makes the
-signature less useful for tasks that involve localization in spatial domain, such as isosurface
+signature less useful for tasks that involve localization in the spatial domain, such as isosurface
 extraction. Here, it happens in various degrees for every data set but it is especially relevant in
 the case of \emph{turbulence}, since the surface is confined to very small regions of the whole
 volume.

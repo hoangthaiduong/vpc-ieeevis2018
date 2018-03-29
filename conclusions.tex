@@ -1,7 +1,7 @@
 \section{Conclusion}
 We presented a study of tradeoff between resolution and precision for commonly used derived
 scientific quantities such as RMSE, gradient, Laplacian, histogram, and isosurface.
-During this study, we covered gamut of scientific data sets, ranging from simulations
+During this study, we covered the gamut of scientific data sets, ranging from simulations
 with smooth features or fine small detail to image data with noisy parts.
 We showed that one stream type does not fit all analysis tasks, but some streams perform well
 in most of them and may be useful in a new file format design.
@@ -22,37 +22,14 @@ are very similar, we can precompute the stream order and apply the same ordering
 queries.
 
 For example, we learned that the RMSE stream is akin to the gradient stream, and thus only one
-needs to be compute. Moreover, since RMSE optimizes for the function, the stream alongside
+needs to be computed. Moreover, since RMSE optimizes for the function, the stream alongside
 a good gradient approaches the function itself. In contrast, the gradient ignores the constant offest
 of all samples, resulting in an inferior RMSE.
 
 
 These results should be considered when designing a file format for scientic data. As future work,
-we plan to create new file format that will incorporate the stream ordering techniques we presented.
+we plan to create new file format that will incorporate the stream-ordering techniques we presented.
 Additionally, such file format needs to support compression and spatial adaptivity to handle large-scale
-data and fast queries. In fact, we are investigating if signatures can be used to handle
-the spatial adaptial adaptivity. For example, we could extend the signature matrix to the tensor, with
-spatial index being the third dimension.
-
-
-%As we explored the quantities of interest, we showed the RMSE stream is good proxy for
-%gradient.
-%
-%To ground our study, we established baseline streams for each quantity. Given the search
-%for optimal stream is exponential in the number of chunks, we described a greedy strategy to obtain
-%the baseline stream.
-%
-%We used the established baseline streams to further investigate streams with goal to identify
-%similarities or dissimilarities. We noticed that if a rmse-optimized stream is applied while
-%focusing on gradient quantity, the result is almost indistinguishable from the gradient-optimized
-%stream. This result suggests, that there is no need to devise heuristic specifically for gradient
-%as the rmse one can be used, thus simplifying the implementation.
-%
-%In contrast, the laplacian can't use the rmse stream. We devised a signature for each stream that
-%captures the ordering and can be applied to all the datasets while still outperforming the
-%rmse-optimized stream while used for laplacian quantity.
-%
-%
-%RMSE stream can be used for gradient.
-%
-%
+data and fast queries. We are investigating if signatures can be used to handle
+the spatial adaptivity. For example, we could extend the signature matrix to the tensor, with
+the spatial index being the third dimension.

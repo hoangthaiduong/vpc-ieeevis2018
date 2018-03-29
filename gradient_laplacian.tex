@@ -91,7 +91,7 @@ which always streams bits that improve resolution first. Therefore, \swav tends 
 function. \sbit, on the other hand, tends to capture well the function's shape (due to fine-scale
 bits), but the whole function can be ``shifted'' slightly due to the lack of precision in
 coarse-scale coefficients. However, the error caused by this shifting reduces significantly when
-taking gradient, which cancels any constant shift. \sbit, therefore, works better than \swav for
+taking the gradient, which cancels any constant shift. \sbit, therefore, works better than \swav for
 gradient computation, because it is better able to retain sharp features.
 
 \duong{talk about the by-level, by-magnitude, and signature}
@@ -110,7 +110,7 @@ gradient computation, because it is better able to retain sharp features.
 \subcaptionbox{\emph{pressure}}
 {\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-pressure}}
 
-\caption{Laplacian error comparison among streams. The plots are truncated so as to better highlight
+\caption{Laplacian error comparison among streams. The plots are truncated to better highlight
 differences without discarding important information. In all cases, in terms of error,
 $\slop < \slsg < \sbit < \swav < \smag < \slvl$}.
 \label{fig:laplacian-error-comparison}
