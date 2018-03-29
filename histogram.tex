@@ -15,33 +15,32 @@ computing the histogram of a reconstructed function, we clamp its range of value
 original function, so that corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same
 range.
 
-As before, for each data set, we use~\Cref{alg:greedy} to compute an $s_{hist-opt}$ stream,
-optimized for histogram error, and an $s_{hist-sig}$ from its signature. We plot the error curves
-for all relevant streams using the error metric just defined~(compare
-\Cref{fig:histogram-stream-comparison}). We use 64 for the number of bins, but note that there exist
-no meaningful differences across a wide range of number of bins (from 64 to 512) in our experiments.
-In all cases, the group consisting of $s_{bit}$, $s_{lvl}$, and $s_{mag}$ underperforms the other
-group by a large margin.
+As before, for each data set, we use~\Cref{alg:greedy} to compute an \shop stream, optimized for
+histogram error, and an \shsg from its signature. We plot the error curves for all relevant
+streams using the error metric just defined~(compare \Cref{fig:histogram-stream-comparison}). We use
+64 for the number of bins, but note that there exist no meaningful differences across a wide range
+of number of bins (from 64 to 512) in our experiments. In all cases, the group consisting of
+\sbit, \slvl, and \smag underperforms the other group by a large margin.
 
-Among the former group, $s_{lvl}$ generally outperforms $s_{bit}$ at low bit rates, although there
-are several crossover points between the two curves. These crossover points are explained
-in~\Cref{fig:histogram-explain}. When leading zero packets are present, $s_{lvl}$ outperforms
-$s_{bit}$, because increasing resolution does not help produce an accurate histogram as much as
+Among the former group, \slvl generally outperforms \sbit at low bit rates, although there are
+several crossover points between the two curves. These crossover points are explained
+in~\Cref{fig:histogram-explain}. When leading zero packets are present, \slvl outperforms
+\sbit, because increasing resolution does not help produce an accurate histogram as much as
 increasing precision. The histogram is oblivious to spatial locations of samples (which require
 resolution to resolve), but it is sensitive to sample values (which require precision). However,
-when leading zero packets are removed, as is the case when using compression, $s_{bit}$ benefits
-significantly more than $s_{lvl}$ does (for the same reason explained in~\Cref{sec:rmse-optimized}),
-resulting in the observed crossovers. Finally, $s_{mag}$ performs poorly, because it ignores regions
+when leading zero packets are removed, as is the case when using compression, \sbit benefits
+significantly more than \slvl does (for the same reason explained in~\Cref{sec:rmse-optimized}),
+resulting in the observed crossovers. Finally, \smag performs poorly, because it ignores regions
 of smooth variations, which nevertheless count toward the distribution.
 
-In the other group, the performances of $s_{wav}$ and $s_{hist-sig}$ (and even $s_{hist-opt}$)
-differ by negligible amount. This observation is confirmed in~\Cref{fig:histograms-boiler}, where we
-plot various histograms, reconstructed at 0.08 bps, for the \emph{boiler} data set. The histograms
-produced by $s_{wav}$ and $s_{hist-sig}$ have approximately the same shape, and are the closest to
-the reference histogram. The next best histogram is produced by $s_{lvl}$, followed by the one
-produced by $s_{bit}$, and finally $s_{mag}$. These results suggest that histogram computation is
-among the analysis tasks that benefit significantly from a bit ordering that combines both
-resolution and precision, not one that adheres to either exclusively.
+In the other group, the performances of \swav and \shsg (and even \shop) differ by negligible
+amount. This observation is confirmed in~\Cref{fig:histograms-boiler}, where we plot various
+histograms, reconstructed at 0.13 bps, for the \emph{boiler} data set. The histograms produced by
+\swav and \shsg have approximately the same shape, and are the closest to the reference histogram.
+The next best histogram is produced by \slvl, followed by the one produced by \sbit, and finally
+\smag. These results suggest that histogram computation is among the analysis tasks that benefit
+significantly from a bit ordering that combines both resolution and precision, not one that adheres
+to either exclusively.
 
 \begin{figure*}[h]
 	\centering
@@ -54,30 +53,30 @@ resolution and precision, not one that adheres to either exclusively.
 	\subcaptionbox{\emph{foam}}
 	{\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-foam}}
 	\caption{Comparison of histogram errors among streams. Plots are truncated to highlight
-	differences without hiding important trends. In general, in terms of error, $s_{hist-opt}\approx
-	s_{hist-sig}\approx s_{wav} < s_{lvl} < s_{bit} < s_{mag}$. Crossover points between $s_{bit}$ and
-	$s_{lvl}$ are explained in~\Cref{fig:histogram-explain}}.
+	differences without hiding important trends. In general, in terms of error, $\shop \approx
+	\shsg \approx \swav < \slvl < \sbit < \smag$. Crossover points between \sbit and \slvl are
+	explained in~\Cref{fig:histogram-explain}}.
 	\label{fig:histogram-stream-comparison}
 \vspace{1em}
 
 	\centering
-	\subcaptionbox{\emph{by level} ($s_{lvl}$)}{
+	\subcaptionbox{\emph{by level} (\slvl)}{
 	{\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-level.png}}}
-	\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}{
+	\subcaptionbox{\emph{by bit plane} (\sbit)}{
 	{\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-bit-plane.png}}}
-	\subcaptionbox{\emph{by magnitude} ($s_{mag}$)}{
+	\subcaptionbox{\emph{by magnitude} (\smag)}{
 	{\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-magnitude.png}}}
-	\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}{
+	\subcaptionbox{\emph{by wavelet norm} (\swav)}{
 	{\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-wavelet-norm.png}}}
-	\subcaptionbox{\emph{by signature} ($s_{hist-sig}$)}{
+	\subcaptionbox{\emph{by signature} (\shsg)}{
 	{\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-signature.png}}}
 	\subcaptionbox{\emph{reference}}{
 	{\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-groundtruth.png}}}
-	\caption{Histograms of the \emph{boiler} data set, reconstructed at 0.08 bps. $s_{lvl}$,
-	$s_{wav}$, and $s_{hist-sig}$ produce histograms that share a shape similar to the reference
-	histogram, with most of the peaks and valleys preserved. In contrast, $s_{bit}$ produces a
-	spurious peak not found in the reference. Finally, $s_{mag}$'s histogram has a widely skewed
-	distribution where too many values fall into the first bin.}
+	\caption{Histograms of the \emph{boiler} data set, reconstructed at 0.13 bps. \slvl, \swav, and
+	\shsg produce histograms that share a shape similar to the reference histogram, with most of the
+	peaks and valleys preserved. In contrast, \sbit produces a spurious peak not found in the
+	reference. Finally, \smag's histogram has a widely skewed distribution where too many values fall
+	into the first bin.}
 	\label{fig:histograms-boiler}
 \end{figure*}
 
@@ -87,10 +86,11 @@ resolution and precision, not one that adheres to either exclusively.
 	{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler-wlz}}
 	\subcaptionbox{without leading zero packets}
 	{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler}}
-	\caption{Comparison of histogram error curves produced by $s_{bit}$ and $s_{lvl}$, for
-	\emph{boiler}, with and without leading zero bits. The vertical axis is in log scale. The error
-	for $s_{bit}$ reduces in a stair-step fashion, in which each step corresponds to a new bit plane
-	streamed. $s_{bit}$ benefits significantly more from the removal of leading zero bits (from (a) to
-	(b), the blue curve shifts more to the left).}
+	
+	\caption{Comparison of histogram error curves produced by \sbit and \slvl, for \emph{boiler}, with
+	and without leading zero bits. The vertical axis is in log scale. The error for \sbit reduces in a
+	stair-step fashion, in which each step corresponds to a new bit plane streamed. \sbit benefits
+	significantly more from the removal of leading zero bits (from (a) to (b), the blue curve shifts
+	more to the left).}
 	\label{fig:histogram-explain}
 \end{figure}

@@ -4,8 +4,8 @@
 \centering
 \subcaptionbox{\em pressure, isovalue=0.2}
 {\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-pressure}}
-\subcaptionbox{\em turbulence, isovalue=5}
-{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-turbulence}}
+\subcaptionbox{\em kingsnake, isovalue=106}
+{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-kingsnake}}
 \subcaptionbox{\em plasma, isovalue=2}
 {\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-plasma}}
 \subcaptionbox{\em diffusivity, isovalue=-0.05}
@@ -30,7 +30,7 @@ $\sbit < \swav \approx \ssig$ in isosurface error.} \label{fig:isocontour-plots}
 {\includegraphics[width=0.16\linewidth]{isocontour/isocontour-signature}}
 \subcaptionbox{\emph{ground truth}}
 {\includegraphics[width=0.16\linewidth]{isocontour/isocontour-groundtruth}} 
-\caption{Rendering of isosurfaces at isovalue of 0.2, at 0.4 bps. The surfaces are colored by the
+\caption{Rendering of isosurfaces at isovalue of 0.2, at 0.7 bps. The surfaces are colored by the
 $x$-component of the normal vector at each point. The surfaces reconstructed by \swav and \sisg are
 closest to the reference, followed by \sbit, \smag, and \slvl.}
 \label{fig:isocontour-surfaces-pressure}
@@ -44,7 +44,8 @@ closest to the reference, followed by \sbit, \smag, and \slvl.}
 {\includegraphics[width=0.32\linewidth]{isocontour/isocontour2-wavelet-norm}}
 \subcaptionbox{\emph{ground truth}}
 {\includegraphics[width=0.32\linewidth]{isocontour/isocontour2-groundtruth}}
-\caption{\emph{Plasma}'s isosurface reconstructed at 0.3 bps.}
+\caption{\emph{Plasma}'s isosurface reconstructed at 0.5 bps. The surfaces are colored by the
+$x$-component of the normal vectors. The reconstruction by \sbit is closer to the reference.}
 \label{fig:isocontour-surfaces-plasma}
 \end{figure}
 
