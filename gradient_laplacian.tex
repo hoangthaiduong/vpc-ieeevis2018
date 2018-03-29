@@ -1,12 +1,13 @@
 \subsection{Computation of derivatives} \label{sec:derivatives}
 
-Computation of derivative-based quantities such as gradient and Laplacian is important in data analysis.
-Since simulation data can rarely be captured by closed-form formulae, we use finite differences. In
-this section, we use 32 bits (instead of 16) for quantization to ensure enough precision for finite
-differences. We always perform finite differences on the finest (original) resolution. This decision
-avoids the problem of computing distances between quantities defined on grids of different sizes and
-we are unaware of any widely accepted solutions to this problem.~\Cref{sec:gradient}
-discusses gradient computation and~\Cref{sec:laplacian} discusses computation of the Laplacian.
+Computation of derivative-based quantities such as gradient and Laplacian is important in data
+analysis. Since simulation data can rarely be captured by closed-form formulae, we resort to finite
+differences for derivative computation. In this section, we use 32 bits (instead of 16) for
+quantization to ensure enough precision for finite differences. Note that we always perform finite
+differences on the finest (original) resolution. This decision avoids the problem of computing
+distances between quantities defined on grids of different sizes, as we are unaware of any widely
+accepted solutions to this problem.~\Cref{sec:gradient} discusses gradient computation
+and~\Cref{sec:laplacian} discusses computation of the Laplacian.
 
 \subsubsection{Gradient computation} \label{sec:gradient}
 
@@ -19,7 +20,7 @@ discusses gradient computation and~\Cref{sec:laplacian} discusses computation of
 \subcaptionbox{\emph{turbulence}}{%
 {\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-turbulence}}}
 \subcaptionbox{\emph{pressure}}{%
-{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-pressure}}}
+{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-pressure}}} 
 \caption{Gradient error of reconstructed functions. Lower gradient error is better. Leading zero
 packets are removed, and the plots are truncated in the same way as in~\Cref{fig:rmse-optimized}.
 The trend in error, in all cases, is $\sgop < \sgsg \approx \sbit < \swav < \smag < \slvl$.}
@@ -40,8 +41,8 @@ The trend in error, in all cases, is $\sgop < \sgsg \approx \sbit < \swav < \sma
 \subcaptionbox{\emph{ground truth}}{%
 {\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-groundtruth.png}}}
 \caption{$x$-component of the ($64^3$) gradient field of \emph{turbulence}, reconstructed at 0.5
-bps. The gradient field produced by \sbit is more accurate than one produced by either \swav or
-\sgsg (compare orange features).}
+bps. The gradient field produced by \sbit is more accurate than one produced by \swav, and slightly
+more accurate than one produced by \sgsg (compare orange features).}
 \label{fig:gradient-rendering-diff}
 \end{figure*}
 
@@ -60,42 +61,45 @@ function's shape (or its relative values) matters more than its absolute values.
 \label{fig:bit-plane-vs-wavelet-norm-gradient}
 \end{figure}
 
-The gradient of a given function $f$ at a grid point $\x = (x,y,z)$ is the vector
-$(\frac{\partial f}{\partial x},\frac{\partial f}{\partial y}, \frac{\partial f}{\partial y})$. We
-compute the derivative in each dimension using a five-point stencil, i.e., $\frac{\partial
-f}{\partial x} \approx \frac{1}{12}f(x-2,y,z) - \frac{2}{3}f(x-1,y,z) + \frac{2}{3}f(x+1,y,z) -
-\frac{1}{12}f(x+2,y,z)$. 
-Using~\Cref{alg:greedy}, we compute a \emph{gradient-optimized} stream, \sgop, that minimizes the
-difference between the reconstructed gradient field and the original gradient field. The error at
-each grid point $\x_i$ is the squared L\textsubscript{2} norm of the difference between two gradient
-vectors, i.e., $\norm{\nabla \tilde{f}(\x_i) - \nabla f(\x_i)}^2$, where $\tilde{f}$ is a low bit rate
-approximation of $f$. The overall error, defined over the whole field, is
-$\err(\nabla \tilde{f}, \nabla f) = \sqrt{\frac{1}{n} \sum_{i=1}^{n}{\norm{\nabla
+The gradient of a given function $f$ at a grid point $\x = (x,y,z)$ is the vector $(\frac{\partial
+f}{\partial x},\frac{\partial f}{\partial y}, \frac{\partial f}{\partial y})$. We compute the
+derivative in each dimension using a five-point stencil, i.e., $\frac{\partial f}{\partial x}
+\approx \frac{1}{12}f(x-2,y,z) - \frac{2}{3}f(x-1,y,z) + \frac{2}{3}f(x+1,y,z) -
+\frac{1}{12}f(x+2,y,z)$. Using~\Cref{alg:greedy}, we compute a \emph{gradient-optimized} stream,
+\sgop, that minimizes the difference between the reconstructed gradient field and the original
+gradient field. The error at each grid point $\x_i$ is the squared L\textsubscript{2} norm of the
+difference between two gradient vectors, i.e., $\norm{\nabla \tilde{f}(\x_i) - \nabla f(\x_i)}^2$,
+where $\tilde{f}$ is a low bit rate approximation of $f$. The overall error, defined over the whole
+field, is $\err(\nabla \tilde{f}, \nabla f) = \sqrt{\frac{1}{n} \sum_{i=1}^{n}{\norm{\nabla
 \tilde{f}(\x_i)-\nabla f(\x_i)}^2}}$.
 
 \Cref{fig:gradient-error-comparison} shows the gradient error incurred by different streams for four
 data sets. In general, we observe the ordering of performance (from best to worst) as: \sgop, \sgsg,
 \sbit, \swav, \smag, \slvl. This ordering can also be seen in~\Cref{fig:gradient-rendering-diff},
-where the $x$-component of the gradient field for \emph{tuburlence} is reconstructed and rendered
-at 0.2 bps. Unlike the RMSE case, \sbit produces better approximations of the gradient field
-compared to \swav.
+where the $x$-component of the gradient field for \emph{tuburlence} is reconstructed and rendered at
+0.5 bps. Unlike the RMSE case, \sbit produces better approximations of the gradient field compared
+to \swav.
 
-We further investigate this difference by extracting a 1D line from \emph{plasma} data set and reconstructing
-the function using \sbit and \swav at 0.6 bps (\Cref{fig:bit-plane-vs-wavelet-norm-gradient}). Because the
-coarse-scale coefficients in \sbit are using low bit rate, the reconstruction from \sbit is
-inaccurate in areas of low gradients. In contrast, the \swav's reconstruction is accurate in
-low-gradient areas, but lacks the resolution to resolve the high-gradient areas, because \swav
-frequently intersperses bits that improve resolution with bits that improve precision, unlike \sbit,
-which always streams bits that improve resolution first. Therefore, \swav tends to produce a
-``smoother'' reconstruction that \emph{on average} (i.e., in terms of RMSE) is close to the original
-function. \sbit, on the other hand, tends to capture well the function's shape (due to fine-scale
-bits), but the whole function can be ``shifted'' slightly due to the lack of precision in
-coarse-scale coefficients. However, the error caused by this shifting reduces significantly when
-taking the gradient, which cancels any constant shift. \sbit, therefore, works better than \swav for
-gradient computation, because it is better able to retain sharp features.
+We further investigate this difference by extracting a 1D line from \emph{plasma} data set and
+reconstructing the function using \sbit and \swav at 0.6 bps
+(\Cref{fig:bit-plane-vs-wavelet-norm-gradient}). Because the coarse-scale coefficients in \sbit are
+approximated at low precision, the reconstruction from \sbit is inaccurate in areas of low
+gradients. In contrast, the \swav's reconstruction is accurate in low-gradient areas, but lacks the
+resolution to resolve the high-gradient areas, because \swav frequently intersperses bits that
+improve resolution with bits that improve precision, unlike \sbit, which always streams bits that
+improve resolution first. Therefore, \swav tends to produce a ``smoother'' reconstruction that
+\emph{on average} (e.g., in terms of RMSE) is close to the original function. \sbit, on the other
+hand, tends to capture well the function's shape (due to fine-scale bits), but the whole function
+can be ``shifted'' slightly due to the lack of precision in coarse-scale coefficients. However, the
+error caused by this shifting reduces significantly when taking the gradient, which cancels any
+constant shift. \sbit, therefore, works better than \swav for gradient computation, because it is
+better able to retain sharp features.
 
-\duong{talk about the by-level, by-magnitude, and signature}
-\duong{explain the ``bumpiness'' in the by wavelet norm}
+\sgop again outperforms the rest of the streams. \slvl and \smag perform poorly for gradient
+computation, because they lack the resolution to capture sharp features. \sgsg closely follows \sbit
+in performance (it is slightly better than \sbit for \emph{boiler} at very low bit rates). These
+results suggest that while \swav is the best among the data-independent streams when optimizing for
+RMSE, \sbit is better for gradient computation.
 
 \subsubsection{Laplacian computation}\label{sec:laplacian}
 
@@ -109,10 +113,9 @@ gradient computation, because it is better able to retain sharp features.
 {\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-turbulence}}
 \subcaptionbox{\emph{pressure}}
 {\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-pressure}}
-
 \caption{Laplacian error comparison among streams. The plots are truncated to better highlight
-differences without discarding important information. In all cases, in terms of error,
-$\slop < \slsg < \sbit < \swav < \smag < \slvl$}.
+differences without discarding important information. In all cases, in terms of error, $\slop <
+\slsg < \sbit < \swav < \smag < \slvl$}.
 \label{fig:laplacian-error-comparison}
 \vspace{1em}
 
@@ -129,9 +132,10 @@ $\slop < \slsg < \sbit < \swav < \smag < \slvl$}.
 {\includegraphics[width=0.16\linewidth]{laplacian/laplacian-pressure-signature}}
 \subcaptionbox{\emph{ground truth}}
 {\includegraphics[width=0.16\linewidth]{laplacian/laplacian-pressure-groundtruth}}
-\caption{Renderings of recontructed Laplacian fields for a $64^3$ region in
-\emph{pressure}, at 1.5 bps.  In terms of image quality, $\slsg > \sbit > \swav
-> \smag > \slvl$.} \label{fig:laplacian-renderings}
+
+\caption{Renderings of recontructed Laplacian fields for a $64^3$ region in \emph{pressure}, at 1.5
+bps.  In terms of image quality, $\slsg > \sbit > \swav > \smag > \slvl$.}
+\label{fig:laplacian-renderings}
 \end{figure*}
 
 The Laplace operator is a second-order differential operator defined as the divergence of the
@@ -141,13 +145,12 @@ f=\frac{{\partial}^2}{\partial{x^2}}f+\frac{{\partial}^2}{\partial{y^2}}f+\frac{
 To compute the Laplacian, we use the five-point finite difference to approximate the second
 derivative in each dimension: $\frac{{\partial}^2}{\partial{x^2}}f(x,y,z) \approx
 -\frac{1}{12}f(x-2,y,z)+\frac{4}{3}f(x-1,y,z)+\frac{-5}{2}f(x,y,z)+\frac{4}{3}f(x+1,y,z)-\frac{1}{12}f(x+2,y,z)$.
-We compare two Laplacian fields using the RMSE metric, i.e., $\err(\Delta
-\tilde{f},\Delta f)=\text{RMSE}(\Delta \tilde{f},\Delta f)$. As usual, we use~\Cref{alg:greedy} to
-compute a \emph{Laplacian-optimized} stream, \slop, which minimizes $\err$, and an \slsg stream from
-its signature.~\Cref{fig:laplacian-error-comparison} plots the error curves for all relevant
-streams. The plots here largely follow the one in~\Cref{fig:gradient-error-comparison}, in terms of
-relative performance among the streams, with one minor discrepancy. \sbit consistently underperforms
-\slsg by a small margin, and produces ``bumpier'' error curves (\todo{explain?}). In
+We compare two Laplacian fields using the RMSE metric, i.e., $\err(\Delta \tilde{f},\Delta
+f)=\text{RMSE}(\Delta \tilde{f},\Delta f)$. As usual, we use~\Cref{alg:greedy} to compute a
+\emph{Laplacian-optimized} stream, \slop, which minimizes $\err$, and an \slsg stream from its
+signature.~\Cref{fig:laplacian-error-comparison} plots the error curves for all relevant streams.
+The plots here largely follow the one in~\Cref{fig:gradient-error-comparison}, in terms of relative
+performance among the streams, but with more discernible gaps between \sbit and \slsg. In
 \Cref{fig:laplacian-renderings}, we render the reconstructed Laplacian fields for the
-\emph{pressure} field at 0.9 bps, which shows how differences in Laplacian among the streams
+\emph{pressure} field at 1.5 bps, which shows how differences in Laplacian among the streams
 translate to visual differences.
