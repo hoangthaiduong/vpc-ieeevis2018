@@ -1,4 +1,22 @@
 \section{Conclusion}
+
+\begin{figure}[t]
+\centering
+ \subcaptionbox{\label{fig:bit-distrib-rmse-tile}\emph{RMSE}}{{\includegraphics[width=0.32\linewidth]{bit-distrib-rmse-tile}}}
+ \subcaptionbox{\label{fig:bit-distrib-laplacian-tile}\emph{Laplacian}}{{\includegraphics[width=0.32\linewidth]{bit-distrib-laplacian-tile}}}
+ \subcaptionbox{\label{fig:bit-distrib-histogram-tile}\emph{histogram}}{ {\includegraphics[width=0.32\linewidth]{bit-distrib-histogram-tile}}}
+ 
+\caption{(Top) Bit distribution across subbands at 1.9 bps, and (bottom) corresponding stream
+signatures, for the three streams \ssig, \slsg, and \shsg. The data is a 2D slice from
+\emph{diffusivity}. The lowest-level subband is in the top-left corner, and subbands are separated
+by red lines. The color of each pixel indicates the bit plane at which the corresponding coefficient
+is currently at. Bit plane 0 (the most significant) is mapped to the darkest green, and bit plane 16
+is mapped to the brightest. It can be observed in both the top and the bottom rows that \shsg
+allocates more bits to the lower subbands, while \slsg prefers to stream bits from higher subbands.
+\ssig is somewhere in the middle.}
+\label{fig:bit-distrib}
+\end{figure}
+
 We presented a study of tradeoff between resolution and precision for commonly used derived
 scientific quantities such as RMSE, gradient, Laplacian, histogram, and isosurface.
 During this study, we covered the gamut of scientific data sets, ranging from simulations
