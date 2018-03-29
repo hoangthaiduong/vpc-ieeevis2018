@@ -52,9 +52,11 @@ dimensions).
  \subcaptionbox{\label{fig:rmse:plasma}\emph{plasma}}{ {\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-plasma}}}
  \subcaptionbox{\label{fig:rmse:kingsnake}\emph{kingsnake}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-kingsnake}}}
 \caption{Root-mean-square error (RMSE) of reconstructed functions for different streams and data
-sets; lower RMSE is better. The streams are truncated to highlight the differences, without omitting
-important information. Leading zero packets are not used for plotting. In all cases, the ordering of
-error, from lowest to highest, is $\sopt < \ssig < \swav < \sbit < \smag < \slvl$.}
+sets; lower RMSE is better. The streams are truncated at both ends to highlight the differences,
+without omitting important information. Leading zero packets are not used for plotting. The general
+ordering of error, from lowest to highest, is $\sopt < \ssig < \swav < \sbit < \smag < \slvl$ (for
+\emph{boiler} and \emph{kingsnake}, \sbit underperforms \slvl at first, but surpasses its after a
+certain bit rate).}
 \label{fig:rmse-optimized}
 \vspace{1em}
 
@@ -65,10 +67,10 @@ error, from lowest to highest, is $\sopt < \ssig < \swav < \sbit < \smag < \slvl
  \subcaptionbox{\emph{by magnitude (\smag)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-magnitude}}}
  \subcaptionbox{\emph{by signature (\ssig)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-signature}}}
  \subcaptionbox{\emph{ground truth}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-groundtruth}}}
-\caption{Volume renderings of a $64^3$ region of \emph{plasma} data set at 0.1
-bps.  \slvl captures the background (purple-blue) well, whereas \sbit captures
-the fine details better. \swav combines the strength of both. \ssig, however,
-produces the most accurate rendering (compare, e.g., yellow features).
+\caption{Volume renderings of a $64^3$ region of \emph{plasma} data set at 0.1 bps.  \slvl captures
+the background (purple-blue) well, whereas \sbit captures the fine details better. \swav combines
+the strength of both. \ssig, however, produces the most accurate rendering (compare, e.g., yellow
+features).
 \pavol{should we circle them or use an arrow?}\hb{yes, please}}
 \label{fig:rmse-rendering}
 \end{figure*}
@@ -79,19 +81,27 @@ commonly used error metric in this case is the root-mean-square error
 datasets. It can be noted that, in general, $\sopt$ performs better than $\ssig$ due to spatial
 adaptivity, whereas \ssig slightly outperforms \swav, followed by \sbit, \smag, and \slvl.
 
-In particular, \sbit performs significantly better than \slvl, which can be attributed partly to our
-removal of leading zero packets, because wavelet coefficients on finer scale subbands are much
-smaller in magnitude. Such coefficients contain a majority of the leading zero bits, whose removal
-benefits \sbit the most, as it touches fine-resolution bits the earliest. \smag underperforms for
-the same reason that \slvl does, but to a lesser extent, since \smag is better adaptive to the data.
-\swav outperforms both \slvl and \sbit, because it follows the optimal (data-independent) bit
-ordering in $\strm_{L,B}$ in the $L_2$ norm, which is also the norm that RMSE is based upon.
-Unsurprisingly, \sopt outperforms the others, as it is the most data-adaptive (i.e., it can
-prioritize packets in the spatial domain in addition to the $\strm_{L,B}$ domain). \ssig is the
-second best stream, as it follows the bit ordering of \sopt in $\strm_{L,B}$, but lacks spatial
-adaptivity. In general, \swav and \ssig have similar performance. In some cases (e.g.,
+In particular, \sbit performs better than \slvl (for \emph{kingsnake} and \emph{boiler} it does so
+after approximately 1 bps), which can be attributed to our removal of leading zero packets, because
+empirically, wavelet coefficients on finer scale subbands are much smaller in magnitude(\todo{cite}).
+Such coefficients contain a majority of the leading zero bits, whose removal benefits \sbit the
+most, as it touches fine-resolution bits the earliest. Compared to \emph{kingsnake} and
+\emph{boiler}, \emph{diffusivity} and \emph{plasma} contain a sigificant amount of empty space,
+which translates to more leading zero bits after the wavelet transform, that \sbit can take
+advantage of --- the number of leading zero packets are: 406,219 (\emph{kingsnake}), 380,955
+(\emph{boiler}), 322,073 (\emph{plasma}), and 215,716 (\emph{diffusivity}). This is the reason why
+unlike for \emph{boiler} and \emph{kingsnake}, \sbit outperforms \slvl immediately from the
+beginning for \emph{diffusivity} and \emph{plasma}. 
+
+\smag underperforms for the same reason that \slvl does, but to a lesser extent, since \smag is
+better adaptive to the data. \swav outperforms both \slvl and \sbit, because it follows the optimal
+(data-independent) bit ordering in $\strm_{L,B}$ in the $L_2$ norm, which is also the norm that RMSE
+is based upon. Unsurprisingly, \sopt outperforms all the others, as it is the most data-adaptive
+(i.e., it can prioritize packets in the spatial domain in addition to the $\strm_{L,B}$ domain).
+\ssig is the second best stream, as it follows the bit ordering of \sopt in $\strm_{L,B}$, but lacks
+any spatial adaptivity. In general, \swav and \ssig have similar performance. In some cases (e.g.,
 ~\Cref{fig:rmse:diffisivity} and~\Cref{fig:rmse:plasma}), \ssig is able to adapt more to the data,
-thus outperforming \swav by a larger margin (\todo{explain}).
+thus outperforming \swav by a larger margin.
 
 We explore the errors visually by volume rendering the \emph{plasma} data set at 0.1 bits per
 sample, for all streams~(\Cref{fig:rmse-rendering}). Bits per sample (bps) are calculated by
