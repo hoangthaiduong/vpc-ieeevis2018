@@ -275,3 +275,37 @@ In 3D, assuming 22 subbands and 32-bit quantized coefficients, a signature conta
 32\times 2)$ bytes. Stream $\ssig$ is data dependent but otherwise has no element of
 spatial-adaptivity; hence it can serve as a bridge when comparing the resolution-versus-precision
 tradeoffs between data-independent and data-dependent streams.
+
+\begin{table}[t]
+	\caption{Streams defined in this paper}
+  \centering
+  \begin{tabular}{p{0.15\textwidth}p{0.06\textwidth}p{0.2\textwidth}}
+  \hline
+  Name & Symbol & Data dependent\\
+  \hline
+  \emph{by level} & \slvl & No\\
+  \emph{by bit plane} & \sbit & No\\
+  \emph{by wavelet norm} & \swav & No\\
+  \emph{by magnitude} & \smag & Yes\\
+	\emph{rmse-optimized} & \sopt & Yes\\
+	\emph{rmse signature} & \ssig & Semi\\
+	\emph{gradient-optimized} & \sgop & Yes\\
+	\emph{gradient signature} & \sgsg & Semi\\
+	\emph{Laplacian-optimized} & \slop & Yes\\
+	\emph{Laplacian signature} & \slsg & Semi\\
+	\emph{histogram-optimized} & \shop & Yes\\
+	\emph{histogram signature} & \shsg & Semi\\
+	\emph{isosurface-optimized} & \siop & Yes\\
+	\emph{isosurface signature} & \sisg & Semi\\
+	% flame & fluid dynamics simulation& float32 & x & x & x & x & x & Done\\
+	% csafe & fluid dynamics simulation& uint8 & x &  &  & x & x & Done\\
+	% enzo-v & fluid dynamics simulation& float32 & x & x &  & x &  & D(work2nd)\\
+	% brain & fluid dynamics simulation& uint8 & x &  &  & x & x & Done\\
+	% foam & fluid dynamics simulation& uint16 & x & x & x & x & x & Done\\
+	% vismale & fluid dynamics simulation& uint8 & x & x & x & x & x & P(rerun)\\
+	% karfs	& fluid dynamics simulation& float32 & x & x &  & x & x & Done\\
+	% aneurism	& fluid dynamics simulation& uint8 & x & x &  & x & x & Done\\
+  % velocityz & hydrodynamics simulation& float64 & x & x &  & x & x & D(main)\\
+  \hline
+  \end{tabular}\label{tbl:data-sets}
+\end{table}
