@@ -25,17 +25,17 @@ unfortunately, is prone to aliasing problems.
 
 \para{Transform-based multiresolution hierarchies.}
 Other multiresolution approaches reduce data by transform-based compression. For example,
-COVRA~\cite{covra2012} constructs an octree of bricks, each of which consists of blocks, and learn a
-sparse representation for the blocks in terms of prototype (basis) blocks. Similarly,
-Fout\etal~\cite{hw_dvr2007} transform each block using the KLT transform, which produces several
-resolution levels, and compress each level using vector quantization~\cite{vq1992}. 
-Schneider~\etal~\cite{compression_domain2003} also use vector quantization, but with a simple
-Haar-like transform that separates each block of $2^3$ voxels into one average and seven difference
-coefficients. Other examples of transform-based hierarchies include works that use the Tucker
+COVRA~\cite{covra2012} constructs an octree of bricks (consisting of blocks), and learn a sparse
+representation for the blocks in terms of basis blocks. Similarly, Fout\etal~\cite{hw_dvr2007}
+transform each block using the KLT transform, producing several resolution levels, and compress each
+level using vector quantization~\cite{vq1992}. Schneider~\etal~\cite{compression_domain2003} also
+use vector quantization, but with a simple Haar-like transform that separates each block of $2^3$
+voxels into one average and seven difference coefficients. Other examples of transform-based
+hierarchies include works that use the Tucker
 decomposition~\cite{tensor_dvr2015,tamresh,tucker-thresholding,multiscale-tensor}, which decomposes
 the input data (stored as a tensor) into $n$ matrices of basis vectors and one core tensor. Tensor
-decomposition can work for higher dimensional data, and can achieve very high compression ratios,
-albeit at the price of a costly transform step.
+decomposition works for higher dimensional data, and can achieve high compression ratios, albeit at
+the price of a costly transform step.
 
 %\paragraph{\textbf{Wavelets}}
 \para{Wavelets.}
@@ -51,10 +51,9 @@ been work to develop acceleration structures to speed up local queries~\cite{wei
 
 Beside offering a multiresolution decomposition, enabling data streaming with level-of-detail
 support, wavelet coefficients are especially amenable for compression, through thresholding or
-entropy compression. In the context of storing and visualizing scientific data, wavelets (with
-compression) are used in a wide variety of
-systems~\cite{multires_toolkit2003,vapor2007,woodring2011} and applications such as volume rendering
-with
+entropy compression. In storing and visualizing scientific data, wavelets (with compression) are
+used in a wide variety of systems~\cite{multires_toolkit2003,vapor2007,woodring2011} and
+applications such as volume rendering with
 level-of-detail~\cite{wavelet-compression-interactive-vis,multires-framework,rapid-compression-volume,interactive-rendering-large-volume,multires-volume-rendering},
 turbulence visualization~\cite{treib}, and particle visualization~\cite{sph-octree}.
 
@@ -68,16 +67,16 @@ unexplored.
 
 %\paragraph{\textbf{Wavelet coders}}
 \para{Wavelet coders.}
-Most work that explores the precision axis comes from state-of-the-art wavelet coders in image
-compression. Wavelet coefficients in corresponding regions across subbands can be thought of as
-belonging to a ``tree''. The emmbedded zerotrees (EZW) coder exploits the property that in such
-trees, ``parent'' coefficients are often larger in magnitude than ``child'' coefficients. It locates
-trees of wavelet coefficients that are insignificant with regard to a series of thresholds, and
-encode such a tree with one single symbol. The thresholds are typically set at the bit planes,
-starting from the most significant one. In this way, the data can be progressively refined in
-precision during decompression. The SPIHT coder~\cite{spiht1996} improves on EZW by locating more
-general types of zero trees~\cite{quantifying-coding-performance}. SPECK~\cite{speck2004} extends
-SPIHT to exploit also spatial correlations among nearby coefficients on the same subband.
+Most work that explores the precision axis comes from state-of-the-art wavelet coders. Wavelet
+coefficients in corresponding regions across subbands can be thought of as belonging to a ``tree''.
+The emmbedded zerotrees (EZW) coder exploits the property that in such trees, ``parent''
+coefficients are often larger in magnitude than their ``children''. It locates trees of wavelet
+coefficients that are insignificant with regard to a series of thresholds, and encode such a tree
+with one single symbol. The thresholds are typically set at the bit planes, starting from the most
+significant one. In this way, the data can be progressively refined in precision during
+decompression. The SPIHT coder~\cite{spiht1996} improves on EZW by locating more general types of
+zero trees~\cite{quantifying-coding-performance}. SPECK~\cite{speck2004} extends SPIHT to exploit
+also spatial correlations among nearby coefficients on the same subband.
 
 %\paragraph{\textbf{Floating-point compression}}
 \para{Floating-point compression.}
@@ -125,9 +124,8 @@ terms, as well as verification of volume-rendered images~\cite{verifying-volume-
 focus on order-of-accuracy and convergence analysis, where errors are introduced mostly through
 discretization, not necessarily for the purpose of reducing data bandwidth. Finally, the Z-checker
 framework~\cite{z-checker} consists of a wide range of independent metrics to evaluate data quality
-after lossy compression. In general, however, no studies have examined the
-resolution-versus-precision tradeoffs, as well as the various orderings of bits in the context of
-data analysis and visualization.
+after lossy compression. In general, the resolution-versus-precision tradeoffs, as well as the
+various orderings of bits in data analysis and visualization have not been well studied.
 
 %by magnitude streams~\cite{image_compression1992}
 % Transfer function adaptive decompression~\cite{tf_decompression2004}

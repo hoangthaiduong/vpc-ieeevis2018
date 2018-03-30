@@ -1,40 +1,6 @@
 \subsection{Isosurface extraction}\label{sec:isocontour}
 
-\begin{figure*}[h]
-\centering
-\subcaptionbox{\em pressure, isovalue=0.2}
-{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-pressure}}
-\subcaptionbox{\em kingsnake, isovalue=106}
-{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-kingsnake}}
-\subcaptionbox{\em plasma, isovalue=2}
-{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-plasma}}
-\subcaptionbox{\em turbulence, isovalue=2}
-{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-turbulence}}
-\caption{Comparison of isosurface errors among streams. Plots are truncated to highlight differences
-without hiding important trends. In all cases, \slvl performs significantly worse than the rest.
-\swav outperforms \sbit for \emph{pressure} and \emph{kingsnake}, but not for \emph{plasma} and \emph{turbulence}.}\label{fig:isocontour-plots}
-\vspace{1em}
-
-\centering
-\subcaptionbox{\emph{by level} ($s_{lvl}$)}
-{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-level}}
-\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}
-{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-bit-plane}}
-\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}
-{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-wavelet-norm}}
-\subcaptionbox{\emph{by magnitude} ($s_{mag}$)}
-{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-magnitude}}
-\subcaptionbox{\emph{by signature} ($s_{iso-sig}$)}
-{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-signature}}
-\subcaptionbox{\emph{ground truth}}
-{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-groundtruth}}
-\caption{Rendering of isosurfaces at isovalue of 0.2, at 0.7 bps, for the \emph{pressure} data set.
-The surfaces are colored by the $x$-component of the normal vector at each point. \swav and
-\sisg produce surfaces that are closest to the reference, followed by \sbit, \smag, and \slvl.}
-\label{fig:isocontour-surfaces-pressure}
-\end{figure*}
-
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
 \subcaptionbox{\emph{by bit plane} (\sbit)}
 {\includegraphics[width=0.32\linewidth]{isocontour/isocontour2-bit-plane}}
@@ -47,6 +13,7 @@ $x$-component of the normal vectors. The reconstruction by \sbit is closer to th
 e.g., yellow features and green features).}
 \label{fig:isocontour-surfaces-plasma}
 \end{figure}
+
 
 Studying isosurfaces of a given function is an essential task in many visualization and analysis
 pipelines, as they can highlight features of interest. For example, in combustion simulations,
