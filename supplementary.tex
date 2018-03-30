@@ -1,5 +1,6 @@
 \documentclass{article}
 
+\usepackage{booktabs}
 \usepackage[margin=0.5in]{geometry}
 \usepackage{graphicx}
 \usepackage{subcaption}
@@ -13,120 +14,195 @@
 
 \begin{table}[ht]
         \caption{Data sets used in experiments. More data sets are included in the
-        supplementary materials. In the main paper, every volume is of dimensions $64^3$. In the
-        supplementary materials, most volumes are of dimensions $256^3$.}
+        supplementary materials. All data sets are $64^3$ subsets of the original volumes.}
   \centering
   \begin{tabular}{llr}
-  \hline
+  \toprule
   Name & Type & Data type \\
-  \hline
+  \midrule
   boiler & combustion simulation& float64\\
   plasma & magnetic reconnection simulation& float32\\
   diffusivity & hydrodynamics simulation& float64\\
   pressure & hydrodynamics simulation& float64\\
-        turbulence & fluid dynamics simulation& float32\\
-        kingsnake & CT scan & uint8\\
-        flame & combustion simulation& float32\\
-        csafe & fluid dynamics simulation& uint8\\
-        enzo-v & cosmology simulation& float32\\
-        % brain & fluid dynamics simulation& uint8\\
-        foam & material simulation& uint16\\
-        % vismale & fluid dynamics simulation& uint8 & x & x & x & x & x & P(rerun)\\
-        karfs & combustion simulation& float32\\
-        % aneurism      & fluid dynamics simulation& uint8 & x & x &  & x & x & Done\\
+  turbulence & fluid dynamics simulation& float32\\
+  kingsnake & CT scan & uint8\\
+  flame & combustion simulation& float32\\
+  csafe & fluid dynamics simulation& uint8\\
+  enzo-v & cosmology simulation& float32\\
+  % brain & fluid dynamics simulation& uint8\\
+  foam & CT scan of aluminum foam & uint16\\
+  % vismale & fluid dynamics simulation& uint8 & x & x & x & x & x & P(rerun)\\
+  karfs & combustion simulation& float32\\
+  % aneurism      & fluid dynamics simulation& uint8 & x & x &  & x & x & Done\\
   % velocityz & hydrodynamics simulation& float64 & x & x &  & x & x & D(main)\\
-  \hline
+  \bottomrule
   \end{tabular}\label{tbl:data-sets}
 \end{table}
 
 \begin{figure}[htb]
         \centering
-        \subcaptionbox{Csafe}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/rmse-optimized-csafe}}
-        \subcaptionbox{Enzo v}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/rmse-optimized-enzo-v}}
-        \subcaptionbox{Flame}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/rmse-optimized-flame}}
-        \subcaptionbox{Foam}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/rmse-optimized-foam}}
-        \subcaptionbox{Karfs}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/rmse-optimized-karfs}}
-        \subcaptionbox{Kingsnake}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/rmse-optimized-kingsnake}}
+        \subcaptionbox{Boiler}[0.32\linewidth][c]{%
+                \includegraphics[width=0.3\linewidth]{img/supplementary/boiler.png}}
+        \subcaptionbox{Plasma}[0.32\linewidth][c]{%
+                \includegraphics[width=0.3\linewidth]{img/supplementary/plasma.png}}
+        \subcaptionbox{Diffusivity}[0.32\linewidth][c]{%
+                \includegraphics[width=0.3\linewidth]{img/supplementary/diffusivity.png}}
+        \subcaptionbox{Pressure}[0.32\linewidth][c]{%
+                \includegraphics[width=0.3\linewidth]{img/supplementary/pressure.png}}
+        \subcaptionbox{Turbulence}[0.32\linewidth][c]{%
+                \includegraphics[width=0.3\linewidth]{img/supplementary/turbulence.png}}
+        \subcaptionbox{Kingsnake}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/kingsnake.png}}
+        \subcaptionbox{Flame}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/flame.png}}
+        \subcaptionbox{Csafe}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/csafe.png}}
+        \subcaptionbox{Enzo-v}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/enzo-v.png}}
+        \subcaptionbox{Foam}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/foam.png}}
+        \subcaptionbox{Karfs}[0.32\linewidth][c]{%
+                \includegraphics[width=0.3\linewidth]{img/supplementary/karfs.png}}
+        \caption{Volume renderings of all data sets}
+\end{figure}
+
+
+\begin{figure}[htb]
+        \centering
+%        \subcaptionbox{Boiler}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-boiler}}
+%        \subcaptionbox{Plasma}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-plasma}}
+%        \subcaptionbox{Diffusivity}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-diffusivity}}
+%        \subcaptionbox{Pressure}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-pressure}}
+%        \subcaptionbox{Turbulence}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-turbulence}}
+        \subcaptionbox{Kingsnake}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-kingsnake}}
+        \subcaptionbox{Flame}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-flame}}
+        \subcaptionbox{Csafe}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-csafe}}
+        \subcaptionbox{Enzo-v}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-enzo-v}}
+        \subcaptionbox{Foam}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-foam}}
+        \subcaptionbox{Karfs}[0.32\linewidth][c]{%
+                \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-karfs}}
         \caption{RMSE}
 \end{figure}
 
 
 \begin{figure}[htb]
         \centering
-        \subcaptionbox{Csafe}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/gradient-optimized-csafe}}
-        \subcaptionbox{Enzo v}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/gradient-optimized-enzo-v}}
-        \subcaptionbox{Flame}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/gradient-optimized-flame}}
-        \subcaptionbox{Foam}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/gradient-optimized-foam}}
-        \subcaptionbox{Karfs}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/gradient-optimized-karfs}}
-        \subcaptionbox{Kingsnake}[0.4\linewidth][c]{%
-                %\includegraphics[width=0.4\linewidth]{img/supplementary/gradient-optimized-kingsnake}
-                }
+%        \subcaptionbox{Boiler}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-boiler}}
+%        \subcaptionbox{Plasma}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-plasma}}
+%        \subcaptionbox{Diffusivity}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-diffusivity}}
+%        \subcaptionbox{Pressure}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-pressure}}
+%        \subcaptionbox{Turbulence}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-turbulence}}
+%        \subcaptionbox{Kingsnake}[0.32\linewidth][c]{%
+%               \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-kingsnake}}
+        \subcaptionbox{Flame}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-flame}}
+        \subcaptionbox{Csafe}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-csafe}}
+        \subcaptionbox{Enzo-v}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-enzo-v}}
+        \subcaptionbox{Foam}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-foam}}
+        \subcaptionbox{Karfs}[0.32\linewidth][c]{%
+                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-karfs}}
         \caption{Gradient}
 \end{figure}
 
 
 \begin{figure}[htb]
         \centering
-        \subcaptionbox{Csafe}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/laplacian-optimized-csafe}}
-        \subcaptionbox{Enzo v}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/laplacian-optimized-enzo-v}}
-        \subcaptionbox{Flame}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/laplacian-optimized-flame}}
-        \subcaptionbox{Foam}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/laplacian-optimized-foam}}
-        \subcaptionbox{Karfs}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/laplacian-optimized-karfs}}
-        \subcaptionbox{Kingsnake}[0.45\linewidth][c]{%
-                %\includegraphics[width=0.4\linewidth]{img/supplementary/laplacian-optimized-kingsnake}
-                }
+%        \subcaptionbox{Boiler}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-boiler}}
+%        \subcaptionbox{Plasma}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-plasma}}
+%        \subcaptionbox{Diffusivity}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-diffusivity}}
+%        \subcaptionbox{Pressure}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-pressure}}
+%        \subcaptionbox{Turbulence}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-turbulence}}
+%        \subcaptionbox{Kingsnake}[0.32\linewidth][c]{%
+%               \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-kingsnake}}
+        \subcaptionbox{Flame}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-flame}}
+        \subcaptionbox{Csafe}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-csafe}}
+        \subcaptionbox{Enzo-v}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-enzo-v}}
+        \subcaptionbox{Foam}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-foam}}
+        \subcaptionbox{Karfs}[0.32\linewidth][c]{%
+                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-karfs}}
         \caption{Laplacian}
 \end{figure}
 
 
 \begin{figure}[htb]
         \centering
-        \subcaptionbox{Csafe}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/histogram-optimized-csafe}}
-        \subcaptionbox{Enzo v}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/histogram-optimized-enzo-v}}
-        \subcaptionbox{Flame}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/histogram-optimized-flame}}
-        \subcaptionbox{Foam}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/histogram-optimized-foam}}
-        \subcaptionbox{Karfs}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/histogram-optimized-karfs}}
-        \subcaptionbox{Kingsnake}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/histogram-optimized-kingsnake}}
+%        \subcaptionbox{Boiler}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-boiler}}
+%        \subcaptionbox{Plasma}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-plasma}}
+%        \subcaptionbox{Diffusivity}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-diffusivity}}
+%        \subcaptionbox{Pressure}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-pressure}}
+%        \subcaptionbox{Turbulence}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-turbulence}}
+%        \subcaptionbox{Kingsnake}[0.32\linewidth][c]{%
+%               \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-kingsnake}}
+        \subcaptionbox{Flame}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-flame}}
+        \subcaptionbox{Csafe}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-csafe}}
+        \subcaptionbox{Enzo-v}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-enzo-v}}
+        \subcaptionbox{Foam}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-foam}}
+        \subcaptionbox{Karfs}[0.32\linewidth][c]{%
+                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-karfs}}
         \caption{Histogram}
 \end{figure}
 
 
 \begin{figure}[htb]
         \centering
-        \subcaptionbox{Csafe ($h=60$)}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/isocontour-optimized-csafe}}
-        \subcaptionbox{Enzo v ($h=0.4$)}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/isocontour-optimized-enzo-v}}
-        \subcaptionbox{Flame ($h=-6000$)}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/isocontour-optimized-flame}}
-        \subcaptionbox{Foam ($h=30934$)}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/isocontour-optimized-foam}}
-        \subcaptionbox{Karfs ($h=2.8$)}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/isocontour-optimized-karfs}}
-        \subcaptionbox{Kingsnake ($h=106$)}[0.45\linewidth][c]{%
-                \includegraphics[width=0.4\linewidth]{img/supplementary/isocontour-optimized-kingsnake}}
+%        \subcaptionbox{Boiler}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-boiler}}
+%        \subcaptionbox{Plasma}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-plasma}}
+%        \subcaptionbox{Diffusivity}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-diffusivity}}
+%        \subcaptionbox{Pressure}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-pressure}}
+%        \subcaptionbox{Turbulence}[0.32\linewidth][c]{%
+%                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-turbulence}}
+        \subcaptionbox{Kingsnake ($h=106$)}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-kingsnake}}
+        \subcaptionbox{Flame ($h=-6000$)}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-flame}}
+        \subcaptionbox{Csafe ($h=60$)}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-csafe}}
+        \subcaptionbox{Enzo v ($h=0.4$)}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-enzo-v}}
+        \subcaptionbox{Foam ($h=30934$)}[0.32\linewidth][c]{%
+               \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-foam}}
+        \subcaptionbox{Karfs ($h=2.8$)}[0.32\linewidth][c]{%
+                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-karfs}}
         \caption{Isosurface}
 \end{figure}
 

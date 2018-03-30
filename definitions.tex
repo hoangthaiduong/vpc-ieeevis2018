@@ -36,16 +36,16 @@ after wavelet transform. \todo{TODO: revise this figure}}\label{fig:pipeline}
 \begin{table}[!b]
 \centering
 \begin{tabular}{l l c c}
-\hline
+\toprule
 Symbol & Name & Data Dependent & Task Dependent \\
-\hline
+\midrule
 \slvl & (\emph{by level}) & \xmark & \xmark\\
 \sbit &(\emph{by bit}) & \xmark & \xmark\\
 \swav &(\emph{by wavelet norm}) & \xmark & \xmark\\
 \smag &(\emph{by magnitude}) & \cmark & \xmark\\
 \stkop &(\emph{task-optimized}) & \cmark & \cmark\\
 \stksg &(\emph{by signature}) & \cmark/\xmark & \xmark\\
-\hline
+\bottomrule
 \end{tabular}\label{tbl:streams}
 \caption{We define various types of data streams, including several
 data-independent, data-dependent and task-independent, as well as
