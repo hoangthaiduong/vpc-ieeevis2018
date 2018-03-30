@@ -46,11 +46,11 @@ Symbol & Name & Data Dependent & Task Dependent \\
 \stkop &(\emph{task-optimized}) & \cmark & \cmark\\
 \stksg &(\emph{by signature}) & \cmark/\xmark & \xmark\\
 \bottomrule
-\end{tabular}\label{tbl:streams}
+\end{tabular}
 \caption{We define various types of data streams, including several
 data-independent, data-dependent and task-independent, as well as
 task-dependent streams. \hb{Duong, \ssig is classified correctly?}\todo{fix
-width}}
+width}\label{tbl:streams}}
 \end{table}
 
 \subsection{Decomposition of Data into Packets} \label{sec:data-streaming-framework}
@@ -64,7 +64,7 @@ which, we use as as the smallest units of data transfer in our framework. A pack
 relatively small number of bits from a data set. We associate a packet with a resolution level and a
 precision level (i.e., bit plane), such that each packet can improve either the resolution or the
 precision of data.  In this framework, different data-reduction schemes become different orderings
-of packets, called \emph{stream}. Restricting two (or more) data streams to the same number of
+of packets, called \emph{streams}. Restricting two (or more) data streams to the same number of
 packets allows us to perform fair and consistent comparisons.
 
 \para{Packets for Different Resolution Levels.} Although there exist several ways to define the
