@@ -12,11 +12,10 @@ intersection~\cite{histogram_intersection1991} as the metric of choice, because 
 compute and is reasonably insensitive to changes in precision, as well as the number of bins. The
 intersection distance between two histograms $H_1$ and $H_2$ is defined as
 $\err(H_1,H_2)=\sum_{i}{\min{(H_1(i),H_2(i))}}$ (the sum is over all bins $i$). Every histogram is
-normalized by dividing the value in each bin by the total number of samples in the volume. The error
-metric takes into account not only the shape but also the value range of the histograms. Therefore,
-when computing the histogram of a reconstructed function, we clamp its range of values to that of
-the original function, so that corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the
-same range.
+normalized by dividing the value in each bin by the number of samples in the volume. The error
+metric should take into account both the histogram shapes and the range of values. Therefore, we
+clamp the range of values in reconstructed fucntions to that of the original function, so that
+corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same range.
 
 As before, for each data set, we use~\Cref{alg:greedy} to compute an \shop stream, optimized for
 histogram error, and then construct an \shsg from its signature. We plot the error curves for all
@@ -31,20 +30,20 @@ there are several crossover points between the two curves~(visualization
 in~\Cref{fig:histogram-explain}). When leading zero packets are present, \slvl outperforms \sbit,
 because increasing resolution does not help produce an accurate histogram as much as increasing
 precision. The histogram is oblivious to spatial locations of samples (which require resolution to
-resolve), but it is sensitive to sample values (which require precision). However, when leading zero
-packets are removed, as is the case when using compression, \sbit benefits significantly more than
-\slvl does (for the same reason explained in~\Cref{sec:rmse-optimized}), resulting in the observed
-crossovers. Finally, \smag performs poorly, because it ignores regions of smooth variations, which
-nevertheless count toward the distribution.
+resolve), but is sensitive to sample values (which require precision). However, when leading zero
+packets are removed with compression, \sbit benefits significantly more than \slvl does (for the
+same reason explained in~\Cref{sec:rmse-optimized}), resulting in the observed crossovers. Finally,
+\smag performs poorly, because it ignores regions of smooth variations, which nevertheless count
+toward the distribution.
 
 In the latter group, the performances of \swav and \shsg (and even \shop) differ by negligible
 amount. This observation is confirmed in~\Cref{fig:histograms-boiler}, where we plot various
 histograms, reconstructed at 0.13 bps, for the \emph{boiler} data set. The histograms produced by
 \swav and \shsg have approximately the same shape, and are the closest to the reference histogram.
 The next best histogram is produced by \slvl, followed by the one produced by \sbit, and finally
-\smag. These results suggest that histogram computation is among the analysis tasks that, while
-being in favor of precision, benefit significantly from a bit ordering that combines both resolution
-and precision, not one that adheres to either exclusively.
+\smag. These results suggest that histogram computation, while being in favor of precision, benefits
+significantly from a bit ordering that combines both resolution and precision, not one that adheres
+to either exclusively.
 
 \begin{figure*}[t]
 	\centering

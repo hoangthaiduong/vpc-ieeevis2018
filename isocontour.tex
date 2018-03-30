@@ -14,24 +14,33 @@ e.g., yellow features and green features).}
 \label{fig:isocontour-surfaces-plasma}
 \end{figure}
 
+\begin{figure}[t]
+\centering
+ \subcaptionbox{\label{fig:bit-distrib-rmse-tile}\emph{RMSE}}{{\includegraphics[width=0.32\linewidth]{bit-distrib-rmse-tile}}}
+ \subcaptionbox{\label{fig:bit-distrib-laplacian-tile}\emph{Laplacian}}{{\includegraphics[width=0.32\linewidth]{bit-distrib-laplacian-tile}}}
+ \subcaptionbox{\label{fig:bit-distrib-histogram-tile}\emph{histogram}}{ {\includegraphics[width=0.32\linewidth]{bit-distrib-histogram-tile}}}
+\caption{(Top) Bit distribution across subbands at 1.9 bps, and (bottom) corresponding stream
+signatures. The data is a 2D slice from \emph{diffusivity}. Subbands are separated by red lines. The
+color of each pixel indicates the bit plane at which the corresponding coefficient is currently at.
+Brighter greens correspond to more precision. Both the top and the bottom rows show that \shsg
+allocates more bits to the lower subbands, while \slsg prefers to stream bits from higher subbands.
+\ssig is somewhere in the middle.}
+\label{fig:bit-distrib}
+\end{figure}
 
 Studying isosurfaces of a given function is an essential task in many visualization and analysis
-pipelines, as they can highlight features of interest. For example, in combustion simulations,
-separation of burning and extinguished regions can be performed by extracting isosurfaces of OH
-concentration.
-
-Several sophisticated metrics exist that may be used to measure error in isosurface extraction,
-focusing on different characteristics, including geometric~\cite{verifiable-isosurface} and
-topological~\cite{topology-verification-isosurface} properties. Commonly used Hausdorff distance is
-another choice, but is not very robust as it varies drastically with minor changes in the surfaces.
-Since isosurfaces partition the domain into ``inside'' and ``outside'' regions, we opt for a simpler
-error metric that assumes nothing about the shape of the isosurfaces, but simply counts
-misclassified voxels. However, if the error caused by discarding a packet is of subvoxel resolution,
-such a metric does not capture the importance of that packet, causing~\Cref{alg:greedy} to produce a
-suboptimal \siop. Therefore, we add the relative difference in surface areas ($|A_1-A_2|/|A_1|$) to
-the error term. The normalization reduces the range of this term to $[0, 1]$, so that when the
-number of misclassified voxels is less than one, the subvoxel error is instead captured by this
-relative difference in surface areas.
+pipelines, as they can highlight features of interest. Several sophisticated metrics exist that may
+be used to measure error in isosurface extraction, focusing on different characteristics, including
+geometric~\cite{verifiable-isosurface} and topological~\cite{topology-verification-isosurface}
+properties. Commonly used Hausdorff distance is another choice, but is not very robust as it varies
+drastically with minor changes in the surfaces. Since isosurfaces partition the domain into
+``inside'' and ``outside'' regions, we opt for a simpler error metric that assumes nothing about the
+shape of the isosurfaces, but simply counts misclassified voxels. However, if the error caused by
+discarding a packet is of subvoxel resolution, such a metric does not capture the importance of that
+packet, causing~\Cref{alg:greedy} to produce a suboptimal \siop. Therefore, we add the relative
+difference in surface areas ($|A_1-A_2|/|A_1|$) to the error term. The normalization reduces the
+range of this term to $[0, 1]$, so that when the number of misclassified voxels is less than one,
+the subvoxel error is instead captured by this relative difference in surface areas.
 
 With the error metric defined, we can compute a data-dependent stream optimized for this metric
 (\siop) and a stream based on its signature (\sisg) using~\Cref{alg:greedy}

@@ -24,15 +24,14 @@
 Thus far, we have presented several types of streams: data-independent (\slvl, \sbit, \swav),
 data-dependent and task-independent (\smag), and task-dependent (\sopt, \ssig). In this section, we
 consider a variety of common analysis and visualization tasks to evaluate the performance of these
-streams. For each task under consideration, we define an error metric, $\err$, for the evaluation
-and comparison of streams. Using \Cref{alg:greedy}, we compute streams specifically optimized for
-each task, \stkop, and use its signature to compute the corresponding \stksg. We compare these
-streams by evaluating the error as a function of the number of packets received for a variety of
-datasets (see \Cref{tbl:data-sets}). To mimic the effects of entropy compression commonly used in
-practice, we remove all packets that contain only leading zero bits from each stream before
-plotting. The wavelet basis allows us to always reconstruct data at full resolution, which greatly
-simplifies computations of errors (there exists no standard methods to compute, for example, the
-root-mean-square error between grids of different dimensions).
+streams. For each task, we define an error metric, $\err$, for the evaluation and comparison of
+streams. Using \Cref{alg:greedy}, we compute streams specifically optimized for each task, \stkop,
+and use its signature to compute the corresponding \stksg. We compare these streams by evaluating
+the error as a function of the number of packets received for a variety of datasets (see
+\Cref{tbl:data-sets}). To mimic the effects of compression commonly used in practice, we remove all
+packets that contain only leading zero bits from each stream. The wavelet basis allows us to always
+reconstruct data at full resolution, which greatly simplifies computations of errors, as there
+exists no standard methods to compute error between grids of different dimensions.
 
 \subsection{Function Reconstruction}\label{sec:rmse-optimized}
 
@@ -73,17 +72,14 @@ datasets. It can be noted that, in general, \srop (the stream optimized to minim
 performs better than \srsg due to spatial adaptivity, whereas \srsg slightly outperforms \swav,
 followed by \sbit, \smag, and \slvl.
 
-In particular, \sbit performs better than \slvl (for \emph{kingsnake} and \emph{boiler}, it does so
-after approximately 1 bps), which can be attributed to the removal of leading zero packets, because
-empirically, wavelet coefficients on finer scale subbands are much smaller in
+In particular, \sbit outperforms than \slvl (for \emph{kingsnake} and \emph{boiler}, it does so
+after approximately 1 bps), which can be attributed to the removal of leading zero packets.
+Empirically, wavelet coefficients on finer scale subbands are much smaller in
 magnitude(\todo{cite}). Such coefficients contain a majority of the leading zero bits, whose removal
-benefits \sbit the most, as it touches fine-resolution bits the earliest. Compared to
-\emph{kingsnake} and \emph{boiler}, \emph{diffusivity} and \emph{plasma} contain a sigificant amount
-of empty space, which translates to more leading zero bits after the wavelet transform, that \sbit
-can take advantage of. The number of leading zero packets are: 406,219 (\emph{kingsnake}), 380,955
-(\emph{boiler}), 322,073 (\emph{plasma}), and 215,716 (\emph{diffusivity}). This is the reason why
-unlike for \emph{boiler} and \emph{kingsnake}, \sbit outperforms \slvl immediately from the
-beginning for \emph{diffusivity} and \emph{plasma}. 
+benefits \sbit the most. \emph{diffusivity} and \emph{plasma} contain a sigificant amount of empty
+space, which translates to more leading zero bits after the wavelet transform, that \sbit can take
+advantage of. This is the reason why unlike for \emph{boiler} and \emph{kingsnake}, \sbit
+outperforms \slvl immediately from the beginning for \emph{diffusivity} and \emph{plasma}.
 
 \smag underperforms for the same reason that \slvl does, but to a lesser extent, since \smag is
 better adaptive to the data. \swav outperforms both \slvl and \sbit, because it follows the optimal

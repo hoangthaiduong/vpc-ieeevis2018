@@ -4,8 +4,8 @@ Computation of derivative-based quantities is important in data analysis. Since 
 rarely be captured by closed-form formulae, we resort to finite differences for derivative
 computation. In this section, we use 32 bits for quantization to ensure enough precision for finite
 differences, as compared to 16 bits for other experiments. We always perform finite differences on
-the finest (original) resolution to avoid computing distances between quantities defined on grids of
-different resolutions.
+the finest resolution to avoid computing distances between quantities defined on grids of different
+resolutions.
 
 \subsubsection{Gradient Computation} \label{sec:gradient}
 
@@ -73,9 +73,8 @@ between the reconstructed gradient field and the original gradient field.
 \Cref{fig:gradient-error-comparison} shows the gradient error incurred by different streams for four
 data sets. In general, we observe the ordering of performance (from best to worst) as: \sgop, \sgsg,
 \sbit, \swav, \smag, \slvl. This ordering can also be seen in~\Cref{fig:gradient-rendering-diff},
-where the $x$-component of the gradient field for \emph{tuburlence} is reconstructed and rendered at
-0.5 bps. Unlike the RMSE case, \sbit produces better approximations of the gradient field compared
-to \swav.
+where the $x$-component of the gradient field for \emph{tuburlence} is rendered at 0.5 bps. Unlike
+the RMSE case, \sbit produces better approximations of the gradient field compared to \swav.
 
 We further investigate this difference by extracting a 1D line from \emph{plasma} data set and
 reconstructing the function using \sbit and \swav at 0.6 bps
@@ -93,8 +92,8 @@ constant shift. \sbit, therefore, works better than \swav for gradient computati
 better able to retain sharp features.
 
 \sgop again outperforms the rest of the streams. \slvl and \smag perform poorly for gradient
-computation, because they lack the resolution to capture sharp features. \sgsg closely follows \sbit
-in performance (it is slightly better than \sbit for \emph{boiler} at very low bit rates). These
+computation, lacking the resolution to capture sharp features. \sgsg closely follows \sbit in
+performance (it is slightly better than \sbit for \emph{boiler} at very low bit rates). These
 results suggest that while \swav is the best among the data-independent streams when optimizing for
 RMSE, \sbit is better for gradient computation.
 
@@ -147,7 +146,8 @@ We use the root-mean-square error to compare two Laplacian fields, i.e., $\err(\
 compute a \emph{Laplacian-optimized} stream, \slop, which minimizes $\err$, and an \slsg stream from
 its signature.~\Cref{fig:laplacian-error-comparison} plots the error curves for all relevant
 streams. The plots here largely follow the one in~\Cref{fig:gradient-error-comparison}, in terms of
-relative performance among the streams, but with more discernible gaps between \sbit and \slsg. In
-\Cref{fig:laplacian-renderings}, we render the reconstructed Laplacian fields for the
-\emph{pressure} field at 1.5 bps, which shows how differences in Laplacian among the streams
-translate to visual differences.
+relative performance among the streams, but with more discernible gaps between \sbit and \slsg.
+
+% In \Cref{fig:laplacian-renderings}, we render the reconstructed Laplacian fields for the
+% \emph{pressure} field at 1.5 bps, which shows how differences in Laplacian among the streams
+% translate to visual differences.
