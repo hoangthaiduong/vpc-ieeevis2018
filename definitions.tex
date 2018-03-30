@@ -12,7 +12,7 @@ packets (comparable amounts of data).}
 point, the client is assumed to have received a subset of packets from the
 server, which can be used to reconstruct an approximation to the original
 data. Therefore, to compare different streams, we can reconstruct the original
-data using the \emoh{same number} of packets from each stream, and perform
+data using the \emph{same number} of packets from each stream, and perform
 desired tasks on each of the (approximate) reconstructions. A stream is
 considered better suited for a given task if it produces results that are
 closer to the ``ground truth'', i.e., the reference results computed from the
@@ -47,16 +47,16 @@ figure}}\label{fig:pipeline}
 \centering
 \begin{tabular}{l l c c}
 %{0.01\textwidth} l{0.04\textwidth} c{0.04\textwidth} c{0.04\textwidth}}
-\hline
+\toprule
 Symbol & Name & Data Dependent & Task Dependent \\
-\hline
+\midrule
 \slvl & (\emph{by level}) & \xmark & \xmark\\
 \sbit &(\emph{by bit}) & \xmark & \xmark\\
 \swav &(\emph{by wavelet norm}) & \xmark & \xmark\\
 \smag &(\emph{by magnitude}) & \cmark & \xmark\\
 \stkop &(\emph{task-optimized}) & \cmark & \cmark\\
 \stksg &(\emph{by signature}) & \cmark/\xmark & \xmark\\
-\hline
+\bottomrule
 \end{tabular}\label{tbl:streams}
 \caption{We define various types of data streams, including several
 data-independent, data-dependent and task-independent, as well as
@@ -103,7 +103,7 @@ define packet} as the smallest units of data \hbadd{transfer}
 packet consists of a relatively small number of bits from a data set. We
 associate a packet with a resolution level \hbadd{or} \hbdel{and} a precision
 level (i.e., bit plane), \hbadd{such} \hbdel{so} that each packet can improve
-either the \hbdel{data's} resolution or \hbdel{its} \habdd{the} precision
+either the \hbdel{data's} resolution or \hbdel{its} \hbadd{the} precision
 \hbadd{of data}.  In this framework, different data-reduction schemes become
 different orderings of packets, \hbdel{and we call the sequence of packets}
 \hbadd{called as} \emph{stream}.  \hbadd{Restricting two (or more) data
