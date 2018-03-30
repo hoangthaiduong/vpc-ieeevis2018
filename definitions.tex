@@ -168,8 +168,8 @@ stream at a later point. In order to avoid local minima, we make a modification 
 algorithm, and build the stream backwards. We start with a ``lossless'' $\tilde{f}$ (i.e.,
 $\tilde{f}=f$), and at each step we remove the packet that has the least impact on the error $\err$
 from $\tilde{f}$. This modification solves the previous problem where less important packets were
-added to $\sopt$ too early. Moreover, it ensures that the packets chosen for removal early on are
-indeed less important and will be put at the end of $\sopt$.
+added to \sopt too early. Moreover, it ensures that the packets chosen for removal early on are
+indeed less important and will be put at the end of \sopt.
 
 Unfortunately, such a greedy algorithm is still expensive in practice, as its complexity is
 $\mathcal{O}(n^3)$, with $n$ being the total number of packets in the data. The cubic time
@@ -180,9 +180,9 @@ to prohibitively large numbers. Therefore, we adopt a simplified version of this
 only one pass through the set of $n$ packets is needed. In each iteration $i$, we disable (set to
 zero) a new packet $p_i$ in $\tilde{f}$, compute and record the incurred error $\err_i$, and then
 enable $p_i$ again at the end of iteration $i$. After $n$ iterations, each packet has an associated
-weight $\err_i$. The stream $\sopt$, then, is simply the sorted list of packets in decreasing order
+weight $\err_i$. The stream \sopt, then, is simply the sorted list of packets in decreasing order
 of the weights. This simplified algorithm brings the running time from days down to hours, while (by
-observation) retaining the same quality for $\sopt$. \Cref{alg:greedy} outlines the approach
+observation) retaining the same quality for \sopt. \Cref{alg:greedy} outlines the approach
 described above.
 
 \begin{algorithm}[h]
@@ -224,7 +224,7 @@ $\sgn(0,0)=0$. Those are followed by packets on the second bit plane of the firs
 ($\sgn(0,1)=1$), and then the first bit plane of the second subband ($\sgn(1,0)=2$), and finally,
 the third bit plane of the second subband ($\sgn(1,2)=5$). Thus, a stream's signature shows how the
 stream traverses the space $\Sigma_{L,B}$, and highlights the different resolution-versus-precision
-tradeoffs among streams, especially among $\sopt$ streams optimized for different tasks.
+tradeoffs among streams, especially among \sopt streams optimized for different tasks.
 In~\Cref{fig:example-signatures} we visualize the signatures of \sbit, \slvl, and \swav, defined
 in~\Cref{sec:data-streaming-framework}.
 
@@ -259,13 +259,12 @@ lists the steps of our approach.
 	\label{alg:signature}
 \end{algorithm}
 
-Finally, a signature can be used to construct a stream which lies between data-independent and
-data-dependent streams, denoted generically as $\ssig$. This construction is done by iterating
-through each element $\sgn(l,b)$ in ascending order, and adding to the end of $\ssig$ all the
-packets in $P_{l,b}$. An $\ssig$ captures the behavior (in the $\Sigma_{L,B}$ space) of the stream
-it derives from, but is stripped from any spatial adaptivity. Hence $\ssig$ can serve as a bridge
-when comparing the resolution-versus-precision tradeoffs between data-independent and data-dependent
-streams.
+Finally, a signature can be used to construct a stream which is denoted generically as $\ssig$. This
+construction is done by iterating through each element $\sgn(l,b)$ in ascending order, and adding to
+the end of \ssig all the packets in $P_{l,b}$. An \ssig captures the behavior (in the $\Sigma_{L,B}$
+space) of the stream it derives from, but is stripped from any spatial adaptivity. Hence, when \ssig
+is derived from an \sopt, it can serve as a bridge when comparing the resolution-versus-precision
+tradeoffs between data-independent and data-dependent streams.
 
 \begin{figure}[t]
 \centering
