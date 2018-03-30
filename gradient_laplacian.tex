@@ -1,19 +1,11 @@
 \subsection{Derivative Computation} \label{sec:derivatives}
 
-\todo{note the captialization. also, the changed form is consistent with other 
-section headings}
-
-Computation of derivative-based quantities \hbdel{such as gradient and Laplacian} is important in data
-analysis. Since simulation data can rarely be captured by closed-form formulae, we resort to finite
-differences for derivative computation. In this section, we use 32 bits \hbdel{(instead of 16)} for
-quantization to ensure enough precision for finite differences, \hbadd{as compared to 16 bits 
-for other experiments}. \hbdel{Note that w}\hbadd{W}e always perform finite
-differences on the finest (original) resolution\hbdel{. This decision} \hbadd{to} avoid 
-\hbdel{the problem of} computing
-distances between quantities defined on grids of different \hbadd{resolutions} \hbdel{sizes, 
-as we are unaware of any widely
-accepted solutions to this problem.~\Cref{sec:gradient} discusses gradient computation
-and~\Cref{sec:laplacian} discusses computation of the Laplacian.}
+Computation of derivative-based quantities is important in data analysis. Since simulation data can
+rarely be captured by closed-form formulae, we resort to finite differences for derivative
+computation. In this section, we use 32 bits for quantization to ensure enough precision for finite
+differences, as compared to 16 bits for other experiments. We always perform finite differences on
+the finest (original) resolution to avoid computing distances between quantities defined on grids of
+different resolutions.
 
 \subsubsection{Gradient Computation} \label{sec:gradient}
 
@@ -67,31 +59,16 @@ function's shape (or its relative values) matters more than its absolute values.
 \label{fig:bit-plane-vs-wavelet-norm-gradient}
 \end{figure}
 
-\hbadd{Given a function $f$ defined on a grid, its gradient at a grid point 
-\mbox{$\x = (x,y,z)$} is the vector $\nabla f(\x) = \left(\frac{\partial f}{\partial x}, 
-\frac{\partial f}{\partial y}, \frac{\partial f}{\partial y}\right)$.}
-\hbdel{The gradient of a given function $f$ at a grid point $\x = (x,y,z)$ is the vector 
-$(\frac{\partial f}{\partial x},\frac{\partial f}{\partial y}, 
-\frac{\partial f}{\partial y})$. We compute the
-derivative in each dimension using a five-point stencil, }
-\hbadd{We use a five-point stencil to compute the gradient,} i.e., 
-%
-$\frac{\partial f}{\partial x} = \frac{1}{12}f(x-2,y,z) - 
-\frac{2}{3}f(x-1,y,z) + \frac{2}{3}f(x+1,y,z) - \frac{1}{12}f(x+2,y,z)$. 
-%
-\hbadd{The error between a gradient field $\nabla f$, and its 
-low-bit-rate approximation $\nabla \tilde{f}$, can be defined as 
-$\err(\nabla \tilde{f}, \nabla f) = \sqrt{\frac{1}{n} \sum_{i=1}^{n}{\norm{\nabla
-\tilde{f}(\x_i)-\nabla f(\x_i)}^2}}.$}
-%
-Using~\Cref{alg:greedy}, we compute a \emph{gradient-optimized} stream,
-\sgop, \hbadd{i.e., a stream} that minimizes the difference between the reconstructed gradient field and the original
-gradient field. 
-\hbdel{The error at each grid point $\x_i$ is the squared L\textsubscript{2} norm of the
-difference between two gradient vectors, i.e., $\norm{\nabla \tilde{f}(\x_i) - \nabla f(\x_i)}^2$,
-where $\tilde{f}$ is a low bit rate approximation of $f$. The overall error, defined over the whole
-field, is $\err(\nabla \tilde{f}, \nabla f) = \sqrt{\frac{1}{n} \sum_{i=1}^{n}{\norm{\nabla
-\tilde{f}(\x_i)-\nabla f(\x_i)}^2}}$.}
+Given a function $f$ defined on a grid, its gradient at a grid point \mbox{$\x = (x,y,z)$} is the
+vector $\nabla f(\x) = \left(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y},
+\frac{\partial f}{\partial y}\right)$. We use a five-point stencil to compute the gradient, i.e.,
+$\frac{\partial f}{\partial x} = \frac{1}{12}f(x-2,y,z) - \frac{2}{3}f(x-1,y,z) +
+\frac{2}{3}f(x+1,y,z) - \frac{1}{12}f(x+2,y,z)$. The error between a gradient field $\nabla f$, and
+its low-bit-rate approximation $\nabla
+\tilde{f}$, is defined as $\err(\nabla \tilde{f}, \nabla f) = \sqrt{\frac{1}{n}
+\sum_{i=1}^{n}{\norm{\nabla \tilde{f}(\x_i)-\nabla f(\x_i)}^2}}$. Using~\Cref{alg:greedy}, we
+compute a \emph{gradient-optimized} stream, \sgop, i.e., a stream that minimizes the difference
+between the reconstructed gradient field and the original gradient field.
 
 \Cref{fig:gradient-error-comparison} shows the gradient error incurred by different streams for four
 data sets. In general, we observe the ordering of performance (from best to worst) as: \sgop, \sgsg,
@@ -159,21 +136,18 @@ bps.  In terms of image quality, $\slsg > \sbit > \swav > \smag > \slvl$.}
 \end{figure*}
 
 The Laplace operator is a second-order differential operator defined as the divergence of the
-gradient field. \hbdel{It can be computed by summing second partial derivatives in all dimensions, e.g., in
-3D,}
-\hbadd{The Laplacian of a 3D field is defined as} $\Delta
-f=\frac{{\partial}^2}{\partial{x^2}}f+\frac{{\partial}^2}{\partial{y^2}}f+\frac{{\partial}^2}{\partial{y^2}}f$. 
-\hbadd{Using a five-point finite difference, we approximate } 
-\hbdel{To compute the Laplacian, we use the five-point finite difference to approximate the second
-derivative in each dimension:} $\frac{{\partial}^2}{\partial{x^2}}f(x,y,z) \approx
+gradient field. The Laplacian of a 3D field is defined as $\Delta
+f=\frac{{\partial}^2}{\partial{x^2}}f+\frac{{\partial}^2}{\partial{y^2}}f+\frac{{\partial}^2}{\partial{y^2}}f$.
+
+Using a five-point finite difference, we approximate $\frac{{\partial}^2}{\partial{x^2}}f(x,y,z)
+\approx
 -\frac{1}{12}f(x-2,y,z)+\frac{4}{3}f(x-1,y,z)+\frac{-5}{2}f(x,y,z)+\frac{4}{3}f(x+1,y,z)-\frac{1}{12}f(x+2,y,z)$.
-\hbadd{Similar to the gradient field, we use the RMSE metric to 
-We} compare two Laplacian fields \hbdel{using the RMSE metric}, i.e., $\err(\Delta \tilde{f},\Delta
-f)=\text{RMSE}(\Delta \tilde{f},\Delta f)$. \hb{have we actually defined RMSE anywhere?} As usual, we use~\Cref{alg:greedy} to compute a
-\emph{Laplacian-optimized} stream, \slop, which minimizes $\err$, and an \slsg stream from its
-signature.~\Cref{fig:laplacian-error-comparison} plots the error curves for all relevant streams.
-The plots here largely follow the one in~\Cref{fig:gradient-error-comparison}, in terms of relative
-performance among the streams, but with more discernible gaps between \sbit and \slsg. In
+We use the root-mean-square error to compare two Laplacian fields, i.e., $\err(\Delta
+\tilde{f},\Delta f)=\text{RMSE}(\Delta \tilde{f},\Delta f)$. As usual, we use~\Cref{alg:greedy} to
+compute a \emph{Laplacian-optimized} stream, \slop, which minimizes $\err$, and an \slsg stream from
+its signature.~\Cref{fig:laplacian-error-comparison} plots the error curves for all relevant
+streams. The plots here largely follow the one in~\Cref{fig:gradient-error-comparison}, in terms of
+relative performance among the streams, but with more discernible gaps between \sbit and \slsg. In
 \Cref{fig:laplacian-renderings}, we render the reconstructed Laplacian fields for the
 \emph{pressure} field at 1.5 bps, which shows how differences in Laplacian among the streams
 translate to visual differences.
