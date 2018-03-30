@@ -44,13 +44,12 @@ Symbol & Name & Data Dependent & Task Dependent \\
 \swav &(\emph{by wavelet norm}) & \xmark & \xmark\\
 \smag &(\emph{by magnitude}) & \cmark & \xmark\\
 \stkop &(\emph{task-optimized}) & \cmark & \cmark\\
-\stksg &(\emph{by signature}) & \cmark/\xmark & \xmark\\
+\stksg &(\emph{by signature}) & \cmark/\xmark & \cmark/\xmark\\
 \bottomrule
 \end{tabular}
-\caption{We define various types of data streams, including several
-data-independent, data-dependent and task-independent, as well as
-task-dependent streams. \hb{Duong, \ssig is classified correctly?}\todo{fix
-width}\label{tbl:streams}}
+\caption{We define various types of data streams, including several data-independent, data-dependent
+and task-independent, as well as task-dependent streams. \stksg can be data dependent or task
+dependent, depending on the stream it derives from. \todo{fix width}\label{tbl:streams}}
 \end{table}
 
 \subsection{Decomposition of Data into Packets} \label{sec:data-streaming-framework}
