@@ -65,11 +65,11 @@
 \usepackage{xspace}
 \algnewcommand{\Inputs}[1]{%
   \State \textbf{Inputs:}
-  \Statex \hspace*{\algorithmicindent}\parbox[t]{.8\linewidth}{\raggedright #1}
+  \Statex \hspace*{\algorithmicindent}\parbox[t]{.9\linewidth}{\raggedright #1}
 }
 \algnewcommand{\Output}[1]{%
   \State \textbf{Output:}
-  \Statex \hspace*{\algorithmicindent}\parbox[t]{.8\linewidth}{\raggedright #1}
+  \Statex \hspace*{\algorithmicindent}\parbox[t]{.9\linewidth}{\raggedright #1}
 }
 \algnewcommand{\Initialize}[1]{%
   \State \textbf{Initialize:}
@@ -228,6 +228,7 @@
 \newcommand{\hb}[1]{{\textcolor{blue}{(HB: #1)}}}
 \newcommand{\hbadd}[1]{{\textcolor{blue}{#1}}}
 \newcommand{\hbdel}[1]{{\textcolor{red}{\sout{#1}}}}
+%\newcommand{\hbdel}[1]{{\textcolor{red}{}}}
 \newcommand{\todo}[1]{{\textcolor{red}{#1}}}
 %\newcommand{\duong}[1]{{\textcolor{purple}{(Duong: #1)}}}
 \newcommand{\duong}[1]{{\textcolor{purple}{}}} % this disable comments
@@ -274,6 +275,10 @@
 
 \newcommand{\para}[1]{\vspace{0.5em}\noindent{\textbf{#1}}}%\hspace{0.04em}}
 
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
 %% Copyright space is enabled by default as required by guidelines.
 %% It is disabled by the 'review' option or via the following command:
 % \nocopyrightspace
@@ -314,6 +319,9 @@
 % \acknowledgments{
 % The authors wish to thank A, B, and C. This work was supported in part by
 % a grant from XYZ (\# 12345-67890).}
+
+\clearpage
+\clearpage
 
 %\bibliographystyle{abbrv}
 \bibliographystyle{abbrv-doi}
