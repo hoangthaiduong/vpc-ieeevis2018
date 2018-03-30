@@ -1,7 +1,7 @@
 \documentclass{article}
 
 \usepackage{booktabs}
-\usepackage[margin=0.5in]{geometry}
+\usepackage[margin=0.2in]{geometry}
 \usepackage{graphicx}
 \usepackage{subcaption}
 
@@ -28,13 +28,13 @@
   kingsnake & CT scan & uint8\\
   flame & combustion simulation& float32\\
   csafe & fluid dynamics simulation& uint8\\
-  enzo-v & cosmology simulation& float32\\
-  % brain & fluid dynamics simulation& uint8\\
+  enzo v & cosmology simulation& float32\\
+  brain & CT scan of mocaque brain & uint8\\
   foam & CT scan of aluminum foam & uint16\\
-  % vismale & fluid dynamics simulation& uint8 & x & x & x & x & x & P(rerun)\\
+  vismale & fluid dynamics simulation& uint8 \\
   karfs & combustion simulation& float32\\
-  % aneurism      & fluid dynamics simulation& uint8 & x & x &  & x & x & Done\\
-  % velocityz & hydrodynamics simulation& float64 & x & x &  & x & x & D(main)\\
+  aneurism      & fluid dynamics simulation& uint8 \\
+  velocityz & hydrodynamics simulation& float64 \\
   \bottomrule
   \end{tabular}\label{tbl:data-sets}
 \end{table}
@@ -42,27 +42,35 @@
 \begin{figure}[htb]
         \centering
         \subcaptionbox{Boiler}[0.32\linewidth][c]{%
-                \includegraphics[width=0.3\linewidth]{img/supplementary/boiler.png}}
+                \includegraphics[width=0.2\linewidth]{img/supplementary/boiler.png}}
         \subcaptionbox{Plasma}[0.32\linewidth][c]{%
-                \includegraphics[width=0.3\linewidth]{img/supplementary/plasma.png}}
+                \includegraphics[width=0.2\linewidth]{img/supplementary/plasma.png}}
         \subcaptionbox{Diffusivity}[0.32\linewidth][c]{%
-                \includegraphics[width=0.3\linewidth]{img/supplementary/diffusivity.png}}
+                \includegraphics[width=0.2\linewidth]{img/supplementary/diffusivity.png}}
         \subcaptionbox{Pressure}[0.32\linewidth][c]{%
-                \includegraphics[width=0.3\linewidth]{img/supplementary/pressure.png}}
+                \includegraphics[width=0.2\linewidth]{img/supplementary/pressure.png}}
         \subcaptionbox{Turbulence}[0.32\linewidth][c]{%
-                \includegraphics[width=0.3\linewidth]{img/supplementary/turbulence.png}}
+                \includegraphics[width=0.2\linewidth]{img/supplementary/turbulence.png}}
         \subcaptionbox{Kingsnake}[0.32\linewidth][c]{%
-               \includegraphics[width=0.3\linewidth]{img/supplementary/kingsnake.png}}
+               \includegraphics[width=0.2\linewidth]{img/supplementary/kingsnake.png}}
         \subcaptionbox{Flame}[0.32\linewidth][c]{%
-               \includegraphics[width=0.3\linewidth]{img/supplementary/flame.png}}
+               \includegraphics[width=0.2\linewidth]{img/supplementary/flame.png}}
         \subcaptionbox{Csafe}[0.32\linewidth][c]{%
-               \includegraphics[width=0.3\linewidth]{img/supplementary/csafe.png}}
-        \subcaptionbox{Enzo-v}[0.32\linewidth][c]{%
-               \includegraphics[width=0.3\linewidth]{img/supplementary/enzo-v.png}}
+               \includegraphics[width=0.2\linewidth]{img/supplementary/csafe.png}}
+        \subcaptionbox{Enzo v}[0.32\linewidth][c]{%
+               \includegraphics[width=0.2\linewidth]{img/supplementary/enzo-v.png}}
+        \subcaptionbox{Brain}[0.32\linewidth][c]{%
+               \includegraphics[width=0.2\linewidth]{img/supplementary/neurons.png}}
         \subcaptionbox{Foam}[0.32\linewidth][c]{%
-               \includegraphics[width=0.3\linewidth]{img/supplementary/foam.png}}
+               \includegraphics[width=0.2\linewidth]{img/supplementary/foam.png}}
+        \subcaptionbox{Vismale}[0.32\linewidth][c]{%
+                \includegraphics[width=0.2\linewidth]{img/supplementary/vismale.png}}
         \subcaptionbox{Karfs}[0.32\linewidth][c]{%
-                \includegraphics[width=0.3\linewidth]{img/supplementary/karfs.png}}
+                \includegraphics[width=0.2\linewidth]{img/supplementary/karfs.png}}
+        \subcaptionbox{Aneurism}[0.32\linewidth][c]{%
+                \includegraphics[width=0.2\linewidth]{img/supplementary/aneurism.png}}
+        \subcaptionbox{Velocity z}[0.32\linewidth][c]{%
+                \includegraphics[width=0.2\linewidth]{img/supplementary/velocityz.png}}
         \caption{Volume renderings of all data sets}
 \end{figure}
 
@@ -176,6 +184,42 @@
         \subcaptionbox{Karfs}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-karfs}}
         \caption{Histogram}
+\end{figure}
+
+
+\begin{figure}[htb]
+        \centering
+        \subcaptionbox{Boiler ($h = 0.05$)}[0.32\linewidth][c]{%
+                \includegraphics[width=0.2\linewidth]{img/supplementary/boiler-iso.png}}
+        \subcaptionbox{Plasma ($h = 2$)}[0.32\linewidth][c]{%
+                \includegraphics[width=0.2\linewidth]{img/supplementary/plasma-iso.png}}
+        \subcaptionbox{Diffusivity ($h = -0.05$)}[0.32\linewidth][c]{%
+                \includegraphics[width=0.2\linewidth]{img/supplementary/diffusivity-iso.png}}
+        \subcaptionbox{Pressure ($h = 0.2$)}[0.32\linewidth][c]{%
+                \includegraphics[width=0.2\linewidth]{img/supplementary/pressure-iso.png}}
+        \subcaptionbox{Turbulence ($h = 5$)}[0.32\linewidth][c]{%
+                \includegraphics[width=0.2\linewidth]{img/supplementary/turbulence-iso.png}}
+        \subcaptionbox{Kingsnake ($h = 106$)}[0.32\linewidth][c]{%
+               \includegraphics[width=0.2\linewidth]{img/supplementary/kingsnake-iso.png}}
+        \subcaptionbox{Flame ($h = -6000$)}[0.32\linewidth][c]{%
+               \includegraphics[width=0.2\linewidth]{img/supplementary/flame-iso.png}}
+        \subcaptionbox{Csafe ($h = 60$)}[0.32\linewidth][c]{%
+               \includegraphics[width=0.2\linewidth]{img/supplementary/csafe-iso.png}}
+        \subcaptionbox{Enzo v ($h = 0.4$)}[0.32\linewidth][c]{%
+               \includegraphics[width=0.2\linewidth]{img/supplementary/enzo-v-iso.png}}
+        \subcaptionbox{Brain ($h = 90$)}[0.32\linewidth][c]{%
+               \includegraphics[width=0.2\linewidth]{img/supplementary/neurons-iso.png}}
+        \subcaptionbox{Foam ($h = 30934$)}[0.32\linewidth][c]{%
+               \includegraphics[width=0.2\linewidth]{img/supplementary/foam-iso.png}}
+        \subcaptionbox{Vismale ($h = 80$)}[0.32\linewidth][c]{%
+                \includegraphics[width=0.2\linewidth]{img/supplementary/vismale-iso.png}}
+        \subcaptionbox{Karfs ($h = 2.8$)}[0.32\linewidth][c]{%
+                \includegraphics[width=0.2\linewidth]{img/supplementary/karfs-iso.png}}
+        \subcaptionbox{Aneurism ($h = 127$)}[0.32\linewidth][c]{%
+                \includegraphics[width=0.2\linewidth]{img/supplementary/aneurism-iso.png}}
+        \subcaptionbox{Velocity z ($h = -2$)}[0.32\linewidth][c]{%
+                \includegraphics[width=0.2\linewidth]{img/supplementary/velocityz-iso.png}}
+        \caption{Isosurfaces (and isovalues) used for computing the isosurface errors}
 \end{figure}
 
 
