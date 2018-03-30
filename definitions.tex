@@ -1,38 +1,82 @@
 \section{Data Reduction Schemes as Packet Streams} \label{sec:terminologies}
 
-It is important to compare the data reduction techniques fairly in order to systematically study the
-resolution-versus-precision tradeoffs among them. One popular approach is to restrict the techniques
-to the same data size and compare data quality. It is, however, difficult to enforce that a
-multiresolution scheme uses the same amount of data as does a quantization scheme, because the
-amount of change in one step of multiresolution simplification may be different from removing one
-bit in the quantization of every data sample. To avoid such mismatch of data increment/decrement
-units, we model each reduction scheme as a stream of equally sized \emph{packets}. We define a
-packet as the smallest unit of data increment/decrement in our framework, where the packet consists
-of a relatively small number of bits from a data set. We associate a packet with a resolution level
-and a precision level (i.e., bit plane), so that each packet can improve either the data's
-resolution or its precision. In this framework, different data-reduction schemes become different
-orderings of packets, and we call the sequence of packets \emph{stream}. The property of each stream
-having the same total number of packets allows us to perform a fair comparison.
+\hbadd{In order to systematically study the
+resolution-versus-precision tradeoffs among different data reduction schemes, 
+it is important to perform fair and consistent comparisons.  
+In this section, we develop such a consistent methodology by first proposing 
+to compare different \emph{streams} of data as sequence of uniformly sized 
+data \emph{packets}, and then discussing several types of data streams, 
+which we compare in \Cref{sec:analysis-tasks}.
+In this paper, we consider \emph{data-independent}, \emph{data-dependent and 
+task-independent}, as well as \emph{task-dependent} streams (see \Cref{tbl:streams}).}
+
+%It is important to compare the data reduction techniques fairly in order to systematically study the
+%resolution-versus-precision tradeoffs among them. One popular approach is to restrict the techniques
+%to the same data size and compare data quality. It is, however, difficult to enforce that a
+%multiresolution scheme uses the same amount of data as does a quantization scheme, because the
+%amount of change in one step of multiresolution simplification may be different from removing one
+%bit in the quantization of every data sample. To avoid such mismatch of data increment/decrement
+%units, we model each reduction scheme as a stream of equally sized \emph{packets}. We define a
+%packet as the smallest unit of data increment/decrement in our framework, where the packet consists
+%of a relatively small number of bits from a data set. We associate a packet with a resolution level
+%and a precision level (i.e., bit plane), so that each packet can improve either the data's
+%resolution or its precision. In this framework, different data-reduction schemes become different
+%orderings of packets, and we call the sequence of packets \emph{stream}. The property of each stream
+%having the same total number of packets allows us to perform a fair comparison.
 
 \subsection{Decomposition of Data into Packets} \label{sec:data-streaming-framework}
 
-Each new packet adds to the data's resolution or precision. To introduce the concept of resolution,
-we use the popular CDF5/3 discrete wavelet transform~\cite{cdf-wavelets}. Although there exist other
-transforms that introduce the concept of resolutions/scales/frequencies, we choose wavelet transform
-because wavelet coefficients are spatially localized, which enables spatial adaptivity (i.e., finer
+\hbadd{Although one way to compare different data reduction strategies is}
+\hbdel{It is important to compare the data reduction techniques fairly in order to systematically study the
+resolution-versus-precision tradeoffs among them. One popular approach is} to restrict the techniques
+to the same data size and compare data quality, it \hbdel{is, however, difficult 
+to enforce that a
+multiresolution scheme uses the same amount of data as does a quantization scheme, because the
+amount of change in one step of multiresolution simplification may be different from removing one
+bit in the quantization of every data sample. }
+\hbadd{becomes difficult to enforce consistency. For example, the amount of change (in data) in one step of 
+multiresolution simplification may be different from removing one
+bit in the quantization of every data sample.}
+To avoid such mismatch of \hbadd{units of} data increment/decrement\hbdel{ units}, 
+we model each reduction scheme as a stream of equally sized \emph{packets}\hbadd{, 
+which, we define as}\hbdel{. We define packet} as the smallest unit of data \hbadd{transfer} 
+\hbdel{increment/decrement} in our framework. \hbdel{, where the} \hbadd{A} packet consists
+of a relatively small number of bits from a data set. We associate a packet with a resolution level
+\hbadd{or} \hbdel{and} a precision level (i.e., bit plane), \hbadd{such} \hbdel{so} that each packet can improve either the \hbdel{data's}
+resolution or \hbdel{its} \habdd{the} precision \hbadd{of data}. 
+In this framework, different data-reduction schemes become different
+orderings of packets, \hbdel{and we call the sequence of packets} \hbadd{called as} \emph{stream}. 
+\hbadd{Restricting two (or more) data streams to the same}
+\hbdel{The property of each stream having the same total} number of packets allows us 
+to perform fair \hbadd{and consistent} comparisons.
+
+\para{Packets for Different Resolution Levels.}
+\hbdel{Each new packet adds to the data's resolution or precision.To introduce the concept of resolution,
+we use the popular CDF5/3 discrete wavelet transform~\cite{cdf-wavelets}.}
+Although there exist \hbadd{several ways to define the notion of}
+\hbdel{other transforms that introduce the concept of} resolution/scale/frequency, 
+we choose wavelet transform \hbadd{due to the compact support of their basis functions,}
+\hbdel{because wavelet coefficients are spatially localized,} which enables spatial adaptivity (i.e., finer
 resolution in regions that contain sharp features, at the expense of coarser resolution elsewhere).
-We choose the CDF5/3 wavelet for its balance between simplicity and effectiveness at decorrelating
+\hbadd{In particular, we choose the CDF5/3 discrete wavelet transform~\cite{cdf-wavelets}} 
+\hbdel{We choose the CDF5/3 wavelet} for its balance between simplicity and effectiveness at decorrelating
 the input signal in practice~\cite{jpeg2000}.
 
-The multidimensional wavelet transform can be performed in multiple passes, which eventually results
-in the original domain being partitioned into several \emph{subbands}, each of which can be thought
-of as a resolution level. One transform pass creates eight subbands in 3D, of which the first is a
-smoothed, downsampled version of the original data, and the next seven add fine details in each
-subset of the dimensions (see a visualization of 2D subbands in~\Cref{fig:pipeline}). A subsequent
-transform pass recurses only on the first subband. We use $l$ $(0 \leq l < L)$ to index the
+\hbadd{A} \hbdel{The} multidimensional wavelet transform can be performed in multiple passes, 
+which \hbadd{partitions} \hbdel{eventually results
+in} the original domain \hbdel{being partitioned} into \hbdel{several} 
+\emph{subbands}, each of which can be thought
+of as a resolution level. One transform pass \hbadd{(in 3D)} creates eight subbands \hbdel{in 3D}, 
+of which the first is a
+smoothed, downsampled version of the original data, and the \hbadd{remaining} \hbdel{next seven} 
+add fine details in each subset of the dimensions (see \hbdel{a visualization of 2D subbands in~}
+\Cref{fig:pipeline}). A subsequent
+transform pass recurses only on the first subband \hbadd{creating the next resolution of 
+subbands}. We use $l$ $(0 \leq l < L)$ to index the
 subbands, with $l = 0$ referring to the coarsest subband and $L$ denoting the number of subbands. In
-this paper, we use $L=22$ (in 3D), corresponding to three transform passes.
+this paper, we use $L=22$ \hbdel{(in 3D)}, corresponding to three transform passes \hbadd{in 3D}.
 
+\para{Packets for Different Precision Levels.}
 For creating packets corresponding to different precision levels, we quantize floating-point wavelet
 coefficients to $B$-bit signed integers. For most of the experiments in this paper, $B=16$. This
 quantization eliminates the exponent bits, such that every bit (except the sign bit) can be
@@ -43,15 +87,17 @@ transformation increases the number of bit planes by one, to compensate for the 
 bit. In our convention, the higher indexed bit planes are less significant.
 
 Precisely, a packet consists of bits on the same bit plane, from a \emph{block} of negabinary
-wavelet coefficients. A block is a $g\times g\times g$ grid of adjacent coefficients on the same
-subband. $g$ is always $2$ for the experiments in this paper. We let $g$ be a constant, so that
+wavelet coefficients. A block is a $[g\times g\times g]$ grid of adjacent coefficients on the same
+subband. \hbdel{$g$ is always $2$ for the experiments in this paper.} We let $g$ be a constant 
+\hbadd{($=2$ in this paper)}, so that
 finer resolution subbands contain more packets, which presents a tradeoff between packets that
 provides wider (but coarser) coverage and packets that provides finer (but more local) details.
 Every packet comes from a bit plane $b$ and a subband $l$. A packets improves the precision (or
 resolution) of a region if it comes from a bit plane (or subband) that has not been streamed before
 in the region. $g$ is chosen to be larger than one for performance reason, as in practice, most
-systems reading bits in batches.
+systems read bits in batches.
 
+\para{Data Streams.}
 A data reduction scheme can be modeled as stream of packets, where the original data contains all
 packets, and any reduction step removes certain packets based on some criteria (details in
 \Cref{sec:static-dynamic-streams}).  These data streams are provided using a client-server model. At
@@ -272,7 +318,7 @@ streams.
 	\sopt & Yes --- Yes & \sopt, \sgop, \slop, \shop, \siop \\
 	\ssig & Semi --- No & \ssig, \sgsg, \slsg, \shsg, \sisg\\
   \hline
-  \end{tabular}\label{tbl:data-sets}
+  \end{tabular}\label{tbl:streams}
 \end{table}
 
 \begin{figure}[t]
