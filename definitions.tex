@@ -67,7 +67,9 @@ which we use as as the smallest units of data transfer in our framework. A packe
 relatively small number $\left(\approx 2^3\right)$ of bits from a data set. We associate a packet with a 
 resolution level and a
 precision level (i.e., bit plane), such that each packet can improve either the resolution or the
-precision of data. \todo{PL: Does a packet the improves resolution add the first bits of those samples/coefficients?  Need to make it clear what we mean by adding resolution, especially in the context of wavelets.} 
+precision of data. \todo{PL: Does a packet the improves resolution add the first bits of those 
+samples/coefficients?  Need to make it clear what we mean by adding resolution, especially in the 
+context of wavelets.} 
 In this framework, different data-reduction schemes become different orderings
 of packets, called \emph{streams}. Restricting two (or more) data streams to the same number of
 packets allows us to perform fair and consistent comparisons.
@@ -151,10 +153,20 @@ traditional methods that work either in resolution (\slvl) or in precision (\sbi
 
 Additionally, we define a third stream that combines these two dimensions and refer to it as
 \emph{by wavelet norm}, or \swav. This stream orders packets in descending order of weights
-$\wwav(p)=2^{B-1-b(p)}\times \norm{\omega_{l(p)}}^2$, where $p$ denotes a packet. The first term
+$\wwav(p)=2^{B-1-b(p)}\times \norm{\wbas_{l(p)}}^2$, 
+\todo{PL: Bit planes are ordered from 0 to B, so $2^{(B-b(p))}$.}
+where $p$ denotes a packet and $\wbas$ represents wavelet basis. The first term
 captures the contribution of a bit on bit plane $b(p)$, and the second term captures the
 contribution of a wavelet coefficient on subband $l(p)$, where $\omega_{l(p)}$ refers to a wavelet
-basis function on subband $l(p)$. In the wavelet representation, a function $f$ is written as a
+basis function 
+%
+\todo{I think you want to point out that $||$ refers to the L2 norm of the basis function. 
+When wavelet transforms are based on lifting, the norm is usually not one, but increases with level.
+Why the *squared* norm?  This is *not* the contribution of a bit to the error in the function.
+For a wavelet basis function w and associated coefficient $sum c(i) (-2)^i$, bit i (when equal to one) adds a contribution $w (-2)^i$ to the signal.  If you leave this bit out, you'll make an L2 error of $sqrt(||w||^2 (2^i)^2) = ||w|| 2^i$.
+It’s obviously too late to redo the results.  We could perhaps state the correct equation and then fix our results for the revision.  Or we could hope the reviewers find the flaw, and we'll fix it.  Otherwise we have to revise the paper with no reviewer pointing out the flaw.}
+%
+on subband $l(p)$. In the wavelet representation, a function $f$ is written as a
 linear sum of wavelet basis functions $\omega_i$: $f=\sum{c_i\omega_i}$, where $c_i$ are the
 coefficients. Since basis functions in the same subband share the same norm, $\wwav(p)$ is simply
 the contribution (in $L_2$ norm) of a bit on bit plane $b_p$ and subband $l_p$, to the whole
