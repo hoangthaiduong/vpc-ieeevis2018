@@ -59,10 +59,10 @@ surface is very sensitive to low-ordered bits (i.e., a slight change in values m
 by a larger distance). For this reason, \swav initially performs better (below 0.2 bps), as it
 streams more precision bits. As \sbit acquires enough precision, however, it starts to resolve the
 fine-scale geometry of the surface better than \swav
-(from~\autoref{fig:bit-plane-vs-wavelet-norm-gradient} in~\Cref{sec:gradient}, we learn that \swav
+(from~\Cref{fig:bit-plane-vs-wavelet-norm-gradient} in~\Cref{sec:gradient}, we learn that \swav
 tends to reconstruct a smoother function everywhere).
 
-\Cref{fig:isocontour-surfaces-plasma} shows the renderings of the surfaces reconstructed by \sbit
+\Cref{fig:isocontour-surfaces-plasma} shows the surfaces reconstructed by \sbit
 and \swav at 0.5 bps, which confirm that \sbit is able to preserve better the fine-scale surface
 features. For the \emph{turbulence} field, the isosurface is extracted from a high-gradient region;
 thus precision bits matter less, and \sbit outperforms \swav from the beginning. \sbit also
@@ -77,6 +77,6 @@ For a typical isosurface that is relatively smooth and is not confined to small 
 \emph{pressure} with an isovalue of 0.2, \swav typically outperforms \sbit
 (see~\Cref{fig:isocontour-surfaces-pressure}). This figure renders the isosurfaces reconstructed at
 0.7 bps for all streams. In terms of the quality of the reconstructed surfaces, $\sisg \approx \swav
-> \sbit > \smag > \slvl$, which agrees with the curves in~\autoref{fig:isocontour-plots}. For
+> \sbit > \smag > \slvl$, which agrees with the curves in~\Cref{fig:isocontour-plots}. For
 isosurface extraction, \swav seems to be the only stream --- among the data-independent ones ---
 that consistently works well in all cases.

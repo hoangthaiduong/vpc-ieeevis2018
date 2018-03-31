@@ -59,8 +59,7 @@ underperforms \slvl at first, but surpasses its after a certain bit rate).}
 \caption{Volume renderings of a $64^3$ region of \emph{plasma} data set at 0.1 bps.  \slvl captures
 the background (purple-blue) well, whereas \sbit captures the fine details better. \swav combines
 the strength of both. \ssig, however, produces the most accurate rendering (compare, e.g., yellow
-features).
-\pavol{should we circle them or use an arrow?}\hb{yes, please}}
+features).}
 \label{fig:rmse-rendering}
 \vspace{-1em}
 \end{figure*}
@@ -92,10 +91,10 @@ $\Sigma_{L,B}$, but lacks any spatial adaptivity. In general, \swav and \ssig ha
 performance. In some cases (e.g., ~\Cref{fig:rmse:diffisivity} and~\Cref{fig:rmse:plasma}), \ssig is
 able to adapt more to the data, thus outperforming \swav by a larger margin.
 
-We explore the errors visually by rendering the \emph{plasma} volume at 0.1 bits per sample, for all
-streams except \srop ~(\Cref{fig:rmse-rendering}). Bits per sample (bps) are calculated by dividing
-the total size of received packets (in bits) by the total number of samples. \hb{bps has been used
-already, and shouldve been defined already} Although \slvl has the precision to obtain an accurate
+We explore the errors visually by rendering the \emph{plasma} volume at 0.1 bits per sample (bps), 
+for all streams except \srop ~(\Cref{fig:rmse-rendering}). Bps are calculated by dividing
+the total size of received packets (in bits) by the total number of samples.
+Although \slvl has the precision to obtain an accurate
 background, it lacks resolution to resolve the fine details. \sbit, instead, lacks the precision to
 reconstruct the (mostly smooth) background, but has enough resolution to capture the fine details
 well. \swav balances both precision and resolution, producing a more accurate picture as a whole. In
