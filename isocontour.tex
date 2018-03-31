@@ -40,11 +40,11 @@ nothing about the shape of the isosurfaces, but simply counts misclassified voxe
 differs from comparing histograms with two bins in that we care about the spatial position and not
 just voxel counts.
 
-However, if the error caused by discarding a packet is of subvoxel resolution, such a metric does
-not capture the importance of that packet, causing~\Cref{alg:greedy} to produce a suboptimal \siop.
-Therefore, we add the relative difference in surface areas ($|A_1-A_2|/|A_1|$) to the error term.
-This additional term is most of the time between $[0, 1]$, and is meant to capture the subvoxel
-error, when the number of misclassified voxels is zero.
+However, if the error caused by discarding a packet is of subvoxel resolution, such a metric fails
+to capture the importance of that packet, causing \siop to be ineffective. Therefore, we add the
+relative difference in surface areas ($|A_1-A_2|/|A_1|$) to the error term. This additional term is
+often between $[0, 1]$, and is meant to capture the subvoxel error, when the number of misclassified
+voxels is zero.
 
 With the error metric defined, we can compute a data-dependent stream optimized for this metric
 (\siop) and a stream based on its signature (\sisg) using~\Cref{alg:greedy}
@@ -62,9 +62,9 @@ fine-scale geometry of the surface better than \swav
 tends to reconstruct a smoother function everywhere).
 
 \Cref{fig:isocontour-surfaces-plasma} shows the renderings of the surfaces reconstructed by \sbit
-and \swav at 0.5 bps, which confirm that \sbit is able to preserve better the fine-scale featureas
-on the surface. For the \emph{turbulence} field, the isosurface is extracted from a high-gradient
-region; thus precision bits matter less, and \sbit outperforms \swav from the beginning. \sbit also
+and \swav at 0.5 bps, which confirm that \sbit is able to preserve better the fine-scale surface
+features. For the \emph{turbulence} field, the isosurface is extracted from a high-gradient region;
+thus precision bits matter less, and \sbit outperforms \swav from the beginning. \sbit also
 outperforms \sisg in this case, most likely because local signatures coming from regions that the
 isosurface does not intersect can dilute those coming from regions that it does. This phenomenon
 makes the signature less useful for tasks that involve localization in the spatial domain, such as
