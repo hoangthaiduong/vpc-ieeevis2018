@@ -43,7 +43,7 @@ just voxel counts.
 However, if the error caused by discarding a packet is of subvoxel resolution, such a metric does
 not capture the importance of that packet, causing~\Cref{alg:greedy} to produce a suboptimal \siop.
 Therefore, we add the relative difference in surface areas ($|A_1-A_2|/|A_1|$) to the error term.
-This additional term is most of the time between $[0, 1]$, and is meant to capture the subvoxel
+Typically, this additional term is in $[0, 1]$, and is meant to capture the subvoxel
 error, when the number of misclassified voxels is zero.
 
 With the error metric defined, we can compute a data-dependent stream optimized for this metric
@@ -61,7 +61,7 @@ fine-scale geometry of the surface better than \swav
 (from~\autoref{fig:bit-plane-vs-wavelet-norm-gradient} in~\Cref{sec:gradient}, we learn that \swav
 tends to reconstruct a smoother function everywhere).
 
-\Cref{fig:isocontour-surfaces-plasma} shows the renderings of the surfaces reconstructed by \sbit
+\Cref{fig:isocontour-surfaces-plasma} shows the surfaces reconstructed by \sbit
 and \swav at 0.5 bps, which confirm that \sbit is able to preserve better the fine-scale featureas
 on the surface. For the \emph{turbulence} field, the isosurface is extracted from a high-gradient
 region; thus precision bits matter less, and \sbit outperforms \swav from the beginning. \sbit also
@@ -74,7 +74,7 @@ the whole volume.
 
 For a typical isosurface that is relatively smooth and is not confined to small regions, such as
 \emph{pressure} with an isovalue of 0.2, \swav typically outperforms \sbit
-(see~\Cref{fig:isocontour-surfaces-pressure})\pavol{Fig 14 is after Fig 15 in text}. This figure
+(see~\Cref{fig:isocontour-surfaces-pressure}). This figure
 renders the isosurfaces reconstructed at 0.7 bps for all streams. In terms of the quality of the
 reconstructed surfaces, $\sisg \approx \swav > \sbit > \smag > \slvl$, which agrees with the curves
 in~\autoref{fig:isocontour-plots}. For isosurface extraction, \swav seems to be the only stream ---

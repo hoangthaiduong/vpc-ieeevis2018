@@ -4,14 +4,14 @@ A histogram succinctly summarizes the distribution of sample values, and thus is
 ``look'' into the data and in guiding further analysis. For example, it can be used to guide the
 selection of colors and opacities in a transfer function.
 
-To decide on an error metric to compare histograms, we have experimented with several popular
+To decide on an error metric to compare histograms, we experimented with several popular
 metrics such as Kolmogorov-Smirnov~\cite{smirnov1948}, Kullback-Leibler~\cite{kullback1951}, and
 Earth Mover's Distance~\cite{emd1998} among others~\cite{Hellinger1909,Bhattacharyya1943}. We choose
 histogram intersection~\cite{histogram_intersection1991} as the metric of choice, because it is fast
 to compute and is reasonably insensitive to changes in precision, as well as the number of bins. The
 intersection distance between two histograms $H_1$ and $H_2$ is defined as
 $\err(H_1,H_2)=1-\sum_{i}{\min{(H_1(i),H_2(i))}}$ (the sum is over all bins $i$). Every histogram is
-normalized by dividing the value in each bin by the number of samples in the volume. We have decided
+normalized by dividing the value in each bin by the number of samples in the volume. We decided
 that the error metric should take into account both the histogram shapes and the range of values.
 Therefore, we clamp the range of values in reconstructed functions to that of the original function,
 so that corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same range. However, in
