@@ -1,10 +1,12 @@
 \subsection{Derivative Computation} \label{sec:derivatives}
 
-Computation of derivative-based quantities is important in data analysis. In this paper, derivatives
-are always computed using finite differences, which is common in practice. We use 32 bits for
-quantization in this section to ensure enough precision for finite differences, as compared to 16
-bits for other experiments. We always compute finite differences on the finest resolution grid to
-avoid computing distances between quantities defined on grids of different resolutions.
+Computation of derivative-based quantities is important in data analysis. Examples include vorticity
+(curl) computation from velocity fields to identify vortical structures, gradient computation for
+accurate Morse segmentation and shading, and ridge extraction (e.g. for Lagrangian coherent
+structures). In this paper, derivatives are always computed using finite differences, which is
+common in practice. Here we use 32 bits for quantization in this section to ensure enough precision for
+finite differences. We always compute finite differences on the finest resolution grid to avoid
+computing distances between quantities defined on grids of different resolutions.
 
 \begin{figure*}[h]
 \centering
