@@ -101,7 +101,7 @@
 
 %% Paper title.
 %\title{A Study of Task-dependent, Precision-adaptive Data Streams for Scientific Analytics\pavol{analysis?}}
-\title{A Study of the Tradeoff between Reducing Precision and Reducing Resolution for Data Analysis and Visualization}
+\title{Studying the Tradeoff between Reducing Precision and Reducing Resolution for Data Analysis and Visualization}
 
 %% This is how authors are specified in the journal style
 
@@ -240,7 +240,7 @@
 \sloppy
 
 % ignore figures for fast compilation
-\usepackage[allfiguresdraft]{draftfigure}
+%\usepackage[allfiguresdraft]{draftfigure}
 
 \usepackage[mathcal]{euscript}
 
@@ -266,10 +266,19 @@
 \newcommand{\shsg}  {\mm{\strm_{\text{hist-sig}}}\xspace}
 \newcommand{\siop}  {\mm{\strm_{\text{iso-opt}}}\xspace}
 \newcommand{\sisg}  {\mm{\strm_{\text{iso-sig}}}\xspace}
-\newcommand{\wlvl}  {\mm{W_{\text{lvl}}}\xspace}
-\newcommand{\wbit}  {\mm{W_{\text{bit}}}\xspace}
-\newcommand{\wwav}  {\mm{W_{\text{wav}}}\xspace}
-\newcommand{\wmag}  {\mm{W_{\text{mag}}}\xspace}
+
+% stream weights
+%\newcommand{\wlvl}  {\mm{w_{\text{lvl}}}\xspace}
+%\newcommand{\wbit}  {\mm{w_{\text{bit}}}\xspace}
+%\newcommand{\wwav}  {\mm{\mathcal{W}_{\text{wav}}}\xspace}
+\newcommand{\wwav}  {\mm{w_{\text{wav}}}\xspace}
+\newcommand{\wmag}  {\mm{w_{\text{mag}}}\xspace}
+
+% wavelet coeff and basis
+\newcommand{\wcof}  {\mm{w}\xspace}
+\newcommand{\wbas}  {\mm{\psi}\xspace}
+\newcommand{\wsca}  {\mm{\phi}\xspace}
+
 \newcommand{\err}   {\mm{\varepsilon}\xspace}
 \newcommand{\x}     {\mm{\mathbf{x}}\xspace}
 
