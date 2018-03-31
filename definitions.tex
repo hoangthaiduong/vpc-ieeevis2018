@@ -7,8 +7,9 @@ develop such a consistent methodology by proposing to model different data reduc
 packets, and any reduction step removes a set of packets (comparable amounts of data).
 
 These data streams are transmitted using a client-server model. At any point, the client is assumed
-to have received a subset of packets from the server, which can be used to reconstruct an
-approximation to the original data. Therefore, to compare different streams, we can reconstruct the
+to have received a subset of packets from the server (in some pre-determined sequential order or 
+in some order requested by the client), which can be used to reconstruct an
+approximation to the original data. Therefore, to compare different streams, we reconstruct the
 original data using the \emph{same number} of packets from each stream, and perform desired tasks on
 each of the (approximate) reconstructions. A stream is considered better suited for a given task if
 it produces results that are closer to the ``ground truth'', i.e., the reference results computed
@@ -20,36 +21,39 @@ where that packet should be deposited. A common solution is to have both the cli
 agree beforehand on a static ordering of packets, independent of the data. We use the term
 \emph{data-independent streams} to refer to streams using such solutions. In contrast, for
 \emph{data-dependent streams}, an additional mechanism is needed to inform the client about the
-position of incoming packets.  In this paper, we consider both these types of streams, as well as
+position of incoming packets. \todo{PL: In practice, does not the client inform the server where it wants more data?  How can the server know where more data is needed?} In this paper, we consider both types of streams, as well as
 specialized \emph{task-dependent} streams optimized for given tasks (see \Cref{tbl:streams}).
 
 \begin{figure}[!b]
 \centering
 \includegraphics[width=\linewidth]{img/pipeline.png}
 \caption{Our data streaming model (in 2D). The input is a regular grid of floating-point samples;
-the output is a stream of packets. Different data reduction schemes generate different streams.  The
+the output is a stream of \emph{packets}\todo{PL:So a packet is a set of bits from wavelet coefficients?  We need to explain what a packet is.}. Different data reduction schemes generate different streams.  The
 wavelet subbands are separated by blue lines in the second image, with the coarsest subband at the
 top left corner. Although not shown here, quantization and negabinary convesion happen immediately
-after wavelet transform. \todo{TODO: revise this figure}}\label{fig:pipeline}
+after wavelet transform. \todo{TODO: revise this figure}
+\todo{PL:Please do.  I don’t know what the rightmost two subfigures show.  I also cannot read 1-point font.}
+}\label{fig:pipeline}
 \end{figure}
 
 \begin{table}[!b]
+\setlength\tabcolsep{4.5pt} % default value: 6pt
 \centering
 \begin{tabular}{l l c c}
 \toprule
 Symbol & Name & Data Dependent & Task Dependent \\
 \midrule
-\slvl & (\emph{by level}) & \xmark & \xmark\\
-\sbit &(\emph{by bit}) & \xmark & \xmark\\
-\swav &(\emph{by wavelet norm}) & \xmark & \xmark\\
-\smag &(\emph{by magnitude}) & \cmark & \xmark\\
-\stkop &(\emph{task-optimized}) & \cmark & \cmark\\
-\stksg &(\emph{by signature}) & \cmark/\xmark & \cmark/\xmark\\
+\slvl & \emph{by level} & \xmark & \xmark\\
+\sbit & \emph{by bit} & \xmark & \xmark\\
+\swav & \emph{by wavelet norm} & \xmark & \xmark\\
+\smag & \emph{by magnitude} & \cmark & \xmark\\
+\stkop & \emph{task-optimized} & \cmark & \cmark\\
+\stksg & \emph{by signature} & \cmark/\xmark & \cmark/\xmark\\
 \bottomrule
 \end{tabular}
-\caption{We define various types of data streams, including several data-independent, data-dependent
-and task-independent, as well as task-dependent streams. \stksg can be data dependent or task
-dependent, depending on the stream it derives from. \todo{fix width}\label{tbl:streams}}
+\caption{We define various types of data streams, including data-independent, data-dependent, 
+task-independent, and task-dependent streams. \stksg can be data dependent or task
+dependent, depending on the stream it derives from.\label{tbl:streams}}
 \end{table}
 
 \subsection{Decomposition of Data into Packets} \label{sec:data-streaming-framework}
@@ -59,45 +63,75 @@ same data size and compare data quality, it becomes difficult to enforce consist
 the amount of change (in data) in one step of multiresolution simplification may be different from
 removing one bit in the quantization of every data sample. To avoid such mismatch of units of data
 increment/decrement, we model each reduction scheme as a stream of equally sized \emph{packets},
-which, we use as as the smallest units of data transfer in our framework. A packet consists of a
-relatively small number of bits from a data set. We associate a packet with a resolution level and a
+which we use as as the smallest units of data transfer in our framework. A packet consists of a
+relatively small number $\left(\approx 2^3\right)$ of bits from a data set. We associate a packet with a 
+resolution level and a
 precision level (i.e., bit plane), such that each packet can improve either the resolution or the
-precision of data.  In this framework, different data-reduction schemes become different orderings
+precision of data. \todo{PL: Does a packet the improves resolution add the first bits of those samples/coefficients?  Need to make it clear what we mean by adding resolution, especially in the context of wavelets.} 
+In this framework, different data-reduction schemes become different orderings
 of packets, called \emph{streams}. Restricting two (or more) data streams to the same number of
 packets allows us to perform fair and consistent comparisons.
 
-\para{Packets for Different Resolution Levels.} Although there exist several ways to define the
-notion of resolution/scale/frequency, we choose wavelet transform due to the compact support of
-their basis functions, which enables spatial adaptivity (i.e., finer resolution in regions that
+%\para{Packets for Different Resolution Levels.} 
+\para{Resolution Levels.} 
+Although there exist several ways to define the
+notion of resolution/scale/frequency, we choose the multi-level basis functions of the wavelet transform 
+because they have compact support, and avoid interpolation problems associated with other representations.
+Wavelet transform enables spatial adaptivity (i.e., finer resolution in regions that
 contain sharp features, at the expense of coarser resolution elsewhere). In particular, we choose
-the CDF5/3 discrete wavelet transform~\cite{cdf-wavelets} for its balance between simplicity and
+the CDF5/3 multi-linear wavelets~\cite{cdf-wavelets} for their balance between simplicity and
 effectiveness at decorrelating the input signal in practice~\cite{jpeg2000}.
 
 A multidimensional wavelet transform can be performed in multiple passes, which partitions the
-original domain into \emph{subbands}, each of which can be thought of as a resolution level. One
-transform pass (in 3D) creates eight subbands, of which the first is a smoothed, downsampled version
+original domain into \emph{subbands}, each of which can be thought of as a 
+resolution level associated with one or more spatial direction. One
+transform pass (in 3D) creates eight subbands, of which the first is a low-pass, downsampled version
 of the original data, and the remaining add fine details in each subset of the dimensions (see
 \Cref{fig:pipeline} for a visualization of subbands in 2D). A subsequent transform pass recurses
 only on the first subband, creating the next (resolution) level of subbands. We use $l$ $(0 \leq l <
 L)$ to index the subbands, with $l = 0$ referring to the coarsest subband and $L$ denoting the
-number of subbands. In this paper, we use $L=22$, corresponding to three transform passes in 3D.
+number of subbands. In this paper, we use $L=1 + 3*7=22$, corresponding to three transform passes in 3D.
 
-\para{Packets for Different Precision Levels.} For creating packets corresponding to different
+%\para{Packets for Different Precision Levels.} 
+\para{Precision Levels.} 
+For creating packets corresponding to different
 precision levels, we quantize floating-point wavelet coefficients to $B$-bit signed integers. For
-most of the experiments in this paper, $B=16$. This quantization eliminates the exponent bits, such
-that every bit (except the sign bit) can be associated with a bit plane $b$ ($0\leq b < B$). To
-avoid special treatment of the sign bit, we convert quantized coefficients from two's complement
-form to a negabinary form, in which integers are represented in base $-2$, i.e.,
-$\sum_{i=0}^{B}{c_i(-2)^i}$ with $c_i\in \{0,1\}$. This transformation increases the number of bit
-planes by one, to compensate for the absence of the sign bit. In our convention, the higher indexed
+most of the experiments in this paper, $B=16$. This quantization eliminates the floating-point exponent bits, such
+that every bit (except the sign bit) can be associated with a bit plane $b$ ($0\leq b < B$). 
+%
+\hbadd{Since 
+%the bits in the quantized values are initialized with zero, and because the 
+disambiguation between small negative and large positive values in the standard two's complement 
+representation requires knowing the sign bit,
+%standard two's complement assigns a small negative value (e.g., $-1$) a bit in high bit plane (e.g., $2^{B-1}$), 
+%which can be distinguished from a large positive value only with the help of the sign bit, 
+we instead use a negabinary representation, 
+in which there is no single dedicated sign bit, and the bit ordering for an unsigned number 
+is roughly proportional to the magnitude of the signed value. In particular, 
+integers are represented in base $-2$, i.e., $\sum_{i=0}^{B}{c_i(-2)^i}$ with $c_i\in \{0,1\}$. 
+%Negabinary representation has no single dedicated sign bit, and the bit ordering for an unsigned number 
+%is roughly proportional to the magnitude of the signed value. 
+Therefore, the negabinary form ensures that small 
+coefficients have many leading zero-bits.}
+%
+%\hbdel{To avoid special treatment of the sign bit, we convert quantized coefficients from two's complement
+%form to a negabinary form, in which integers are represented in base $-2$, i.e.,
+%$\sum_{i=0}^{B}{c_i(-2)^i}$ with $c_i\in \{0,1\}$.}
+This transformation increases the number of bit
+planes by one \hbadd{(note the summation from $0$ to $B$ in the above expression)}, 
+to compensate for the absence of the sign bit. In our convention, the higher indexed
 bit planes are less significant.
+\todo{PL: They’d better not be!  If i is the index and $(-2)^i$ 
+is the place value of a bit, then higher i means *more* significant.}
 
-Precisely, a packet consists of bits on the same bit plane, from a \emph{block} of negabinary
-wavelet coefficients. A block is a $[g\times g\times g]$ grid of adjacent coefficients on the same
+\para{Blocks and Packets.}
+Precisely, a \emph{packet} consists of bits from the same bit plane, from a \emph{block} of negabinary
+wavelet coefficients. A block is a $[g\times g\times g]$ grid of adjacent coefficients from the same
 subband. We let $g$ be a constant ($g=2$ in this paper), so that finer resolution subbands contain
-more packets, which presents a tradeoff between packets that provides wider (but coarser) coverage
-and packets that provides finer (but more local) details. Every packet comes from a bit plane $b$
-and a subband $l$. A packets improves the precision (or resolution) of a region if it comes from a
+more packets, which presents a tradeoff between packets that provide wider (but coarser) coverage
+and packets that provide finer (but more local) details. Every packet \hbadd{(one byte)} 
+comes from a bit plane $b$
+and a subband $l$. A packet improves the precision (or resolution) of a region if it comes from a
 bit plane (or subband) that has not been streamed before in the region. $g$ is chosen to be larger
 than one for performance reason, as in practice, most systems read bits in batches.
 
@@ -105,10 +139,13 @@ than one for performance reason, as in practice, most systems read bits in batch
 
 We model two common data reduction schemes in the literature as \emph{by level} and \emph{by bit
 plane} streams. The \emph{by level} stream, \slvl, orders the packets strictly from coarser to finer
-resolution levels. Within the same subband, packets follow the row-major order of coefficients and
-then bit plane order (from 0 to $B$) within each coefficient. The other common ordering, \emph{by
+subbands. Within the same subband, packets follow the row-major order of coefficients 
+\todo{PL: A packet is a block (?), so row-major order of *blocks* of coefficients.} and
+then bit plane order (from 0 to $B$) within each coefficient. 
+\todo{PL: Do we get all bits for one coefficient, or  one bit plane at a time for the block of coefficients?} 
+The other common ordering, \emph{by
 bit plane}, denoted as \sbit, proceeds strictly from higher ordered to lower ordered bit planes.
-Within the same bit plane, packets follow the subband order (from 0 to $L$), and then row-major
+Within the same bit plane, packets follow the subband order (from $0$ to $L-1$), and then row-major
 order in each subband. The streams \slvl and \sbit are designed to mimic the way data is accessed in
 traditional methods that work either in resolution (\slvl) or in precision (\sbit).
 
@@ -121,20 +158,27 @@ basis function on subband $l(p)$. In the wavelet representation, a function $f$ 
 linear sum of wavelet basis functions $\omega_i$: $f=\sum{c_i\omega_i}$, where $c_i$ are the
 coefficients. Since basis functions in the same subband share the same norm, $\wwav(p)$ is simply
 the contribution (in $L_2$ norm) of a bit on bit plane $b_p$ and subband $l_p$, to the whole
-function $f$. A data-reduction scheme based on \emph{by wavelet norm} was hinted at in~\cite{weiss}.
+function $f$. A data-reduction scheme based on \emph{by wavelet norm} was presented by 
+Weiss and Lindstrom~\cite{weiss}.
 
 Another common way to reduce data in the wavelet domain is to leave out coefficients of smallest
-magnitudes. We model this scheme with a stream called \emph{by magnitude}, or \smag. Here, the
+magnitudes\hbadd{, since coefficient magnitude is only weakly related to error, as the error 
+also depends on the wavelet basis function norm~\cite{weiss}}.
+ We model this scheme with a stream called \emph{by magnitude}, or \smag. Here, the
 weight function is $\wmag(p)=\sum_{c\in \text{block}(p)}\norm{c}^2$ (the sum is over all
 coefficients in the block that contains packet $p$). If two packets have the same weight, they are
-ordered by subband index, and then by bit plane. Unlike \slvl, \sbit, and \swav, the \smag stream is
-data dependent because the coefficient magnitudes are not known without the data.
+ordered by subband index, and then by bit plane. 
 
+Unlike \slvl, \sbit, and \swav, the \smag stream is
+data dependent because the coefficient magnitudes are not known without the data.
+%
 In principle, data-dependent streams are better than data-independent streams because they can
 prioritize important packets based on the actual data. However, data-dependent streams are
 ill-suited for practical purposes, because the cost of sending position information likely outweighs
 any potential benefit. Nevertheless, we study them for various reasons. First, the \emph{by
-magnitude} scheme is well known in the literature. Second, the ``best'' data-dependent streams can
+magnitude} scheme is well known in literature~\cite{vapor2007}. Second, the ``best'' data-dependent streams 
+\todo{PL: By this you mean that you get the position information for free?  I.e. this info is not part of the stream itself?  Clarify this important distinction since the previous sentence talks about encoding this information.}
+can
 serve as a benchmark to evaluate the performance of their data-independent counterparts. Finally, in
 addition to being data dependent, streams can also be task dependent (\Cref{sec:data_dep_streams}),
 which may provide insights into how data should be queried to perform certain analysis tasks.
