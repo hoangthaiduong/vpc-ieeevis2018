@@ -198,21 +198,24 @@ which may provide insights into how data should be queried to perform certain an
 \subsection{Task-optimized Streams} \label{sec:data_dep_streams}
 
 Each analysis task may require a fundamentally different stream for optimal results. Studying such
-an ``optimal'' (and data-dependent) stream is important because it not only serves as a benchmark,
+an ``optimal'' stream is important because it not only serves as a baseline,
 but also can provide insights into other, more practical streams for the same task.
 
 Given the original data set $f$ and its reconstructed approximation $\tilde{f}$ using a subset of
-packets, let $q$ represent some quantity of interest \footnote{In this paper, we use the terms
+packets, let $q$ represent some quantity of interest\footnote{In this paper, we use the terms
 ``quantity of interest'' and ``task'' interchangeably, with the understanding that, e.g., if the
-task is extracting isosurface, then the quantity of interest is the isosurface.}, e.g., histogram,
+task is extracting an isosurface, then the quantity of interest is the isosurface.}, e.g., histogram,
 isosurface, etc., computed on $f$ or $\tilde{f}$. For a given task $q$, a well-defined error metric
 $\err(q(\tilde{f}),q(f))$ is needed. Given a data set $f$, a task $q$, and an error metric $\err$,
 our goal is to generate an \emph{optimal} (and data-dependent) stream, $\sopt$, for $q$ with respect
-to $\err$. We can define $\sopt$ as a stream such that the area under the curve of \err is minimized
+to $\err$. We define $\sopt$ as a stream such that the area under the curve of \err, 
+with respect to the number of bits, is minimized
 for all packets to be streamed. However, this definition is limited in practice because a stream
-should be able to terminate at any point and still produce as small an error as possible. Moreover,
-the solution to the problem has exponential time complexity.
+should be able to terminate at any point and still produce as small an error as possible. Furthermore,
+the optimization of $\err$ for all possible bit rates has exponential time complexity with 
+respect to \todo{what? bit rate? data size?}.
 
+\todo{see PL's original comments in this paragraph}
 Instead, we employ a greedy approach to define the optimal stream.  A straightforward greedy
 algorithm, however, suffers from the usual limitation of potentially leading to a local optimum. For
 example, starting with an all-zero reconstruction $\tilde{f}=0$, and an empty stream, we can
@@ -250,9 +253,9 @@ described above.
 		\Initialize{A set of $n$ weights $\Gamma = \{\gamma_i\}$ }
 		\For{each packet $p_i$}
 			\State $p_i := 0$
-      \State $P \rightarrow$ wavelet coefficients $W$ \\
+      \State $P \rightarrow$ wavelet coefficients \wcof \\
       		\ \ \ \ \ \ \ \ \ \ \ \ (inverse quantization and inverse negabinary transform)
-			\State $W \rightarrow f'$ (inverse wavelet transform)
+			\State $wcof \rightarrow f'$ (inverse wavelet transform)
 			\State $\gamma_i := \err(q(f'),q(f))$			
 			\State Restore $p_i$
 		\EndFor
@@ -267,24 +270,27 @@ Unlike data-independent streams, data-dependent streams do not impose a static o
 To concisely represent and characterize the dynamic ordering of data-dependent streams, we introduce
 the notion of a \emph{stream signature}. Any stream can be represented with respect to the
 two-dimensional space of resolution (subbands) and precision (bit planes), i.e., \mbox{$
-\Sigma_{L,B}=\{(l,b)\ |\ 0\leq l < L,\ 0\leq b < B\}$.}
+\Lspace_{L,B}=\{(l,b)\ |\ 0\leq l < L,\ 0\leq b \leq B\}$.}
 
-Given a stream, we define its signature $\sgn_{L,B}$ as an $L \times B$ matrix, where each $(l,b)$
+Given a stream, we define its signature $\sgn = \sgn^{L,B}$ as an $L \times (1+B)$ matrix, where each $(l,b)$
 element is associated with $P_{l,b}$---the set of packets belonging to subband $l$ and bit plane
-$b$. In particular, $\sgn(l,b)$ is an integer in the range $[0, B\times L)$, and indicates, on
+$b$. In particular, $\sgn_{l,b}$, i.e., the $(l,b)$ element of $\sgn$, is 
+an integer in the range $[0, (1+B)\times L)$, and indicates, on
 average, the position at which packet $P_{l,b}$ appears in the given stream. For example, the
 signature $\sgn=\bigl[ \begin{smallmatrix}0 & 1 & 4\\ 2 & 3 & 5\end{smallmatrix}\bigr]$ indicates
 that the stream begins with packets that lie on the first bit plane of the first subband, as
-$\sgn(0,0)=0$. Those are followed by packets on the second bit plane of the first subband
-($\sgn(0,1)=1$), and then the first bit plane of the second subband ($\sgn(1,0)=2$), and finally,
-the third bit plane of the second subband ($\sgn(1,2)=5$). Thus, a stream's signature shows how the
-stream traverses the space $\Sigma_{L,B}$, and highlights the different resolution-versus-precision
+$\sgn_{0,0}=0$. Those are followed by packets on the second bit plane of the first subband
+($\sgn_{0,1}=1$), and then the first bit plane of the second subband ($\sgn_{1,0}=2$), and finally,
+the third bit plane of the second subband ($\sgn_{1,2}=5$). Thus, a stream's signature shows how the
+stream traverses the space $\Lspace_{L,B}$, and highlights the different resolution-versus-precision
 tradeoffs among streams, especially among \sopt streams optimized for different tasks.
 In~\Cref{fig:example-signatures} we visualize the signatures of \sbit, \slvl, and \swav, defined
 in~\Cref{sec:data-streaming-framework}.
 
 To compute a stream signature, we partition the whole domain (not individual subbands) into several
-\emph{regions}, compute one signature per region, and average these local signatures. It is only
+\emph{regions}, compute one signature per region, and average these local signatures. 
+\todo{Why?  Does that result in a different signature?  If so, why is this preferred?} 
+It is only
 when packets are relatively well localized that their relative ordering in the $\Sigma_{L,B}$ space
 becomes meaningful. For example, a packet at one corner of the domain may be streamed before one at
 an opposite corner, but this fact contains no useful information. We define a region to be the
@@ -326,10 +332,13 @@ tradeoffs between data-independent and data-dependent streams.
  \subcaptionbox{\label{fig:by-level-signature}\emph{by level} (\slvl)}{{\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-LEVEL)-(rmse)}}}
  \subcaptionbox{\label{fig:rmse:diffisivity}\emph{by bit plane} (\sbit)}{{\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-BIT-PLANE)-(rmse)}}}
  \subcaptionbox{\label{fig:rmse:plasma}\emph{by wavelet norm} (\swav)}{ {\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-WAVELET-NORM)-(rmse)}}}
-\caption{Renderings of signatures for \slvl, \sbit, and \swav in 2D. Each signature is a $10\times
-17$ image, corresponding to $10$ subbands and $17$ bit planes. Each $(l,b)$ ``cell'' contains a
-unique value from $0$ to $169$, indicating its ``priority'' in stream, and which is mapped through a
-linear blue color map ($0$ is mapped to the brightest blue). It is clear that the \slvl streams bits
+\caption{Visualization of signatures for \slvl, \sbit, and \swav in 2D. Each signature is a $10\times
+17$ image, corresponding to $10$ subbands \hbadd{(in 2D)} and $17$ bit planes. Each $(l,b)$ ``cell'' contains a
+unique value from $0$ to $169$, indicating its ``priority'' in the stream, and 
+\hbadd{mapped to a white--blue color scale} 
+\hbdel{which is mapped through a linear blue color map ($0$ is mapped to the brightest blue)}. It is clear 
+\todo{PL: No, it is not clear, because you haven’t told us what the ordering of sub-bands is.}
+that \slvl streams bits
 by resolution (from top to bottom), \sbit streams by precision (from left to right), while \swav
 mixes precision and resolution.}
 \label{fig:example-signatures}
