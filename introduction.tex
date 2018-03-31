@@ -36,24 +36,24 @@ considering both resolution and precision in the ordering, it is unclear how muc
 reduced for a given data budget or how little data could be used to achieve the same error.
 Furthermore, optimal data-dependent orderings may be especially impractical since they assume
 perfect knowledge of the data. It is therefore important to understand which of these potential
-gains are realizable. This paper aims to answer these important questions about the suitable bit orderings through extensive,
-empirical experiments. In particular, our contributions are:
+gains are realizable. This paper aims to answer these important questions about the suitable bit
+orderings through extensive, empirical experiments. In particular, this paper presents:
 
-\begin{itemize}
+\begin{itemize}\dense
 %
-\item A framework that allows systematic studies of the resolution-versus-precision tradeoffs for
+\item a framework that allows systematic studies of the resolution-versus-precision tradeoffs for
 common data analysis and visualization tasks. The core idea is to represent various data reduction
 techniques as bit streams that improve data quality in either resolution or precision in each step
 (\Cref{sec:terminologies}). We can thus compare these techniques fairly, by comparing the
 corresponding data streams.
 %  
-\item \pavol{Christine: 1st and 3rd entries are not full sentences} Empirical evidence that jointly optimizing resolution and precision can provide significant
-improvements on the results of analysis tasks over adjusting either independently. This claim is
-demonstrated using a diverse collection of data sets and data analysis tasks. We also show how
+\item empirical evidence that jointly optimizing resolution and precision can provide significant
+improvements on the results of analysis tasks over adjusting either independently. 
+We present a a diverse collection of data sets and data analysis tasks, and also show how
 different types of data analysis might require substantially different data streams for optimal
 results.
 %
-\item A greedy approach that gives estimations for lower bounds of error for various analysis tasks.
+\item a greedy approach that gives estimations for lower bounds of error for various analysis tasks.
 In addition, we also identify practical streams that closely approximate these bounds for each task
 (\Cref{sec:rmse-optimized}, \Cref{sec:derivatives}, \Cref{sec:histogram}, and
 \Cref{sec:isocontour}), using a novel concept called \emph{stream signature}
