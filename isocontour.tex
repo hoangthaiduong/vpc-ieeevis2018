@@ -20,12 +20,12 @@ the yellow features and the green features).}
  \subcaptionbox{\label{fig:bit-distrib-rmse-tile}\emph{RMSE}}{{\includegraphics[width=0.32\linewidth]{bit-distrib-rmse-tile}}}
  \subcaptionbox{\label{fig:bit-distrib-laplacian-tile}\emph{Laplacian}}{{\includegraphics[width=0.32\linewidth]{bit-distrib-laplacian-tile}}}
  \subcaptionbox{\label{fig:bit-distrib-histogram-tile}\emph{histogram}}{ {\includegraphics[width=0.32\linewidth]{bit-distrib-histogram-tile}}}
-\caption{(Top) Bit distribution across subbands at 1.9 bps, and (bottom) corresponding stream
-signatures. The data is a 2D slice from \emph{diffusivity}. Subbands are separated by red lines. The
-color of each pixel indicates the bit plane at which the corresponding coefficient is currently at.
-Brighter greens correspond to more precision. Both the top and the bottom rows show that \shsg
-allocates more bits to the lower subbands, while \slsg prefers to stream bits from higher subbands.
-\ssig is somewhere in the middle.}
+\caption{(Top) Bit distribution across subbands at 1.9 bps for signature-based streams, and (bottom)
+corresponding stream signatures. The data is a 2D slice from \emph{diffusivity}. Subbands are
+separated by red lines. The color of each pixel indicates the bit plane at which the corresponding
+coefficient is currently at. Brighter greens correspond to more precision. Both the top and the
+bottom rows show that \shsg allocates more bits to the lower subbands, while \slsg prefers to stream
+bits from higher subbands. \srsg is somewhere in the middle.}
 \label{fig:bit-distrib}
 \end{figure}
 

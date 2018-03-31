@@ -3,13 +3,14 @@
 We present the first empirical study to demonstrate that combining precision and resolution can lead
 to significant gain in reduction, and that different tasks might prefer different
 resolution-versus-precision tradeoffs. For example, while histograms require high precision,
-computing derivatives benefits more from higher resolution. For brevity we focus on on a small set
-of core tasks with a single metric for each task. However, the framework is generic and applies to
-any well-defined metric and one future direction is to consider a broader set of domain-specific
-tasks. We did not address volume rendering, where the results will heavily depend on the viewpoint
-and transfer function. However, our experience has been that in practice, many volume rendered
-images simply show layers of translucent isosurfaces. For these cases, our results on isosurfaces
-provide a good stand-in.
+computing derivatives benefits more from higher resolution, and function reconstruction requires a
+proper mix of the two (see~\Cref{fig:bit-distrib}). For brevity we focus on on a small set of core
+tasks with a single metric for each task. However, the framework is generic and applies to any
+well-defined metric and one future direction is to consider a broader set of domain-specific tasks.
+We did not address volume rendering, where the results will heavily depend on the viewpoint and
+transfer function. However, our experience has been that in practice, many volume rendered images
+simply show layers of translucent isosurfaces. For these cases, our results on isosurfaces provide a
+good stand-in.
 
 An important question is whether task- and data-dependent streams provide sufficient advantages
 compared to purely static ones. In practice, data would be used for multiple, not-necessarily
