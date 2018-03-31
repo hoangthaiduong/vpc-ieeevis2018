@@ -8,6 +8,63 @@ common in practice. Here we use 32 bits for quantization in this section to ensu
 finite differences. We always compute finite differences on the finest resolution grid to avoid
 computing distances between quantities defined on grids of different resolutions.
 
+\begin{figure*}[h]
+\centering
+\subcaptionbox{\emph{boiler}}
+{\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-boiler}}
+\subcaptionbox{\emph{diffusivity}}
+{\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-diffusivity}}
+\subcaptionbox{\emph{turbulence}}
+{\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-turbulence}}
+\subcaptionbox{\emph{pressure}}
+{\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-pressure}}
+\caption{Laplacian error comparison among streams. The plots are truncated to better highlight
+differences without discarding important information. In all cases, in terms of error, $\slop <
+\slsg < \sbit < \swav < \smag < \slvl$.}
+\label{fig:laplacian-error-comparison}
+\end{figure*}
+
+\begin{figure*}[t]
+        \centering
+        \subcaptionbox{\emph{boiler}}
+        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-boiler}}
+        \subcaptionbox{\emph{diffusivity}}
+        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-diffusivity}}
+        \subcaptionbox{\emph{kingsnake}}
+        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-kingsnake}}
+        \subcaptionbox{\emph{foam}}
+        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-foam}}
+        \caption{Comparison of histogram errors among streams. Plots are truncated to highlight
+        differences without hiding important trends. In general, in terms of error, $\shop \approx \shsg
+        \approx \swav < \slvl, \sbit, \smag$. The erratic behavior at the beginning for \emph{kingsnake}
+        is likely due to the data being too noisy. The especially poor performances of \sbit for
+        \emph{boiler} and \emph{foam} are due to the ``shifting'' effect explained in~\Cref{sec:gradient}.
+        Crossover points between \sbit and \slvl are explained in~\Cref{fig:histogram-explain}.}
+        \label{fig:histogram-stream-comparison}
+\vspace{1em}
+
+        \centering
+        \subcaptionbox{\emph{by level} (\slvl)}{
+        {\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-level}}}
+        \subcaptionbox{\emph{by bit plane} (\sbit)}{
+        {\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-bit-plane}}}
+        \subcaptionbox{\emph{by magnitude} (\smag)}{
+        {\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-magnitude}}}
+        \subcaptionbox{\emph{by wavelet norm} (\swav)}{
+        {\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-wavelet-norm}}}
+        \subcaptionbox{\emph{by signature} (\shsg)}{
+        {\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-signature}}}
+        \subcaptionbox{\emph{reference}}{
+        {\includegraphics[width=0.155\linewidth]{histogram/histogram-boiler-groundtruth}}}
+        \caption{Histograms of the \emph{boiler} data set, reconstructed at 0.13 bps. \slvl, \swav, and
+        \shsg produce histograms that share a shape similar to the reference histogram, with most of the
+        peaks and valleys preserved. In contrast, \sbit produces a spurious peak not found in the
+        reference. Finally, \smag's histogram has a widely skewed distribution where too many values fall
+        into the first bin.}
+        \label{fig:histograms-boiler}
+        \vspace{-1em}
+\end{figure*}
+
 \subsubsection{Gradient Computation} \label{sec:gradient}
 
 Given a function $f$ defined on a grid, its gradient at a grid point \mbox{$\x = (x,y,z)$} is the
@@ -42,7 +99,9 @@ error caused by this shifting reduces significantly when taking the gradient, wh
 constant shift. \sbit, therefore, works better than \swav for gradient computation, because it is
 better able to retain sharp features.
 
-\begin{figure}[h]
+
+
+\begin{figure}[!b]
 \centering
 \subcaptionbox{\emph{by bit plane} (\sbit)}{
 {\includegraphics[width=0.48\linewidth]{gradient/gradient-bit-plane}}} 
@@ -66,23 +125,9 @@ performance (it is slightly better than \sbit for \emph{boiler} at very low bit 
 results suggest that while \swav is the best among the data-independent streams when optimizing for
 RMSE, \sbit is better for gradient computation.
 
-\subsubsection{Laplacian Computation}\label{sec:laplacian}
 
-\begin{figure*}[h]
-\centering
-\subcaptionbox{\emph{boiler}}
-{\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-boiler}}
-\subcaptionbox{\emph{diffusivity}}
-{\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-diffusivity}}
-\subcaptionbox{\emph{turbulence}}
-{\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-turbulence}}
-\subcaptionbox{\emph{pressure}}
-{\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-pressure}}
-\caption{Laplacian error comparison among streams. The plots are truncated to better highlight
-differences without discarding important information. In all cases, in terms of error, $\slop <
-\slsg < \sbit < \swav < \smag < \slvl$.}
-\label{fig:laplacian-error-comparison}
-\end{figure*}
+
+\subsubsection{Laplacian Computation}\label{sec:laplacian}
 
 The Laplace operator is a second-order differential operator defined as the divergence of the
 gradient field. The Laplacian of a 3D field is defined as $\Delta f = 
