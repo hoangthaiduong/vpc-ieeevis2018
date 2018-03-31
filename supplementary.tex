@@ -5,7 +5,7 @@
 \usepackage{graphicx}
 \usepackage{subcaption}
 
-\title{Supplementary Material: Studying the Tradeoff between Reducing Precision and Reducing Resolution for Data Analysis and Visualization}
+\title{Supplementary Material: A Study of the Tradeoff between Reducing Precision and Reducing Resolution for Data Analysis and Visualization}
 \date{}
 
 \begin{document}
@@ -13,8 +13,8 @@
 
 
 \begin{table}[ht]
-        \caption{Data sets used in experiments. More data sets are included in the
-        supplementary materials. All data sets are $64^3$ subsets of the original volumes.}
+        \caption{All data sets used in experiments. The resolution of data sets is $64^3$ and
+        they are subsets of the original volumes (no downsampling performed).}
   \centering
   \begin{tabular}{llr}
   \toprule
@@ -25,15 +25,15 @@
   diffusivity & hydrodynamics simulation& float64\\
   pressure & hydrodynamics simulation& float64\\
   turbulence & fluid dynamics simulation& float32\\
-  kingsnake & CT scan & uint8\\
+  kingsnake & scan of a snake egg & uint8\\
   flame & combustion simulation& float32\\
   csafe & fluid dynamics simulation& uint8\\
   enzo v & cosmology simulation& float32\\
-  brain & CT scan of mocaque brain & uint8\\
+  brain & microscope image of marmoset brain & uint8\\
   foam & CT scan of aluminum foam & uint16\\
-  vismale & fluid dynamics simulation& uint8 \\
+  vismale & CT scan of human & uint8 \\
   karfs & combustion simulation& float32\\
-  aneurism      & fluid dynamics simulation& uint8 \\
+  aneurism      & scan of brain aneurism & uint8 \\
   velocityz & hydrodynamics simulation& float64 \\
   \bottomrule
   \end{tabular}\label{tbl:data-sets}
@@ -114,35 +114,35 @@
 \begin{figure}[htb]
         \centering
         \subcaptionbox{Boiler}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-boiler}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-boiler}}
         \subcaptionbox{Plasma}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-plasma}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-plasma}}
         \subcaptionbox{Diffusivity}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-diffusivity}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-diffusivity}}
         \subcaptionbox{Pressure}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-pressure}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-pressure}}
         \subcaptionbox{Turbulence}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-turbulence}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-turbulence}}
         \subcaptionbox{Kingsnake}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-kingsnake}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-kingsnake}}
         \subcaptionbox{Flame}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-flame}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-flame}}
         \subcaptionbox{Csafe}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-csafe}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-csafe}}
         \subcaptionbox{Enzo v}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-enzo-v}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-enzo-v}}
         \subcaptionbox{Brain}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-neurons}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-neurons}}
         \subcaptionbox{Foam}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-foam}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-foam}}
         \subcaptionbox{Vismale}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-vismale}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-vismale}}
         \subcaptionbox{Karfs}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-karfs}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-karfs}}
         \subcaptionbox{Aneurism}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-aneurism}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-aneurism}}
         \subcaptionbox{Velocity z}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/gradient-optimized-velocityz}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-velocityz}}
         \caption{Gradient using 5-point stencil}
 \end{figure}
 
@@ -150,35 +150,35 @@
 \begin{figure}[htb]
         \centering
         \subcaptionbox{Boiler}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-boiler}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-boiler}}
         \subcaptionbox{Plasma}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-plasma}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-plasma}}
         \subcaptionbox{Diffusivity}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-diffusivity}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-diffusivity}}
         \subcaptionbox{Pressure}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-pressure}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-pressure}}
         \subcaptionbox{Turbulence}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-turbulence}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-turbulence}}
         \subcaptionbox{Kingsnake}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-kingsnake}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-kingsnake}}
         \subcaptionbox{Flame}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-flame}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-flame}}
         \subcaptionbox{Csafe}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-csafe}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-csafe}}
         \subcaptionbox{Enzo v}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-enzo-v}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-enzo-v}}
         \subcaptionbox{Brain}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-neurons}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-neurons}}
         \subcaptionbox{Foam}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-foam}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-foam}}
         \subcaptionbox{Vismale}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-vismale}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-vismale}}
         \subcaptionbox{Karfs}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-karfs}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-karfs}}
         \subcaptionbox{Aneurism}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-aneurism}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-aneurism}}
         \subcaptionbox{Velocity z}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/laplacian-optimized-velocityz}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-velocityz}}
         \caption{Laplacian using 5-point stencil}
 \end{figure}
 
@@ -186,35 +186,35 @@
 \begin{figure}[htb]
         \centering
         \subcaptionbox{Boiler}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-boiler}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-boiler}}
         \subcaptionbox{Plasma}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-plasma}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-plasma}}
         \subcaptionbox{Diffusivity}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-diffusivity}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-diffusivity}}
         \subcaptionbox{Pressure}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-pressure}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-pressure}}
         \subcaptionbox{Turbulence}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-turbulence}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-turbulence}}
         \subcaptionbox{Kingsnake}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-kingsnake}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-kingsnake}}
         \subcaptionbox{Flame}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-flame}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-flame}}
         \subcaptionbox{Csafe}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-csafe}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-csafe}}
         \subcaptionbox{Enzo v}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-enzo-v}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-enzo-v}}
         \subcaptionbox{Brain}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-neurons}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-neurons}}
         \subcaptionbox{Foam}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-foam}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-foam}}
         \subcaptionbox{Vismale}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-vismale}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-vismale}}
         \subcaptionbox{Karfs}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-karfs}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-karfs}}
         \subcaptionbox{Aneurism}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-aneurism}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-aneurism}}
         \subcaptionbox{Velocity z}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/histogram-optimized-velocityz}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-velocityz}}
         \caption{Histogram using 64 bins}
 \end{figure}
 
@@ -258,35 +258,35 @@
 \begin{figure}[htb]
         \centering
         \subcaptionbox{Boiler}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-boiler}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-boiler}}
         \subcaptionbox{Plasma}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-plasma}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-plasma}}
         \subcaptionbox{Diffusivity}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-diffusivity}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-diffusivity}}
         \subcaptionbox{Pressure}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-pressure}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-pressure}}
         \subcaptionbox{Turbulence}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-turbulence}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-turbulence}}
         \subcaptionbox{Kingsnake}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-kingsnake}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-kingsnake}}
         \subcaptionbox{Flame}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-flame}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-flame}}
         \subcaptionbox{Csafe}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-csafe}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-csafe}}
         \subcaptionbox{Enzo v}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-enzo-v}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-enzo-v}}
         \subcaptionbox{Brain}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-neurons}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-neurons}}
         \subcaptionbox{Foam}[0.32\linewidth][c]{%
-               \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-foam}}
+               \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-foam}}
         \subcaptionbox{Vismale}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-vismale}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-vismale}}
         \subcaptionbox{Karfs}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-karfs}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-karfs}}
         \subcaptionbox{Aneurism}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-aneurism}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-aneurism}}
         \subcaptionbox{Velocity z}[0.32\linewidth][c]{%
-                \includegraphics[width=0.2\linewidth]{img/supplementary/isocontour-optimized-velocityz}}
+                \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-velocityz}}
         \caption{Isosurface}
 \end{figure}
 
