@@ -56,7 +56,6 @@ to either exclusively.
 	{\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-kingsnake}}
 	\subcaptionbox{\emph{foam}}
 	{\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-foam}}
-	
 	\caption{Comparison of histogram errors among streams. Plots are truncated to highlight
 	differences without hiding important trends. In general, in terms of error, $\shop \approx \shsg
 	\approx \swav < \slvl, \sbit, \smag$. The erratic behavior at the beginning for \emph{kingsnake}
@@ -85,6 +84,7 @@ to either exclusively.
 	reference. Finally, \smag's histogram has a widely skewed distribution where too many values fall
 	into the first bin.}
 	\label{fig:histograms-boiler}
+	\vspace{-1em}
 \end{figure*}
 
 \begin{figure*}[t]
@@ -126,11 +126,11 @@ The surfaces are colored by the $x$-component of the normal vector at each point
 	\subcaptionbox{with leading zero packets}
 	{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler-wlz}}
 	\subcaptionbox{without leading zero packets}
-	{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler}}
-	\caption{Comparison of histogram error curves produced by \sbit and \slvl, for \emph{boiler}, with
-	and without leading zero bits. The vertical axis is in log scale. The error for \sbit reduces in a
-	stair-step fashion, in which each step corresponds to a new bit plane streamed. \sbit benefits
-	significantly more from the removal of leading zero bits (from (a) to (b), the blue curve shifts
-	more to the left).}
+	{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler}} \caption{Histogram
+	error curves produced by \sbit and \slvl, for \emph{boiler}, with and without leading zero bits.
+	The vertical axis is in log scale. The error for \sbit reduces in a stair-step fashion, whhere
+	each step corresponds to a new bit plane streamed. \sbit benefits significantly more from the
+	removal of leading zero bits (the blue curve shifts more to the left).}
 	\label{fig:histogram-explain}
+	\vspace{-1em}
 \end{figure}

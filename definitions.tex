@@ -63,14 +63,14 @@ dependent, depending on the stream it derives from.\label{tbl:streams}}
 \subsection{Decomposition of Data into Packets} \label{sec:data-streaming-framework}
 
 Although one way to compare different data reduction strategies is to restrict the techniques to the
-same data size and compare data quality, it becomes difficult to enforce consistency. For example,
-the amount of change (in data) in one step of multiresolution simplification may be different from
-removing one bit in the quantization of every data sample. To avoid such mismatch of units of data
+same data size and compare data quality, it is difficult to enforce consistency. For example, the
+amount of change (in data) in one step of multiresolution simplification may be different from
+removing one bit in the quantization of every sample. To avoid such mismatch of units of data
 increment/decrement, we model each reduction scheme as a stream of equally sized \emph{packets},
-which are used as the smallest units of data transfer in our framework. A packet consists of a
-relatively small number (e.g., $2^3$) of bits. We associate a packet
-with a resolution level and a precision level (i.e., bit plane), such that each packet can improve
-either the resolution or the precision of data. A resolution-improving packet adds the first bits of
+which are also the smallest units of data transfer in our framework. A packet consists of a
+relatively small number $\left(\approx 2^3\right)$ of bits, and is associated with a resolution
+level and a precision level (i.e., bit plane), such that each packet can improve either the
+resolution or the precision of data. A resolution-improving packet adds the first bits of
 coefficients on a new (and finer) subband locally. In this framework, different data-reduction
 schemes become different orderings of packets, called \emph{streams}. Restricting two (or more) data
 streams to the same number of packets allows us to perform fair and consistent comparisons.
@@ -110,27 +110,27 @@ This transformation increases the number of bit planes by one, i.e., $0\leq b \l
 %the summation from $0$ to $B$ in the above expression).
 
 \para{Blocks and Packets.}
-A \emph{packet} consists of bits from the same bit plane, from a \emph{block} of negabinary
-wavelet coefficients. A block is a $[g\times g\times g]$ grid of adjacent coefficients from the same
-subband. We let $g$ be a constant ($g=2$ in this paper), so that finer resolution subbands contain
-more packets, which presents a tradeoff between packets that provide wider (but coarser) coverage
-and packets that provide finer (but more local) details. Every packet (= one byte in this paper) 
-comes from a bit plane $b$
-and a subband $l$. A packet improves the precision (or resolution) of a region if it comes from a
-bit plane (or subband) that has not been streamed before in the region. $g$ is chosen to be larger
-than one for performance reason, as in practice, most systems read bits in batches.
+Precisely, a \emph{packet} consists of bits from the same bit plane, from a \emph{block} of
+negabinary wavelet coefficients. A block is a $[g\times g\times g]$ grid of adjacent coefficients
+from the same subband. We let $g$ be a constant ($g=2$ in this paper), so that finer resolution
+subbands contain more packets, which presents a tradeoff between packets that provide wider (but
+coarser) coverage and packets that provide finer (but more local) details. Every packet (of size one
+byte in this paper) comes from a bit plane $b$ and a subband $l$. A packet improves the precision
+(or resolution) of a region if it comes from a bit plane (or subband) that has not been streamed
+before in the region. $g$ is chosen to be larger than one for performance reason, as in practice,
+most systems read bits in batches.
 
 \subsection{Data-dependent and Data-independent Streams} \label{sec:static-dynamic-streams}
 
-We model two common data reduction schemes in the literature as \emph{by level} and \emph{by bit
-plane} streams. The \emph{by level} stream, \slvl, orders the packets strictly from coarser to finer
-subbands. Within the same subband, packets follow the row-major order of $2^3$ blocks of
-coefficients and then bit plane order (from 0 to $B$) within each coefficient. All bits for each
-coefficient are streamed together. The other common ordering, \emph{by bit plane}, denoted as \sbit,
-proceeds strictly from higher ordered to lower ordered bit planes. Within the same bit plane,
-packets follow the subband order (from $0$ to $L-1$), and then row-major order in each subband. The
-streams \slvl and \sbit are designed to mimic the way data is accessed in traditional methods that
-work either in resolution (\slvl) or in precision (\sbit).
+We model two common reduction schemes in the literature as \emph{by level} and \emph{by bit plane}
+streams. The \emph{by level} stream, \slvl, orders the packets strictly from coarser to finer
+subbands. Within the same subband, packets follow the row-major order of blocks and then bit plane
+order (from 0 to $B$) within each coefficient. All bits for each coefficient are streamed together.
+The other common ordering, \emph{by bit plane}, denoted as \sbit, proceeds strictly from higher
+ordered to lower ordered bit planes. Within the same bit plane, packets follow the subband order
+(from $0$ to $L-1$), and then row-major order in each subband. The streams \slvl and \sbit are
+designed to mimic the way data is accessed in traditional methods that work either in resolution
+(\slvl) or in precision (\sbit).
 
 Additionally, we define a third stream that combines these two dimensions and refer to it as
 \emph{by wavelet norm}, or \swav. This stream orders packets in descending order of weights
@@ -150,8 +150,8 @@ In the wavelet representation, a function $f$ is written as a linear sum of wave
 i.e., $f=\sum{c_i\wbas_i}$, where $c_i$ are the coefficients. Since our wavelet transforms
 are based on lifting, this norm is usually not one, but increases with level. Basis functions in the
 same subband share the same norm, hence $\wwav(p)$ is simply the contribution (in $L_2$ norm) of a
-bit on bit plane $b_p$ and subband $l_p$, to the whole function $f$. A data-reduction scheme based
-on \emph{by wavelet norm} was presented by Weiss and Lindstrom~\cite{weiss}.
+bit on bit plane $b_p$ and subband $l_p$, to the whole function $f$. This ordering based on norms of
+wavelet basis functions was proposed previously by Weiss \etal~\cite{weiss}.
 
 Another common way to reduce data in the wavelet domain is to leave out coefficients of smallest
 magnitudes. Note that coefficient magnitude is only weakly related to error, as the error also
@@ -211,13 +211,12 @@ nested loop. For a $nx\times ny \times nz$ volume and a block size that spans $b
 samples, $n$ will be $\frac{nx}{bx}\times \frac{ny}{by}\times \frac{nz}{bz}$. Even a small volume,
 e.g., $nx=ny=nz=64$ with $bx=by=bz=2$, hence $n^2=32768^2$, will result in a prohibitively high
 run time. Therefore, we adopt a simplified version of this algorithm, where only one pass through
-the set of $n$ packets is needed. In each iteration $i$ ($0\leq i < n$), we disable (set to zero) a
-new packet $p_i$ in $\tilde{f}$, compute and record the incurred error $\err_i$, and then enable
-$p_i$ again at the end of iteration $i$. After $n$ iterations, each packet has an associated weight
+the set of $n$ packets is needed. In iteration $i$ ($0\leq i < n$), we disable (set to zero) a new
+packet $p_i$ in $\tilde{f}$, compute and record the incurred error $\err_i$, and then enable $p_i$
+again at the end of iteration $i$. After $n$ iterations, each packet has an associated weight
 $\err_i$. The stream \sopt is simply the sorted list of packets in decreasing order of the
-weights. This simplified algorithm brings the running time down significantly, while (by
-observation) retaining the same quality for \sopt. \Cref{alg:greedy} outlines the approach described
-above.
+weights. This simplified algorithm has significantly lower running time, while (by observation)
+retaining the same quality for \sopt. \Cref{alg:greedy} outlines the approach described above.
 
 \begin{algorithm}[h]
   \caption{Computing a task-optimized stream}
@@ -311,4 +310,5 @@ $10\times 17$ image, corresponding to $10$ subbands (in 2D) and $17$ bit planes.
 mapped to a white--blue color scale. \slvl streams bits by resolution (from top to bottom), \sbit
 streams by precision (from left to right), while \swav mixes precision and resolution.}
 \label{fig:example-signatures}
+\vspace{-1em}
 \end{figure}

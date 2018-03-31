@@ -56,6 +56,7 @@ of the original function well in areas of both low and high gradients, where \sw
 smooth approximations (blue arrows). \sbit therefore is better for derivative computations, where a
 function's shape (or its relative values) matters more than its absolute values.}
 \label{fig:bit-plane-vs-wavelet-norm-gradient}
+\vspace{-1em}
 \end{figure}
 
 Given a function $f$ defined on a grid, its gradient at a grid point \mbox{$\x = (x,y,z)$} is the
@@ -112,7 +113,6 @@ RMSE, \sbit is better for gradient computation.
 differences without discarding important information. In all cases, in terms of error, $\slop <
 \slsg < \sbit < \swav < \smag < \slvl$.}
 \label{fig:laplacian-error-comparison}
-\vspace{1em}
 \end{figure*}
 
 The Laplace operator is a second-order differential operator defined as the divergence of the
