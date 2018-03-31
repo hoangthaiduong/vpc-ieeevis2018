@@ -5,17 +5,18 @@ A histogram succinctly summarizes the distribution of sample values, and thus is
 selection of colors and opacities in a transfer function.
 
 To decide on an error metric to compare histograms, we have experimented with several popular
-metrics such as Kolmogorov-Smirnov \todo{cite}, Kullback-Leibler \todo{cite}, Earth Mover's
-Distance~\cite{emd1998} among others (Hellinger \todo{cite}, Total variation \todo{cite}, Chi-square
-\todo{cite}, Bhattacharyya \todo{cite}). We choose histogram
-intersection~\cite{histogram_intersection1991} as the metric of choice, because it is fast to
-compute and is reasonably insensitive to changes in precision, as well as the number of bins. The
+metrics such as Kolmogorov-Smirnov~\cite{smirnov1948}, Kullback-Leibler~\cite{kullback1951}, and
+Earth Mover's Distance~\cite{emd1998} among others~\cite{Hellinger1909,Bhattacharyya1943}. We choose
+histogram intersection~\cite{histogram_intersection1991} as the metric of choice, because it is fast
+to compute and is reasonably insensitive to changes in precision, as well as the number of bins. The
 intersection distance between two histograms $H_1$ and $H_2$ is defined as
-$\err(H_1,H_2)=\sum_{i}{\min{(H_1(i),H_2(i))}}$ (the sum is over all bins $i$). Every histogram is
-normalized by dividing the value in each bin by the number of samples in the volume. The error
-metric should take into account both the histogram shapes and the range of values. Therefore, we
-clamp the range of values in reconstructed fucntions to that of the original function, so that
-corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same range.
+$\err(H_1,H_2)=1-\sum_{i}{\min{(H_1(i),H_2(i))}}$ (the sum is over all bins $i$). Every histogram is
+normalized by dividing the value in each bin by the number of samples in the volume. We have decided
+that the error metric should take into account both the histogram shapes and the range of values.
+Therefore, we clamp the range of values in reconstructed functions to that of the original function,
+so that corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same range. However, in
+situations where only the histogram shape but not the range of values is deemed important, no
+clamping is needed.
 
 As before, for each data set, we use~\Cref{alg:greedy} to compute an \shop stream, optimized for
 histogram error, and then construct an \shsg from its signature. We plot the error curves for all
@@ -36,7 +37,7 @@ same reason explained in~\Cref{sec:rmse-optimized}), resulting in the observed c
 \smag performs poorly, because it ignores regions of smooth variations, which nevertheless count
 toward the distribution.
 
-In the latter group, the performances of \swav and \shsg (and even \shop) differ by negligible
+In the latter group, the performances of \swav and \shsg (and even \shop) differ by a negligible
 amount. This observation is confirmed in~\Cref{fig:histograms-boiler}, where we plot various
 histograms, reconstructed at 0.13 bps, for the \emph{boiler} data set. The histograms produced by
 \swav and \shsg have approximately the same shape, and are the closest to the reference histogram.
