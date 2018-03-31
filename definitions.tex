@@ -177,42 +177,40 @@ but also can provide insights into other, more practical streams for the same ta
 Given the original data set $f$ and its reconstructed approximation $\tilde{f}$ using a subset of
 packets, let $q$ represent some quantity of interest\footnote{In this paper, we use the terms
 ``quantity of interest'' and ``task'' interchangeably, with the understanding that, e.g., if the
-task is extracting an isosurface, then the quantity of interest is the isosurface.}, e.g., histogram,
-isosurface, etc., computed on $f$ or $\tilde{f}$. For a given task $q$, a well-defined error metric
-$\err(q(\tilde{f}),q(f))$ is needed. Given a data set $f$, a task $q$, and an error metric $\err$,
-our goal is to generate an \emph{optimal} (and data-dependent) stream, $\sopt$, for $q$ with respect
-to $\err$. We define $\sopt$ as a stream such that the area under the curve of \err, 
-with respect to the number of bits, is minimized
-for all packets to be streamed. However, this definition is limited in practice because a stream
-should be able to terminate at any point and still produce as small an error as possible. Furthermore,
-the optimization of $\err$ for all possible bit rates has exponential time complexity with 
-respect to \todo{what? bit rate? data size?}.
+task is extracting an isosurface, then the quantity of interest is the isosurface.}, e.g.,
+histogram, isosurface, etc., computed on $f$ or $\tilde{f}$. For a given task $q$, a well-defined
+error metric $\err(q(\tilde{f}),q(f))$ is needed. Given a data set $f$, a task $q$, and an error
+metric $\err$, our goal is to generate an \emph{optimal} (and data-dependent) stream, $\sopt$, for
+$q$ with respect to $\err$. One possible definition for $\sopt$ is a stream such that the area under
+the plotted curve of \err, with respect to the number of bits, is minimized for all packets to be
+streamed. However, this definition is limited in practice because a stream should be able to
+terminate at any point and still produce as small an error as possible.
 
-\todo{see PL's original comments in this paragraph}
-Instead, we employ a greedy approach to define the optimal stream.  A straightforward greedy
-algorithm, however, suffers from the usual limitation of potentially leading to a local optimum. For
+Instead, we employ a greedy approach to define the optimal stream. We notice through experimenst,
+however, that a straightforward greedy algorithm can pick unimportant packets too early. For
 example, starting with an all-zero reconstruction $\tilde{f}=0$, and an empty stream, we can
 repeatedly append new packets to the stream, which when included in the current $\tilde{f}$, would
-minimize $\err$ at every step. Each step might pick a packet that introduces low error, yet
-contributes very little to improve the quality of $\tilde{f}$, possibly leading to a nonoptimal
-stream at a later point. In order to avoid local minima, we make a modification to this greedy
-algorithm, and build the stream backwards. We start with a ``lossless'' $\tilde{f}$ (i.e.,
-$\tilde{f}=f$), and at each step we remove the packet that has the least impact on the error $\err$
-from $\tilde{f}$. This modification solves the previous problem where less important packets were
-added to \sopt too early. Moreover, it ensures that the packets chosen for removal early on are
-indeed less important and will be put at the end of \sopt.
+minimize $\err$ at every step. At some point, the algorithm might pick a packet that introduces the
+lowest error, yet contributes very little to improve the quality of $\tilde{f}$ (because more
+important packets would increase the error), leading to a nonoptimal stream. To avoid this problem,
+we make a modification to this greedy algorithm, and build the stream backwards. We start with a
+``lossless'' $\tilde{f}$ (i.e., $\tilde{f}=f$), and at each step we remove the packet that has the
+least impact on the error $\err$ from $\tilde{f}$. This modification largely avoids the previous
+problem where less important packets were added to \sopt too early, because by starting with the
+full (instead of empty) set of packets, our error measurement captures better the importance of
+packets.
 
-Unfortunately, such a greedy algorithm is still expensive in practice, as its complexity is
-$\mathcal{O}(n^3)$, with $n$ being the total number of packets in the data. The cubic time
-complexity comes from the complexity of the 2-level nested loop, multiplied by that of the wavelet
-transform and error computation. Considering a small, e.g., $[64 \times 64 \times 64]$ domain, a
-block size that spans $2^3$ coefficients, and $16$ bits of quantization, $n$ will be 557056, leading
-to prohibitively large numbers. Therefore, we adopt a simplified version of this algorithm, where
-only one pass through the set of $n$ packets is needed. In each iteration $i$, we disable (set to
-zero) a new packet $p_i$ in $\tilde{f}$, compute and record the incurred error $\err_i$, and then
-enable $p_i$ again at the end of iteration $i$. After $n$ iterations, each packet has an associated
-weight $\err_i$. The stream \sopt, then, is simply the sorted list of packets in decreasing order of
-the weights. This simplified algorithm brings the running time from days down to hours, while (by
+Unfortunately, such a greedy algorithm is still expensive in practice, as its complexity is at least
+$\mathcal{O}(n^2)$, with $n$ being the total number of packets in the data, due to the 2-level
+nested loop. For a $nx\times n\times nz$ volume and a block size that spans $bx\times by\times bz$
+samples, $n$ will be $\frac{nx}{bx}\times \frac{ny}{by}\times \frac{nz}{bz}$. Even a small volume,
+e.g., for $nx=ny=nz=64$ and $bx=by=bz=2$, hence $n^2=32768^2$, will result in a prohibitively high
+run time. Therefore, we adopt a simplified version of this algorithm, where only one pass through
+the set of $n$ packets is needed. In each iteration $i$ ($0\leq i < n$), we disable (set to zero) a
+new packet $p_i$ in $\tilde{f}$, compute and record the incurred error $\err_i$, and then enable
+$p_i$ again at the end of iteration $i$. After $n$ iterations, each packet has an associated weight
+$\err_i$. The stream \sopt, then, is simply the sorted list of packets in decreasing order of the
+weights. This simplified algorithm brings the running time down significantly, while (by
 observation) retaining the same quality for \sopt. \Cref{alg:greedy} outlines the approach described
 above.
 
@@ -242,53 +240,50 @@ above.
 Unlike data-independent streams, data-dependent streams do not impose a static ordering of packets.
 To concisely represent and characterize the dynamic ordering of data-dependent streams, we introduce
 the notion of a \emph{stream signature}. Any stream can be represented with respect to the
-two-dimensional space of resolution (subbands) and precision (bit planes), i.e., \mbox{$
-\Lspace_{L,B}=\{(l,b)\ |\ 0\leq l < L,\ 0\leq b \leq B\}$.}
+two-dimensional space (denoted here as $\Sigma_{L,B}$) of resolution (subbands) and precision (bit
+planes), i.e., \mbox{$ \Lspace_{L,B}=\{(l,b)\ |\ 0\leq l < L,\ 0\leq b \leq B\}$.}
 
-Given a stream, we define its signature $\sgn = \sgn^{L,B}$ as an $L \times (1+B)$ matrix, where each $(l,b)$
+Given a stream, we define its signature $\sgn$ as an $L \times (1+B)$ matrix, where each $(l,b)$
 element is associated with $P_{l,b}$---the set of packets belonging to subband $l$ and bit plane
-$b$. In particular, $\sgn_{l,b}$, i.e., the $(l,b)$ element of $\sgn$, is 
-an integer in the range $[0, (1+B)\times L)$, and indicates, on
-average, the position at which packet $P_{l,b}$ appears in the given stream. For example, the
-signature $\sgn=\bigl[ \begin{smallmatrix}0 & 1 & 4\\ 2 & 3 & 5\end{smallmatrix}\bigr]$ indicates
-that the stream begins with packets that lie on the first bit plane of the first subband, as
-$\sgn_{0,0}=0$. Those are followed by packets on the second bit plane of the first subband
-($\sgn_{0,1}=1$), and then the first bit plane of the second subband ($\sgn_{1,0}=2$), and finally,
-the third bit plane of the second subband ($\sgn_{1,2}=5$). Thus, a stream's signature shows how the
-stream traverses the space $\Lspace_{L,B}$, and highlights the different resolution-versus-precision
-tradeoffs among streams, especially among \sopt streams optimized for different tasks.
-In~\Cref{fig:example-signatures} we visualize the signatures of \sbit, \slvl, and \swav, defined
-in~\Cref{sec:data-streaming-framework}.
+$b$. In particular, $\sgn_{l,b}$, i.e., the $(l,b)$ element of $\sgn$, is an integer in the range
+$[0, (1+B)\times L)$, and indicates, on average, the position at which packets in $P_{l,b}$ appears
+in the given stream. For example, the signature $\sgn=\bigl[ \begin{smallmatrix}0 & 1 & 4\\
+2 & 3 & 5\end{smallmatrix}\bigr]$ indicates that the stream begins with packets that lie on the
+first bit plane of the first subband, as $\sgn_{0,0}=0$. Those are followed by packets on the second
+bit plane of the first subband ($\sgn_{0,1}=1$), and then the first bit plane of the second subband
+($\sgn_{1,0}=2$), and finally, the third bit plane of the second subband ($\sgn_{1,2}=5$). Thus, a
+stream's signature shows how the stream traverses the space $\Lspace_{L,B}$, and highlights the
+different resolution-versus-precision tradeoffs among streams, especially among \sopt streams
+optimized for different tasks. In~\Cref{fig:example-signatures} we visualize the signatures of
+\sbit, \slvl, and \swav, defined in~\Cref{sec:data-streaming-framework}.
 
 To compute a stream signature, we partition the whole domain (not individual subbands) into several
-\emph{regions}, compute one signature per region, and average these local signatures. 
-\todo{Why?  Does that result in a different signature?  If so, why is this preferred?} 
-It is only
-when packets are relatively well localized that their relative ordering in the $\Sigma_{L,B}$ space
-becomes meaningful. For example, a packet at one corner of the domain may be streamed before one at
-an opposite corner, but this fact contains no useful information. We define a region to be the
-spatial volume that is covered by a packet in the coarsest subband. Algorithm~\ref{alg:signature}
-lists the steps of our approach.
+\emph{regions}, compute one signature per region, and average these local signatures. Partitioning
+is used since it is only when packets are relatively well localized that their relative ordering in
+the $\Sigma_{L,B}$ space becomes meaningful. For example, a packet at one corner of the domain may
+be streamed before one at an opposite corner, but this fact contains no useful information. We
+define a region to be the spatial volume that is covered by a packet in the coarsest subband.
+Algorithm~\ref{alg:signature} lists the steps of our approach.
 
 \begin{algorithm}[h]
   \caption{Computing a stream signature}
   \begin{algorithmic}[1]
     \Inputs{
 			A stream $P=\{p_i\}$\\}
-		\Initialize{Per-region signature matrix $A_r:= 0$\\
-		Global signature matrix $A := 0$}
+		\Initialize{Per-region signature matrix $\sgn_r:= 0$\\
+		Global signature matrix $\sgn := 0$}
 		\For{each packet $p_i$ in $P$}
 			\State Let $r$, $b$, $l$ be the region, bit plane, and subband that $p_i$ belongs
-			\State $A_r(l,b) := A_r(l,b)+i$
+			\State $\sgn_r(l,b) := \sgn_r(l,b)+i$
 		\EndFor
 		\For{each region $r$}
-			\State Sort the elements of $A_r$
-			\State Assign each element of $A_r$ its index after sorting
-			\State $A := A+A_r$
+			\State Sort the elements of $\sgn_r$
+			\State Assign each element of $\sgn_r$ its index after sorting
+			\State $\sgn := \sgn+\sgn_r$
 		\EndFor
-		\State Sort the elements of $A$
-		\State Assign each element of $A$ its index after sorting
-		\Output{The signature matrix $A$}
+		\State Sort the elements of $\sgn$
+		\State Assign each element of $\sgn$ its index after sorting
+		\Output{The signature matrix $\sgn$}
 	\end{algorithmic}
 	\label{alg:signature}
 \end{algorithm}
@@ -305,14 +300,10 @@ tradeoffs between data-independent and data-dependent streams.
  \subcaptionbox{\label{fig:by-level-signature}\emph{by level} (\slvl)}{{\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-LEVEL)-(rmse)}}}
  \subcaptionbox{\label{fig:rmse:diffisivity}\emph{by bit plane} (\sbit)}{{\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-BIT-PLANE)-(rmse)}}}
  \subcaptionbox{\label{fig:rmse:plasma}\emph{by wavelet norm} (\swav)}{ {\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-WAVELET-NORM)-(rmse)}}}
-\caption{Visualization of signatures for \slvl, \sbit, and \swav in 2D. Each signature is a $10\times
-17$ image, corresponding to $10$ subbands \hbadd{(in 2D)} and $17$ bit planes. Each $(l,b)$ ``cell'' contains a
-unique value from $0$ to $169$, indicating its ``priority'' in the stream, and 
-\hbadd{mapped to a white--blue color scale} 
-\hbdel{which is mapped through a linear blue color map ($0$ is mapped to the brightest blue)}. It is clear 
-\todo{PL: No, it is not clear, because you haven’t told us what the ordering of sub-bands is.}
-that \slvl streams bits
-by resolution (from top to bottom), \sbit streams by precision (from left to right), while \swav
-mixes precision and resolution.}
+\caption{Visualization of signatures for \slvl, \sbit, and \swav in 2D. Each signature is a
+$10\times 17$ image, corresponding to $10$ subbands (in 2D) and $17$ bit planes. Each $(l,b)$
+``cell'' contains a unique value from $0$ to $169$, indicating its ``priority'' in the stream, and
+mapped to a white--blue color scale. \slvl streams bits by resolution (from top to bottom), \sbit
+streams by precision (from left to right), while \swav mixes precision and resolution.}
 \label{fig:example-signatures}
 \end{figure}

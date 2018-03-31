@@ -29,7 +29,7 @@ streams. Using \Cref{alg:greedy}, we compute streams specifically optimized for 
 and use its signature to compute the corresponding \stksg. We compare these streams by evaluating
 the error as a function of the number of packets received for a variety of datasets (see
 \Cref{tbl:data-sets}). To mimic the effects of compression commonly used in practice, we remove from
-each stream all packets that consist only of leading zero bits. The wavelet basis allows us to
+each stream all packets that consist only of leading-zero bits. The wavelet basis allows us to
 always reconstruct data at full resolution, which greatly simplifies computation of errors, as there
 exists no standard method to compute error between grids of different dimensions.
 
@@ -72,11 +72,11 @@ performs better than \srsg due to spatial adaptivity, whereas \srsg slightly out
 followed by \sbit, \smag, and \slvl.
 
 In particular, \sbit outperforms \slvl (for \emph{kingsnake} and \emph{boiler}, it does so after
-approximately 1 bps), which can be attributed to the removal of leading zero packets. Empirically,
-wavelet coefficients on finer scale subbands are much smaller in magnitude(\todo{cite}). Such
-coefficients contain a majority of the leading zero bits, whose removal benefits \sbit the most.
+approximately 1 bps), which can be attributed to the removal of leading-zero packets. Empirically,
+wavelet coefficients on finer scale subbands are much smaller in magnitude~\cite{spiht1996}. Such
+coefficients contain a majority of the leading-zero bits, whose removal benefits \sbit the most.
 \emph{diffusivity} and \emph{plasma} contain a significant amount of empty space, which translates
-to more leading zero bits after the wavelet transform that \sbit can take advantage of. This is the
+to more leading-zero bits after the wavelet transform that \sbit can take advantage of. This is the
 reason why, unlike for \emph{boiler} and \emph{kingsnake}, \sbit outperforms \slvl immediately from
 the beginning for \emph{diffusivity} and \emph{plasma}.
 
