@@ -37,33 +37,38 @@ exists no standard method to compute error between grids of different dimensions
 
 \begin{figure*}[t]
 \centering
- \subcaptionbox{\label{fig:rmse:boiler}\emph{boiler}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-boiler}}}
- \subcaptionbox{\label{fig:rmse:diffisivity}\emph{diffusivity}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-diffusivity}}}
- \subcaptionbox{\label{fig:rmse:plasma}\emph{plasma}}{ {\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-plasma}}}
- \subcaptionbox{\label{fig:rmse:kingsnake}\emph{kingsnake}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-kingsnake}}}
-\caption{Root-mean-square error (RMSE) of reconstructed functions for different streams and data
-sets; lower RMSE is better. The streams are truncated at both ends to highlight the differences,
-without omitting important information. The general ordering of error, from lowest to highest, is
-$\sopt < \ssig < \swav < \sbit < \smag < \slvl$ (for \emph{boiler} and \emph{kingsnake}, \sbit
-underperforms \slvl at first, but surpasses its after a certain bit rate).}
-\label{fig:rmse-optimized}
+\subcaptionbox{\emph{boiler}}{%
+{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-boiler}}}
+\subcaptionbox{\emph{diffusivity}}{%
+{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-diffusivity}}}
+\subcaptionbox{\emph{turbulence}}{%
+{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-turbulence}}}
+\subcaptionbox{\emph{pressure}}{%
+{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-pressure}}} 
+\caption{Gradient error of reconstructed functions. Lower gradient error is better. Leading zero
+packets are removed, and the plots are truncated in the same way as in~\Cref{fig:rmse-optimized}.
+The trend in error, in all cases, is $\sgop < \sgsg \approx \sbit < \swav < \smag < \slvl$.}
+\label{fig:gradient-error-comparison}
 \vspace{1em}
 
 \centering
- \subcaptionbox{\emph{by level} (\slvl)}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-level}}}
- \subcaptionbox{\emph{by bit plane (\sbit)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-bit-plane}}}
- \subcaptionbox{\emph{by wavelet norm (\swav)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-wavelet-norm}}}
- \subcaptionbox{\emph{by magnitude (\smag)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-magnitude}}}
- \subcaptionbox{\emph{by signature (\ssig)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-signature}}}
- \subcaptionbox{\emph{ground truth}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-groundtruth}}}
-\caption{Volume renderings of a $64^3$ region of \emph{plasma} data set at 0.1 bps.  \slvl captures
-the background (purple-blue) well, whereas \sbit captures the fine details better. \swav combines
-the strength of both. \ssig, however, produces the most accurate rendering (compare, e.g., yellow
-features).}
-\label{fig:rmse-rendering}
-\vspace{-1em}
+\subcaptionbox{\emph{by level} (\slvl)}{%
+{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-level}}}
+\subcaptionbox{\emph{by bit plane} (\sbit)}{%
+{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-bit-plane}}}
+\subcaptionbox{\emph{by wavelet norm} (\swav)}{%
+{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-wavelet-norm}}}
+\subcaptionbox{\emph{by magnitude} (\smag)}{%
+{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-magnitude}}}
+\subcaptionbox{\emph{by signature} (\sgsg)}{%
+{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-signature.png}}}
+\subcaptionbox{\emph{ground truth}}{%
+{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-groundtruth.png}}}
+\caption{The $x$-component of the ($64^3$) gradient field of \emph{turbulence}, reconstructed at 0.5
+bps. The gradient field produced by \sbit is more accurate than the one produced by \swav, and
+slightly more accurate than the one produced by \sgsg (compare orange features).}
+\label{fig:gradient-rendering-diff}
 \end{figure*}
-
 
 One of the most fundamental analysis tasks is that of reconstructing the original function itself. A
 commonly used error metric in this case is the root-mean-square error

@@ -8,57 +8,6 @@ avoid computing distances between quantities defined on grids of different resol
 
 \subsubsection{Gradient Computation} \label{sec:gradient}
 
-\begin{figure*}[t]
-\centering
-\subcaptionbox{\emph{boiler}}{%
-{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-boiler}}}
-\subcaptionbox{\emph{diffusivity}}{%
-{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-diffusivity}}}
-\subcaptionbox{\emph{turbulence}}{%
-{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-turbulence}}}
-\subcaptionbox{\emph{pressure}}{%
-{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-pressure}}} 
-\caption{Gradient error of reconstructed functions. Lower gradient error is better. Leading zero
-packets are removed, and the plots are truncated in the same way as in~\Cref{fig:rmse-optimized}.
-The trend in error, in all cases, is $\sgop < \sgsg \approx \sbit < \swav < \smag < \slvl$.}
-\label{fig:gradient-error-comparison}
-\vspace{1em}
-
-\centering
-\subcaptionbox{\emph{by level} (\slvl)}{%
-{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-level}}}
-\subcaptionbox{\emph{by bit plane} (\sbit)}{%
-{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-bit-plane}}}
-\subcaptionbox{\emph{by wavelet norm} (\swav)}{%
-{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-wavelet-norm}}}
-\subcaptionbox{\emph{by magnitude} (\smag)}{%
-{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-magnitude}}}
-\subcaptionbox{\emph{by signature} (\sgsg)}{%
-{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-signature.png}}}
-\subcaptionbox{\emph{ground truth}}{%
-{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-groundtruth.png}}}
-\caption{The $x$-component of the ($64^3$) gradient field of \emph{turbulence}, reconstructed at 0.5
-bps. The gradient field produced by \sbit is more accurate than the one produced by \swav, and
-slightly more accurate than the one produced by \sgsg (compare orange features).}
-\label{fig:gradient-rendering-diff}
-\end{figure*}
-
-\begin{figure}[h]
-\centering
-\subcaptionbox{\emph{by bit plane} (\sbit)}{
-{\includegraphics[width=0.48\linewidth]{gradient/gradient-bit-plane}}} 
-\subcaptionbox{\emph{by wavelet norm} (\swav)}{
-{\includegraphics[width=0.48\linewidth]{gradient/gradient-wavelet-norm}}}
-\caption{A 1D line extracted from \emph{plasma}, and reconstructed using \sbit and \swav at 0.6 bps.
-The original data is in orange and the reconstructions are in blue. \swav captures well the function
-values in low-gradient regions, where \sbit struggles (red arrows). However, \sbit retains the shape
-of the original function well in areas of both low and high gradients, where \swav instead produces
-smooth approximations (blue arrows). \sbit therefore is better for derivative computations, where a
-function's shape (or its relative values) matters more than its absolute values.}
-\label{fig:bit-plane-vs-wavelet-norm-gradient}
-\vspace{-1em}
-\end{figure}
-
 Given a function $f$ defined on a grid, its gradient at a grid point \mbox{$\x = (x,y,z)$} is the
 vector $\nabla f(\x) = \left(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y},
 \frac{\partial f}{\partial z}\right)$. We use a five-point stencil to compute the gradient, i.e.,
@@ -90,6 +39,24 @@ can be ``shifted'' slightly due to the lack of precision in coarse-scale coeffic
 error caused by this shifting reduces significantly when taking the gradient, which cancels any
 constant shift. \sbit, therefore, works better than \swav for gradient computation, because it is
 better able to retain sharp features.
+
+\begin{figure}[h]
+\centering
+\subcaptionbox{\emph{by bit plane} (\sbit)}{
+{\includegraphics[width=0.48\linewidth]{gradient/gradient-bit-plane}}} 
+\subcaptionbox{\emph{by wavelet norm} (\swav)}{
+{\includegraphics[width=0.48\linewidth]{gradient/gradient-wavelet-norm}}}
+\caption{A 1D line extracted from \emph{plasma}, and reconstructed using \sbit and \swav at 0.6 bps.
+The original data is in orange and the reconstructions are in blue. \swav captures well the function
+values in low-gradient regions, where \sbit struggles (red arrows). However, \sbit retains the shape
+of the original function well in areas of both low and high gradients, where \swav instead produces
+smooth approximations (blue arrows). \sbit therefore is better for derivative computations, where a
+function's shape (or its relative values) matters more than its absolute values.}
+\label{fig:bit-plane-vs-wavelet-norm-gradient}
+\vspace{-1em}
+\end{figure}
+
+
 
 \sgop again outperforms the rest of the streams. \slvl and \smag perform poorly for gradient
 computation, lacking the resolution to capture sharp features. \sgsg closely follows \sbit in
@@ -130,3 +97,6 @@ compute a \emph{Laplacian-optimized} stream, \slop, which minimizes $\err$, and 
 its signature.~\Cref{fig:laplacian-error-comparison} plots the error curves for all relevant
 streams. The plots here largely follow the ones in~\Cref{fig:gradient-error-comparison}, in terms of
 relative performance among the streams, but with more discernible gaps between \sbit and \slsg.
+
+
+

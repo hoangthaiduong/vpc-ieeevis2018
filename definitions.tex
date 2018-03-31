@@ -174,6 +174,20 @@ dependent, streams can also be task dependent (\Cref{sec:data_dep_streams}), whi
 insights into how data should be queried to perform certain analysis tasks.
 
 \subsection{Task-optimized Streams} \label{sec:data_dep_streams}
+\begin{figure}[t]
+\centering
+ \subcaptionbox{\label{fig:by-level-signature}\emph{by level} (\slvl)}{{\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-LEVEL)-(rmse)}}}
+ \subcaptionbox{\label{fig:rmse:diffisivity}\emph{by bit plane} (\sbit)}{{\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-BIT-PLANE)-(rmse)}}}
+ \subcaptionbox{\label{fig:rmse:plasma}\emph{by wavelet norm} (\swav)}{ {\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-WAVELET-NORM)-(rmse)}}}
+\caption{Visualization of signatures for \slvl, \sbit, and \swav in 2D. Each signature is a
+$10\times 17$ image, corresponding to $10$ subbands (in 2D) and $17$ bit planes. Each $(l,b)$
+``cell'' contains a unique value from $0$ to $169$, indicating its ``priority'' in the stream, and
+mapped to a white--blue color scale. \slvl streams bits by resolution (from top to bottom), \sbit
+streams by precision (from left to right), while \swav mixes precision and resolution.}
+\label{fig:example-signatures}
+\vspace{-1em}
+\end{figure}
+
 
 Each analysis task may require a fundamentally different stream for optimal results. Studying such
 an ``optimal'' stream is important because it not only serves as a baseline,
@@ -218,6 +232,36 @@ $\err_i$. The stream \sopt is simply the sorted list of packets in decreasing or
 weights. This simplified algorithm has significantly lower running time, while (by observation)
 retaining the same quality for \sopt. \Cref{alg:greedy} outlines the approach described above.
 
+\begin{figure*}[t]
+\centering
+ \subcaptionbox{\label{fig:rmse:boiler}\emph{boiler}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-boiler}}}
+ \subcaptionbox{\label{fig:rmse:diffisivity}\emph{diffusivity}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-diffusivity}}}
+ \subcaptionbox{\label{fig:rmse:plasma}\emph{plasma}}{ {\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-plasma}}}
+ \subcaptionbox{\label{fig:rmse:kingsnake}\emph{kingsnake}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-kingsnake}}}
+\caption{Root-mean-square error (RMSE) of reconstructed functions for different streams and data
+sets; lower RMSE is better. The streams are truncated at both ends to highlight the differences,
+without omitting important information. The general ordering of error, from lowest to highest, is
+$\sopt < \ssig < \swav < \sbit < \smag < \slvl$ (for \emph{boiler} and \emph{kingsnake}, \sbit
+underperforms \slvl at first, but surpasses its after a certain bit rate).}
+\label{fig:rmse-optimized}
+\vspace{1em}
+
+\centering
+ \subcaptionbox{\emph{by level} (\slvl)}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-level}}}
+ \subcaptionbox{\emph{by bit plane (\sbit)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-bit-plane}}}
+ \subcaptionbox{\emph{by wavelet norm (\swav)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-wavelet-norm}}}
+ \subcaptionbox{\emph{by magnitude (\smag)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-magnitude}}}
+ \subcaptionbox{\emph{by signature (\ssig)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-signature}}}
+ \subcaptionbox{\emph{ground truth}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-groundtruth}}}
+\caption{Volume renderings of a $64^3$ region of \emph{plasma} data set at 0.1 bps.  \slvl captures
+the background (purple-blue) well, whereas \sbit captures the fine details better. \swav combines
+the strength of both. \ssig, however, produces the most accurate rendering (compare, e.g., yellow
+features).}
+\label{fig:rmse-rendering}
+\vspace{-1em}
+\end{figure*}
+
+
 \begin{algorithm}[h]
   \caption{Computing a task-optimized stream}
   \begin{algorithmic}[1]
@@ -241,6 +285,7 @@ retaining the same quality for \sopt. \Cref{alg:greedy} outlines the approach de
 \end{algorithm}
 
 \subsection{Stream Signatures} \label{sec:stream-signature}
+
 Unlike data-independent streams, data-dependent streams do not impose a static ordering of packets.
 To concisely represent and characterize the dynamic ordering of data-dependent streams, we introduce
 the notion of a \emph{stream signature}. Any stream can be represented with respect to the
@@ -298,17 +343,3 @@ the end of \ssig all the packets in $P_{l,b}$. An \ssig captures the behavior (i
 space) of the stream it derives from, but is stripped from any spatial adaptivity. Hence, when \ssig
 is derived from an \sopt, it can serve as a bridge when comparing the resolution-versus-precision
 tradeoffs between data-independent and data-dependent streams.
-
-\begin{figure}[t]
-\centering
- \subcaptionbox{\label{fig:by-level-signature}\emph{by level} (\slvl)}{{\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-LEVEL)-(rmse)}}}
- \subcaptionbox{\label{fig:rmse:diffisivity}\emph{by bit plane} (\sbit)}{{\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-BIT-PLANE)-(rmse)}}}
- \subcaptionbox{\label{fig:rmse:plasma}\emph{by wavelet norm} (\swav)}{ {\includegraphics[width=0.32\linewidth]{SIG-(STATIC)-(BY-WAVELET-NORM)-(rmse)}}}
-\caption{Visualization of signatures for \slvl, \sbit, and \swav in 2D. Each signature is a
-$10\times 17$ image, corresponding to $10$ subbands (in 2D) and $17$ bit planes. Each $(l,b)$
-``cell'' contains a unique value from $0$ to $169$, indicating its ``priority'' in the stream, and
-mapped to a white--blue color scale. \slvl streams bits by resolution (from top to bottom), \sbit
-streams by precision (from left to right), while \swav mixes precision and resolution.}
-\label{fig:example-signatures}
-\vspace{-1em}
-\end{figure}
