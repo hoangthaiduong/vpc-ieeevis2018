@@ -26,10 +26,10 @@ streams. For each task, we define an error metric, $\err$, for the evaluation an
 streams. Using \Cref{alg:greedy}, we compute streams specifically optimized for each task, \stkop,
 and use its signature to compute the corresponding \stksg. We compare these streams by evaluating
 the error as a function of the number of packets received for a variety of datasets (see
-\Cref{tbl:data-sets}). To mimic the effects of compression commonly used in practice, we remove all
-packets that contain only leading zero bits from each stream. The wavelet basis allows us to always
-reconstruct data at full resolution, which greatly simplifies computations of errors, as there
-exists no standard methods to compute error between grids of different dimensions.
+\Cref{tbl:data-sets}). To mimic the effects of compression commonly used in practice, we remove from
+each stream all packets that consist only of leading zero bits. The wavelet basis allows us to
+always reconstruct data at full resolution, which greatly simplifies computation of errors, as there
+exists no standard method to compute error between grids of different dimensions.
 
 \subsection{Function Reconstruction}\label{sec:rmse-optimized}
 
@@ -41,10 +41,9 @@ exists no standard methods to compute error between grids of different dimension
  \subcaptionbox{\label{fig:rmse:kingsnake}\emph{kingsnake}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-kingsnake}}}
 \caption{Root-mean-square error (RMSE) of reconstructed functions for different streams and data
 sets; lower RMSE is better. The streams are truncated at both ends to highlight the differences,
-without omitting important information. Leading zero packets are not used for plotting. The general
-ordering of error, from lowest to highest, is $\sopt < \ssig < \swav < \sbit < \smag < \slvl$ (for
-\emph{boiler} and \emph{kingsnake}, \sbit underperforms \slvl at first, but surpasses its after a
-certain bit rate).}
+without omitting important information. The general ordering of error, from lowest to highest, is
+$\sopt < \ssig < \swav < \sbit < \smag < \slvl$ (for \emph{boiler} and \emph{kingsnake}, \sbit
+underperforms \slvl at first, but surpasses its after a certain bit rate).}
 \label{fig:rmse-optimized}
 \vspace{1em}
 
@@ -65,38 +64,38 @@ features).
 
 One of the most fundamental analysis tasks is that of reconstructing the original function itself. A
 commonly used error metric in this case is the root-mean-square error
-(RMSE).~\Cref{fig:rmse-optimized} shows the comparison of the different streams for a variety of
+(RMSE).~\Cref{fig:rmse-optimized} shows a comparison of the different streams for a variety of
 datasets. It can be noted that, in general, \srop (the stream optimized to minimize the RMSE)
 performs better than \srsg due to spatial adaptivity, whereas \srsg slightly outperforms \swav,
 followed by \sbit, \smag, and \slvl.
 
-In particular, \sbit outperforms than \slvl (for \emph{kingsnake} and \emph{boiler}, it does so
-after approximately 1 bps), which can be attributed to the removal of leading zero packets.
-Empirically, wavelet coefficients on finer scale subbands are much smaller in
-magnitude(\todo{cite}). Such coefficients contain a majority of the leading zero bits, whose removal
-benefits \sbit the most. \emph{diffusivity} and \emph{plasma} contain a sigificant amount of empty
-space, which translates to more leading zero bits after the wavelet transform, that \sbit can take
-advantage of. This is the reason why unlike for \emph{boiler} and \emph{kingsnake}, \sbit
-outperforms \slvl immediately from the beginning for \emph{diffusivity} and \emph{plasma}.
+In particular, \sbit outperforms \slvl (for \emph{kingsnake} and \emph{boiler}, it does so after
+approximately 1 bps), which can be attributed to the removal of leading zero packets. Empirically,
+wavelet coefficients on finer scale subbands are much smaller in magnitude(\todo{cite}). Such
+coefficients contain a majority of the leading zero bits, whose removal benefits \sbit the most.
+\emph{diffusivity} and \emph{plasma} contain a significant amount of empty space, which translates
+to more leading zero bits after the wavelet transform that \sbit can take advantage of. This is the
+reason why, unlike for \emph{boiler} and \emph{kingsnake}, \sbit outperforms \slvl immediately from
+the beginning for \emph{diffusivity} and \emph{plasma}.
 
 \smag underperforms for the same reason that \slvl does, but to a lesser extent, since \smag is
-better adaptive to the data. \swav outperforms both \slvl and \sbit, because it follows the optimal
+better adapted to the data. \swav outperforms both \slvl and \sbit, because it follows the optimal
 (data-independent) bit ordering in $\Sigma_{L,B}$ in the $L_2$ norm, which is also the norm that
-RMSE is based upon. Unsurprisingly, \sopt outperforms all the others, as it is the most
+RMSE is based upon. Unsurprisingly, \srop outperforms all the others, as it is the most
 data-adaptive (i.e., it can prioritize packets in the spatial domain in addition to the
-$\Sigma_{L,B}$ domain). \ssig is the second best stream, as it follows the bit ordering of \sopt in
+$\Sigma_{L,B}$ domain). \srsg is the second best stream, as it follows the bit ordering of \srop in
 $\Sigma_{L,B}$, but lacks any spatial adaptivity. In general, \swav and \ssig have similar
 performance. In some cases (e.g., ~\Cref{fig:rmse:diffisivity} and~\Cref{fig:rmse:plasma}), \ssig is
 able to adapt more to the data, thus outperforming \swav by a larger margin.
 
 We explore the errors visually by rendering the \emph{plasma} volume at 0.1 bits per sample, for all
-streams~(\Cref{fig:rmse-rendering}). Bits per sample (bps) are calculated by dividing the total size
-of received packets (in bits) by the total number of samples. \hb{bps has been used already, and
-shouldve been defined already} Although \slvl has the precision to obtain an accurate background, it
-lacks resolution to resolve the fine details. \sbit, instead, lacks the precision to reconstruct the
-(mostly smooth) background, but has enough resolution to capture the fine details well. \swav
-balances both precision and resolution, producing a more accurate picture as a whole. In this case,
-the \ssig stream manages to produce the most accurate rendering. In general, \ssig benefits more
-from ``anisotropic'' data, such as \emph{plasma}, where most features lie on a thin ``surface''. For
-such data, wavelet coefficients along one dimension are often larger compared to those along other
-dimensions, which \sopt, and hence \ssig, can take advantage of, but not \swav.
+streams except \srop ~(\Cref{fig:rmse-rendering}). Bits per sample (bps) are calculated by dividing
+the total size of received packets (in bits) by the total number of samples. \hb{bps has been used
+already, and shouldve been defined already} Although \slvl has the precision to obtain an accurate
+background, it lacks resolution to resolve the fine details. \sbit, instead, lacks the precision to
+reconstruct the (mostly smooth) background, but has enough resolution to capture the fine details
+well. \swav balances both precision and resolution, producing a more accurate picture as a whole. In
+this case, the \ssig stream manages to produce the most accurate rendering. In general, \srsg
+benefits more from ``anisotropic'' data, such as \emph{plasma}, where most features lie on a thin
+``surface''. For such data, wavelet coefficients along one dimension are often larger compared to
+those along other dimensions, which \srop, and hence \srsg, can take advantage of, but not \swav.

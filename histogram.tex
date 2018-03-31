@@ -11,7 +11,7 @@ Distance~\cite{emd1998} among others (Hellinger \todo{cite}, Total variation \to
 intersection~\cite{histogram_intersection1991} as the metric of choice, because it is fast to
 compute and is reasonably insensitive to changes in precision, as well as the number of bins. The
 intersection distance between two histograms $H_1$ and $H_2$ is defined as
-$\err(H_1,H_2)=\sum_{i}{\min{(H_1(i),H_2(i))}}$ (the sum is over all bins $i$). Every histogram is
+$\err(H_1,H_2)=1-\sum_{i}{\min{(H_1(i),H_2(i))}}$ (the sum is over all bins $i$). Every histogram is
 normalized by dividing the value in each bin by the number of samples in the volume. The error
 metric should take into account both the histogram shapes and the range of values. Therefore, we
 clamp the range of values in reconstructed fucntions to that of the original function, so that
