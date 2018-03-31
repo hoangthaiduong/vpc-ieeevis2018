@@ -1,33 +1,41 @@
-\section{Conclusion}
+\section{Discussions}
 
-We presented a study of tradeoff between resolution and precision for commonly used derived
-scientific quantities such as RMSE, gradient, Laplacian, histogram, and isosurface.
-During this study, we covered the gamut of scientific data sets, ranging from simulations
-with smooth features or fine scale detail to image data with noisy parts\pavol{do we have plot of image data?}.
-We showed that one stream type does not fit all analysis tasks, but some streams perform well
-in most of them and may be useful in a new file format design.
+Our study shows that different tasks potentially require different resolution-versus-precision
+tradeoffs. In particular, while computations of histogram requires high-precision data, computations
+of derivatives require high-resolution data. Good reconstructions of data in $L_2$ norm require a
+proper mix of resolution and precision (see~\Cref{fig:bit-distrib}). One notable omission is volume
+rendering, which poses a serious challenge as it depends on many factors such as the transfer
+function used and the camera positions. However, our experience has been that in practice, many
+volume rendered images simply show several layers of translucent isosurfaces. In such cases, our
+results for isosurface extraction might apply.
 
-We started with an evaluation of contemporary techniques for reducing resolution or precision.
-The experiments showed that streaming only in resolution or precision is suboptimal for all
-tested queries. We thus developed a tractable greedy algorithm for computing adaptive stream order
-based on the particular task. The produced stream significantly\pavol{it would be good to quantify what
-significantly means, 2x?} outperforms any stream that has
-a fixed streaming order.
+Although we focus on a small set of core tasks in this paper, and only pick one metric for each
+task, the framework we propose is generic enough to work for any well defined error metric.It
+remains future work to apply the same methodologies to more advanced, or domain-specific tasks.
 
-After establishing the greedy algorithm for computing a stream, we focused on each query and
-investigated which queries have similar streams. This approach is important because if two streams
-are very similar, we can precompute the stream order and apply the same ordering to different
-queries.
+For a given task, the signature-based stream (\ssig) computed from an \sopt can be viewed as a
+benchmark for the data-independent streams. In practice, task-dependent signatures can also be
+precomputed and used to guide streaming. However, we show that in most cases, the performance of
+\ssig can be well approximated by either \emph{by bit plane} (\sbit), or \emph{by wavelet norm}
+(\swav), suggesting that it might be not fruitful to pursue an ``ideal'' bit ordering in the
+resolution-versus-precision space. Instead, for substantial gain, effort should be spent on bridging
+the gap between \sopt and the others, which mostly concerns spatial adaptivity. For example,
+isosurface extraction can benefit subtantially from a data structure that can localize an isosurface
+in spatial domain, saving bits from being read and streamed elsewhere.
 
-For example, we learned that the RMSE stream is akin to the gradient stream, and thus only one
-needs to be computed. Moreover, since RMSE optimizes for the function, the stream alongside
-a good gradient approaches the function itself. In contrast, the gradient ignores the constant offest
-of all samples, resulting in an inferior RMSE.
+Although we always reconstruct the data at full resolution for straightforward comparison, it is
+often infeasible for systems in practice to always work in full resolution. Most often, some form of
+adaptive-refinement-mesh is used, where density of data points varies spatially. Such configurations
+call for a principled method for measuring error between grids of different resolutions, which we
+believe will need further investigation.
+
+The results presented here can help designing file formats for scientic data. For example, the
+\emph{by wavelet norm} (\swav) stream might be a reasonable candidate for a default bit ordering,
+for its all-around good performance. However, for a file format, there are often conflicting goals
+and tradeoffs that need balancing. For example, further work is required to decide which set of bits
+should be stored together, and how best to encode (compress) them so that I/O cost is minimized.
+High compression ratios and efficient disk I/O are often in conflict with the fine-granularity of
+spatial adaptivity and random access, which concerns blocking and the size of blocks. Finally, a
+good file format should work well for combinations of tasks, which we do not address.
 
 
-These results should be considered when designing a file format for scientic data. As future work,
-we plan to create new file format that will incorporate the stream-ordering techniques we presented.
-Additionally, such file format needs to support compression and spatial adaptivity to handle large-scale
-data and fast queries. We are investigating if signatures can be used to handle
-the spatial adaptivity. For example, we could extend the signature matrix to the tensor, with
-the spatial index being the third dimension.
