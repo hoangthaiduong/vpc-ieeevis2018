@@ -1,0 +1,20 @@
+We thank reviewers for helpful comments.
+
+Regarding the consistency of conference names in citations, we corrected them 
+according the conference/journal titles.
+
+
+Todo
+----
+[x] R3 b) scheme as stream
+[ ] R3 b) careful proofreading -> send to Chris
+[ ] R4 explain difference between s_task-opt and s_task-sig (add simple example illustrating the difference)
+[x] R4 minor concerns
+[ ] R4 "bps" not properly introduced
+[ ] R4 "We use a five-point stencil to compute the gradient," --> Why?
+[ ] R4 "we opt for a simpler error metric that assumes nothing about the shape 
+of the isosurfaces, but simply counts misclassified voxels" --> this is the 
+Dice metric. (add citation?)
+[ ] R4 Hellinger citation needs to be fixed
+[ ] Li 2018 (Online Version of Record before inclusion in an issue)
+[ ] R4 Not sure what is missing in reference 35 (some detail)

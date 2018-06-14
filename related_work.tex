@@ -26,7 +26,7 @@ unfortunately, is prone to aliasing problems.
 \para{Transform-based multiresolution hierarchies.}
 Other multiresolution approaches reduce data by transform-based compression. For example,
 COVRA~\cite{covra2012} constructs an octree of bricks (consisting of blocks), and learn a sparse
-representation for the blocks in terms of basis blocks. Similarly, Fout\etal~\cite{hw_dvr2007}
+representation for the blocks in terms of basis blocks. Similarly, Fout \etal~\cite{hw_dvr2007}
 transform each block using the KLT transform, producing several resolution levels, and compress each
 level using vector quantization~\cite{vq1992}. Schneider~\etal~\cite{compression_domain2003} also
 use vector quantization, but with a simple Haar-like transform that separates each block of $2^3$
@@ -59,7 +59,7 @@ turbulence visualization~\cite{treib}, and particle visualization~\cite{sph-octr
 
 Most wavelet-based techniques employ tiling of wavelet coefficients in individual subands to
 facilitate random access and spatial adaptivity in resolution. For example, the VAPOR
-toolkit~\cite{vapor2007} incorporates a multiresolution file format based on a wavelets to allow
+toolkit~\cite{vapor2007} incorporates a multiresolution file format based on wavelets to allow
 data analysis on commodity hardware by storing individual tiles in separate files to allow loading
 of the region of interest. However, like most multiresolution work, only the resolution control is
 leveraged. The precision axis, which can potentially further reduce data transfer, is left

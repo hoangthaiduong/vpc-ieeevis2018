@@ -34,7 +34,7 @@ block of negabinary wavelet coefficients. Different data reduction schemes gener
 streams.  The wavelet subbands are separated by blue lines in the second image, with the coarsest
 subband at the top left corner. 
 %Although not shown here, 
-Quantization and negabinary convesion
+Quantization and negabinary conversion
 happen immediately after wavelet transform.
 %\todo{PL:Please do.  I don’t know what the rightmost two subfigures show.  I also cannot read 1-point font.}
 }\label{fig:pipeline}
@@ -65,9 +65,9 @@ dependent, depending on the stream it derives from.\label{tbl:streams}}
 Although one way to compare different data reduction strategies is to restrict the techniques to the
 same data size and compare data quality, it is difficult to enforce consistency. For example, the
 amount of change (in data) in one step of multiresolution simplification may be different from
-removing one bit in the quantization of every sample. To avoid such mismatch of units of data
-increment/decrement, we model each reduction scheme as a stream of equally sized \emph{packets},
-which are also the smallest units of data transfer in our framework. A packet consists of a
+removing one bit in the quantization of every sample. To make all data reduction schemes comparable,
+in each scheme, a data set is redefined as a stream of equally sized \emph{packets}.
+These packets are the smallest units of data transfer in our framework. A packet consists of a
 relatively small number $\left(\approx 2^3\right)$ of bits, and is associated with a resolution
 level and a precision level (i.e., bit plane), such that each packet can improve either the
 resolution or the precision of data. A resolution-improving packet adds the first bits of
