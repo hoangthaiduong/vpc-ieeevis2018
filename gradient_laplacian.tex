@@ -99,14 +99,12 @@ error caused by this shifting reduces significantly when taking the gradient, wh
 constant shift. \sbit, therefore, works better than \swav for gradient computation, because it is
 better able to retain sharp features.
 
-
-
 \begin{figure}[!b]
 \centering
 \subcaptionbox{\emph{by bit plane} (\sbit)}{
-{\includegraphics[width=0.48\linewidth]{gradient/gradient-bit-plane}}} 
+{\includegraphics[width=0.48\linewidth]{gradient/1d_plasma_by_bit_plane}}} 
 \subcaptionbox{\emph{by wavelet norm} (\swav)}{
-{\includegraphics[width=0.48\linewidth]{gradient/gradient-wavelet-norm}}}
+{\includegraphics[width=0.48\linewidth]{gradient/1d_plasma_by_wavelet_norm}}}
 \caption{A 1D line extracted from \emph{plasma}, and reconstructed using \sbit and \swav at 0.6 bps.
 The original data is in orange and the reconstructions are in blue. \swav captures well the function
 values in low-gradient regions, where \sbit struggles (red arrows). However, \sbit retains the shape
@@ -116,8 +114,6 @@ function's shape (or its relative values) matters more than its absolute values.
 \label{fig:bit-plane-vs-wavelet-norm-gradient}
 \vspace{-1em}
 \end{figure}
-
-
 
 \sgop again outperforms the rest of the streams. \slvl and \smag perform poorly for gradient
 computation, lacking the resolution to capture sharp features. \sgsg closely follows \sbit in
