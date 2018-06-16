@@ -1,19 +1,19 @@
 \subsection{Isosurface Extraction}\label{sec:isocontour}
 
-\begin{figure}[t]
-\centering
-\subcaptionbox{\emph{by bit plane} (\sbit)}
-{\includegraphics[width=0.32\linewidth]{isocontour/isocontour2-bit-plane}}
-\subcaptionbox{\emph{by wavelet norm} (\swav)}
-{\includegraphics[width=0.32\linewidth]{isocontour/isocontour2-wavelet-norm}}
-\subcaptionbox{\emph{ground truth}}
-{\includegraphics[width=0.32\linewidth]{isocontour/isocontour2-groundtruth}}
-\caption{\emph{plasma}'s isosurface reconstructed at 0.5 bps. The surfaces are colored by the
-$x$-component of the normal vectors. The reconstruction by \sbit is closer to the reference (compare
-e.g., yellow features and green features).}
-\label{fig:isocontour-surfaces-plasma}
-\vspace{-1em}
-\end{figure}
+% \begin{figure}[t]
+% \centering
+% \subcaptionbox{\emph{by bit plane} (\sbit)}
+% {\includegraphics[width=0.32\linewidth]{isocontour/isocontour2-bit-plane}}
+% \subcaptionbox{\emph{by wavelet norm} (\swav)}
+% {\includegraphics[width=0.32\linewidth]{isocontour/isocontour2-wavelet-norm}}
+% \subcaptionbox{\emph{ground truth}}
+% {\includegraphics[width=0.32\linewidth]{isocontour/isocontour2-groundtruth}}
+% \caption{\emph{plasma}'s isosurface reconstructed at 0.5 bps. The surfaces are colored by the
+% $x$-component of the normal vectors. The reconstruction by \sbit is closer to the reference (compare
+% e.g., yellow features and green features).}
+% \label{fig:isocontour-surfaces-plasma}
+% \vspace{-1em}
+% \end{figure}
 
 \begin{figure}[t]
 \centering
@@ -55,17 +55,19 @@ streams, along with \sbit, \slvl, \swav, and \smag. As can be observed, \slvl pe
 indicating that isosurface extraction favors resolution over precision. \emph{plasma} is the only
 data set where \sbit outperforms \swav.
 
-For \emph{plasma}, the isosurface is extracted from a region with a low gradient, which means the
-surface is very sensitive to low-ordered bits (i.e., a slight change in values moves the isosurface
-by a larger distance). For this reason, \swav initially performs better (below 0.2 bps), as it
-streams more precision bits. As \sbit acquires enough precision, however, it starts to resolve the
-fine-scale geometry of the surface better than \swav
-(from~\Cref{fig:bit-plane-vs-wavelet-norm-gradient} in~\Cref{sec:gradient}, we learn that \swav
-tends to reconstruct a smoother function everywhere).
+% For \emph{plasma}, the isosurface is extracted from a region with a low gradient, which means the
+% surface is very sensitive to low-ordered bits (i.e., a slight change in values moves the isosurface
+% by a larger distance). For this reason, \swav initially performs better (below 0.2 bps), as it
+% streams more precision bits. As \sbit acquires enough precision, however, it starts to resolve the
+% fine-scale geometry of the surface better than \swav
+% (from~\Cref{fig:bit-plane-vs-wavelet-norm-gradient} in~\Cref{sec:gradient}, we learn that \swav
+% tends to reconstruct a smoother function everywhere).
 
-\Cref{fig:isocontour-surfaces-plasma} shows the surfaces reconstructed by \sbit
-and \swav at 0.5 bps, which confirm that \sbit is able to preserve better the fine-scale surface
-features. For the \emph{turbulence} field, the isosurface is extracted from a high-gradient region;
+% \Cref{fig:isocontour-surfaces-plasma} shows the surfaces reconstructed by \sbit
+% and \swav at 0.5 bps, which confirm that \sbit is able to preserve better the fine-scale surface
+% features. 
+
+For the \emph{turbulence} field, the isosurface is extracted from a high-gradient region;
 thus precision bits matter less, and \sbit outperforms \swav from the beginning. \sbit also
 outperforms \sisg in this case, most likely because local signatures coming from regions that the
 isosurface does not intersect can dilute those coming from regions that it does. This phenomenon
