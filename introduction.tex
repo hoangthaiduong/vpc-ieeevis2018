@@ -22,8 +22,8 @@ equally important is the null hypothesis. However, in many situations, a combina
 resolution and precision reduction could be appropriate. For example, high spatial resolution may be
 needed to resolve the topology of an isosurface, yet the corresponding data samples may be usable at
 less than full precision to adequately approximate the geometry. Conversely, accumulating accurate
-statistics may require high-precision values, yet a lower resolution subset of data points may be
-sufficient for the task. 
+statistics may require high-precision values, but at low resolutions. For example, computing a
+reasonably accurate histogram might only require a subset of data points.
 
 In general, different levels of adaptivity in combinations of resolution and precision may be
 suitable for different types of analysis and visualization tasks, and for many, these requirements
@@ -60,6 +60,14 @@ In addition, we also identify practical streams that closely approximate these b
 (\Cref{sec:stream-signature}), which is a small matrix that captures the essence of how a bit stream
 navigates the precision-versus-resolution space.
 \end{itemize}
+
+In the third contribution, we consider the following analysis tasks: function reconstruction,
+derivative computation, histogram computation, and isosurface extraction. The focus is on relatively
+basic tasks, with a notable omission of volume rendering, which is considered an advanced task for
+our purposes. Many parameters affect the quality of a rendered image, including transfer function,
+camera position, resolution of the image, and rendering method. In practice, many rendered images
+simply show layers of translucent isosurfaces, and for these cases, our results on isosurfaces
+provide a good stand-in.
 
 
 %%% Local Variables:
