@@ -1,19 +1,15 @@
-\section{Discussion}
+\section{Discussion and Future Work}
 
 This work addresses one of the biggest challenges in scientific visualization today, which is the
-enormous amount of data generated. For this reason, techniques along the line of data
-compression~\cite{zfp2014} or out-of-core streaming~\cite{visualization-driven}, are becoming more
-crucial. But most works in the literature assume only one dimension of data reduction, often
-independent of the visualization task being performed. This paper aims to provide this missing link.
-In particular, we aim to understand the tradeoffs between two prominent dimensions of data
-reduction, namely resolution and precision, when performing several common analysis tasks. Although
-the tasks studied here are more concerned with the quality of underlying data instead of
-visualization outputs, we believe the two often strongly correlate. We also believe such tasks can
-be building blocks for more complex tasks. For example, in volume rendering, often times the
-transfer function is designed with the help of a histogram, while shading is done using normal
-vectors, which are perpendicular to gradient vectors. Many transfer functions in practice are also
-designed to extract layers of important isosurfaces, in which case our study of isosurface
-extraction can provide some insight.
+enormous amount of data being generated. We focus on an issue rarely discussed in the literature,
+which is the tradeoffs between two prominent dimensions of data reduction, namely resolution and
+precision, when performing analysis tasks. To make the study tractable in a principled way, we avoid
+advanced tasks such as volume rendering, the results of which are dependent on too many input
+parameters. The fundamental analysis tasks considered here can serve as building blocks for more
+complex tasks. Although we are more concerned with the quality of underlying data rather than
+visualization outputs, we believe the two often strongly correlate, as demonstrated throughout the
+paper. We have also chosen error metrics to measure data quality so that they can be good proxies
+for evaluating visualization outputs.
 
 We present the first empirical study to demonstrate that combining reduction in precision and
 resolution can lead to a significant improvement in data quality for the same data size, and that
@@ -40,12 +36,14 @@ suggest that the majority of this difference can be attributed to spatial adapti
 prototypical example are isosurfaces where \sopt can skip all regions that do not effect any
 portion of the surface.
 
-Ultimately, our results can guide development of new data layouts and file formats for scientific
-data. It seems \swav provides the best all around performance especially if it could be coupled with
-a spatially adaptive hierarchy. However, for a file format additional constraints must be
-considered, such as disk block sizes, cache coherence, and compression. Furthermore, an ideal format
-should allow task-dependent data queries even though task-dependent formats will likely be
-restricted to very specific situations. 
+This study can be considered only a first step towards a system of solutions that can optimize
+storage, network, and I/O bandwidth to suit specific tasks at hand. Ultimately, our results can
+guide development of new data layouts and file formats for scientific data. It seems \swav provides
+the best all around performance especially if it could be coupled with a spatially adaptive
+hierarchy. However, for a file format additional constraints must be considered, such as disk block
+sizes, cache coherence, and compression. Furthermore, an ideal format should allow task-dependent
+data queries even though task-dependent formats will likely be restricted to very specific
+situations. 
 
 Another important consideration is that to provide a fair comparison we always reconstruct the data
 at full resolution. This isolates the question of how much information the data contains from how it
