@@ -1,6 +1,6 @@
 \section{Data Reduction Schemes as Packet Streams}\label{sec:terminologies}
 
-In order to systematically study the resolution-versus-precision tradeoffs among different data
+In order to systematically study the resolution-versus-precision trade-offs among different data
 reduction schemes, it is important to perform fair and consistent comparisons.  In this section, we
 develop such a consistent methodology by proposing to model different data reduction schemes as
 \emph{streams} of uniformly sized data \emph{packets}, where the original data contains all of the
@@ -113,7 +113,7 @@ This transformation increases the number of bit planes by one, i.e., $0\leq b \l
 Precisely, a \emph{packet} consists of bits from the same bit plane, from a \emph{block} of
 negabinary wavelet coefficients. A block is a $[g\times g\times g]$ grid of adjacent coefficients
 from the same subband. We let $g$ be a constant ($g=2$ in this paper), so that finer resolution
-subbands contain more packets, which presents a tradeoff between packets that provide wider (but
+subbands contain more packets, which presents a trade-off between packets that provide wider (but
 coarser) coverage and packets that provide finer (but more local) details. Every packet (of size one
 byte in this paper) comes from a bit plane $b$ and a subband $l$. A packet improves the precision
 (or resolution) of a region if it comes from a bit plane (or subband) that has not been streamed
@@ -302,7 +302,7 @@ first bit plane of the first subband, as $\sgn_{0,0}=0$. Those are followed by p
 bit plane of the first subband ($\sgn_{0,1}=1$), and then the first bit plane of the second subband
 ($\sgn_{1,0}=2$), and finally, the third bit plane of the second subband ($\sgn_{1,2}=5$). Thus, a
 stream's signature shows how the stream traverses the space $\Lspace_{L,B}$, and highlights the
-different resolution-versus-precision tradeoffs among streams, especially among \sopt streams
+different resolution-versus-precision trade-offs among streams, especially among \sopt streams
 optimized for different tasks. In~\Cref{fig:example-signatures} we visualize the signatures of
 \sbit, \slvl, and \swav, defined in~\Cref{sec:data-streaming-framework}.
 
@@ -342,4 +342,4 @@ construction is done by iterating through each element $\sgn(l,b)$ in ascending 
 the end of \ssig all the packets in $P_{l,b}$. An \ssig captures the behavior (in the $\Lspace_{L,B}$
 space) of the stream it derives from, but is stripped from any spatial adaptivity. Hence, when \ssig
 is derived from an \sopt, it can serve as a bridge when comparing the resolution-versus-precision
-tradeoffs between data-independent and data-dependent streams.
+trade-offs between data-independent and data-dependent streams.

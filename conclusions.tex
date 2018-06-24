@@ -2,39 +2,43 @@
 
 This work addresses one of the biggest challenges in scientific visualization today, which is the
 enormous amount of data being generated. We focus on an issue rarely discussed in the literature,
-which is the tradeoffs between two prominent dimensions of data reduction, namely resolution and
+which is the trade-off between two prominent dimensions of data reduction, namely resolution and
 precision, when performing analysis tasks. To make the study tractable in a principled way, we avoid
 advanced tasks such as volume rendering, the results of which are dependent on too many input
 parameters. The fundamental analysis tasks considered here can serve as building blocks for more
 complex tasks. Although we are more concerned with the quality of underlying data rather than
 visualization outputs, we believe the two often strongly correlate, as demonstrated throughout the
 paper. We have also chosen error metrics to measure data quality so that they can be good proxies
-for evaluating visualization outputs.
+for evaluating visualization outputs. For brevity we focus on a small set of core tasks, but the
+framework is generic and applies to any well-defined metric and one future direction is to consider
+a broader set of tasks. 
 
 We present the first empirical study to demonstrate that combining reduction in precision and
 resolution can lead to a significant improvement in data quality for the same data size, and that
-different tasks might prefer different resolution-versus-precision tradeoffs. For example, while
+different tasks might prefer different resolution-versus-precision trade-offs. For example, while
 histograms require high precision, computing derivatives benefits more from higher resolution, and
-function reconstruction requires a proper mix of the two (see~\Cref{fig:bit-distrib}). We also show
-that common reduction techniques, e.g., those based on \slvl and \smag, do not perform well when
-leading zero bits are removed (to simulate entropy compression). For brevity we focus on a small set
-of core tasks with a single metric for each task. However, the framework is generic and applies to
-any well-defined metric and one future direction is to consider a broader set of domain-specific
-tasks. 
+function reconstruction and isosurface extraction require a proper mix of the two
+(see~\Cref{fig:bit-distrib}). We also show that common reduction techniques, e.g., those based on
+\slvl and \smag, do not perform well when leading zero bits are removed (to simulate entropy
+compression). These conclusions are valid, to varying extents, across all data sets in our
+experiments, suggesting that they likely apply widely in practice. Although presented here mainly
+for comparison purposes, the signature-based streams can be utilized in practice to make packet
+streaming adaptive to the data. Each signature is a negligibly small array of integers which guides
+packet streaming depending on the task.
 
 An important question is whether task- and data-dependent streams provide sufficient advantages over
-purely static streams. In practice, data would be used for multiple, not-necessarily predefined tasks
-and maintaining multiple streams will likely lead to additional overheads. Here, we consider \sopt
-to be the ideal data- and task-dependent stream and \ssig to be the best possible data-independent
-stream. In both cases some improvements are likely possible, e.g., a better optimization for \sopt
-and different ideas for creating \ssig, but one would not expect these to lead to fundamentally
-different results. Given these assumptions and the fact that \ssig in most cases provides very
-similar results to \sbit or \swav, the additional effort (and potential overheads) for
-task-dependent orderings it unlikely to be beneficial. This leaves a significant gap between the
-good static streams, in particular \swav and \sbit, and the optimal stream \sopt. Our experiments
-suggest that the majority of this difference can be attributed to spatial adaptivity. The
-prototypical example are isosurfaces where \sopt can skip all regions that do not effect any
-portion of the surface.
+purely static streams. In practice, data would be used for multiple, not-necessarily predefined
+tasks and maintaining multiple streams will likely lead to additional overheads. Here, we consider
+\sopt to be the ideal data- and task-dependent stream and \ssig to be the best possible
+data-independent stream. In both cases some improvements are likely possible, but one would not
+expect these to lead to fundamentally different results. Given these assumptions and the fact that
+\ssig in most cases provides very similar results to \sbit or \swav, the additional effort (and
+potential overheads) for task-dependent orderings it unlikely to be beneficial. This leaves a
+significant gap between the good static streams, in particular \swav and \sbit, and the optimal
+stream \sopt. Our experiments suggest that the majority of this difference can be attributed to
+spatial adaptivity. The prototypical example are isosurfaces where \sopt can skip all regions that
+do not effect any portion of the surface. In future work, we look forward to augment static streams
+with solutions to spatial adaptivity to improve their performance.
 
 This study can be considered only a first step towards a system of solutions that can optimize
 storage, network, and I/O bandwidth to suit specific tasks at hand. Ultimately, our results can

@@ -1,9 +1,9 @@
 As the gap between the available compute power and the cost of data movement increases, data
-transfer, whether from cache, main memory, or from disk, becomes a major bottleneck in many
-workflows. However, it has been shown that not every bit of data is always necessary to answer
-scientific questions with required accuracy. In particular, for techniques at the end of scientific
-workflows, such as visualization and data analysis, lower fidelity representations of the data often
-provide adequate approximations~\cite{woodring2011,covra2012,compression_sim2013}, and even during
+transfer, whether from cache, main memory, or disk, becomes a major bottleneck in many workflows.
+However, it has been shown that not every bit of data is always necessary to answer scientific
+questions with required accuracy. In particular, for techniques at the end of scientific workflows,
+such as visualization and data analysis, lower fidelity representations of the data often provide
+adequate approximations~\cite{woodring2011,covra2012,compression_sim2013}, and even during
 simulation some loss in precision is often
 acceptable~\cite{compression_sim2013,doi:10.1177/1094342018762036}. As a result, several different
 techniques have been proposed to reduce the size of data. 
@@ -22,12 +22,12 @@ equally important is the null hypothesis. However, in many situations, a combina
 resolution and precision reduction could be appropriate. For example, high spatial resolution may be
 needed to resolve the topology of an isosurface, yet the corresponding data samples may be usable at
 less than full precision to adequately approximate the geometry. Conversely, accumulating accurate
-statistics may require high-precision values, but at low resolutions. For example, computing a
-reasonably accurate histogram might only require a subset of data points.
+statistics may require high-precision values, yet a lower resolution subset of data points may be
+sufficient for the task.
 
 In general, different levels of adaptivity in combinations of resolution and precision may be
 suitable for different types of analysis and visualization tasks, and for many, these requirements
-will be data dependent. Consequently, a globally optimal data organization may not exist. Instead,
+might be data dependent. Consequently, a globally optimal data organization may not exist. Instead,
 we consider a progressive setting in which some initial data is loaded and processed, and new data
 is requested selectively based on the requirement of the current task as well as the characteristics
 of the data already loaded. The result is a stream of bits ordered such that the error is minimized,
@@ -41,7 +41,7 @@ orderings through extensive, empirical experiments. In particular, this paper pr
 
 \begin{itemize}\dense
 %
-\item a framework that allows systematic studies of the resolution-versus-precision tradeoffs for
+\item a framework that allows systematic studies of the resolution-versus-precision trade-off for
 common data analysis and visualization tasks. The core idea is to represent various data reduction
 techniques as bit streams that improve data quality in either resolution or precision in each step
 (\Cref{sec:terminologies}). We can thus compare these techniques fairly, by comparing the
@@ -62,11 +62,11 @@ navigates the precision-versus-resolution space.
 \end{itemize}
 
 In the third contribution, we consider the following analysis tasks: function reconstruction,
-derivative computation, histogram computation, and isosurface extraction. The focus is on common and
-basic tasks, with a notable omission of volume rendering. Too many parameters affect the quality of
-a rendered image (e.g., including transfer function, camera position, resolution of the image, and
-rendering method), making the problem of designing a systematic while extensive study less tractable.
-
+derivative computation, histogram computation, and isosurface extraction. The focus is on common
+tasks, with a notable omission of volume rendering. Too many parameters affect the quality of a
+rendered image (e.g., including transfer function, camera position, resolution of the image, and
+rendering method), making it less tractable to design a scientifically sound study that produces
+generalizable results.
 
 %%% Local Variables:
 %%% mode: latex
