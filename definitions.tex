@@ -152,7 +152,7 @@ Another common way to reduce data in the wavelet domain is to leave out coeffici
 magnitudes. Note that coefficient magnitude is only weakly related to error, as the error also
 depends on the wavelet basis function norm~\cite{weiss}. We model this scheme with a stream called
 \emph{by magnitude}, or \smag. Here, the weight function is $\wmag(p)=\sum_{c\in
-\text{block}(p)}\norm{c}^2$ (the sum is over all coefficients in the block that contains packet
+\text{block}(p)}\norm{c}$ (the sum is over all coefficients in the block that contains packet
 $p$). If two packets have the same weight, they are ordered by subband index, and then by bit plane.
 
 Unlike \slvl, \sbit, and \swav, the \smag stream is data dependent because the coefficient
@@ -235,8 +235,7 @@ significantly lower running time, while (by observation) retaining the same qual
 \caption{Root-mean-square error (RMSE) of reconstructed functions for different streams and data
 sets; lower RMSE is better. The streams are truncated at both ends to highlight the differences,
 without omitting important information. The general ordering of error, from lowest to highest, is
-$\sopt < \ssig < \swav < \sbit < \smag < \slvl$ (for \emph{boiler} and \emph{kingsnake}, \sbit
-underperforms \slvl at first, but surpasses its after a certain bit rate).}
+$\sopt < \ssig < \swav < \sbit < \smag < \slvl$.}
 \label{fig:rmse-optimized}
 \vspace{1em}
 
