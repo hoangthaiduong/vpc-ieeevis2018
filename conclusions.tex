@@ -16,49 +16,46 @@ a broader set of tasks.
 We present the first empirical study to demonstrate that combining reduction in precision and
 resolution can lead to a significant improvement in data quality for the same data size, and that
 different tasks might prefer different resolution-versus-precision trade-offs. For example, while
-histograms require high precision, computing derivatives benefits more from higher resolution, and
-function reconstruction and isosurface extraction require a proper mix of the two
+computing histograms requires high precision, computing derivatives benefits more from higher
+resolution, and function reconstruction and isosurface extraction require a proper mix of the two
 (see~\Cref{fig:bit-distrib}). We also show that common reduction techniques, e.g., those based on
 \slvl and \smag, do not perform well when leading zero bits are removed (to simulate entropy
-compression). These conclusions are valid, to varying extents, across all data sets in our
-experiments, suggesting that they likely apply widely in practice. Although presented here mainly
-for comparison purposes, the signature-based streams can be utilized in practice to make packet
-streaming adaptive to the data. Each signature is a negligibly small array of integers which guides
-packet streaming depending on the task.
+compression). These conclusions are valid (to varying extents depending on the data) across all data
+sets in our experiments, suggesting that they likely apply widely in practice. Compared to
+data-independent streams, signature-based streams often perform better because they are more
+adaptive to the data. They are also amenable for implementation (unlike \sopt), as a signature is
+negligibly small and thus can be precomputed and stored during pre-processing.
 
 An important question is whether task- and data-dependent streams provide sufficient advantages over
-purely static streams. In practice, data would be used for multiple, not-necessarily predefined
-tasks and maintaining multiple streams will likely lead to additional overheads. Here, we consider
-\sopt to be the ideal data- and task-dependent stream and \ssig to be the best possible
-data-independent stream. In both cases some improvements are likely possible, but one would not
-expect these to lead to fundamentally different results. Given these assumptions and the fact that
-\ssig in most cases provides very similar results to \sbit or \swav, the additional effort (and
-potential overheads) for task-dependent orderings it unlikely to be beneficial. This leaves a
-significant gap between the good static streams, in particular \swav and \sbit, and the optimal
+purely data-independent streams. In practice, data would be used for multiple, not-necessarily
+predefined tasks and maintaining multiple streams will likely lead to additional overheads. Here, we
+consider \ssig to be the best possible stream that could be realized. Improvements on \ssig are
+likely possible, but would not likely lead to fundamentally different results. Given these
+assumptions and the fact that \ssig in most cases provides very similar results to \sbit or \swav,
+the additional effort (and potential overheads) for task-dependent bit orderings is unlikely to be
+beneficial. This leaves a significant gap between the best data-independent streams and the optimal
 stream \sopt. Our experiments suggest that the majority of this difference can be attributed to
 spatial adaptivity. The prototypical example are isosurfaces where \sopt can skip all regions that
-do not effect any portion of the surface. In future work, we look forward to augment static streams
-with solutions to spatial adaptivity to improve their performance.
+do not effect any portion of the surface.
 
 This study can be considered only a first step towards a system of solutions that can optimize
 storage, network, and I/O bandwidth to suit specific tasks at hand. Ultimately, our results can
 guide development of new data layouts and file formats for scientific data. It seems \swav provides
-the best all around performance especially if it could be coupled with a spatially adaptive
-hierarchy. However, for a file format additional constraints must be considered, such as disk block
-sizes, cache coherence, and compression. Furthermore, an ideal format should allow task-dependent
-data queries even though task-dependent formats will likely be restricted to very specific
-situations. 
+the best all around performance. However, for a file format additional constraints must be
+considered, such as disk block sizes, cache coherence, and compression. Furthermore, an ideal format
+should allow task-dependent data queries even though task-dependent formats will likely be
+restricted to very specific situations. 
 
-Another important consideration is that to provide a fair comparison we always reconstruct the data
-at full resolution. This isolates the question of how much information the data contains from how it
-is represented. However, in practice, processing and memory costs are important, and it is likely
-that adaptive representations would be used~\cite{gigavoxels,Gobbetti2008,vdb2013}. In these cases
-the error of a given approximation depends not only on the information that is available, but also
-on what algorithm and what interpolation are used. For example, trilinear interpolation on a coarse
-grid might provide vastly different results than wavelet reconstruction on the original mesh. It is
-possible to specifically construct grids where both interpolations are equivalent~\cite{weiss}, yet
-these are not yet implement in standard tools. An important future research direction will be to
-understand the implications of the results presented here on existing toolchains such as VTK.
+Another important consideration is that for fair comparisons we always reconstruct the data at full
+resolution using wavelets. However, in practice, processing and memory costs are important, and it
+is likely that adaptive representations would be used~\cite{gigavoxels,Gobbetti2008,vdb2013}. In
+these cases the error of a given approximation depends not only on the information that is
+available, but also on what algorithm and what interpolation are used. For example, trilinear
+interpolation on a coarse grid might provide vastly different results than wavelet reconstruction on
+the original mesh. It is possible to specifically construct grids where both interpolations are
+equivalent~\cite{weiss}, yet these are not yet implement in standard tools. An important future
+research direction will be to understand the implications of the results presented here on existing
+toolchains such as VTK.
 
 %%% Local Variables:
 %%% mode: latex
