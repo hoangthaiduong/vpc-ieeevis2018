@@ -26,12 +26,13 @@ data-dependent and task-independent (\smag), and task-dependent (\sopt, \ssig). 
 consider a variety of common analysis and visualization tasks to evaluate the performance of these
 streams. For each task, we define an error metric, $\err$, for the evaluation and comparison of
 streams. Using \Cref{alg:greedy}, we compute streams specifically optimized for each task, \stkop,
-and use its signature to compute the corresponding \stksg. We compare these streams by evaluating
-the error as a function of the number of packets received for a variety of datasets (see
-\Cref{tbl:data-sets}). To mimic the effects of entropy compression commonly used in practice, we
-remove from each stream all packets that consist only of leading-zero bits. The wavelet basis allows
-us to always reconstruct data at full resolution, which greatly simplifies computation of errors, as
-there exists no standard method to compute error between grids of different dimensions.
+and use its signature to compute the corresponding \stksg. For a variety of data sets, we compare
+these streams by evaluating the error as a function of bits per samples (or \emph{bps}), defined as
+the total number of bits received divided by the total number of samples. To mimic the effects of
+entropy compression commonly used in practice, we remove from each stream all packets that consist
+only of leading-zero bits. The wavelet basis allows us to always reconstruct data at full
+resolution, which greatly simplifies computation of errors, as there exists no standard method to
+compute error between grids of different dimensions.
 
 \subsection{Function Reconstruction}\label{sec:rmse-optimized}
 
@@ -73,10 +74,10 @@ slightly more accurate than the one produced by \sgsg (compare orange features).
 
 One of the most fundamental analysis tasks is that of reconstructing the original function itself. A
 commonly used error metric in this case is the root-mean-square error
-(RMSE).~\Cref{fig:rmse-optimized} shows a comparison of the different streams for a variety of
-datasets. It can be noted that, in general, \srop (the stream optimized to minimize the RMSE)
-performs better than \srsg due to spatial adaptivity, whereas \srsg slightly outperforms \swav,
-followed by \sbit, \smag, and \slvl.
+(RMSE).~\Cref{fig:rmse-optimized} shows a comparison of the different streams for a variety of data
+sets. It can be noted that, in general, \srop (the stream optimized to minimize the RMSE) performs
+better than \srsg due to spatial adaptivity, whereas \srsg slightly outperforms \swav, followed by
+\sbit, \smag, and \slvl.
 
 In particular, \sbit outperforms \slvl (for \emph{kingsnake} and \emph{boiler}, it does so after
 approximately 1 bps), which can be attributed to the removal of leading-zero packets. Empirically,
