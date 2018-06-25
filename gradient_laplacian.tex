@@ -104,8 +104,8 @@ to retain sharp features.
 (\swav)}{{\includegraphics[width=0.48\linewidth]{gradient/1d_plasma_by_wavelet_norm}}} \caption{A 1D
 line extracted from \emph{plasma}, and reconstructed using \sbit and \swav at 0.6 bps. The original
 data is in orange and the reconstructions are in blue. On average, \swav captures well the function
-values, where \sbit struggles (seen as a slight vertical shift). However, \sbit retains the shape of the function slightly better in
-high-gradient areas.}
+values, where \sbit struggles (seen as a slight vertical shift). However, \sbit retains the shape of
+the function slightly better in high-gradient areas.}
 \label{fig:bit-plane-vs-wavelet-norm-gradient}
 \vspace{-1em}
 \end{figure}
@@ -135,7 +135,6 @@ We use the root-mean-square error to compare two Laplacian fields, i.e., $\err(\
 compute a \emph{Laplacian-optimized} stream, \slop, which minimizes $\err$, and an \slsg stream from
 its signature.~\Cref{fig:laplacian-error-comparison} plots the error curves for all relevant
 streams. The plots here largely follow the ones in~\Cref{fig:gradient-error-comparison}, in terms of
-relative performance among the streams, but with more discernible gaps between \sbit and \slsg.
-
-
-
+relative performance among the streams, but with more discernible gaps between \sbit and \slsg, as
+well as between \slsg and \sbit. The results suggest that similar to the gradient case, computation
+of the Laplacian favors resolution over precision, but to a higher degree.
