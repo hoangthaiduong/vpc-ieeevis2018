@@ -81,47 +81,43 @@ between the reconstructed gradient field and the original gradient field.
 \Cref{fig:gradient-error-comparison} shows the gradient error incurred by different streams for four
 data sets. In general, we observe the ordering of performance (from best to worst) as: \sgop, \sgsg,
 \sbit, \swav, \smag, \slvl. This ordering can also be seen in~\Cref{fig:gradient-rendering-diff},
-where the $x$-component of the gradient field for \emph{tuburlence} is rendered at 0.5 bps. Unlike
-the RMSE case, \sbit produces better approximations of the gradient field compared to \swav.
+where the $x$-component of the gradient field for \emph{tuburlence} is rendered at 0.3 bps. Unlike
+the RMSE case, \sbit performs nearly the same as \swav does.
 
 We further investigate this difference by extracting a 1D line from the \emph{plasma} data set and
 reconstructing the function using \sbit and \swav at 0.6 bps
-(\Cref{fig:bit-plane-vs-wavelet-norm-gradient}). Because the coarse-scale coefficients in \sbit are
-approximated at low precision, the reconstruction from \sbit is inaccurate in areas of low
-gradients. In contrast, \swav's reconstruction is accurate in low-gradient areas, but lacks the
-resolution to resolve the high-gradient areas, because \swav frequently intersperses bits that
-improve resolution with bits that improve precision, unlike \sbit, which always streams bits that
-improve resolution first. Therefore, \swav tends to produce a ``smoother'' reconstruction that
-\emph{on average} (e.g., in terms of RMSE) is close to the original function. \sbit, on the other
-hand, tends to capture well the function's shape (due to fine-scale bits), but the whole function
-can be ``shifted'' slightly due to the lack of precision in coarse-scale coefficients. However, the
-error caused by this shifting reduces significantly when taking the gradient, which cancels any
-constant shift. \sbit, therefore, works better than \swav for gradient computation, because it is
-better able to retain sharp features.
+(\Cref{fig:bit-plane-vs-wavelet-norm-gradient}).\swav's reconstruction is ``smoother'' and more
+accurate \emph{on average}, but lacks the resolution to resolve the high-gradient areas. This is
+because \swav intersperses resolution-improving packets and precision-improving packets, unlike
+\sbit, which always streams packets that improve resolution first. \sbit, on the other hand, tends
+to capture well the function's shape (due to fine-scale bits), but the whole function can be
+``shifted'' slightly as seen in the figure, due to the lack of precision in the coarse-scale
+coefficients. However, the gradient operator has the tendency to cancel this shifting effect. \sbit,
+therefore, might work slightly better than \swav for gradient computation, because it is better able
+to retain sharp features.
 
 \begin{figure}[!b]
 \centering
-\subcaptionbox{\emph{by bit plane} (\sbit)}{
-{\includegraphics[width=0.48\linewidth]{gradient/1d_plasma_by_bit_plane}}} 
-\subcaptionbox{\emph{by wavelet norm} (\swav)}{
-{\includegraphics[width=0.48\linewidth]{gradient/1d_plasma_by_wavelet_norm}}}
-\caption{A 1D line extracted from \emph{plasma}, and reconstructed using \sbit and \swav at 0.6 bps.
-The original data is in orange and the reconstructions are in blue. \swav captures well the function
-values in low-gradient regions, where \sbit struggles (red arrows). However, \sbit retains the shape
-of the original function well in areas of both low and high gradients, where \swav instead produces
-smooth approximations (blue arrows). \sbit therefore is better for derivative computations, where a
-function's shape (or its relative values) matters more than its absolute values.}
+\subcaptionbox{\emph{by bit plane}
+(\sbit)}{{\includegraphics[width=0.48\linewidth]{gradient/1d_plasma_by_bit_plane}}}
+\subcaptionbox{\emph{by wavelet norm}
+(\swav)}{{\includegraphics[width=0.48\linewidth]{gradient/1d_plasma_by_wavelet_norm}}} \caption{A 1D
+line extracted from \emph{plasma}, and reconstructed using \sbit and \swav at 0.6 bps. The original
+data is in orange and the reconstructions are in blue. On average, \swav captures well the function
+values, where \sbit struggles (seen as a slight vertical shift). However, \sbit retains the shape of the function slightly better in
+high-gradient areas.}
 \label{fig:bit-plane-vs-wavelet-norm-gradient}
 \vspace{-1em}
 \end{figure}
 
 \sgop again outperforms the rest of the streams. \slvl and \smag perform poorly for gradient
-computation, lacking the resolution to capture sharp features. \sgsg closely follows \sbit in
-performance (it is slightly better than \sbit for \emph{boiler} at very low bit rates). These
-results suggest that while \swav is the best among the data-independent streams when optimizing for
-RMSE, \sbit is better for gradient computation.
-
-
+computation, lacking the resolution to capture sharp features. \sgsg mostly closely follows \sbit in
+performance, but outperforms it for \emph{boiler}. Again, compared to the other fields,
+\emph{boiler} is less smooth, resulting in less spatial coherency in the number of leading zero bits
+for the fine-scale coefficients, which \sgop and \sgsg can take advantage of, while \swav or \sbit
+do not take into account actual bit values. Overall, the results suggest that while \swav is the
+best data-independent streams for minimizing RMSE, \sbit is a good alternative for gradient
+computation.
 
 \subsubsection{Laplacian Computation}\label{sec:laplacian}
 
