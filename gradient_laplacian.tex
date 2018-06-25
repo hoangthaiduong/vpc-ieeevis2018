@@ -69,10 +69,11 @@ differences without discarding important information. In all cases, in terms of 
 
 Given a function $f$ defined on a grid, its gradient at a grid point \mbox{$\x = (x,y,z)$} is the
 vector $\nabla f(\x) = \left(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y},
-\frac{\partial f}{\partial z}\right)$. We use a five-point stencil to compute the gradient, i.e.,
-$\frac{\partial f}{\partial x} \approx \frac{1}{12}f(x-2,y,z) - \frac{2}{3}f(x-1,y,z) +
-\frac{2}{3}f(x+1,y,z) - \frac{1}{12}f(x+2,y,z)$. The error between a gradient field $\nabla f$, and
-its low-bit-rate approximation $\nabla
+\frac{\partial f}{\partial z}\right)$. For accuracy, we use a five-point stencil to compute the
+gradient, i.e., $\frac{\partial f}{\partial x} \approx \frac{1}{12}f(x-2,y,z) -
+\frac{2}{3}f(x-1,y,z) + \frac{2}{3}f(x+1,y,z) - \frac{1}{12}f(x+2,y,z)$, but note that the relative
+performances of the streams stay the same, using the more common two- and three-point formulas. The
+error between a gradient field $\nabla f$, and its low-bit-rate approximation $\nabla
 \tilde{f}$, is defined as $\err(\nabla \tilde{f}, \nabla f) = \sqrt{\frac{1}{N}
 \sum_{i=1}^{N}{\norm{\nabla \tilde{f}(\x_i)-\nabla f(\x_i)}^2}}$. Using~\Cref{alg:greedy}, we
 compute a \emph{gradient-optimized} stream, \sgop, i.e., a stream that minimizes the difference

@@ -28,10 +28,10 @@ streams. For each task, we define an error metric, $\err$, for the evaluation an
 streams. Using \Cref{alg:greedy}, we compute streams specifically optimized for each task, \stkop,
 and use its signature to compute the corresponding \stksg. We compare these streams by evaluating
 the error as a function of the number of packets received for a variety of datasets (see
-\Cref{tbl:data-sets}). To mimic the effects of compression commonly used in practice, we remove from
-each stream all packets that consist only of leading-zero bits. The wavelet basis allows us to
-always reconstruct data at full resolution, which greatly simplifies computation of errors, as there
-exists no standard method to compute error between grids of different dimensions.
+\Cref{tbl:data-sets}). To mimic the effects of entropy compression commonly used in practice, we
+remove from each stream all packets that consist only of leading-zero bits. The wavelet basis allows
+us to always reconstruct data at full resolution, which greatly simplifies computation of errors, as
+there exists no standard method to compute error between grids of different dimensions.
 
 \subsection{Function Reconstruction}\label{sec:rmse-optimized}
 

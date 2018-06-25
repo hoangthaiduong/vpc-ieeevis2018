@@ -66,10 +66,10 @@ in~\Cref{fig:histogram-explain}). When leading zero packets are present, \slvl o
 because increasing resolution does not help produce an accurate histogram as much as increasing
 precision. The histogram is oblivious to spatial locations of samples (which require resolution to
 resolve), but is sensitive to sample values (which require precision). However, when leading zero
-packets are removed with compression, \sbit benefits significantly more than \slvl does (for the
-same reason explained in~\Cref{sec:rmse-optimized}), resulting in the observed crossovers. Finally,
-\smag performs poorly, because it ignores regions of smooth variations, which nevertheless count
-toward the distribution.
+packets are removed, \sbit benefits significantly more than \slvl does (for the same reason
+explained in~\Cref{sec:rmse-optimized}), resulting in the observed crossovers. Finally, \smag
+performs poorly, because it ignores regions of smooth variations, which nevertheless count toward
+the distribution.
 
 In the latter group, the performances of \swav and \shsg (and even \shop) differ by a negligible
 amount. This observation is confirmed in~\Cref{fig:histograms-boiler}, where we plot various
