@@ -134,8 +134,8 @@ $\frac{{\partial}^2 f}{\partial{x^2}}
 We use the root-mean-square error to compare two Laplacian fields, i.e., $\err(\Delta
 \tilde{f},\Delta f)=\text{RMSE}(\Delta \tilde{f},\Delta f)$. As usual, we use~\Cref{alg:greedy} to
 compute a \emph{Laplacian-optimized} stream, \slop, which minimizes $\err$, and an \slsg stream from
-its signature.~\Cref{fig:laplacian-error-comparison} plots the error curves for all relevant
-streams. The plots here largely follow the ones in~\Cref{fig:gradient-error-comparison}, in terms of
-relative performance among the streams, but with more discernible gaps between \sbit and \slsg, as
-well as between \slsg and \sbit. The results suggest that similar to the gradient case, computation
-of the Laplacian favors resolution over precision, but to a higher degree.
+its signature.~\Cref{fig:laplacian-error-comparison} plots the errors for all relevant streams. The
+plots here largely follow the ones in~\Cref{fig:gradient-error-comparison}, in terms of relative
+performance among the streams, but with more discernible gaps between \sbit and \slsg, as well as
+between \slsg and \sbit. The results suggest that similar to the gradient case, computation of the
+Laplacian favors resolution over precision, but to a higher degree.

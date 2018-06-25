@@ -47,10 +47,10 @@ histogram intersection~\cite{histogram_intersection1991} as the metric of choice
 to compute and is reasonably insensitive to changes in precision, as well as the number of bins. The
 intersection distance between two histograms $H_1$ and $H_2$ is defined as
 $\err(H_1,H_2)=1-\sum_{i}{\min{(H_1(i),H_2(i))}}$ (the sum is over all bins $i$). Every histogram is
-normalized by dividing the value in each bin by the number of samples in the volume. We decided that
-the error metric should take into account both the histogram shapes and the range of values.
-Therefore, we clamp the range of values in reconstructed functions to that of the original function,
-so that corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same range.
+normalized by dividing the value in each bin by the total number of samples. We decided that the
+error metric should take into account both the histogram shapes and the range of values, and clamped
+the range of values in reconstructed functions to that of the original function, so that
+corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same range.
 
 As before, for each data set, we use~\Cref{alg:greedy} to compute an \shop stream, optimized for
 histogram error, and then construct an \shsg from its signature. We plot the error curves for all
