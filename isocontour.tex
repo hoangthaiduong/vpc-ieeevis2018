@@ -55,31 +55,11 @@ streams, along with \sbit, \slvl, \swav, and \smag. As can be observed, \slvl pe
 indicating that isosurface extraction favors resolution over precision. \emph{plasma} is the only
 data set where \sbit outperforms \swav.
 
-% For \emph{plasma}, the isosurface is extracted from a region with a low gradient, which means the
-% surface is very sensitive to low-ordered bits (i.e., a slight change in values moves the isosurface
-% by a larger distance). For this reason, \swav initially performs better (below 0.2 bps), as it
-% streams more precision bits. As \sbit acquires enough precision, however, it starts to resolve the
-% fine-scale geometry of the surface better than \swav
-% (from~\Cref{fig:bit-plane-vs-wavelet-norm-gradient} in~\Cref{sec:gradient}, we learn that \swav
-% tends to reconstruct a smoother function everywhere).
-
-% \Cref{fig:isocontour-surfaces-plasma} shows the surfaces reconstructed by \sbit
-% and \swav at 0.5 bps, which confirm that \sbit is able to preserve better the fine-scale surface
-% features. 
-
-For the \emph{turbulence} field, the isosurface is extracted from a high-gradient region;
-thus precision bits matter less, and \sbit outperforms \swav from the beginning. \sbit also
-outperforms \sisg in this case, most likely because local signatures coming from regions that the
-isosurface does not intersect can dilute those coming from regions that it does. This phenomenon
-makes the signature less useful for tasks that involve localization in the spatial domain, such as
-isosurface extraction. Here, it happens in various degrees for every data set but it is especially
-relevant in the case of \emph{turbulence}, since the surface is confined to very small regions of
-the whole volume.
-
-For a typical isosurface that is relatively smooth and is not confined to small regions, such as
-\emph{pressure} with an isovalue of 0.2, \swav typically outperforms \sbit
-(see~\Cref{fig:isocontour-surfaces-pressure}). This figure renders the isosurfaces reconstructed at
-0.6 bps for all streams. In terms of the quality of the reconstructed surfaces, $\sisg \approx \swav
-> \sbit > \smag > \slvl$, which agrees with the curves in~\Cref{fig:isocontour-plots}. For
-isosurface extraction, \swav seems to be the only stream --- among the data-independent ones ---
-that consistently works well in all cases.
+\swav typically outperforms \sbit, while \sisg does not provide a clear advantage over \swav as
+often seen in other tasks. The reduced effectiveness of \sisg may be explained by the fact that to
+compute an isosurface error, voxels are only classified into two broad categories, allowing for a
+higher tolerance for differences in streams.~\Cref{fig:isocontour-surfaces-pressure} renders the
+isosurfaces reconstructed at 0.6 bps for all streams. In terms of the quality of the reconstructed
+surfaces, $\sisg \approx \swav > \sbit > \smag > \slvl$, which agrees with the plots
+in~\Cref{fig:isocontour-plots}. For isosurface extraction, \swav seems to be the only stream ---
+among the data-independent ones --- that consistently works well in all cases.
