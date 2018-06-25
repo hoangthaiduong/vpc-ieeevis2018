@@ -1,19 +1,19 @@
 \section{Data Reduction Schemes as Packet Streams}\label{sec:terminologies}
 
 In order to systematically study the resolution-versus-precision trade-offs among different data
-reduction schemes, it is important to perform fair and consistent comparisons.  In this section, we
+reduction schemes, it is important to perform fair and consistent comparisons. In this section, we
 develop such a consistent methodology by proposing to model different data reduction schemes as
 \emph{streams} of uniformly sized data \emph{packets}, where the original data contains all of the
 packets, and any reduction step removes a set of packets (comparable amounts of data).
 
 These data streams are transmitted using a client-server model. At any point, the client is assumed
-to have received a subset of packets from the server (in some pre-determined sequential order or 
-in some order requested by the client), which can be used to reconstruct an
-approximation to the original data. Therefore, to compare different streams, we reconstruct the
-original data using the \emph{same number} of packets from each stream, and perform desired tasks on
-each of the (approximate) reconstructions. A stream is considered better suited for a given task if
-it produces results that are closer to the ``ground truth'', i.e., the reference results computed
-from the original data. \Cref{fig:pipeline} gives a schematic view of our data streaming model.
+to have received a subset of packets from the server (in some pre-determined sequential order or in
+some order requested by the client), which can be used to reconstruct an approximation to the
+original data. Therefore, to compare different streams, we reconstruct the original data using the
+\emph{same number} of packets from each stream, and perform desired tasks on each of the
+(approximate) reconstructions. A stream is considered better suited for a given task if it produces
+results that are closer to the reference results computed from the original data.
+\Cref{fig:pipeline} gives a schematic view of our data streaming model.
 
 Although both the server and the client in our model can be on the same physical machine, only the
 server has full knowledge of the data. Thus, when the client receives a packet, it might not know
@@ -48,7 +48,7 @@ happen immediately after wavelet transform.
 Symbol & Name & Data Dependent & Task Dependent \\
 \midrule
 \slvl & \emph{by level} & \xmark & \xmark\\
-\sbit & \emph{by bit} & \xmark & \xmark\\
+\sbit & \emph{by bit plane} & \xmark & \xmark\\
 \swav & \emph{by wavelet norm} & \xmark & \xmark\\
 \smag & \emph{by magnitude} & \cmark & \xmark\\
 \stkop & \emph{task-optimized} & \cmark & \cmark\\
@@ -66,14 +66,12 @@ Although one way to compare different data reduction strategies is to restrict t
 same data size and compare data quality, it is difficult to enforce consistency. For example, the
 amount of change (in data) in one step of multiresolution simplification may be different from
 removing one bit in the quantization of every sample. To make all data reduction schemes comparable,
-in each scheme, a data set is redefined as a stream of equally sized \emph{packets}.
-These packets are the smallest units of data transfer in our framework. A packet consists of a
-relatively small number $\left(\approx 2^3\right)$ of bits, and is associated with a resolution
-level and a precision level (i.e., bit plane), such that each packet can improve either the
-resolution or the precision of data. A resolution-improving packet adds the first bits of
-coefficients on a new (and finer) subband locally. In this framework, different data-reduction
-schemes become different orderings of packets, called \emph{streams}. Restricting two (or more) data
-streams to the same number of packets allows us to perform fair and consistent comparisons.
+in each scheme, a data set is redefined as a stream of equally sized \emph{packets}. These packets
+are the smallest units of data transfer in our framework. A packet consists of a relatively small
+number $\left(\approx 2^3\right)$ of bits, and is associated with a resolution level and a precision
+level (i.e., bit plane), In this framework, different data-reduction schemes become different
+orderings of packets, called \emph{streams}. Restricting two (or more) data streams to the same
+number of packets allows us to perform fair and consistent comparisons.
 
 %\para{Packets for Different Resolution Levels.} 
 \para{Resolution Levels.} 
@@ -115,10 +113,8 @@ negabinary wavelet coefficients. A block is a $[g\times g\times g]$ grid of adja
 from the same subband. We let $g$ be a constant ($g=2$ in this paper), so that finer resolution
 subbands contain more packets, which presents a trade-off between packets that provide wider (but
 coarser) coverage and packets that provide finer (but more local) details. Every packet (of size one
-byte in this paper) comes from a bit plane $b$ and a subband $l$. A packet improves the precision
-(or resolution) of a region if it comes from a bit plane (or subband) that has not been streamed
-before in the region. $g$ is chosen to be larger than one for performance reason, as in practice,
-most systems read bits in batches.
+byte in this paper) comes from a bit plane $b$ and a subband $l$. $g$ is chosen to be larger than
+one for performance reason, as in practice, most systems read bits in batches.
 
 \subsection{Data-dependent and Data-independent Streams} \label{sec:static-dynamic-streams}
 
@@ -194,16 +190,14 @@ an ``optimal'' stream is important because it not only serves as a baseline,
 but also can provide insights into other, more practical streams for the same task.
 
 Given the original data set $f$ and its reconstructed approximation $\tilde{f}$ using a subset of
-packets, let $q$ represent some quantity of interest\footnote{In this paper, we use the terms
-``quantity of interest'' and ``task'' interchangeably, with the understanding that, e.g., if the
-task is extracting an isosurface, then the quantity of interest is the isosurface.}, e.g.,
-histogram, isosurface, etc., computed on $f$ or $\tilde{f}$. For a given task $q$, a well-defined
-error metric $\err(q(\tilde{f}),q(f))$ is needed. Given a data set $f$, a task $q$, and an error
-metric $\err$, our goal is to generate an \emph{optimal} (and data-dependent) stream, $\sopt$, for
-$q$ with respect to $\err$. One possible definition for $\sopt$ is a stream such that the area under
-the plotted curve of \err, with respect to the number of bits, is minimized for all packets to be
-streamed. However, this definition is limited in practice because a stream should be able to
-terminate at any point and still produce as small an error as possible.
+packets, let $q$ represent some quantity of interest, e.g., histogram, isosurface, etc., computed on
+$f$ or $\tilde{f}$. For a given task $q$, a well-defined error metric $\err(q(\tilde{f}),q(f))$ is
+needed. Given a data set $f$, a task $q$, and an error metric $\err$, our goal is to generate an
+\emph{optimal} (and data-dependent) stream, $\sopt$, for $q$ with respect to $\err$. One possible
+definition for $\sopt$ is a stream such that the area under the plotted curve of \err, with respect
+to the number of bits, is minimized for all packets to be streamed. However, this definition is
+limited in practice because a stream should be able to terminate at any point and still produce as
+small an error as possible.
 
 Instead, we employ a greedy approach to define the optimal stream. We notice through experiments,
 however, that a straightforward greedy algorithm can pick unimportant packets too early. For
@@ -222,15 +216,16 @@ packets.
 Unfortunately, such a greedy algorithm is still expensive in practice, as its complexity is at least
 $\mathcal{O}(n^2)$, with $n$ being the total number of packets in the data, due to the 2-level
 nested loop. For a $nx\times ny \times nz$ volume and a block size that spans $bx\times by\times bz$
-samples, $n$ will be $\frac{nx}{bx}\times \frac{ny}{by}\times \frac{nz}{bz}$. Even a small volume,
-e.g., $nx=ny=nz=64$ with $bx=by=bz=2$, hence $n^2=32768^2$, will result in a prohibitively high
-run time. Therefore, we adopt a simplified version of this algorithm, where only one pass through
-the set of $n$ packets is needed. In iteration $i$ ($0\leq i < n$), we disable (set to zero) a new
-packet $p_i$ in $\tilde{f}$, compute and record the incurred error $\err_i$, and then enable $p_i$
-again at the end of iteration $i$. After $n$ iterations, each packet has an associated weight
-$\err_i$. The stream \sopt is simply the sorted list of packets in decreasing order of the
-weights. This simplified algorithm has significantly lower running time, while (by observation)
-retaining the same quality for \sopt. \Cref{alg:greedy} outlines the approach described above.
+samples, $n$ will be $\frac{nx}{bx}\times \frac{ny}{by}\times \frac{nz}{bz} \times (B+1)$, with
+$(B+1)$ being the number of bit planes. Even a small volume, e.g., $nx=ny=nz=64$ with $bx=by=bz=2$,
+hence $n^2=(32768\times 16)^2$, will result in a prohibitively high run time. Therefore, we adopt a
+simplified version of this algorithm, where only one pass through the set of $n$ packets is needed.
+In iteration $i$ ($0\leq i < n$), we disable (set to zero) a new packet $p_i$ in $\tilde{f}$,
+compute and record the incurred error $\err_i$, and then enable $p_i$ again at the end of iteration
+$i$. After $n$ iterations, each packet has an associated weight $\err_i$. The stream \sopt is simply
+the sorted list of packets in decreasing order of the weights. This simplified algorithm has
+significantly lower running time, while (by observation) retaining the same quality for \sopt.
+\Cref{alg:greedy} outlines the approach described above.
 
 \begin{figure*}[t]
 \centering
