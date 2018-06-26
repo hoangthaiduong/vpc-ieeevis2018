@@ -213,18 +213,18 @@ full (instead of empty) set of packets, our error measurement captures better th
 packets.
 
 Unfortunately, such a greedy algorithm is still expensive in practice, as its complexity is at least
-$\mathcal{O}(n^2)$, with $n$ being the total number of packets in the data, due to the 2-level
-nested loop. For a $nx\times ny \times nz$ volume and a block size that spans $bx\times by\times bz$
-samples, $n$ will be $\frac{nx}{bx}\times \frac{ny}{by}\times \frac{nz}{bz} \times (B+1)$, with
-$(B+1)$ being the number of bit planes. Even a small volume, e.g., $nx=ny=nz=64$ with $bx=by=bz=2$,
-hence $n^2=(32768\times 16)^2$, will result in a prohibitively high run time. Therefore, we adopt a
-simplified version of this algorithm, where only one pass through the set of $n$ packets is needed.
-In iteration $i$ ($0\leq i < n$), we disable (set to zero) a new packet $p_i$ in $\tilde{f}$,
-compute and record the incurred error $\err_i$, and then enable $p_i$ again at the end of iteration
-$i$. After $n$ iterations, each packet has an associated weight $\err_i$. The stream \sopt is simply
-the sorted list of packets in decreasing order of the weights. This simplified algorithm has
-significantly lower running time, while (by observation) retaining the same quality for \sopt.
-\Cref{alg:greedy} outlines the approach described above.
+$\mathcal{O}(n^2)$ ($n$ is the total number of packets), due to the 2-level nested loop. For a
+$nx\times ny \times nz$ volume and a block size of $bx\times by\times bz$ samples, $n$ is
+$\frac{nx}{bx}\times \frac{ny}{by}\times \frac{nz}{bz} \times (B+1)$, with $(B+1)$ being the number
+of bit planes. Even a small volume, e.g., $nx=ny=nz=64$ with $bx=by=bz=2$, hence $n^2=(32768\times
+16)^2$, will result in a prohibitively high run time. Therefore, we adopt a simplified version of
+this algorithm, where only one pass through $n$ packets is needed. In iteration $i$ ($0\leq i < n$),
+we set a new packet $p_i$ to zero in $\tilde{f}$, compute and record the incurred error $\err_i$,
+and then enable $p_i$ again at the end of iteration $i$. After $n$ iterations, each packet has an
+associated weight $\err_i$. The stream \sopt is simply the sorted list of packets in decreasing
+order of the weights. This simplified algorithm has significantly lower running time, while (by
+observation) retaining the same quality for \sopt. \Cref{alg:greedy} outlines the approach described
+above.
 
 \begin{figure*}[t]
 \centering

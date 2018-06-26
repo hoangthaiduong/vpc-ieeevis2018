@@ -67,17 +67,17 @@ differences without discarding important information. In all cases, in terms of 
 
 \subsubsection{Gradient Computation} \label{sec:gradient}
 
-Given a function $f$ defined on a grid, its gradient at a grid point \mbox{$\x = (x,y,z)$} is the
-vector $\nabla f(\x) = \left(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y},
-\frac{\partial f}{\partial z}\right)$. For accuracy, we use a five-point stencil to compute the
-gradient, i.e., $\frac{\partial f}{\partial x} \approx \frac{1}{12}f(x-2,y,z) -
-\frac{2}{3}f(x-1,y,z) + \frac{2}{3}f(x+1,y,z) - \frac{1}{12}f(x+2,y,z)$, but note that the relative
-performances of the streams stay the same, using the more common two- and three-point formulas. The
-error between a gradient field $\nabla f$, and its low-bit-rate approximation $\nabla
+Given a function $f$ defined on a grid, its gradient at a grid point \mbox{$\x = (x,y,z)$} is
+$\nabla f(\x) = \left(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}, \frac{\partial
+f}{\partial z}\right)$. For accuracy, we use a five-point stencil to compute the gradient, i.e.,
+$\frac{\partial f}{\partial x} \approx \frac{1}{12}f(x-2,y,z) - \frac{2}{3}f(x-1,y,z) +
+\frac{2}{3}f(x+1,y,z) - \frac{1}{12}f(x+2,y,z)$, but note that the relative performances of the
+streams stay the same, using the more common two- and three-point formulas. The error between a
+gradient field $\nabla f$, and its low-bit-rate approximation $\nabla
 \tilde{f}$, is defined as $\err(\nabla \tilde{f}, \nabla f) = \sqrt{\frac{1}{N}
 \sum_{i=1}^{N}{\norm{\nabla \tilde{f}(\x_i)-\nabla f(\x_i)}^2}}$. Using~\Cref{alg:greedy}, we
-compute a \emph{gradient-optimized} stream, \sgop, i.e., a stream that minimizes the difference
-between the reconstructed gradient field and the original gradient field.
+compute a \emph{gradient-optimized} stream, \sgop, that minimizes the difference between the
+reconstructed and the original gradient fields.
 
 \Cref{fig:gradient-error-comparison} shows the gradient error incurred by different streams for four
 data sets. In general, we observe the ordering of performance (from best to worst) as: \sgop, \sgsg,
@@ -85,17 +85,16 @@ data sets. In general, we observe the ordering of performance (from best to wors
 where the $x$-component of the gradient field for \emph{tuburlence} is rendered at 0.3 bps. Unlike
 the RMSE case, \sbit performs nearly the same as \swav does.
 
-We further investigate this difference by extracting a 1D line from the \emph{plasma} data set and
-reconstructing the function using \sbit and \swav at 0.6 bps
+To investigate this difference, we extract a 1D line from the \emph{plasma} data set and reconstruct
+the function using \sbit and \swav at 0.6 bps
 (\Cref{fig:bit-plane-vs-wavelet-norm-gradient}).\swav's reconstruction is ``smoother'' and more
 accurate \emph{on average}, but lacks the resolution to resolve the high-gradient areas. This is
 because \swav intersperses resolution-improving packets and precision-improving packets, unlike
-\sbit, which always streams packets that improve resolution first. \sbit, on the other hand, tends
-to capture well the function's shape (due to fine-scale bits), but the whole function can be
-``shifted'' slightly as seen in the figure, due to the lack of precision in the coarse-scale
-coefficients. However, the gradient operator has the tendency to cancel this shifting effect. \sbit,
-therefore, might work slightly better than \swav for gradient computation, because it is better able
-to retain sharp features.
+\sbit, which always favor resolution-improving packets. \sbit, on the other hand, tends to capture
+well the function's shape (due to fine-scale bits), but the whole function can be ``shifted''
+slightly, due to the lack of precision in the coarse-scale coefficients. However, the gradient
+operator has the tendency to cancel this shifting effect, making \sbit work slightly better than
+\swav, because the former is better at retaining sharp features.
 
 \begin{figure}[!b]
 \centering

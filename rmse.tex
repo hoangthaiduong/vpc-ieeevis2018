@@ -13,7 +13,7 @@
   pressure~\cite{cook_cabot_miller_2004} & hydrodynamics simulation& float64\\
 	turbulence~\cite{turbulence} & fluid dynamics simulation& float32\\
 	kingsnake~\cite{kingsnake} & CT scan & uint8\\
-	foam & CT scan & uint16\\
+	foam~\cite{foam} & CT scan & uint16\\
   \bottomrule
   \end{tabular}\label{tbl:data-sets}
   \vspace{-0.5em}
@@ -100,13 +100,12 @@ performances, but \ssig performs better when the data is less smooth or noisy, a
 one bits among a majority of leading zero bits, which \swav does not take into account (this stream
 in effect assumes every packet contains all one bits).
 
-We explore the errors visually by rendering the \emph{plasma} volume at 0.2 bits per sample (bps),
-for all streams except \srop ~(\Cref{fig:rmse-rendering}). Bps are calculated by dividing the total
-size of received packets (in bits) by the total number of samples. Although \slvl has the precision
-to obtain an accurate background, it lacks resolution to resolve the fine details. \sbit, instead,
-lacks the precision to reconstruct the (mostly smooth) background, but has enough resolution to
-capture the fine details well. \swav balances both precision and resolution, producing a more
-accurate picture as a whole. In this case, the \ssig stream manages to produce the most accurate
-rendering, likely due to the ``anisotropic'' nature of the data, where most features lie on a thin
-``surface''. For such data, wavelet coefficients along one dimension are often larger compared to
-those along other dimensions, which \srop, and hence \srsg, can take advantage of, but not \swav.
+We explore the errors visually by rendering the \emph{plasma} volume at 0.2 bps, for all streams
+except \srop ~(\Cref{fig:rmse-rendering}). Although \slvl has the precision to obtain an accurate
+background, it lacks resolution to resolve the fine details. \sbit, instead, lacks the precision to
+reconstruct the (mostly smooth) background, but has enough resolution to capture the fine details
+well. \swav balances both precision and resolution, producing a more accurate picture as a whole. In
+this case, the \ssig stream manages to produce the most accurate rendering, likely due to the
+``anisotropic'' nature of the data, where most features lie on a thin ``surface''. For such data,
+wavelet coefficients along one dimension are often larger compared to those along other dimensions,
+which \srop, and hence \srsg, can take advantage of, but not \swav.

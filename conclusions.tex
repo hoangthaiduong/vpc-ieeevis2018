@@ -21,7 +21,7 @@ resolution, and function reconstruction and isosurface extraction require a prop
 (see~\Cref{fig:bit-distrib}). We also show that common reduction techniques, e.g., those based on
 \slvl and \smag, do not perform well when leading zero bits are removed (to simulate entropy
 compression). {\color{red}For each task, the relative ordering of the rate-distortion curves stay
-largely the same regardless of data sets, although the gaps between them vary depending on the
+largely the same regardless of data sets, although the gaps among them vary depending on the
 smoothness and noisiness of the data. Compared to data-independent streams, signature-based streams
 often perform better because they are more adaptive to the data. They are also amenable for
 implementation (unlike \sopt), as a signature is negligibly small and thus can be precomputed and
@@ -51,15 +51,14 @@ should allow task-dependent data queries even though task-dependent formats will
 restricted to very specific situations. 
 
 Another important consideration is that for fair comparisons we always reconstruct the data at full
-resolution using wavelets. However, in practice, processing and memory costs are important, and it
-is likely that adaptive representations would be used~\cite{gigavoxels,Gobbetti2008,vdb2013}. In
-these cases the error of a given approximation depends not only on the information that is
-available, but also on what algorithm and what interpolation method are used. For example,
-trilinear interpolation on a coarse grid might provide vastly different results than wavelet
-reconstruction on the original mesh. It is possible to specifically construct grids where both
-interpolations are equivalent~\cite{weiss}, yet these are not yet implement in standard tools. An
-important future research direction will be to understand the implications of the results presented
-here on existing toolchains such as VTK.
+resolution using wavelets. However, processing and memory costs are important, and it is likely that
+adaptive representations would be used in practice~\cite{gigavoxels,Gobbetti2008,vdb2013}. In these
+cases the error of a given approximation depends not only on the available information, but also on
+the data structure and algorithm being used. For example, trilinear interpolation on a coarse grid
+might produce different results than wavelet reconstruction on the original mesh. There exist
+solutions where both interpolations are equivalent~\cite{weiss}, yet these are not yet implement in
+standard tools. An important future research direction will be to understand the implications of the
+results presented here on existing toolchains such as VTK.
 
 %%% Local Variables:
 %%% mode: latex
