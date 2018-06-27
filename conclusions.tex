@@ -23,8 +23,7 @@ visualization tasks, we use carefully chosen error metrics
 %than visualization outputs, we believe the two often strongly correlate, as demonstrated throughout
 %the paper. We have chosen error metrics carefully to measure data quality 
 so that they can be good
-proxies for evaluating visualization outputs. Although the paper focuses on a small set of core tasks, but
-the framework is generic and applies to any well-defined metric, and one future direction is to
+proxies for evaluating visualization outputs. Although the paper focuses on a small set of core tasks, the framework is generic and applies to any well-defined metric, and one future direction is to
 consider a broader set of tasks.}
 
 We present the first empirical study to demonstrate that combining reduction in precision and
@@ -34,7 +33,7 @@ computing histograms requires high precision, computing derivatives benefits mor
 resolution, and function reconstruction and isosurface extraction require a suitable mix of the two
 (see~\Cref{fig:bit-distrib}). We also show that common reduction techniques, e.g., those based on
 \slvl and \smag, do not perform well when leading zero bits are removed (to simulate entropy
-compression). {\color{red}For each task, the relative ordering of the rate-distortion curves stay
+compression). {\color{red}For each task, the relative ordering of the rate-distortion curves stays
 largely the same regardless of data sets, although the gaps among them vary depending on the
 smoothness and noisiness of the data. Compared to data-independent streams, signature-based streams
 often perform better because they are more adaptive to the data. They are also amenable for
