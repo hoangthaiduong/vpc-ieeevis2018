@@ -124,10 +124,10 @@
   fundamental limits at which the reduced information ceases to be useful. The paper explores the
   additional gains that could be achieved by combining both strategies. In particular, we present a
   common framework that allows us to study the trade-off in reducing precision and/or resolution in
-  a principled manner. We represent data reduction schemes as progressive streams of bits, and study
-  how various bit orderings such as by resolution, by precision, etc. impact the resulting
-  approximation error across a wide range of test data and analysis tasks. Furthermore, we compute
-  streams optimized for different tasks, to serve as lower bounds on the achievable error.
+  a principled manner. We represent data reduction schemes as progressive {\it streams} of bits, and study
+  how various bit orderings such as by resolution, by precision, etc., impact the resulting
+  approximation error across a variety of data sets as well as analysis tasks. Furthermore, we compute
+  streams that are optimized for different tasks, to serve as lower bounds on the achievable error.
   Scientific data management systems can use the results presented in this paper as guidance on how
   to store and stream data to make efficient use of the limited storage and bandwidth in
   practice.\vspace{-0.5em}
@@ -172,7 +172,7 @@
 %% Uncomment below to include a teaser figure.
 \teaser{
   \centering
-  \includegraphics[width=0.99\linewidth]{cats}
+  \includegraphics[width=\linewidth]{cats}
   % \subcaptionbox{By level}{
   % {\includegraphics[width=0.15\linewidth]{teaser_rmse_level}}}
   % \subcaptionbox{By bit plane}{
@@ -194,7 +194,7 @@
   % {\includegraphics[width=0.15\linewidth]{teaser_laplacian_signature}}}
   % \subcaptionbox{Groundtruth}{
   % {\includegraphics[width=0.15\linewidth]{teaser_laplacian_groundtruth}}}
-  \caption{Renderings of the \emph{diffusivity} field at 0.2 bits per sample (bps), and its Laplacian field, at 1.5 bps, using two of the bit streams studied in the paper. Compared to the \emph{by bit plane} stream, the \emph{by wavelet norm} stream produces a better reconstruction of the original function (left, compare white features), and a slightly worse, if not comparable, reconstruction of the Laplacian field (right).}
+  \caption{Visualization of the \emph{diffusivity} field at 0.2 bits per sample (bps), and its Laplacian field, at 1.5 bps, using two of the bit streams studied in the paper. Compared to the \emph{by bit plane} stream, the \emph{by wavelet norm} stream produces a better reconstruction of the original function (left, compare white features), and a slightly worse, if not comparable, reconstruction of the Laplacian field (right).}
   \label{fig:teaser}
 }
 

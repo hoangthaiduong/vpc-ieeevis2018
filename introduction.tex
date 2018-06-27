@@ -3,8 +3,8 @@ transfer, whether from cache, main memory, or disk, becomes a major bottleneck i
 However, it has been shown that not every bit of data is always necessary to answer scientific
 questions with required accuracy. In particular, for techniques at the end of scientific workflows,
 such as visualization and data analysis, lower fidelity representations of the data often provide
-adequate approximations~\cite{woodring2011,covra2012,compression_sim2013}, and even during
-simulation some loss in precision is often
+adequate approximations~\cite{woodring2011,covra2012,compression_sim2013}; even during
+simulation, some loss in precision is often
 acceptable~\cite{compression_sim2013,doi:10.1177/1094342018762036}. As a result, several different
 techniques have been proposed to reduce the size of data. 
 
@@ -29,7 +29,7 @@ In general, different levels of adaptivity in combinations of resolution and pre
 suitable for different types of analysis and visualization tasks, and for many, these requirements
 might be data dependent. Consequently, a globally optimal data organization may not exist. Instead,
 we consider a progressive setting in which some initial data is loaded and processed, and new data
-is requested selectively based on the requirement of the current task as well as the characteristics
+is requested selectively based on the requirements of the current task as well as the characteristics
 of the data already loaded. The result is a stream of bits ordered such that the error is minimized,
 considering the task at hand. However, although intuitively there are almost certainly advantages in
 considering both resolution and precision in the ordering, it is unclear how much the error could be
@@ -43,7 +43,7 @@ orderings through extensive, empirical experiments. In particular, this paper pr
 %
 \item a framework that allows systematic studies of the resolution-versus-precision trade-off for
 common data analysis and visualization tasks. The core idea is to represent various data reduction
-techniques as bit streams that improve data quality in either resolution or precision in each step
+techniques as bit streams that progressively change data quality in either resolution or precision % in each step
 (\Cref{sec:terminologies}). We can thus compare these techniques fairly, by comparing the
 corresponding data streams.
 %  
