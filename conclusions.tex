@@ -28,10 +28,10 @@ the framework is generic and applies to any well-defined metric, and one future 
 consider a broader set of tasks.}
 
 We present the first empirical study to demonstrate that combining reduction in precision and
-resolution can lead to a significant improvement in data quality for the same data size, and that
-different tasks might prefer different resolution-versus-precision trade-offs. For example, while
+resolution can lead to a significant improvement in data quality for the same data budget, and that
+different tasks might prefer different resolution-versus-precision trade-offs. For example, whereas
 computing histograms requires high precision, computing derivatives benefits more from higher
-resolution, and function reconstruction and isosurface extraction require a proper mix of the two
+resolution, and function reconstruction and isosurface extraction require a suitable mix of the two
 (see~\Cref{fig:bit-distrib}). We also show that common reduction techniques, e.g., those based on
 \slvl and \smag, do not perform well when leading zero bits are removed (to simulate entropy
 compression). {\color{red}For each task, the relative ordering of the rate-distortion curves stay
@@ -39,19 +39,19 @@ largely the same regardless of data sets, although the gaps among them vary depe
 smoothness and noisiness of the data. Compared to data-independent streams, signature-based streams
 often perform better because they are more adaptive to the data. They are also amenable for
 implementation (unlike \sopt), as a signature is negligibly small and thus can be precomputed and
-stored during pre-processing. It is also interesting to consider per-block signatures instead of a
+stored during preprocessing. It is also interesting to consider per-block signatures instead of a
 global one.}
 
 {\color{red}An important question is whether task- and data-dependent streams provide sufficient
 advantages over purely data-independent streams. In practice, data would be used for multiple,
-not-necessarily predefined tasks and maintaining multiple streams will likely lead to additional
+and not necessarily predefined, tasks and maintaining multiple streams will likely lead to additional
 overheads. Here, we consider \ssig to be the best possible stream that could be realized.
 Improvements on \ssig in the resolution-versus-precision space are likely possible, but unlikely to
 be significant. Given these assumptions and the fact that \ssig in most cases provides very similar
 results to \sbit or \swav, the additional effort (and potential overheads) for task-dependent bit
 orderings is unlikely to be beneficial. This leaves a significant gap between the best
 data-independent streams and the optimal stream \sopt. Our experiments suggest that the majority of
-this difference can be attributed to spatial adaptivity. The prototypical example are isosurfaces
+these differences can be attributed to spatial adaptivity. The prototypical example is isosurface computation,
 where \sopt can skip all regions that do not effect any portion of the surface. It is worthwhile in
 future work to investigate solutions to spatial adaptivity to significantly improve the performance
 of data-independent streams.}
