@@ -1,3 +1,60 @@
+% figure for histogram
+\begin{figure*}[t]
+        \centering
+        \subcaptionbox{\emph{boiler}}
+        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-boiler}}
+        \subcaptionbox{\emph{diffusivity}}
+        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-diffusivity}}
+        \subcaptionbox{\emph{kingsnake}}
+        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-kingsnake}}
+        \subcaptionbox{\emph{foam}}
+        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-foam}}
+        \caption{Comparison of histogram errors among streams. Plots are truncated to highlight
+        differences without hiding important trends. In general, in terms of error, $\shop \approx \shsg
+        \approx \swav < \slvl, \sbit, \smag$. The erratic behavior at the beginning for \emph{kingsnake}
+        is likely due to the data being too noisy. The especially poor performances of \sbit for
+        \emph{boiler} and \emph{foam} are due to the ``shifting'' effect explained in~\Cref{sec:gradient}.
+        Crossover points between \sbit and \slvl are explained in~\Cref{fig:histogram-explain}.}
+        \label{fig:histogram-stream-comparison}
+\vspace{1em}
+
+        \centering
+        \subcaptionbox{\emph{by level} (\slvl)}{
+        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-level}}}
+        \subcaptionbox{\emph{by bit plane} (\sbit)}{
+        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-bit-plane}}}
+        \subcaptionbox{\emph{by magnitude} (\smag)}{
+        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-magnitude}}}
+        \subcaptionbox{\emph{by wavelet norm} (\swav)}{
+        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-wavelet-norm}}}
+        \subcaptionbox{\emph{by signature} (\shsg)}{
+        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-signature}}}
+        \subcaptionbox{\emph{reference}}{
+        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-groundtruth}}}
+        \caption{Histograms of the \emph{boiler} data set, reconstructed at 0.3 bps. \slvl, \swav, and
+        \shsg produce histograms that share a shape similar to the reference histogram, with most of the
+        peaks and valleys preserved. In contrast, \sbit produces a spurious peak not found in the
+        reference. Finally, \smag's histogram has a widely skewed distribution where too many values fall
+        into the first bin.}
+        \label{fig:histograms-boiler}
+        \vspace{-1em}
+\end{figure*}
+
+\begin{figure}[!t]
+	\centering
+	\subcaptionbox{with leading zero packets}
+	{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler-wlz}}
+	\subcaptionbox{without leading zero packets}
+	{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler}} \caption{Histogram
+	error curves produced by \sbit and \slvl, for \emph{boiler}, with and without leading zero bits.
+	The vertical axis is in log scale. The error for \sbit reduces in a stair-step fashion, where
+	each step corresponds to a new bit plane streamed. \sbit benefits significantly more from the
+	removal of leading zero bits (the blue curve shifts more to the left).}
+	\label{fig:histogram-explain}
+	\vspace{-1em}
+\end{figure}
+
+% figure for isosurface
 \begin{figure*}[t]
 \centering
 \subcaptionbox{\em pressure, isovalue=0.2}
@@ -78,17 +135,3 @@ histograms, reconstructed at 0.3 bps, for the \emph{boiler} data set. The histog
 The next best histogram is produced by \slvl, followed by the one produced by \sbit, and finally
 \smag. These results suggest that histogram computation benefits from a bit ordering that combines
 both resolution and precision, with a strong bias towards precision.
-
-\begin{figure}[h]
-	\centering
-	\subcaptionbox{with leading zero packets}
-	{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler-wlz}}
-	\subcaptionbox{without leading zero packets}
-	{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler}} \caption{Histogram
-	error curves produced by \sbit and \slvl, for \emph{boiler}, with and without leading zero bits.
-	The vertical axis is in log scale. The error for \sbit reduces in a stair-step fashion, where
-	each step corresponds to a new bit plane streamed. \sbit benefits significantly more from the
-	removal of leading zero bits (the blue curve shifts more to the left).}
-	\label{fig:histogram-explain}
-	\vspace{-1em}
-\end{figure}

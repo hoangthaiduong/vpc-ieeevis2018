@@ -1,14 +1,57 @@
-\subsection{Derivative Computation} \label{sec:derivatives}
+% fig for 1D slice of plasma
+\begin{figure}[!b]
+\centering
+\subcaptionbox{\emph{by bit plane}
+(\sbit)}{{\includegraphics[width=0.48\linewidth]{gradient/1d_plasma_by_bit_plane}}}
+\subcaptionbox{\emph{by wavelet norm}
+(\swav)}{{\includegraphics[width=0.48\linewidth]{gradient/1d_plasma_by_wavelet_norm}}} \caption{A 1D
+line extracted from \emph{plasma}, and reconstructed using \sbit and \swav at 0.6 bps. The original
+data is in orange and the reconstructions are in blue. On average, \swav captures well the function
+values, where \sbit struggles (seen as a slight vertical shift). However, \sbit retains the shape of
+the function slightly better in high-gradient areas.}
+\label{fig:bit-plane-vs-wavelet-norm-gradient}
+\vspace{-1em}
+\end{figure}
 
-Computation of derivative-based quantities is important in data analysis. Examples include vorticity
-(curl) computation from velocity fields to identify vortical structures, gradient computation for
-accurate Morse segmentation and shading, and ridge extraction (e.g. for Lagrangian coherent
-structures). In this paper, derivatives are always computed using finite differences, which is
-common in practice. Here we use 32 bits for quantization in this section to ensure enough precision for
-finite differences. We always compute finite differences on the finest resolution grid to avoid
-computing distances between quantities defined on grids of different resolutions.
+% figure for gradient error
+\begin{figure*}[t]
+\centering
+\subcaptionbox{\emph{boiler}}{%
+{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-boiler}}}
+\subcaptionbox{\emph{diffusivity}}{%
+{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-diffusivity}}}
+\subcaptionbox{\emph{turbulence}}{%
+{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-turbulence}}}
+\subcaptionbox{\emph{pressure}}{%
+{\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-pressure}}} 
+\caption{Gradient error of reconstructed functions. Lower gradient error is better. Leading zero
+packets are removed, and the plots are truncated in the same way as in~\Cref{fig:rmse-optimized}.
+The trend in error, in all cases, is $\sgop < \sgsg \approx \sbit \approx \swav < \smag < \slvl$.}
+\label{fig:gradient-error-comparison}
+\vspace{1em}
 
-\begin{figure*}[h]
+\centering
+\subcaptionbox{\emph{by level} (\slvl)}{%
+{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-level}}}
+\subcaptionbox{\emph{by bit plane} (\sbit)}{%
+{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-bit-plane}}}
+\subcaptionbox{\emph{by wavelet norm} (\swav)}{%
+{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-wavelet-norm}}}
+\subcaptionbox{\emph{by magnitude} (\smag)}{%
+{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-magnitude}}}
+\subcaptionbox{\emph{by signature} (\sgsg)}{%
+{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-signature.png}}}
+\subcaptionbox{\emph{reference}}{%
+{\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-groundtruth.png}}}
+\caption{The $x$-component of the ($64^3$) gradient field of \emph{turbulence}, reconstructed at 0.3
+bps. The gradient field produced by \sbit is more accurate than the one produced by \swav, and
+slightly more accurate than the one produced by \sgsg (compare orange features).}
+\label{fig:gradient-rendering-diff}
+%\vspace{-1em}
+\end{figure*}
+
+% figure for laplacian
+\begin{figure*}[!t]
 \centering
 \subcaptionbox{\emph{boiler}}
 {\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-boiler}}
@@ -24,46 +67,15 @@ differences without discarding important information. In all cases, in terms of 
 \label{fig:laplacian-error-comparison}
 \end{figure*}
 
-\begin{figure*}[t]
-        \centering
-        \subcaptionbox{\emph{boiler}}
-        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-boiler}}
-        \subcaptionbox{\emph{diffusivity}}
-        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-diffusivity}}
-        \subcaptionbox{\emph{kingsnake}}
-        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-kingsnake}}
-        \subcaptionbox{\emph{foam}}
-        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-foam}}
-        \caption{Comparison of histogram errors among streams. Plots are truncated to highlight
-        differences without hiding important trends. In general, in terms of error, $\shop \approx \shsg
-        \approx \swav < \slvl, \sbit, \smag$. The erratic behavior at the beginning for \emph{kingsnake}
-        is likely due to the data being too noisy. The especially poor performances of \sbit for
-        \emph{boiler} and \emph{foam} are due to the ``shifting'' effect explained in~\Cref{sec:gradient}.
-        Crossover points between \sbit and \slvl are explained in~\Cref{fig:histogram-explain}.}
-        \label{fig:histogram-stream-comparison}
-\vspace{1em}
+\subsection{Derivative Computation} \label{sec:derivatives}
 
-        \centering
-        \subcaptionbox{\emph{by level} (\slvl)}{
-        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-level}}}
-        \subcaptionbox{\emph{by bit plane} (\sbit)}{
-        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-bit-plane}}}
-        \subcaptionbox{\emph{by magnitude} (\smag)}{
-        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-magnitude}}}
-        \subcaptionbox{\emph{by wavelet norm} (\swav)}{
-        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-wavelet-norm}}}
-        \subcaptionbox{\emph{by signature} (\shsg)}{
-        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-signature}}}
-        \subcaptionbox{\emph{reference}}{
-        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-groundtruth}}}
-        \caption{Histograms of the \emph{boiler} data set, reconstructed at 0.3 bps. \slvl, \swav, and
-        \shsg produce histograms that share a shape similar to the reference histogram, with most of the
-        peaks and valleys preserved. In contrast, \sbit produces a spurious peak not found in the
-        reference. Finally, \smag's histogram has a widely skewed distribution where too many values fall
-        into the first bin.}
-        \label{fig:histograms-boiler}
-        \vspace{-1em}
-\end{figure*}
+Computation of derivative-based quantities is important in data analysis. Examples include vorticity
+(curl) computation from velocity fields to identify vortical structures, gradient computation for
+accurate Morse segmentation and shading, and ridge extraction (e.g. for Lagrangian coherent
+structures). In this paper, derivatives are always computed using finite differences, which is
+common in practice. Here we use 32 bits for quantization in this section to ensure enough precision for
+finite differences. We always compute finite differences on the finest resolution grid to avoid
+computing distances between quantities defined on grids of different resolutions.
 
 \subsubsection{Gradient Computation} \label{sec:gradient}
 
@@ -87,7 +99,7 @@ the RMSE case, \sbit performs nearly the same as \swav does.
 
 To investigate this difference, we extract a 1D line from the \emph{plasma} data set and reconstruct
 the function using \sbit and \swav at 0.6 bps
-(\Cref{fig:bit-plane-vs-wavelet-norm-gradient}).\swav's reconstruction is ``smoother'' and more
+(\Cref{fig:bit-plane-vs-wavelet-norm-gradient}). \swav's reconstruction is ``smoother'' and more
 accurate \emph{on average}, but lacks the resolution to resolve the high-gradient areas. This is
 because \swav intersperses resolution-improving packets and precision-improving packets, unlike
 \sbit, which always favor resolution-improving packets. \sbit, on the other hand, tends to capture
@@ -95,20 +107,6 @@ well the function's shape (due to fine-scale bits), but the whole function can b
 slightly, due to the lack of precision in the coarse-scale coefficients. However, the gradient
 operator has the tendency to cancel this shifting effect, making \sbit work slightly better than
 \swav, because the former is better at retaining sharp features.
-
-\begin{figure}[!b]
-\centering
-\subcaptionbox{\emph{by bit plane}
-(\sbit)}{{\includegraphics[width=0.48\linewidth]{gradient/1d_plasma_by_bit_plane}}}
-\subcaptionbox{\emph{by wavelet norm}
-(\swav)}{{\includegraphics[width=0.48\linewidth]{gradient/1d_plasma_by_wavelet_norm}}} \caption{A 1D
-line extracted from \emph{plasma}, and reconstructed using \sbit and \swav at 0.6 bps. The original
-data is in orange and the reconstructions are in blue. On average, \swav captures well the function
-values, where \sbit struggles (seen as a slight vertical shift). However, \sbit retains the shape of
-the function slightly better in high-gradient areas.}
-\label{fig:bit-plane-vs-wavelet-norm-gradient}
-\vspace{-1em}
-\end{figure}
 
 \sgop again outperforms the rest of the streams. \slvl and \smag perform poorly for gradient
 computation, lacking the resolution to capture sharp features. \sgsg mostly closely follows \sbit in
