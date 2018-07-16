@@ -16,10 +16,12 @@
 % \end{figure}
 
 \begin{figure}[!b]
+\vspace{-1em}
 \centering
- \subcaptionbox{\label{fig:bit-distrib-rmse-tile}\emph{RMSE signature}}{{\includegraphics[width=0.32\linewidth]{bit-distrib-rmse-tile}}}
- \subcaptionbox{\label{fig:bit-distrib-laplacian-tile}\emph{Laplacian signature}}{{\includegraphics[width=0.32\linewidth]{bit-distrib-laplacian-tile}}}
- \subcaptionbox{\label{fig:bit-distrib-histogram-tile}\emph{histogram signature}}{ {\includegraphics[width=0.32\linewidth]{bit-distrib-histogram-tile}}}
+ \subcaptionbox{\label{fig:bit-distrib-rmse-tile}\emph{RMSE signature}}{{\includegraphics[width=0.32\linewidth]{bit-distrib-rmse-tile}\vspace{-0.5em}}}
+ \subcaptionbox{\label{fig:bit-distrib-laplacian-tile}\emph{Laplacian signature}}{{\includegraphics[width=0.32\linewidth]{bit-distrib-laplacian-tile}\vspace{-0.5em}}}
+ \subcaptionbox{\label{fig:bit-distrib-histogram-tile}\emph{histogram signature}}{ {\includegraphics[width=0.32\linewidth]{bit-distrib-histogram-tile}\vspace{-0.5em}}}
+ \vspace{-0.5em}
 \caption{(Top) Bit distribution across subbands at 1.9 bps for signature-based streams, and (bottom)
 corresponding stream signatures. The data is a 2D slice from \emph{diffusivity}. Subbands are
 separated by red lines. The color of each pixel indicates the bit plane at which the corresponding
@@ -27,7 +29,7 @@ coefficient is currently at. Brighter greens correspond to more precision. Both 
 bottom rows show that \shsg allocates more bits to the lower subbands, while \slsg prefers to stream
 bits from higher subbands. \srsg is somewhere in the middle.}
 \label{fig:bit-distrib}
-%\vspace{-1em}
+\vspace{-1.5em}
 \end{figure}
 
 Studying isosurfaces of a given function is an essential task in many visualization and analysis

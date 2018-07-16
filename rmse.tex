@@ -1,10 +1,11 @@
 % figure for function reconstruction result
 \begin{figure*}[t]
 \centering
- \subcaptionbox{\label{fig:rmse:boiler}\emph{boiler}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-boiler}}}
- \subcaptionbox{\label{fig:rmse:diffisivity}\emph{diffusivity}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-diffusivity}}}
- \subcaptionbox{\label{fig:rmse:plasma}\emph{plasma}}{ {\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-plasma}}}
- \subcaptionbox{\label{fig:rmse:kingsnake}\emph{kingsnake}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-kingsnake}}}
+ \subcaptionbox{\label{fig:rmse:boiler}\emph{boiler}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-boiler}\vspace{-0.5em}}}
+ \subcaptionbox{\label{fig:rmse:diffisivity}\emph{diffusivity}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-diffusivity}\vspace{-0.5em}}}
+ \subcaptionbox{\label{fig:rmse:plasma}\emph{plasma}}{ {\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-plasma}\vspace{-0.5em}}}
+ \subcaptionbox{\label{fig:rmse:kingsnake}\emph{kingsnake}}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-kingsnake}\vspace{-0.5em}}}
+ \vspace{-0.5em}
 \caption{Root-mean-square error (RMSE) of reconstructed functions for different streams and data
 sets; lower RMSE is better. The streams are truncated at both ends to highlight the differences,
 without omitting important information. The general ordering of error, from lowest to highest, is
@@ -13,18 +14,19 @@ $\sopt < \ssig < \swav < \sbit < \smag < \slvl$.}
 \vspace{1em}
 
 \centering
- \subcaptionbox{\emph{by level} (\slvl)}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-level}}}
- \subcaptionbox{\emph{by bit plane (\sbit)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-bit-plane}}}
- \subcaptionbox{\emph{by wavelet norm (\swav)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-wavelet-norm}}}
- \subcaptionbox{\emph{by magnitude (\smag)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-magnitude}}}
- \subcaptionbox{\emph{by signature (\ssig)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-signature}}}
- \subcaptionbox{\emph{reference}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-groundtruth}}}
+ \subcaptionbox{\emph{by level} (\slvl)}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-level}\vspace{-0.5em}}}
+ \subcaptionbox{\emph{by bit plane (\sbit)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-bit-plane}\vspace{-0.5em}}}
+ \subcaptionbox{\emph{by wavelet norm (\swav)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-wavelet-norm}\vspace{-0.5em}}}
+ \subcaptionbox{\emph{by magnitude (\smag)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-magnitude}\vspace{-0.5em}}}
+ \subcaptionbox{\emph{by signature (\ssig)}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-signature}\vspace{-0.5em}}}
+ \subcaptionbox{\emph{reference}}{{\includegraphics[width=0.16\linewidth]{rmse/rmse-plasma-groundtruth}\vspace{-0.5em}}}
+ \vspace{-0.5em}
 \caption{Volume renderings of a $64^3$ region of \emph{plasma} data set at 0.2 bps.  \slvl captures
 the background (purple-blue) well, whereas \sbit captures the fine details better. \swav combines
 the strength of both. \ssig, however, produces the most accurate rendering (compare, e.g., yellow
 features).}
 \label{fig:rmse-rendering}
-\vspace{-1em}
+\vspace{-1.5em}
 \end{figure*}
 
 \section{Evaluation on Different Analysis Tasks} \label{sec:analysis-tasks}
@@ -48,6 +50,7 @@ features).}
   \vspace{-0.5em}
    \caption{Data sets used in our experiments; all volumes are $64^3$. Additional data sets are 
    included in the supplementary material.}
+  \vspace{-2em}
 \end{table}
 
 Thus far, we have presented several types of streams: data-independent (\slvl, \sbit, \swav),

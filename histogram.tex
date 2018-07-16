@@ -1,70 +1,74 @@
 % figure for histogram
 \begin{figure*}[t]
-        \centering
-        \subcaptionbox{\emph{boiler}}
-        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-boiler}}
-        \subcaptionbox{\emph{diffusivity}}
-        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-diffusivity}}
-        \subcaptionbox{\emph{kingsnake}}
-        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-kingsnake}}
-        \subcaptionbox{\emph{foam}}
-        {\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-foam}}
-        \caption{Comparison of histogram errors among streams. Plots are truncated to highlight
-        differences without hiding important trends. In general, in terms of error, $\shop \approx \shsg
-        \approx \swav < \slvl, \sbit, \smag$. The erratic behavior at the beginning for \emph{kingsnake}
-        is likely due to the data being too noisy. The especially poor performances of \sbit for
-        \emph{boiler} and \emph{foam} are due to the ``shifting'' effect explained in~\Cref{sec:gradient}.
-        Crossover points between \sbit and \slvl are explained in~\Cref{fig:histogram-explain}.}
-        \label{fig:histogram-stream-comparison}
+\centering
+\subcaptionbox{\emph{boiler}}
+{\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-boiler}\vspace{-0.5em}}
+\subcaptionbox{\emph{diffusivity}}
+{\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-diffusivity}\vspace{-0.5em}}
+\subcaptionbox{\emph{kingsnake}}
+{\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-kingsnake}\vspace{-0.5em}}
+\subcaptionbox{\emph{foam}}
+{\includegraphics[width=0.24\linewidth]{histogram/histogram-optimized-foam}\vspace{-0.5em}}
+\vspace{-0.5em}
+\caption{Comparison of histogram errors among streams. Plots are truncated to highlight
+differences without hiding important trends. In general, in terms of error, $\shop \approx \shsg
+\approx \swav < \slvl, \sbit, \smag$. The erratic behavior at the beginning for \emph{kingsnake}
+is likely due to the data being too noisy. The especially poor performances of \sbit for
+\emph{boiler} and \emph{foam} are due to the ``shifting'' effect explained in~\Cref{sec:gradient}.
+Crossover points between \sbit and \slvl are explained in~\Cref{fig:histogram-explain}.}
+\label{fig:histogram-stream-comparison}
 \vspace{1em}
 
-        \centering
-        \subcaptionbox{\emph{by level} (\slvl)}{
-        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-level}}}
-        \subcaptionbox{\emph{by bit plane} (\sbit)}{
-        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-bit-plane}}}
-        \subcaptionbox{\emph{by magnitude} (\smag)}{
-        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-magnitude}}}
-        \subcaptionbox{\emph{by wavelet norm} (\swav)}{
-        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-wavelet-norm}}}
-        \subcaptionbox{\emph{by signature} (\shsg)}{
-        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-signature}}}
-        \subcaptionbox{\emph{reference}}{
-        {\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-groundtruth}}}
-        \caption{Histograms of the \emph{boiler} data set, reconstructed at 0.3 bps. \slvl, \swav, and
-        \shsg produce histograms that share a shape similar to the reference histogram, with most of the
-        peaks and valleys preserved. In contrast, \sbit produces a spurious peak not found in the
-        reference. Finally, \smag's histogram has a widely skewed distribution where too many values fall
-        into the first bin.}
-        \label{fig:histograms-boiler}
-        \vspace{-1em}
+\centering
+\subcaptionbox{\emph{by level} (\slvl)}{
+{\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-level}\vspace{-0.5em}}}
+\subcaptionbox{\emph{by bit plane} (\sbit)}{
+{\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-bit-plane}\vspace{-0.5em}}}
+\subcaptionbox{\emph{by magnitude} (\smag)}{
+{\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-magnitude}\vspace{-0.5em}}}
+\subcaptionbox{\emph{by wavelet norm} (\swav)}{
+{\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-wavelet-norm}\vspace{-0.5em}}}
+\subcaptionbox{\emph{by signature} (\shsg)}{
+{\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-signature}\vspace{-0.5em}}}
+\subcaptionbox{\emph{reference}}{
+{\includegraphics[width=0.158\linewidth]{histogram/histogram-boiler-groundtruth}\vspace{-0.5em}}}
+\vspace{-0.5em}
+\caption{Histograms of the \emph{boiler} data set, reconstructed at 0.3 bps. \slvl, \swav, and
+\shsg produce histograms that share a shape similar to the reference histogram, with most of the
+peaks and valleys preserved. In contrast, \sbit produces a spurious peak not found in the
+reference. Finally, \smag's histogram has a widely skewed distribution where too many values fall
+into the first bin.}
+\label{fig:histograms-boiler}
+\vspace{-1em}
 \end{figure*}
 
 \begin{figure}[!t]
-	\centering
-	\subcaptionbox{with leading zero packets}
-	{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler-wlz}}
-	\subcaptionbox{without leading zero packets}
-	{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler}} \caption{Histogram
-	error curves produced by \sbit and \slvl, for \emph{boiler}, with and without leading zero bits.
-	The vertical axis is in log scale. The error for \sbit reduces in a stair-step fashion, where
-	each step corresponds to a new bit plane streamed. \sbit benefits significantly more from the
-	removal of leading zero bits (the blue curve shifts more to the left).}
-	\label{fig:histogram-explain}
-	\vspace{-1em}
+\centering
+\subcaptionbox{with leading zero packets}
+{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler-wlz}\vspace{-0.5em}}
+\subcaptionbox{without leading zero packets}
+{\includegraphics[width=0.48\linewidth]{histogram/histogram-explain-boiler}\vspace{-0.5em}}
+\vspace{-0.5em}
+\caption{Histogram error curves produced by \sbit and \slvl, for \emph{boiler}, with and without
+leading zero bits. The vertical axis is in log scale. The error for \sbit reduces in a stair-step
+fashion, where each step corresponds to a new bit plane streamed. \sbit benefits significantly more
+from the removal of leading zero bits (the blue curve shifts more to the left).}
+\label{fig:histogram-explain}
+\vspace{-1.5em}
 \end{figure}
 
 % figure for isosurface
 \begin{figure*}[t]
 \centering
 \subcaptionbox{\em pressure, isovalue=0.2}
-{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-pressure}}
+{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-pressure}\vspace{-0.5em}}
 \subcaptionbox{\em kingsnake, isovalue=106}
-{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-kingsnake}}
+{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-kingsnake}\vspace{-0.5em}}
 \subcaptionbox{\em plasma, isovalue=2}
-{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-plasma}}
+{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-plasma}\vspace{-0.5em}}
 \subcaptionbox{\em turbulence, isovalue=2}
-{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-turbulence}}
+{\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-turbulence}\vspace{-0.5em}}
+\vspace{-0.5em}
 \caption{Comparison of isosurface errors among streams. Plots are truncated to highlight differences
 without hiding important trends. The trend in error is $\siop < \sisg \approx \swav < \sbit < \smag
 << \slvl$.}\label{fig:isocontour-plots}
@@ -72,22 +76,23 @@ without hiding important trends. The trend in error is $\siop < \sisg \approx \s
 
 \centering
 \subcaptionbox{\emph{by level} ($s_{lvl}$)}
-{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-level}}
+{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-level}\vspace{-0.5em}}
 \subcaptionbox{\emph{by bit plane} ($s_{bit}$)}
-{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-bit-plane}}
+{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-bit-plane}\vspace{-0.5em}}
 \subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}
-{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-wavelet-norm}}
+{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-wavelet-norm}\vspace{-0.5em}}
 \subcaptionbox{\emph{by magnitude} ($s_{mag}$)}
-{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-magnitude}}
+{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-magnitude}\vspace{-0.5em}}
 \subcaptionbox{\emph{by signature} ($s_{iso-sig}$)}
-{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-signature}}
+{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-signature}\vspace{-0.5em}}
 \subcaptionbox{\emph{reference}}
-{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-groundtruth}}
+{\includegraphics[width=0.16\linewidth]{isocontour/isocontour-groundtruth}\vspace{-0.5em}}
+\vspace{-0.5em}
 \caption{Rendering of isosurfaces at isovalue of 0.2, at 0.6 bps, for the \emph{pressure} data set.
 The surfaces are colored by the $x$-component of the normal vector at each point. \swav and
 \sisg produce surfaces that are closest to the reference, followed by \sbit, \smag, and \slvl.}
 \label{fig:isocontour-surfaces-pressure}
-\vspace{-1em}
+\vspace{-1.5em}
 \end{figure*}
 
 
