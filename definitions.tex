@@ -220,6 +220,7 @@ $w_i$. The stream \sopt is simply the sorted list of packets in decreasing order
 This simplified algorithm (\Cref{alg:greedy}) has significantly lower running time, while (by
 observation) retaining the same quality for \sopt.
 
+\vspace{-0.5em}
 \begin{algorithm}[h]
   \caption{Computing a task-optimized stream}
   \begin{algorithmic}[1]
@@ -242,7 +243,7 @@ observation) retaining the same quality for \sopt.
 	\label{alg:greedy}
 \end{algorithm}
 
-\vspace{-1em}
+\vspace{-0.5em}
 We note that for a more optimized implementation, the inverse wavelet transform on line 7 can be
 replaced by ``splatting'' coefficient $p_i$ onto the domain, due to the transform being linear and
 the fact that $p_i$ is the only coefficient changed in the current iteration.
@@ -292,6 +293,7 @@ be streamed before one at an opposite corner, but this fact contains no useful i
 define a region to be the spatial volume that is covered by a packet in the coarsest subband.
 Algorithm~\ref{alg:signature} lists the steps of our approach.
 
+\vspace{-0.5em}
 \begin{algorithm}[h]
   \caption{Computing a stream signature}
   \begin{algorithmic}[1]
@@ -314,6 +316,7 @@ Algorithm~\ref{alg:signature} lists the steps of our approach.
 	\end{algorithmic}
 	\label{alg:signature}
 \end{algorithm}
+\vspace{-0.5em}
 
 Finally, a signature can be used to construct a stream denoted generically as $\ssig$. This
 construction is done by iterating through each element $A(l,b)$ in ascending order and adding to the
