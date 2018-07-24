@@ -8,18 +8,17 @@ simulation, some loss in precision is often
 acceptable~\cite{compression_sim2013,doi:10.1177/1094342018762036}. As a result, several different
 techniques have been proposed to reduce the size of data. 
 
-Broadly, these techniques can be classified into (i) reducing the data resolution, e.g., the number
-of data points stored, and (ii) reducing the precision of each data point. Examples of the former
-kind of approaches are subsampling~\cite{idx2001}, adaptive mesh refinement~\cite{amr1989}, octrees
-and other tree structures~\cite{hierarchical1984}, and wavelets~\cite{woodring2011}, and those of
-the latter are various forms of
-compression~\cite{fpzip,isabela,zfp2014,sz,vq1992,compression_domain2003,sqe}. Traditionally,
-multiresolution structures have been used to accelerate dynamic queries, e.g., in
+Broadly, these techniques either (i) reduce the data resolution, e.g., the number of data points
+stored, or (ii) reduce the precision of each data point. Examples of the first kind of approach are
+subsampling~\cite{idx2001}, adaptive mesh refinement~\cite{amr1989}, octrees and other tree
+structures~\cite{hierarchical1984}, and wavelets~\cite{woodring2011}, and those of the second are
+various forms of compression~\cite{fpzip,isabela,zfp2014,sz,vq1992,compression_domain2003,sqe}.
+Traditionally, multiresolution structures have been used to accelerate dynamic queries, e.g., in
 rendering~\cite{multires_octree1999}, since discarding data points based on the viewpoint or data
 complexity can result in significant speed-up. Compression based on quantization, on the other hand,
 is more common when storing data, where in the absence of other information, treating each sample as
 equally important is the null hypothesis. However, in many situations, a combination of both
-resolution and precision reduction could be appropriate. For example, high spatial resolution may be
+resolution and precision reduction may be appropriate. For example, high spatial resolution may be
 needed to resolve the topology of an isosurface, yet the corresponding data samples may be usable at
 less than full precision to adequately approximate the geometry. Conversely, accumulating accurate
 statistics may require high-precision values, yet a lower resolution subset of data points may be
@@ -29,15 +28,15 @@ In general, different levels of adaptivity in combinations of resolution and pre
 suitable for different types of analysis and visualization tasks, and for many, these requirements
 might be data dependent. Consequently, a globally optimal data organization may not exist. Instead,
 we consider a progressive setting in which some initial data is loaded and processed, and new data
-is requested selectively based on the requirements of the current task as well as the characteristics
-of the data already loaded. The result is a stream of bits ordered such that the error is minimized,
-considering the task at hand. However, although intuitively there are almost certainly advantages in
-considering both resolution and precision in the ordering, it is unclear how much the error could be
-reduced for a given data budget or how little data could be used to achieve the same error.
+is requested selectively based on the requirements of the current task as well as the
+characteristics of the data already loaded. The result is a stream of bits ordered such that the
+error is minimized, considering the task at hand. However, although intuitively considering both
+resolution and precision in the ordering certainly has advantages, it is unclear how much the error
+could be reduced for a given data budget or how little data could be used to achieve the same error.
 Furthermore, optimal data-dependent orderings may be especially impractical since they assume
-perfect knowledge of the data. It is therefore important to understand which of these potential
-gains are realizable. This paper aims to answer these important questions about the suitable bit
-orderings through extensive, empirical experiments. In particular, this paper presents:
+perfect knowledge of the data. We therefore need to understand which of these potential gains are
+realizable. This paper aims to address these problems about the suitable bit orderings through
+extensive, empirical experiments. In particular, this paper presents:
 
 \begin{itemize}\dense
 %
@@ -48,17 +47,16 @@ techniques as bit streams that progressively improve data quality in either reso
 corresponding bit streams.
 %  
 \item empirical evidence that jointly optimizing resolution and precision can provide significant
-improvements on the results of analysis tasks over adjusting either independently. 
-We present a diverse collection of data sets and data analysis tasks, and also show how
-different types of data analysis might require substantially different data streams for optimal
-results.
+improvements on the results of analysis tasks over adjusting either independently. We present a
+diverse collection of data sets and data analysis tasks and also show how different types of data
+analysis might require substantially different data streams for optimal results.
 %
 \item a greedy approach that gives estimations for lower bounds of error for various analysis tasks.
 In addition, we also identify practical streams that closely approximate these bounds for each task
-(\Cref{sec:rmse-optimized}, \Cref{sec:derivatives}, \Cref{sec:histogram}, and
-\Cref{sec:isocontour}), using a novel concept called \emph{stream signature}
-(\Cref{sec:stream-signature}), which is a small matrix that captures the essence of how a bit stream
-navigates the precision-versus-resolution space.
+(\Cref{sec:rmse-optimized}, \Cref{sec:derivatives}, \Cref{sec:histogram}, and \Cref{sec:isocontour})
+using a novel concept called \emph{stream signature} (\Cref{sec:stream-signature}), which is a small
+matrix that captures the essence of how a bit stream navigates the precision-versus-resolution
+space.
 \end{itemize}
 
 In the third contribution, we consider the following analysis tasks: function

@@ -3,15 +3,15 @@
 \para{Tree-based multiresolution hierarchies.}
 A very common scheme to generate a tree-like hierarchy is to construct low-resolution copies of the
 data from higher resolution ones through downsampling. Examples include Gaussian and Laplacian
-pyramids~\cite{laplacian-pyramid},
-mipmaps~\cite{multires_octree1999,interactive-exploration-ct-scans}. Often, the data is stored in
+pyramids~\cite{laplacian-pyramid} and
+mipmaps~\cite{multires_octree1999,interactive-exploration-ct-scans}. The data is often stored in
 blocks on each resolution level. To save bandwidth, low-resolution versions of distant blocks can be
 streamed during rendering. However, these methods increase storage requirements, making them
 unsuitable for very large data.
 
-Recent multi-resolution techniques save storage by adapting to the data in such a way that different
+Recent multiresolution techniques save storage by adapting to the data in such a way that different
 regions are stored with different resolutions. A very popular approach is sparse voxel
-octrees~\cite{gigavoxels,Gobbetti2008}, and
+octrees~\cite{gigavoxels,Gobbetti2008} and
 variations~\cite{Fogal-2013-RayGuided,visualization-driven,large-scale-volume}. Smooth-varying
 regions are stored at coarser octree levels, which significantly reduces storage. During rendering,
 blocks of samples are streamed from an appropriate resolution, determined by how far the queried
@@ -25,16 +25,16 @@ unfortunately, is prone to aliasing problems.
 
 \para{Transform-based multiresolution hierarchies.}
 Other multiresolution approaches reduce data by transform-based compression. For example,
-COVRA~\cite{covra2012} constructs an octree of bricks (consisting of blocks), and learn a sparse
+COVRA~\cite{covra2012} constructs an octree of bricks (consisting of blocks) and learns a sparse
 representation for the blocks in terms of basis blocks. Similarly, Fout \etal~\cite{hw_dvr2007}
-transform each block using the KLT transform, producing several resolution levels, and compress each
+transform each block using the KLT transform to produce several resolution levels, and compress each
 level using vector quantization~\cite{vq1992}. Schneider~\etal~\cite{compression_domain2003} also
-use vector quantization, but with a simple Haar-like transform that separates each block of $2^3$
+use vector quantization but with a simple Haar-like transform that separates each block of $2^3$
 voxels into one average and seven difference coefficients. Other examples of transform-based
 hierarchies include works that use the Tucker
 decomposition~\cite{tensor_dvr2015,tamresh,tucker-thresholding,multiscale-tensor}, which decomposes
 the input data (stored as a tensor) into $n$ matrices of basis vectors and one core tensor. Tensor
-decomposition works for higher dimensional data, and can achieve high compression ratios, albeit at
+decomposition works for higher dimensional data and can achieve high compression ratios, albeit at
 the price of a costly transform step.
 
 %\paragraph{\textbf{Wavelets}}
@@ -49,11 +49,11 @@ special interpolation rules when given some arbitrary subset of wavelet coeffici
 disadvantage of the DWT is the random access cost, which is not constant time, although there has
 been work to develop acceleration structures to speed up local queries~\cite{weiss}.
 
-Beside offering a multiresolution decomposition, enabling data streaming with level-of-detail
+Besides offering a multiresolution decomposition, enabling data streaming with level-of-detail
 support, wavelet coefficients are especially amenable for compression, through thresholding or
 entropy compression. In storing and visualizing scientific data, wavelets (with compression) are
 used in a wide variety of systems~\cite{multires_toolkit2003,vapor2007,woodring2011} and
-applications such as volume rendering with
+applications, such as volume rendering with
 level-of-detail~\cite{wavelet-compression-interactive-vis,multires-framework,rapid-compression-volume,interactive-rendering-large-volume,multires-volume-rendering},
 turbulence visualization~\cite{treib}, and particle visualization~\cite{sph-octree}.
 
@@ -69,14 +69,14 @@ unexplored.
 \para{Wavelet coders.}
 Most work that explores the precision axis comes from state-of-the-art wavelet coders. Wavelet
 coefficients in corresponding regions across subbands can be thought of as belonging to a ``tree''.
-The emmbedded zerotrees (EZW) coder exploits the property that in such trees, ``parent''
-coefficients are often larger in magnitude than their ``children''. It locates trees of wavelet
-coefficients that are insignificant with regard to a series of thresholds, and encode such a tree
-with one single symbol. The thresholds are typically set at the bit planes, starting from the most
-significant one. In this way, the data can be progressively refined in precision during
+The embedded zerotrees (EZW) coder exploits the observation that in such trees, ``parent''
+coefficients are often larger in magnitude than their ``children''. EZW therefore locates trees of
+wavelet coefficients that are insignificant with regard to a series of thresholds and encodes such a
+tree with one single symbol. The thresholds are typically set at the bit planes, starting from the
+most significant one. In this way, the data can be progressively refined in precision during
 decompression. The SPIHT coder~\cite{spiht1996} improves on EZW by locating more general types of
-zero trees~\cite{quantifying-coding-performance}. SPECK~\cite{speck2004} extends SPIHT to exploit
-also spatial correlations among nearby coefficients on the same subband.
+zero trees~\cite{quantifying-coding-performance}. SPECK~\cite{speck2004} extends SPIHT to also
+exploit spatial correlations among nearby coefficients on the same subband.
 
 %\paragraph{\textbf{Floating-point compression}}
 \para{Floating-point compression.}
@@ -106,7 +106,7 @@ For example, Woodring \etal~\cite{woodring2011} use JPEG2000 to store floating p
 most JPEG2000 implementations are limited to integer data, the authors apply uniform scalar
 quantization to convert floating point data to integer form. Even though JPEG2000 supports varying
 both resolution and precision, most works do not explore this capability but focus only on setting
-bit rate. In general, efficiently leveraging both axes of data reduction has not been well-studied.
+bit rate. In general, efficiently leveraging both axes of data reduction has not been well studied.
 
 %\paragraph{\textbf{Error quantification}}
 \para{Error quantification.}
@@ -124,11 +124,11 @@ terms, as well as verification of volume-rendered images~\cite{verifying-volume-
 focus on order-of-accuracy and convergence analysis, where errors are introduced mostly through
 discretization, not necessarily for the purpose of reducing data bandwidth. For volume rendering,
 Ljung \etal~\cite{transfer-function-based} compute an error estimate based on color variation
-between low and high resolution levels in each block, which guides the selection of an appropriate
+between low- and high-resolution levels in each block, which guides the selection of an appropriate
 resolution level for every block. Finally, the Z-checker framework~\cite{z-checker} consists of a
 wide range of independent metrics to evaluate data quality after lossy compression. In general, the
-resolution-versus-precision trade-off, as well as the various orderings of bits in data analysis and
-visualization have not been well studied.
+resolution-versus-precision trade-off for data analysis and visualization have not been well
+studied.
 
 %by magnitude streams~\cite{image_compression1992}
 % Transfer function adaptive decompression~\cite{tf_decompression2004}

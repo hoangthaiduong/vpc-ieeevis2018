@@ -1,29 +1,17 @@
 \section{Discussion and Future Work}
 
-We focus on one of the biggest contemporary challenges in visualization: management of 
-the enormous amounts of data. This work addresses the trade-off between two prominent 
-dimensions of data reduction, resolution and precision, with respect to 
-common analysis and visualization tasks --- 
-%This work addresses one of the biggest challenges in scientific visualization today,
-%which is the enormous amount of data being generated. We focus on 
-an issue rarely discussed in literature.
-%, which is the trade-off between two prominent dimensions of data reduction, namely
-%resolution and precision, when performing analysis tasks. 
-To keep the study tractable while not
-compromising the generalizability of results, this paper targets 
-several fundamental analysis and visualization tasks, with an outlook that these can serve as building blocks 
-for more-complex and multi-parameter tasks, such as volume rendering, in the future.
-%avoid multi-parameter tasks such as volume
-%rendering, in hopes that the fundamental analysis tasks considered here can serve as building blocks
-%for more complex tasks. 
-Since the goal is to evaluate the suitability of data reduction schemes to analysis and 
-visualization tasks, we use carefully chosen error metrics 
-%Although we are more concerned with the quality of underlying data rather
-%than visualization outputs, we believe the two often strongly correlate, as demonstrated throughout
-%the paper. We have chosen error metrics carefully to measure data quality 
-so that they can be good
-proxies for evaluating visualization outputs. Although the paper focuses on a small set of core tasks, the framework is generic and applies to any well-defined metric, and one future direction is to
-consider a broader set of tasks.
+We focus on one of the biggest contemporary challenges in visualization: management of the enormous
+amounts of data. This work addresses the trade-off between two prominent dimensions of data
+reduction, resolution and precision, with respect to common analysis and visualization tasks --- an
+issue rarely discussed in the literature. To keep the study tractable while not compromising the
+generalizability of results, this paper targets several fundamental analysis and visualization
+tasks, with an outlook that these can serve as building blocks for more complex and multiparameter
+tasks, such as volume rendering, in the future. Since the goal is to evaluate the suitability of
+data reduction schemes for analysis and visualization tasks, we use carefully chosen error metrics
+the paper. We have chosen error metrics carefully to measure data quality so that they can be good
+proxies for evaluating visualization outputs. Although the paper focuses on a small set of core
+tasks, the framework is generic and applies to any well-defined metric, and one future direction is
+to consider a broader set of tasks.
 
 We present the first empirical study to demonstrate that combining reduction in precision and
 resolution can lead to a significant improvement in data quality for the same data budget, and that
@@ -40,37 +28,37 @@ implementation (unlike \sopt), as a signature is negligibly small and thus can b
 stored during preprocessing. It is also interesting to consider per-block signatures instead of a
 global one.
 
-An important question is whether task- and data-dependent streams provide sufficient
-advantages over purely data-independent streams. In practice, data would be used for multiple,
-and not necessarily predefined, tasks and maintaining multiple streams will likely lead to additional
-overheads. Here, we consider \ssig to be the best possible stream that could be realized.
-Improvements on \ssig in the resolution-versus-precision space are likely possible, but unlikely to
-be significant. Given these assumptions and the fact that \ssig in most cases provides very similar
-results to \sbit or \swav, the additional effort (and potential overheads) for task-dependent bit
-orderings is unlikely to be beneficial. This leaves a significant gap between the best
-data-independent streams and the optimal stream \sopt. Our experiments suggest that the majority of
-these differences can be attributed to spatial adaptivity. The prototypical example is isosurface computation,
-where \sopt can skip all regions that do not effect any portion of the surface. It is worthwhile in
-future work to investigate solutions to spatial adaptivity to significantly improve the performance
-of data-independent streams.
+An important question is whether task- and data-dependent streams provide sufficient advantages over
+purely data-independent streams. In practice, data would be used for multiple, and not necessarily
+predefined, tasks, and maintaining multiple streams will likely lead to additional overheads. Here,
+we consider \ssig to be the best possible stream that could be realized. Improvements on \ssig in
+the resolution-versus-precision space are likely possible, but they are unlikely to be significant.
+Given these assumptions and the fact that \ssig in most cases provides very similar results to \sbit
+or \swav, the additional effort (and potential overheads) for task-dependent bit orderings is
+unlikely to be beneficial. This leaves a significant gap between the best data-independent streams
+and the optimal stream \sopt. Our experiments suggest that the majority of these differences can be
+attributed to spatial adaptivity. The prototypical example is isosurface computation, where \sopt
+can skip all regions that do not affect any portion of the surface. It may be worthwhile in future
+work to investigate solutions to spatial adaptivity to significantly improve the performance of
+data-independent streams.
 
-This study can be considered only a first step towards a system of solutions that can optimize
+This study can be considered only a first step toward a system of solutions that can optimize
 storage, network, and I/O bandwidth to suit specific tasks at hand. Ultimately, our results can
-guide development of new data layouts and file formats for scientific data. It seems \swav provides
+guide development of new data layouts and file formats for scientific data. \swav appears to provide
 the best all around performance. However, for a file format additional constraints must be
 considered, such as disk block sizes, cache coherence, and compression. Furthermore, an ideal format
 should allow task-dependent data queries even though task-dependent formats will likely be
 restricted to very specific situations. 
 
-Another important consideration is that for fair comparisons we always reconstruct the data at full
+Another important consideration is that for fair comparisons, we always reconstruct the data at full
 resolution using wavelets. However, processing and memory costs are important, and it is likely that
 adaptive representations would be used in practice~\cite{gigavoxels,Gobbetti2008,vdb2013}. In these
 cases the error of a given approximation depends not only on the available information, but also on
 the data structure and algorithm being used. For example, trilinear interpolation on a coarse grid
 might produce different results than wavelet reconstruction on the original mesh. There exist
-solutions where both interpolations are equivalent~\cite{weiss}, yet these are not yet implement in
-standard tools. An important future research direction will be to understand the implications of the
-results presented here on existing toolchains such as VTK.
+solutions where both interpolations are equivalent~\cite{weiss}, but such solutions have not yet
+been implemented in standard tools. An important future research direction will be to understand the
+implications of the results presented here for existing toolchains such as VTK.
 
 %%% Local Variables:
 %%% mode: latex

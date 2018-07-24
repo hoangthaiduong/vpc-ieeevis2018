@@ -98,26 +98,26 @@ The surfaces are colored by the $x$-component of the normal vector at each point
 
 \subsection{Histogram Computation}\label{sec:histogram}
 
-A histogram succinctly summarizes the distribution of sample values, and thus is useful as a cursory
-``look'' into the data and in guiding further analysis. For example, it can be used to guide the
-selection of colors and opacities in a transfer function.
+A histogram succinctly summarizes the distribution of sample values, and thus it is useful as a
+cursory ``look'' into the data and in guiding further analysis. For example, it can be used to guide
+the selection of colors and opacities in a transfer function.
 
 To decide on an error metric to compare histograms, we experimented with several popular metrics
 such as Kolmogorov-Smirnov~\cite{smirnov1948}, Kullback-Leibler~\cite{kullback1951}, and Earth
-Mover's Distance~\cite{emd1998} among others~\cite{Hellinger1909,Bhattacharyya1943}. We choose
+Mover's Distance~\cite{emd1998}, among others~\cite{Hellinger1909,Bhattacharyya1943}. We chose
 histogram intersection~\cite{histogram_intersection1991} as the metric of choice, because it is fast
 to compute and is reasonably insensitive to changes in precision, as well as the number of bins. The
 intersection distance between two histograms $H_1$ and $H_2$ is defined as
 $\err(H_1,H_2)=1-\sum_{i}{\min{(H_1(i),H_2(i))}}$ (the sum is over all bins $i$). Every histogram is
 normalized by dividing the value in each bin by the total number of samples. We decided that the
-error metric should take into account both the histogram shapes and the range of values, and clamped
-the range of values in reconstructed functions to that of the original function, so that
+error metric should take into account both the histogram shapes and the range of values, and we
+clamped the range of values in reconstructed functions to that of the original function, so that
 corresponding histogram bins, i.e., $H_1(i)$ and $H_2(i)$, share the same range.
 
 As before, for each data set, we use~\Cref{alg:greedy} to compute an \shop stream, optimized for
 histogram error, and then construct an \shsg from its signature. We plot the error curves for all
 relevant streams using the Intersection error metric~(compare
-\Cref{fig:histogram-stream-comparison}). We use 64 for the number of bins, but note that there exist
+\Cref{fig:histogram-stream-comparison}). We use 64 for the number of bins but note that there exist
 no meaningful differences across a wide range of number of bins (from 64 to 512) in our experiments.
 In all cases, the group consisting of \sbit, \slvl, and \smag underperforms the other group by a
 large margin.
@@ -127,7 +127,7 @@ there are several crossover points between the two curves~(visualization
 in~\Cref{fig:histogram-explain}). When leading zero packets are present, \slvl outperforms \sbit,
 because increasing resolution does not help produce an accurate histogram as much as increasing
 precision. The histogram is oblivious to spatial locations of samples (which require resolution to
-resolve), but is sensitive to sample values (which require precision). However, when leading zero
+resolve) but is sensitive to sample values (which require precision). However, when leading zero
 packets are removed, \sbit benefits significantly more than \slvl does (for the same reason
 explained in~\Cref{sec:rmse-optimized}), resulting in the observed crossovers. Finally, \smag
 performs poorly, because it ignores regions of smooth variations, which nevertheless count toward
@@ -136,7 +136,7 @@ the distribution.
 In the latter group, the performances of \swav and \shsg (and even \shop) differ by a negligible
 amount. This observation is confirmed in~\Cref{fig:histograms-boiler}, where we plot various
 histograms, reconstructed at 0.3 bps, for the \emph{boiler} data set. The histograms produced by
-\swav and \shsg have approximately the same shape, and are the closest to the reference histogram.
+\swav and \shsg have approximately the same shape and are the closest to the reference histogram.
 The next best histogram is produced by \slvl, followed by the one produced by \sbit, and finally
 \smag. These results suggest that histogram computation benefits from a bit ordering that combines
-both resolution and precision, with a strong bias towards precision.
+both resolution and precision, with a strong bias toward precision.

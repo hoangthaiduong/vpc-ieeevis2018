@@ -77,9 +77,9 @@ differences without discarding important information. In all cases, in terms of 
 
 Computation of derivative-based quantities is important in data analysis. Examples include vorticity
 (curl) computation from velocity fields to identify vortical structures, gradient computation for
-accurate Morse segmentation and shading, and ridge extraction (e.g. for Lagrangian coherent
+accurate Morse segmentation and shading, and ridge extraction (e.g., for Lagrangian coherent
 structures). In this paper, derivatives are always computed using finite differences, which is
-common in practice. Here we use 32 bits for quantization in this section to ensure enough precision for
+common in practice. In this section, we use 32 bits for quantization to ensure enough precision for
 finite differences. We always compute finite differences on the finest resolution grid to avoid
 computing distances between quantities defined on grids of different resolutions.
 
@@ -89,7 +89,7 @@ Given a function $f$ defined on a grid, its gradient at a grid point \mbox{$\x =
 $\nabla f(\x) = \left(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}, \frac{\partial
 f}{\partial z}\right)$. For accuracy, we use a five-point stencil to compute the gradient, i.e.,
 $\frac{\partial f}{\partial x} \approx \frac{1}{12}f(x-2,y,z) - \frac{2}{3}f(x-1,y,z) +
-\frac{2}{3}f(x+1,y,z) - \frac{1}{12}f(x+2,y,z)$, but note that the relative performances of the
+\frac{2}{3}f(x+1,y,z) - \frac{1}{12}f(x+2,y,z)$, but we note that the relative performances of the
 streams stay the same, using the more common two- and three-point formulas. The error between a
 gradient field $\nabla f$, and its low-bit-rate approximation $\nabla
 \tilde{f}$, is defined as $\err(\nabla \tilde{f}, \nabla f) = \sqrt{\frac{1}{N}
@@ -101,27 +101,25 @@ reconstructed and the original gradient fields.
 data sets. In general, we observe the ordering of performance (from best to worst) as: \sgop, \sgsg,
 \sbit, \swav, \smag, \slvl. This ordering can also be seen in~\Cref{fig:gradient-rendering-diff},
 where the $x$-component of the gradient field for \emph{tuburlence} is rendered at 0.3 bps. Unlike
-the RMSE case, \sbit performs nearly the same as \swav does.
+the RMSE case, \sbit performs nearly the same as \swav.
 
 To investigate this difference, we extract a 1D line from the \emph{plasma} data set and reconstruct
-the function using \sbit and \swav at 0.6 bps
-(\Cref{fig:bit-plane-vs-wavelet-norm-gradient}). \swav's reconstruction is ``smoother'' and more
-accurate \emph{on average}, but lacks the resolution to resolve the high-gradient areas. This is
-because \swav intersperses resolution-improving packets and precision-improving packets, unlike
-\sbit, which always favor resolution-improving packets. \sbit, on the other hand, tends to capture
-well the function's shape (due to fine-scale bits), but the whole function can be ``shifted''
-slightly, due to the lack of precision in the coarse-scale coefficients. However, the gradient
-operator has the tendency to cancel this shifting effect, making \sbit work slightly better than
-\swav, because the former is better at retaining sharp features.
+the function using \sbit and \swav at 0.6 bps (\Cref{fig:bit-plane-vs-wavelet-norm-gradient}).
+\swav's reconstruction is ``smoother'' and more accurate \emph{on average} but lacks the resolution
+to resolve the high-gradient areas. This is because \swav intersperses resolution-improving packets
+and precision-improving packets, unlike \sbit, which always favor resolution-improving packets.
+\sbit, on the other hand, tends to capture well the function's shape (due to fine-scale bits), but
+the whole function can be ``shifted'' slightly, due to the lack of precision in the coarse-scale
+coefficients. However, the gradient operator has the tendency to cancel this shifting effect, making
+\sbit work slightly better than \swav, because the former is better at retaining sharp features.
 
 \sgop again outperforms the rest of the streams. \slvl and \smag perform poorly for gradient
 computation, lacking the resolution to capture sharp features. \sgsg mostly closely follows \sbit in
-performance, but outperforms it for \emph{boiler}. Again, compared to the other fields,
-\emph{boiler} is less smooth, resulting in less spatial coherency in the number of leading zero bits
-for the fine-scale coefficients, which \sgop and \sgsg can take advantage of, while \swav or \sbit
-do not take into account actual bit values. Overall, the results suggest that while \swav is the
-best data-independent streams for minimizing RMSE, \sbit is a good alternative for gradient
-computation.
+performance but outperforms it for \emph{boiler}. Again, compared to the other fields, \emph{boiler}
+is less smooth, resulting in less spatial coherency in the number of leading zero bits for the
+fine-scale coefficients, which \sgop and \sgsg can take advantage of, whereas \swav or \sbit do not
+take into account actual bit values. Overall, the results suggest that although \swav is the best
+data-independent streams for minimizing RMSE, \sbit is a good alternative for gradient computation.
 
 \subsubsection{Laplacian Computation}\label{sec:laplacian}
 
