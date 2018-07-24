@@ -92,10 +92,15 @@ original domain into \emph{subbands}, each of which can be thought of as a resol
 associated with one or more spatial direction. One transform pass (in 3D) creates eight subbands, of
 which the first is a low-pass, downsampled version of the original data, and the remaining add fine
 details in each subset of the dimensions (see \Cref{fig:pipeline} for a visualization of subbands in
-2D). A subsequent transform pass recurses only on the first subband (of the previous level), creating the next (resolution)
-level of subbands. We use $l$ $(0 \leq l < L)$ to index the subbands, with $l = 0$ referring to the
-coarsest subband and $L$ denoting the number of subbands. In this paper, we use $L=1 + 3*7=22$,
-corresponding to three transform passes in 3D.
+2D). A subsequent transform pass recurses only on the first subband (of the previous level),
+creating the next (resolution) level of subbands. We use $l$ $(0 \leq l < L)$ to index the subbands,
+with $l = 0$ referring to the coarsest subband and $L$ denoting the number of subbands. In 3D, the
+eight subbands created after one transform pass are indexed in the following order, from coarse to
+fine: LLL, LLH, LHL, LHH, HLL, HLH, HHL, HHH (L stands for ``low'' and H stands for ``high'',
+referring to the low- and high-pass filter pair that perform the wavelet transform). The LHL
+subband, for example, contains coefficients that are low-pass transformed along $X$ and $Z$, and
+high-pass transformed along $Y$. In our experiments, the number of subbands, $L$, is fixed at $1 +
+3*7=22$, corresponding to three transform passes in 3D.
 
 %\para{Packets for Different Precision Levels.} 
 \para{Precision levels.} 
@@ -248,15 +253,15 @@ the notion of a \emph{stream signature}. Any stream can be represented with resp
 two-dimensional space of resolution (subbands) and precision (bit
 planes), i.e., \mbox{$\Lspace_{L,B}=\{(l,b)\ |\ 0\leq l < L,\ 0\leq b \leq B\}$.}
 
-Given a stream, we define its signature $\sgn$ as an $L \times (1+B)$ matrix, where each $(l,b)$
+Given a stream, we define its signature $A$ as an $L \times (1+B)$ matrix, where each $(l,b)$
 element is associated with $P_{l,b}$, the set of packets belonging to subband $l$ and bit plane $b$.
-In particular, $\sgn_{l,b}$, i.e., the $(l,b)$ element of $\sgn$, is an integer in the range $[0,
+In particular, $A(l,b)$, i.e., the $(l,b)$ element of $A$, is an integer in the range $[0,
 (1+B)\times L)$, and indicates, on average, the position at which packets in $P_{l,b}$ appear in the
-given stream. For example, the signature $\sgn=\bigl[ \begin{smallmatrix}0 & 1 & 4\\
+given stream. For example, the signature $A=\bigl[ \begin{smallmatrix}0 & 1 & 4\\
 2 & 3 & 5\end{smallmatrix}\bigr]$ indicates that the stream begins with packets that lie on the
-first bit plane of the first subband, as $\sgn_{0,0}=0$. Those are followed by packets on the second
-bit plane of the first subband ($\sgn_{0,1}=1$), and then the first bit plane of the second subband
-($\sgn_{1,0}=2$), and finally, the third bit plane of the second subband ($\sgn_{1,2}=5$). Thus, a
+first bit plane of the first subband, as $A(0,0)=0$. Those are followed by packets on the second
+bit plane of the first subband ($A(0,1)=1$), and then the first bit plane of the second subband
+($A(1,0)=2$), and finally, the third bit plane of the second subband ($A(1,2)=5$). Thus, a
 stream's signature shows how the stream traverses the space $\Lspace_{L,B}$ and highlights the
 different resolution-versus-precision trade-offs among streams, especially among \sopt streams
 optimized for different tasks. In~\Cref{fig:example-signatures} we visualize the signatures of
@@ -290,27 +295,27 @@ Algorithm~\ref{alg:signature} lists the steps of our approach.
   \begin{algorithmic}[1]
     \Inputs{
 			A stream $P=\{p_i\}$\\}
-		\Initialize{Per-region signature matrix $\sgn_r:= 0$\\
-		Global signature matrix $\sgn := 0$}
+		\Initialize{Per-region signature matrix $A_r:= 0$\\
+		Global signature matrix $A := 0$}
 		\For{each packet $p_i$ in $P$}
 			\State Let $r$, $b$, $l$ be the region, bit plane, and subband that $p_i$ belongs
-			\State $\sgn_r(l,b) := \sgn_r(l,b)+i$
+			\State $A_r(l,b) := A_r(l,b)+i$
 		\EndFor
 		\For{each region $r$}
-			\State Sort the elements of $\sgn_r$
-			\State Assign each element of $\sgn_r$ its index after sorting
-			\State $\sgn := \sgn+\sgn_r$
+			\State Sort the elements of $A_r$
+			\State Assign each element of $A_r$ its index after sorting
+			\State $A := A+A_r$
 		\EndFor
-		\State Sort the elements of $\sgn$
-		\State Assign each element of $\sgn$ its index after sorting
-		\Output{The signature matrix $\sgn$}
+		\State Sort the elements of $A$
+		\State Assign each element of $A$ its index after sorting
+		\Output{The signature matrix $A$}
 	\end{algorithmic}
 	\label{alg:signature}
 \end{algorithm}
 
 Finally, a signature can be used to construct a stream denoted generically as $\ssig$. This
-construction is done by iterating through each element $\sgn(l,b)$ in ascending order and adding to
-the end of \ssig all the packets in $P_{l,b}$. An \ssig captures the behavior (in the
-$\Lspace_{L,B}$ space) of the stream it derives from, but it is stripped from any spatial
-adaptivity. Hence, when \ssig is derived from an \sopt, it can serve as a bridge when comparing the
+construction is done by iterating through each element $A(l,b)$ in ascending order and adding to the
+end of \ssig all the packets in $P_{l,b}$. An \ssig captures the behavior (in the $\Lspace_{L,B}$
+space) of the stream it derives from, but it is stripped from any spatial adaptivity. Hence, when
+\ssig is derived from an \sopt, it can serve as a bridge when comparing the
 resolution-versus-precision trade-offs between data-independent and data-dependent streams.
