@@ -12,7 +12,7 @@ unsuitable for very large data.
 Recent multi-resolution techniques save storage by adapting to the data in such a way that different
 regions are stored with different resolutions. A very popular approach is sparse voxel
 octrees~\cite{gigavoxels,Gobbetti2008}, and
-variations~\cite{Fogal-2013-RayGuided,visualization-driven,large‐scale-volume}. Smooth-varying
+variations~\cite{Fogal-2013-RayGuided,visualization-driven,large-scale-volume}. Smooth-varying
 regions are stored at coarser octree levels, which significantly reduces storage. During rendering,
 blocks of samples are streamed from an appropriate resolution, determined by how far the queried
 samples are from the eye/camera.
@@ -112,9 +112,9 @@ bit rate. In general, efficiently leveraging both axes of data reduction has not
 \para{Error quantification.}
 Several works have aimed at quantifying the error incurred by data reduction, by compression or
 otherwise, for the results of analysis tasks. Baker \etal~\cite{evaluating-compression-climate}
-evaluate several compressors (FPZIP~\cite{fpzip}, APAX~\cite{apax}, ISABELA~\cite{isabela}) on
-ensembles of climate simulation data. Laney \etal~\cite{compression_sim2013} study the effects of
-lossy compression (using FPZIP and APEX) on the Miranda hydrodynamic simulation code. Li
+evaluate several compressors, including FPZIP~\cite{fpzip} and ISABELA~\cite{isabela} on ensembles
+of climate simulation data. Laney \etal~\cite{compression_sim2013} study the effects of lossy
+compression (using FPZIP and APEX) on the Miranda hydrodynamic simulation code. Li
 \etal~\cite{evaluating-efficacy-wavelet} measure the error incurred by wavelet compression on
 turbulent-flow data. Wang \etal~\cite{statistical-volume-quality} assess the quality of distorted
 data using a combination of statistical metrics in the wavelet transform domain. Etiene \etal have
@@ -122,13 +122,13 @@ published a series of studies on verification of isosurfaces in
 geometrical~\cite{verifiable-isosurface} and topological~\cite{topology-verification-isosurface}
 terms, as well as verification of volume-rendered images~\cite{verifying-volume-rendering}. They
 focus on order-of-accuracy and convergence analysis, where errors are introduced mostly through
-discretization, not necessarily for the purpose of reducing data bandwidth. For
-volume rendering, Ljung \etal~\cite{transfer-function-based} compute an error estimate based on
-color variation between low and high resolution levels in each block, which guides the selection of
-an appropriate resolution level for every block. Finally, the Z-checker framework~\cite{z-checker}
-consists of a wide range of independent metrics to evaluate data quality after lossy compression. In
-general, the resolution-versus-precision trade-off, as well as the various orderings of bits in data
-analysis and visualization have not been well studied.
+discretization, not necessarily for the purpose of reducing data bandwidth. For volume rendering,
+Ljung \etal~\cite{transfer-function-based} compute an error estimate based on color variation
+between low and high resolution levels in each block, which guides the selection of an appropriate
+resolution level for every block. Finally, the Z-checker framework~\cite{z-checker} consists of a
+wide range of independent metrics to evaluate data quality after lossy compression. In general, the
+resolution-versus-precision trade-off, as well as the various orderings of bits in data analysis and
+visualization have not been well studied.
 
 %by magnitude streams~\cite{image_compression1992}
 % Transfer function adaptive decompression~\cite{tf_decompression2004}
