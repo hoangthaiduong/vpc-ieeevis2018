@@ -208,18 +208,17 @@ to \sopt too early, because by starting with the full (instead of empty) set of 
 measurement better captures the importance of packets.
 
 Unfortunately, such a greedy algorithm is still expensive in practice, as its complexity is at least
-$\mathcal{O}(n^2)$ ($n$ is the total number of packets), due to the 2-level nested loop. For a
-$nx\times ny \times nz$ volume and a block size of $bx\times by\times bz$ samples, $n$ is
-$\frac{nx}{bx}\times \frac{ny}{by}\times \frac{nz}{bz} \times (B+1)$, with $(B+1)$ being the number
-of bit planes. Even a small volume, e.g., $nx=ny=nz=64$ with $bx=by=bz=2$, hence $n^2=(32768\times
-16)^2$, will result in a prohibitively high run time. Therefore, we adopt a simplified version of
-this algorithm, where only one pass through $n$ packets is needed. In iteration $i$ ($0\leq i < n$),
-we set a new packet $p_i$ to zero in $f'$, compute and record the incurred error $w_i$ using the
-error metric $\err$, and then enable $p_i$ again at the end of iteration $i$. After $n$ iterations,
-each packet has an associated weight $w_i$. The stream \sopt is simply the sorted list of packets in
-decreasing order of the weights. This simplified algorithm has significantly lower running time,
-while (by observation) retaining the same quality for \sopt. \Cref{alg:greedy} outlines the approach
-described above.
+$\mathcal{O}(n^2)$ ($n$ is the number of packets), due to the 2-level nested loop. For a $nx\times
+ny \times nz$ volume, a block size of $bx\times by\times bz$, and $B+1$ bit planes, $n$ is
+$\frac{nx}{bx}\times \frac{ny}{by}\times \frac{nz}{bz} \times (B+1)$. Thus, even a small volume,
+e.g., $nx,ny,nz=64$ and $bx,by,bz=2$, can result in a prohibitively high run time, as
+$n^2=(32768\times 17)^2$. Therefore, we adopt a simplified version of this algorithm, where only one
+pass through $n$ packets is needed. In iteration $i$ ($0\leq i < n$), we set a new packet $p_i$ to
+zero, compute and record the incurred error $w_i$ using the error metric $\err$, and then enable
+$p_i$ again at the end of iteration $i$. After $n$ iterations, each packet has an associated weight
+$w_i$. The stream \sopt is simply the sorted list of packets in decreasing order of the weights.
+This simplified algorithm (\Cref{alg:greedy}) has significantly lower running time, while (by
+observation) retaining the same quality for \sopt.
 
 \begin{algorithm}[h]
   \caption{Computing a task-optimized stream}
@@ -242,6 +241,11 @@ described above.
 	\end{algorithmic}
 	\label{alg:greedy}
 \end{algorithm}
+
+\vspace{-1em}
+We note that for a more optimized implementation, the inverse wavelet transform on line 7 can be
+replaced by ``splatting'' coefficient $p_i$ onto the domain, due to the transform being linear and
+the fact that $p_i$ is the only coefficient changed in the current iteration.
 
 \subsection{Stream Signatures} \label{sec:stream-signature}
 
