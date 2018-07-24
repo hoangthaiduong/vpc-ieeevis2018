@@ -91,11 +91,10 @@ f}{\partial z}\right)$. For accuracy, we use a five-point stencil to compute the
 $\frac{\partial f}{\partial x} \approx \frac{1}{12}f(x-2,y,z) - \frac{2}{3}f(x-1,y,z) +
 \frac{2}{3}f(x+1,y,z) - \frac{1}{12}f(x+2,y,z)$, but we note that the relative performances of the
 streams stay the same, using the more common two- and three-point formulas. The error between a
-gradient field $\nabla f$, and its low-bit-rate approximation $\nabla
-\tilde{f}$, is defined as $\err(\nabla \tilde{f}, \nabla f) = \sqrt{\frac{1}{N}
-\sum_{i=1}^{N}{\norm{\nabla \tilde{f}(\x_i)-\nabla f(\x_i)}^2}}$. Using~\Cref{alg:greedy}, we
-compute a \emph{gradient-optimized} stream, \sgop, that minimizes the difference between the
-reconstructed and the original gradient fields.
+gradient field $\nabla f$, and its low-bit-rate approximation $\nabla f'$, is defined as
+$\err(\nabla f', \nabla f) = \sqrt{\frac{1}{N} \sum_{i=1}^{N}{\norm{\nabla f'(\x_i)-\nabla
+f(\x_i)}^2}}$. Using~\Cref{alg:greedy}, we compute a \emph{gradient-optimized} stream, \sgop, that
+minimizes the difference between the reconstructed and the original gradient fields.
 
 \Cref{fig:gradient-error-comparison} shows the gradient error incurred by different streams for four
 data sets. In general, we observe the ordering of performance (from best to worst) as: \sgop, \sgsg,
@@ -132,10 +131,10 @@ Using a five-point finite difference, we approximate
 $\frac{{\partial}^2 f}{\partial{x^2}}
 \approx
 -\frac{1}{12}f(x-2,y,z)+\frac{4}{3}f(x-1,y,z)-\frac{5}{2}f(x,y,z)+\frac{4}{3}f(x+1,y,z)-\frac{1}{12}f(x+2,y,z)$.
-We use the root-mean-square error to compare two Laplacian fields, i.e., $\err(\Delta
-\tilde{f},\Delta f)=\text{RMSE}(\Delta \tilde{f},\Delta f)$. As usual, we use~\Cref{alg:greedy} to
-compute a \emph{Laplacian-optimized} stream, \slop, which minimizes $\err$, and an \slsg stream from
-its signature.~\Cref{fig:laplacian-error-comparison} plots the errors for all relevant streams. The
+We use the root-mean-square error to compare two Laplacian fields, i.e., $\err(\Delta f',\Delta
+f)=\text{RMSE}(\Delta f',\Delta f)$. As usual, we use~\Cref{alg:greedy} to compute a
+\emph{Laplacian-optimized} stream, \slop, which minimizes $\err$, and an \slsg stream from its
+signature.~\Cref{fig:laplacian-error-comparison} plots the errors for all relevant streams. The
 plots here largely follow the ones in~\Cref{fig:gradient-error-comparison}, in terms of relative
 performance among the streams, but with more discernible gaps between \sbit and \slsg, as well as
 between \slsg and \sbit. The results suggest that similar to the gradient case, computation of the

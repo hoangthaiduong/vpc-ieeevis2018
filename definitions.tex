@@ -156,7 +156,7 @@ In the wavelet representation, a function $f$ is written as a linear sum of wave
 i.e., $f=\sum{c_i\wbas_i}$, where $c_i$ are the coefficients. Since our wavelet transforms are based
 on lifting, this norm is usually not one, but it increases with level. Basis functions in the same
 subband share the same norm, hence $\wwav(p)$ is simply the contribution (in $L_2$ norm) of a bit on
-bit plane $b_p$ and subband $l_p$, to the whole function $f$. This ordering based on norms of
+bit plane $b(p)$ and subband $l(p)$, to the whole function $f$. This ordering based on norms of
 wavelet basis functions was proposed previously by Weiss \etal~\cite{weiss}.
 
 Another common way to reduce data in the wavelet domain is to leave out the coefficients of the
@@ -185,29 +185,27 @@ Each analysis task may require a fundamentally different stream for optimal resu
 an ``optimal'' stream is important because it not only serves as a baseline but also can provide
 insights into other, more practical streams for the same task.
 
-Given the original data set $f$ and its reconstructed approximation $\tilde{f}$ using a subset of
-packets, let $q$ represent some quantity of interest, e.g., histogram, isosurface, etc., computed on
-$f$ or $\tilde{f}$. For a given task $q$, a well-defined error metric $\err(q(\tilde{f}),q(f))$ is
-needed. Given a data set $f$, a task $q$, and an error metric $\err$, our goal is to generate an
-\emph{optimal} (and data-dependent) stream, $\sopt$, for $q$ with respect to $\err$. One possible
-definition for $\sopt$ is a stream such that the area under the plotted curve of \err, with respect
-to the number of bits, is minimized for all packets to be streamed. However, this definition is
-limited in practice because a stream should be able to terminate at any point and still produce as
-small an error as possible.
+Given the original data set $f$ and its reconstructed approximation $f'$ using a subset of packets,
+let $q$ represent some quantity of interest, e.g., histogram, isosurface, etc., computed on $f$ or
+$f'$. For a given $q$, a well-defined error metric $\err(q(f'),q(f))$, which returns a single
+scalar, is needed. Given $f$, $q$, and $\err$, our goal is to generate an \emph{optimal} (and
+data-dependent) stream, $\sopt$, for $q$ with respect to $\err$. One possible definition for $\sopt$
+is a stream such that the area under the plotted curve of \err, with respect to the number of bits,
+is minimized for all packets to be streamed. However, this definition is limited in practice because
+a stream should be able to terminate at any point and still produce as small an error as possible.
 
 Instead, we employ a greedy approach to define the optimal stream. We notice through experiments,
 however, that a straightforward greedy algorithm can pick unimportant packets too early. For
-example, starting with an all-zero reconstruction $\tilde{f}=0$ and an empty stream, we can
-repeatedly append new packets to the stream, which when included in the current $\tilde{f}$, would
-minimize $\err$ at every step. At some point, the algorithm might pick a packet that introduces the
-lowest error yet contributes very little to improve the quality of $\tilde{f}$ (because more
-important packets would increase the error), leading to a nonoptimal stream. To avoid this problem,
-we make a modification to this greedy algorithm and build the stream backwards. We start with a
-``lossless'' $\tilde{f}$ (i.e., $\tilde{f}=f$), and at each step we remove the packet that has the
-least impact on the error $\err$ from $\tilde{f}$. This modification largely avoids the previous
-problem where less important packets were added to \sopt too early, because by starting with the
-full (instead of empty) set of packets, our error measurement better captures the importance of
-packets.
+example, starting with an all-zero reconstruction $f'=0$ and an empty stream, we can repeatedly
+append new packets to the stream, which when included in the current $f'$, would minimize $\err$ at
+every step. At some point, the algorithm might pick a packet that introduces the lowest error yet
+contributes very little to improve the quality of $f'$ (because more important packets would
+increase the error), leading to a nonoptimal stream. To avoid this problem, we make a modification
+to this greedy algorithm and build the stream backwards. We start with a ``lossless'' $f'$ (i.e.,
+$f'=f$), and at each step we remove the packet that has the least impact on the error $\err$ from
+$f'$. This modification largely avoids the previous problem where less important packets were added
+to \sopt too early, because by starting with the full (instead of empty) set of packets, our error
+measurement better captures the importance of packets.
 
 Unfortunately, such a greedy algorithm is still expensive in practice, as its complexity is at least
 $\mathcal{O}(n^2)$ ($n$ is the total number of packets), due to the 2-level nested loop. For a
@@ -216,12 +214,12 @@ $\frac{nx}{bx}\times \frac{ny}{by}\times \frac{nz}{bz} \times (B+1)$, with $(B+1
 of bit planes. Even a small volume, e.g., $nx=ny=nz=64$ with $bx=by=bz=2$, hence $n^2=(32768\times
 16)^2$, will result in a prohibitively high run time. Therefore, we adopt a simplified version of
 this algorithm, where only one pass through $n$ packets is needed. In iteration $i$ ($0\leq i < n$),
-we set a new packet $p_i$ to zero in $\tilde{f}$, compute and record the incurred error $\err_i$,
-and then enable $p_i$ again at the end of iteration $i$. After $n$ iterations, each packet has an
-associated weight $\err_i$. The stream \sopt is simply the sorted list of packets in decreasing
-order of the weights. This simplified algorithm has significantly lower running time, while (by
-observation) retaining the same quality for \sopt. \Cref{alg:greedy} outlines the approach described
-above.
+we set a new packet $p_i$ to zero in $f'$, compute and record the incurred error $w_i$ using the
+error metric $\err$, and then enable $p_i$ again at the end of iteration $i$. After $n$ iterations,
+each packet has an associated weight $w_i$. The stream \sopt is simply the sorted list of packets in
+decreasing order of the weights. This simplified algorithm has significantly lower running time,
+while (by observation) retaining the same quality for \sopt. \Cref{alg:greedy} outlines the approach
+described above.
 
 \begin{algorithm}[h]
   \caption{Computing a task-optimized stream}
@@ -230,16 +228,16 @@ above.
 			An original function $f$\\
 			An unordered set of $n$ packets $P = \{p_i\}$, produced from $f$\\
 			A quantity of interest $q$, and an error function $\err$}
-		\Initialize{A set of $n$ weights $\Gamma = \{\gamma_i\}$ }
+		\Initialize{A set of $n$ weights $\{w_i\}$ }
 		\For{each packet $p_i$}
 			\State $p_i := 0$
-      \State $P \rightarrow$ wavelet coefficients \wcof \\
+      \State $P \rightarrow$ wavelet coefficients $C=\{c_j\}$\\
       		\ \ \ \ \ \ \ \ \ \ \ \ (inverse quantization and inverse negabinary transform)
-			\State $\wcof \rightarrow f'$ (inverse wavelet transform)
-			\State $\gamma_i := \err(q(f'),q(f))$			
+			\State $\{c_j\} \rightarrow f'$ (inverse wavelet transform)
+			\State $w_i := \err(q(f'),q(f))$			
 			\State Restore $p_i$
 		\EndFor
-		\State Sort the $p_i$'s in descending order of $\gamma_i$.
+		\State Sort the $p_i$'s in descending order of $w_i$.
 		\Output{The $q$-optimized stream, which is the sorted $P$}
 	\end{algorithmic}
 	\label{alg:greedy}
