@@ -54,13 +54,11 @@ With the error metric defined, we can compute a data-dependent stream optimized 
 (\siop) and a stream based on its signature (\sisg) using~\Cref{alg:greedy}
 and~\Cref{alg:signature}. \Cref{fig:isocontour-plots} compares the performances of these two
 streams, along with \sbit, \slvl, \swav, and \smag. As can be observed, \slvl performs poorly,
-indicating that isosurface extraction, unlike histogram computation, requires higher levels of
-resolution, as we need to resolve a surface in space. \swav typically outperforms \sbit, but \sisg
-does not provide a clear advantage over \swav as often seen in other tasks. The reduced
-effectiveness of \sisg may be explained by the fact that to compute an isosurface error, voxels are
-classified into only two broad categories, allowing for a higher tolerance for differences in
-streams.~\Cref{fig:isocontour-surfaces-pressure} renders the isosurfaces reconstructed at 0.6 bps
-for all streams. In terms of the quality of the reconstructed surfaces, $\sisg \approx \swav > \sbit
-> \smag > \slvl$, which agrees with the plots in~\Cref{fig:isocontour-plots}. For isosurface
-extraction, \swav seems to be the only stream --- among the data-independent ones --- that
+indicating that isosurface extraction, requires higher levels of resolution compared to histogram
+computation, as we need to resolve a surface in the spatial domain and not just the range domain of
+the function. \swav and \sisg typically outperform \sbit, especially at low bit
+rates.~\Cref{fig:isocontour-surfaces-pressure} renders the isosurfaces reconstructed at 0.6 bps for
+all streams. In terms of the quality of the reconstructed surfaces, $\sisg \approx \swav > \sbit >
+\smag > \slvl$, which agrees with the plots in~\Cref{fig:isocontour-plots}. For isosurface
+extraction, \swav appears to be the only stream --- among the data-independent ones --- that
 consistently works well in all cases.

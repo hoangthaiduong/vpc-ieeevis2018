@@ -122,16 +122,15 @@ no meaningful differences across a wide range of number of bins (from 64 to 512)
 In all cases, the group consisting of \sbit, \slvl, and \smag underperforms the other group by a
 large margin.
 
-Among the former group of streams, \slvl generally outperforms \sbit at low bit rates, although
-there are several crossover points between the two curves~(visualization
-in~\Cref{fig:histogram-explain}). When leading zero packets are present, \slvl outperforms \sbit,
-because increasing resolution does not help produce an accurate histogram as much as increasing
-precision. The histogram is oblivious to spatial locations of samples (which require resolution to
-resolve) but is sensitive to sample values (which require precision). However, when leading zero
-packets are removed, \sbit benefits significantly more than \slvl does (for the same reason
-explained in~\Cref{sec:rmse-optimized}), resulting in the observed crossovers. Finally, \smag
-performs poorly, because it ignores regions of smooth variations, which nevertheless count toward
-the distribution.
+\smag performs poorly, because it ignores regions of smooth variations, which nevertheless count
+toward the distribution. \slvl generally outperforms \sbit at low bit rates, although there are
+several crossover points between the two curves. As can be seen in~\Cref{fig:histogram-explain},
+\slvl outperforms \sbit when leading zero packets are present, because increasing resolution does
+not help as much as increasing precision. This is because the histogram is oblivious to spatial
+locations of samples (which require resolution to resolve) but is sensitive to sample values (which
+require precision). However, when leading zero packets are removed, \sbit benefits significantly
+more than \slvl does (for the same reason explained in~\Cref{sec:rmse-optimized}), resulting in the
+observed crossovers.
 
 In the latter group, the performances of \swav and \shsg (and even \shop) differ by a negligible
 amount. This observation is confirmed in~\Cref{fig:histograms-boiler}, where we plot various

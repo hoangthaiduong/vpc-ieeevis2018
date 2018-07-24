@@ -8,9 +8,9 @@
 (\swav)}{{\includegraphics[width=0.48\linewidth]{gradient/1d_plasma_by_wavelet_norm}\vspace{-0.5em}}}
 \vspace{-0.5em}
 \caption{A 1D line extracted from \emph{plasma}, and reconstructed using \sbit and \swav at 0.6 bps.
-The original data is in orange and the reconstructions are in blue. On average, \swav captures well
-the function values, where \sbit struggles (seen as a slight vertical shift). However, \sbit retains
-the shape of the function slightly better in high-gradient areas.}
+The original data is in orange and the reconstructions are in blue. \sbit is worse at capturing the
+function values (seen as a slight vertical shift) but it is comparable to \swav in capturing the
+shape of the function, which is important for gradient computation.}
 \label{fig:bit-plane-vs-wavelet-norm-gradient}
 \vspace{-1em}
 \end{figure}
@@ -48,8 +48,7 @@ The trend in error, in all cases, is $\sgop < \sgsg \approx \sbit \approx \swav 
 {\includegraphics[width=0.16\linewidth]{gradient/gradient-turbulence-groundtruth.png}\vspace{-0.5em}}}
 \vspace{-0.5em}
 \caption{The $x$-component of the ($64^3$) gradient field of \emph{turbulence}, reconstructed at 0.3
-bps. The gradient field produced by \sbit is more accurate than the one produced by \swav, and
-slightly more accurate than the one produced by \sgsg (compare orange features).}
+bps. \sbit, \swav, and \sgsg produce visually comparable gradient fields.}
 \label{fig:gradient-rendering-diff}
 %\vspace{-1em}
 \end{figure*}
@@ -104,21 +103,20 @@ the RMSE case, \sbit performs nearly the same as \swav.
 
 To investigate this difference, we extract a 1D line from the \emph{plasma} data set and reconstruct
 the function using \sbit and \swav at 0.6 bps (\Cref{fig:bit-plane-vs-wavelet-norm-gradient}).
-\swav's reconstruction is ``smoother'' and more accurate \emph{on average} but lacks the resolution
-to resolve the high-gradient areas. This is because \swav intersperses resolution-improving packets
-and precision-improving packets, unlike \sbit, which always favor resolution-improving packets.
-\sbit, on the other hand, tends to capture well the function's shape (due to fine-scale bits), but
-the whole function can be ``shifted'' slightly, due to the lack of precision in the coarse-scale
-coefficients. However, the gradient operator has the tendency to cancel this shifting effect, making
-\sbit work slightly better than \swav, because the former is better at retaining sharp features.
+\swav's reconstruction is more accurate on average compared to \sbit, which captures well the
+function's shape (due to the presence of fine-scale bits), but not the function values (due to the
+lack of precision in the coarse-scale coefficients). Functions reconstructed with \sbit tend to be
+``shifted'' in the range domain, as seen in ~\Cref{fig:bit-plane-vs-wavelet-norm-gradient}. However,
+the gradient operator has the tendency to cancel the shifting effect, bringing the performance of
+\sbit closer to that of \swav.
 
 \sgop again outperforms the rest of the streams. \slvl and \smag perform poorly for gradient
 computation, lacking the resolution to capture sharp features. \sgsg mostly closely follows \sbit in
 performance but outperforms it for \emph{boiler}. Again, compared to the other fields, \emph{boiler}
-is less smooth, resulting in less spatial coherency in the number of leading zero bits for the
-fine-scale coefficients, which \sgop and \sgsg can take advantage of, whereas \swav or \sbit do not
-take into account actual bit values. Overall, the results suggest that although \swav is the best
-data-independent streams for minimizing RMSE, \sbit is a good alternative for gradient computation.
+is less smooth, resulting in less spatial coherency in the magnitudes of the fine-scale
+coefficients, which \sgop and \sgsg can take advantage of, whereas \swav or \sbit do not take into
+account actual bit values. Overall, the results suggest that besides minimizing RMSE, \swav also
+works well for gradient computation, although for the latter task, \sbit is also good alternative.
 
 \subsubsection{Laplacian Computation}\label{sec:laplacian}
 
