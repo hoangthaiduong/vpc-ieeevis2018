@@ -63,6 +63,8 @@
 %\usepackage{algorithm}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{xspace}
+%\usepackage[title]{appendix}
+\usepackage{fancyvrb}
 \algnewcommand{\Inputs}[1]{%
   \State \textbf{Inputs:}
   \Statex \hspace*{\algorithmicindent}\parbox[t]{.9\linewidth}{\raggedright #1}
@@ -330,10 +332,34 @@
 \input{isocontour.tex}
 \input{conclusions.tex}
 
+\appendix{
+  \label{apd:norm-basis_funcs}
+  \section{L2 Norms of CDF5/3 wavelet basis functions}
+  The $\swav$ stream requires the norms of CDF5/3 wavelet basis functions, which the
+  following pseudocode computes.
+  \begin{Verbatim}[fontsize=\small]
+sca_weights = [1/2, 1, 1/2]
+wav_weights = [-1/8, -1/4, 3/4, -1/4, -1/8]
+scal_func = sca_weights, wav_func = wav_weights
+sca_norms = [], wav_norms = []
+for (l = 0; l < n+1; l = l+1) {
+  sca_norms[l] = norm(sca_func), wav_norms[l] = norm(wav_func)
+  wav_weights = upsample(wav_weights)
+  wav_func = convolve(wav_weights, sca_func)
+  sca_weights = upsample(sca_weights)
+  sca_func = convolve(sca_weights, sca_func) }
+  \end{Verbatim}
+  The \texttt{upsample} function adds a 0 between every two adjacent samples in its argument. The
+\texttt{convolve} function implements the convolution operation in 1D. When the loop ends, \texttt{sca\_norms[n]}
+stores the the norm of the basis functions in the coarsest subband (they all share the same norm),
+while \texttt{wav\_norms[n-1], wav\_norms[n-2]}, \dots store the norms of basis functions in
+subsequent subbands, from coarse to fine.
+
 %% if specified like this the section will be committed in review mode
-\acknowledgments{We thank Benjamin Isaac for the \emph{boiler} data set and Kristoffer Matheson and
-  Ashley Spear for the \emph{foam} data set, collected through work supported by NSF grant
-  DMREF-1629660. This work was performed under the auspices of the U.S. Department of Energy by
+\acknowledgments{We thank the reviewers for their valueable comments. Some of the data sets are
+  kindly shared with us by Benjamin Isaac (\emph{boiler}) and Kristoffer Matheson and
+  Ashley Spear (\emph{foam} -- collected through work supported by NSF grant
+  DMREF-1629660). This work was performed under the auspices of the U.S. Department of Energy by
   Lawrence Livermore National Laboratory under Contract DE-AC52-07NA27344 and was supported by the
   LLNL-LDRD Program under Project No. 17-SI-004. This work is supported in part by NSF: CGV:
   Award:1314896,  NSF:IIP Award :1602127 NSF:ACI:award 1649923, DOE/SciDAC DESC0007446, CCMSC
@@ -341,6 +367,7 @@
   Department of Energy, National Nuclear Security Administration, under Award Number(s)
   DE-NA0002375. This work was also supported by the Department of Energy Office of Science, Office
   of Advanced Scientific Computing Research under the guidance of Dr. Lucy Nowell.}
+
 
 %\bibliographystyle{abbrv}
 \bibliographystyle{abbrv-doi}

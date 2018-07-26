@@ -7,21 +7,17 @@ pyramids~\cite{laplacian-pyramid} and
 mipmaps~\cite{multires_octree1999,interactive-exploration-ct-scans}. The data is often stored in
 blocks on each resolution level. To save bandwidth, low-resolution versions of distant blocks can be
 streamed during rendering. However, these methods increase storage requirements, making them
-unsuitable for very large data.
-
-Recent multiresolution techniques save storage by adapting to the data in such a way that different
-regions are stored with different resolutions. A very popular approach is sparse voxel
-octrees~\cite{gigavoxels,Gobbetti2008} and
+unsuitable for very large data. Recent multiresolution techniques save storage by adapting to the
+data in such a way that different regions are stored with different resolutions. A very popular
+approach is sparse voxel octrees~\cite{gigavoxels,Gobbetti2008} and
 variations~\cite{Fogal-2013-RayGuided,visualization-driven,large-scale-volume}. Smooth-varying
 regions are stored at coarser octree levels, which significantly reduces storage. During rendering,
 blocks of samples are streamed from an appropriate resolution, determined by how far the queried
-samples are from the eye/camera.
-
-A sparse, multiresolution hierarchy can also be built using other trees such as B+
-tree~\cite{vdb2013} and kd-tree~\cite{fogal-kdtree,in-situ-sampling-particle}, or space-filling
-curves~\cite{idx2001, mloc}, which reorder data samples to form a hierarchy without any filtering
-steps or redundant samples. Low-resolution levels are constructed via subsampling, which,
-unfortunately, is prone to aliasing problems.
+samples are from the eye/camera. A sparse, multiresolution hierarchy can also be built using other
+trees such as B+ tree~\cite{vdb2013} and kd-tree~\cite{fogal-kdtree,in-situ-sampling-particle}, or
+space-filling curves~\cite{idx2001, mloc}, which reorder data samples to form a hierarchy without
+any filtering steps or redundant samples. Low-resolution levels are constructed via subsampling,
+which, unfortunately, is prone to aliasing problems.
 
 \para{Transform-based multiresolution hierarchies.}
 Other multiresolution approaches reduce data by transform-based compression. For example,
@@ -67,16 +63,16 @@ unexplored.
 
 %\paragraph{\textbf{Wavelet coders}}
 \para{Wavelet coders.}
-Most work that explores the precision axis comes from state-of-the-art wavelet coders. Wavelet
-coefficients in corresponding regions across subbands can be thought of as belonging to a ``tree''.
-The embedded zerotrees (EZW) coder exploits the observation that in such trees, ``parent''
-coefficients are often larger in magnitude than their ``children''. EZW therefore locates trees of
-wavelet coefficients that are insignificant with regard to a series of thresholds and encodes such a
-tree with one single symbol. The thresholds are typically set at the bit planes, starting from the
-most significant one. In this way, the data can be progressively refined in precision during
-decompression. The SPIHT coder~\cite{spiht1996} improves on EZW by locating more general types of
-zero trees~\cite{quantifying-coding-performance}. SPECK~\cite{speck2004} extends SPIHT to also
-exploit spatial correlations among nearby coefficients on the same subband.
+Most work that explores the precision axis can be found in wavelet coders. Wavelet coefficients in
+corresponding regions across subbands can be thought of as belonging to a ``tree''. The embedded
+zerotrees (EZW) coder exploits the observation that in such trees, ``parent'' coefficients are often
+larger in magnitude than their ``children''. EZW therefore locates trees of wavelet coefficients
+that are insignificant with regard to a series of thresholds and encodes such a tree with one single
+symbol. The thresholds are typically set at the bit planes, starting from the most significant one.
+In this way, the data can be progressively refined in precision during decompression. The SPIHT
+coder~\cite{spiht1996} improves on EZW by locating more general types of zero
+trees~\cite{quantifying-coding-performance}. SPECK~\cite{speck2004} extends SPIHT to also exploit
+spatial correlations among nearby coefficients on the same subband.
 
 %\paragraph{\textbf{Floating-point compression}}
 \para{Floating-point compression.}
@@ -101,12 +97,12 @@ Schemes that allow progressive data access in both resolution and precision incl
 SBHP~\cite{sbhp2000} and JPEG2000~\cite{jpeg2000}. Both partition each subband into blocks and code
 each block independently, in bit plane order. By interleaving compressed bits across blocks, one can
 construct a purely resolution-progressive or a purely precision-progressive stream, or anything in
-between. Outside image compression, JPEG2000 has found use in the compression of scientific data.
-For example, Woodring \etal~\cite{woodring2011} use JPEG2000 to store floating point data. Since
-most JPEG2000 implementations are limited to integer data, the authors apply uniform scalar
-quantization to convert floating point data to integer form. Even though JPEG2000 supports varying
-both resolution and precision, most works do not explore this capability but focus only on setting
-bit rate. In general, efficiently leveraging both axes of data reduction has not been well studied.
+between. JPEG2000 has found use in the compression of scientific data, e.g., by Woodring \etal
+~\cite{woodring2011}. Since most JPEG2000 implementations are limited to integer data, the authors
+apply uniform scalar quantization to convert floating point data to integer form. Even though
+JPEG2000 supports varying both resolution and precision, most works do not explore this capability
+but focus only on setting bit rate. In general, efficiently leveraging both axes of data reduction
+has not been well studied.
 
 %\paragraph{\textbf{Error quantification}}
 \para{Error quantification.}
@@ -114,21 +110,20 @@ Several works have aimed at quantifying the error incurred by data reduction, by
 otherwise, for the results of analysis tasks. Baker \etal~\cite{evaluating-compression-climate}
 evaluate several compressors, including FPZIP~\cite{fpzip} and ISABELA~\cite{isabela} on ensembles
 of climate simulation data. Laney \etal~\cite{compression_sim2013} study the effects of lossy
-compression (using FPZIP and APEX) on the Miranda hydrodynamic simulation code. Li
-\etal~\cite{evaluating-efficacy-wavelet} measure the error incurred by wavelet compression on
-turbulent-flow data. Wang \etal~\cite{statistical-volume-quality} assess the quality of distorted
-data using a combination of statistical metrics in the wavelet transform domain. Etiene \etal have
-published a series of studies on verification of isosurfaces in
-geometrical~\cite{verifiable-isosurface} and topological~\cite{topology-verification-isosurface}
-terms, as well as verification of volume-rendered images~\cite{verifying-volume-rendering}. They
-focus on order-of-accuracy and convergence analysis, where errors are introduced mostly through
-discretization, not necessarily for the purpose of reducing data bandwidth. For volume rendering,
-Ljung \etal~\cite{transfer-function-based} compute an error estimate based on color variation
-between low- and high-resolution levels in each block, which guides the selection of an appropriate
-resolution level for every block. Finally, the Z-checker framework~\cite{z-checker} consists of a
-wide range of independent metrics to evaluate data quality after lossy compression. In general, the
-resolution-versus-precision trade-off for data analysis and visualization have not been well
-studied.
+compression on the Miranda hydrodynamic simulation code. Li \etal~\cite{evaluating-efficacy-wavelet}
+measure the error incurred by wavelet compression on turbulent-flow data. Wang
+\etal~\cite{statistical-volume-quality} assess the quality of distorted data using a combination of
+statistical metrics in the wavelet transform domain. Etiene \etal have published a series of studies
+on verification of isosurfaces in geometrical~\cite{verifiable-isosurface} and
+topological~\cite{topology-verification-isosurface} terms, and verification of volume-rendered
+images~\cite{verifying-volume-rendering}. They focus on order-of-accuracy and convergence analysis,
+where errors are introduced mostly through discretization, not necessarily for the purpose of
+reducing data bandwidth. For volume rendering, Ljung \etal~\cite{transfer-function-based} compute an
+error estimate based on color variation between low- and high-resolution levels in each block, which
+guides the selection of an appropriate resolution level for every block. Finally, the Z-checker
+framework~\cite{z-checker} consists of a wide range of independent metrics to evaluate data quality
+after lossy compression. In all these works, errors are not quantified in the context of the
+tradeoff between resolution and precision.
 
 %by magnitude streams~\cite{image_compression1992}
 % Transfer function adaptive decompression~\cite{tf_decompression2004}

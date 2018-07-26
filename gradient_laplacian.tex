@@ -132,7 +132,7 @@ $\frac{{\partial}^2 f}{\partial{x^2}}
 \approx
 -\frac{1}{12}f(x-2,y,z)+\frac{4}{3}f(x-1,y,z)-\frac{5}{2}f(x,y,z)+\frac{4}{3}f(x+1,y,z)-\frac{1}{12}f(x+2,y,z)$.
 We use the root-mean-square error to compare two Laplacian fields, i.e., $\err(\Delta f',\Delta
-f)=\text{RMSE}(\Delta f',\Delta f)$. As usual, we use~\Cref{alg:greedy} to compute a
+f)=\text{RMSE}(\Delta f',\Delta f)$. We use~\Cref{alg:greedy} to compute a
 \emph{Laplacian-optimized} stream, \slop, which minimizes $\err$, and an \slsg stream from its
 signature.~\Cref{fig:laplacian-error-comparison} plots the errors for all relevant streams. The
 plots here largely follow the ones in~\Cref{fig:gradient-error-comparison}, in terms of relative

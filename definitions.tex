@@ -7,13 +7,13 @@ develop such a consistent methodology by proposing to model different data reduc
 packets, and any reduction step removes a set of packets (comparable amounts of data).
 
 These data streams are transmitted using a client-server model. At any point, the client is assumed
-to have received a subset of packets from the server (in some predetermined sequential order or in
-some order requested by the client), which can be used to reconstruct an approximation to the
-original data. Therefore, to compare different streams, we reconstruct the original data using the
-\emph{same number} of packets from each stream and perform desired tasks on each of the
-(approximate) reconstructions. A stream is considered better suited for a given task if it produces
-results that are closer to the reference results computed from the original data.
-\Cref{fig:pipeline} gives a schematic view of our data streaming model.
+to have received a subset of packets (in some predetermined sequential order or in some order
+requested by the client), which can be used to reconstruct an approximation to the original data.
+Therefore, to compare different streams, we reconstruct the original data using the \emph{same
+number} of packets from each stream and perform desired tasks on each of the (approximate)
+reconstructions. A stream is considered better suited for a given task if it produces results that
+are closer to the reference results computed from the original data. \Cref{fig:pipeline} gives a
+schematic view of our data streaming model.
 
 \begin{figure}[!b]
 \vspace{-1em}
@@ -133,11 +133,11 @@ We define two streams: \emph{by level} and \emph{by bit plane}, which model two 
 schemes in the literature. The \emph{by level} stream, \slvl, orders the packets strictly from
 coarser to finer subbands. Within the same subband, packets follow the row-major order of blocks and
 then bit plane order (from 0 to $B$) within each coefficient. All bits for each coefficient are
-streamed together. The other common ordering, \emph{by bit plane}, denoted as \sbit, proceeds
-strictly from higher ordered to lower ordered bit planes. Within the same bit plane, packets follow
-the subband order (from $0$ to $L-1$) and then row-major order in each subband. The streams \slvl
-and \sbit are designed to mimic the way data is accessed in traditional methods that work either in
-resolution (\slvl) or in precision (\sbit).
+streamed together. The other common ordering, \emph{by bit plane}, or \sbit, proceeds strictly from
+higher ordered to lower ordered bit planes. Within the same bit plane, packets follow the subband
+order (from $0$ to $L-1$) and then row-major order in each subband. \slvl and \sbit are designed to
+mimic the way data is accessed in traditional methods that work either in resolution (\slvl) or in
+precision (\sbit).
 
 Additionally, we define a third stream that combines these two dimensions and refer to it as
 \emph{by wavelet norm}, or \swav. This stream orders packets in descending order of weights
@@ -157,7 +157,8 @@ i.e., $f=\sum{c_i\wbas_i}$, where $c_i$ are the coefficients. Since our wavelet 
 on lifting, this norm is usually not one, but it increases with level. Basis functions in the same
 subband share the same norm, hence $\wwav(p)$ is simply the contribution (in $L_2$ norm) of a bit on
 bit plane $b(p)$ and subband $l(p)$, to the whole function $f$. This ordering based on norms of
-wavelet basis functions was proposed previously by Weiss \etal~\cite{weiss}.
+wavelet basis functions was proposed previously by Weiss \etal~\cite{weiss}. For details of
+computing the norms of basis functions, see Appendix A.
 
 Another common way to reduce data in the wavelet domain is to leave out the coefficients of the
 smallest magnitudes. Note that coefficient magnitudes are only weakly related to error, as the error
@@ -182,17 +183,16 @@ provide insights into how data should be queried to perform certain analysis tas
 \subsection{Task-Optimized Streams} \label{sec:data_dep_streams}
 
 Each analysis task may require a fundamentally different stream for optimal results. Studying such
-an ``optimal'' stream is important because it not only serves as a baseline but also can provide
-insights into other, more practical streams for the same task.
-
-Given the original data set $f$ and its reconstructed approximation $f'$ using a subset of packets,
-let $q$ represent some quantity of interest, e.g., histogram, isosurface, etc., computed on $f$ or
-$f'$. For a given $q$, a well-defined error metric $\err(q(f'),q(f))$, which returns a single
-scalar, is needed. Given $f$, $q$, and $\err$, our goal is to generate an \emph{optimal} (and
-data-dependent) stream, $\sopt$, for $q$ with respect to $\err$. One possible definition for $\sopt$
-is a stream such that the area under the plotted curve of \err, with respect to the number of bits,
-is minimized for all packets to be streamed. However, this definition is limited in practice because
-a stream should be able to terminate at any point and still produce as small an error as possible.
+``optimal'' streams is important because they not only serve as a baseline but also can provide
+insights into other, more practical streams. Given the original data set $f$ and its reconstructed
+approximation $f'$ using a subset of packets, let $q$ represent some quantity of interest, e.g.,
+histogram, isosurface, etc., computed on $f$ or $f'$. For a given $q$, a well-defined error metric
+$\err(q(f'),q(f))$, which returns a single scalar, is needed. Given $f$, $q$, and $\err$, our goal
+is to generate an \emph{optimal} (and data-dependent) stream, $\sopt$, for $q$ with respect to
+$\err$. One possible definition for $\sopt$ is a stream such that the area under the plotted curve
+of \err, with respect to the number of bits, is minimized for all packets to be streamed. However,
+this definition is limited in practice because a stream should be able to terminate at any point and
+still produce as small an error as possible.
 
 Instead, we employ a greedy approach to define the optimal stream. We notice through experiments,
 however, that a straightforward greedy algorithm can pick unimportant packets too early. For
