@@ -18,18 +18,19 @@ shape of the function, which is important for gradient computation.}
 % figure for gradient error
 \begin{figure*}[t]
 \centering
-\subcaptionbox{\emph{boiler}}{%
+\subcaptionbox{\emph{boiler}, $[2.020e{-}9, 0.148]$}{%
 {\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-boiler}\vspace{-0.5em}}}
-\subcaptionbox{\emph{diffusivity}}{%
+\subcaptionbox{\emph{diffusivity} $[1.063e {-}10, 0.497]$}{%
 {\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-diffusivity}\vspace{-0.5em}}}
-\subcaptionbox{\emph{turbulence}}{%
+\subcaptionbox{\emph{turbulence} $[0.465e{-}3, 12.19]$}{%
 {\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-turbulence}\vspace{-0.5em}}}
-\subcaptionbox{\emph{pressure}}{%
+\subcaptionbox{\emph{pressure} $[2.542e{-}6, 0.536]$}{%
 {\includegraphics[width=0.24\linewidth]{gradient/gradient-optimized-pressure}\vspace{-0.5em}}} 
 \vspace{-0.5em}
 \caption{Gradient error of reconstructed functions. Lower gradient error is better. Leading zero
 packets are removed, and the plots are truncated in the same way as in~\Cref{fig:rmse-optimized}.
-The trend in error, in all cases, is $\sgop < \sgsg \approx \sbit \approx \swav < \smag < \slvl$.}
+The numbers in brackets are the ranges of gradient magnitudes. The trend in error, in
+all cases, is $\sgop < \sgsg \approx \sbit \approx \swav < \smag < \slvl$.}
 \label{fig:gradient-error-comparison}
 \vspace{1em}
 
@@ -56,18 +57,18 @@ bps. \sbit, \swav, and \sgsg produce visually comparable gradient fields.}
 % figure for laplacian
 \begin{figure*}[!t]
 \centering
-\subcaptionbox{\emph{boiler}}
+\subcaptionbox{\emph{boiler} $[-0.393, 0.221]$}
 {\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-boiler}\vspace{-0.5em}}
-\subcaptionbox{\emph{diffusivity}}
+\subcaptionbox{\emph{diffusivity} $[-0.404, 0.269]$}
 {\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-diffusivity}\vspace{-0.5em}}
-\subcaptionbox{\emph{turbulence}}
+\subcaptionbox{\emph{turbulence} $[-17.44, 11.99]$}
 {\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-turbulence}\vspace{-0.5em}}
-\subcaptionbox{\emph{pressure}}
+\subcaptionbox{\emph{pressure} $[-0.467, 0.432]$}
 {\includegraphics[width=0.24\linewidth]{laplacian/laplacian-optimized-pressure}\vspace{-0.5em}}
 \vspace{-0.5em}
 \caption{Laplacian error comparison among streams. The plots are truncated to better highlight
-differences without discarding important information. In all cases, in terms of error, $\slop <
-\slsg < \sbit < \swav < \smag < \slvl$.}
+differences without discarding important information. The numbers in brackets are the ranges of the
+Laplacian fields. In all cases, in terms of error, $\slop <\slsg < \sbit < \swav < \smag < \slvl$.}
 \label{fig:laplacian-error-comparison}
 \vspace{-1.5em}
 \end{figure*}

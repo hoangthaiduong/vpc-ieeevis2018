@@ -60,30 +60,31 @@ from the removal of leading zero bits (the blue curve shifts more to the left).}
 % figure for isosurface
 \begin{figure*}[t]
 \centering
-\subcaptionbox{\em pressure, isovalue=0.2}
+\subcaptionbox{\em pressure, \#cells = 36149}
 {\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-pressure}\vspace{-0.5em}}
-\subcaptionbox{\em kingsnake, isovalue=106}
+\subcaptionbox{\em kingsnake, \#cells = 45783}
 {\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-kingsnake}\vspace{-0.5em}}
-\subcaptionbox{\em plasma, isovalue=2}
+\subcaptionbox{\em plasma, \#cells = 24856}
 {\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-plasma}\vspace{-0.5em}}
-\subcaptionbox{\em turbulence, isovalue=2}
+\subcaptionbox{\em turbulence, \#cells = 33742}
 {\includegraphics[width=0.24\linewidth]{isocontour/isocontour-optimized-turbulence}\vspace{-0.5em}}
 \vspace{-0.5em}
 \caption{Comparison of isosurface errors among streams. Plots are truncated to highlight differences
-without hiding important trends. The trend in error is $\siop < \sisg \approx \swav < \sbit < \smag
-<< \slvl$.}\label{fig:isocontour-plots}
+without hiding important trends. The number of cells that each surface occupies is reported. The
+trend in error is $\siop < \sisg \approx \swav < \sbit < \smag <<
+\slvl$.}\label{fig:isocontour-plots}
 \vspace{1em}
 
 \centering
-\subcaptionbox{\emph{by level} ($s_{lvl}$)}
+\subcaptionbox{\emph{by level} ($\slvl$)}
 {\includegraphics[width=0.16\linewidth]{isocontour/isocontour-level}\vspace{-0.5em}}
-\subcaptionbox{\emph{by bit plane} ($s_{bit}$)}
+\subcaptionbox{\emph{by bit plane} ($\sbit$)}
 {\includegraphics[width=0.16\linewidth]{isocontour/isocontour-bit-plane}\vspace{-0.5em}}
-\subcaptionbox{\emph{by wavelet norm} ($s_{wav}$)}
+\subcaptionbox{\emph{by wavelet norm} ($\swav$)}
 {\includegraphics[width=0.16\linewidth]{isocontour/isocontour-wavelet-norm}\vspace{-0.5em}}
-\subcaptionbox{\emph{by magnitude} ($s_{mag}$)}
+\subcaptionbox{\emph{by magnitude} ($\smag$)}
 {\includegraphics[width=0.16\linewidth]{isocontour/isocontour-magnitude}\vspace{-0.5em}}
-\subcaptionbox{\emph{by signature} ($s_{iso-sig}$)}
+\subcaptionbox{\emph{by signature} ($\sisg$)}
 {\includegraphics[width=0.16\linewidth]{isocontour/isocontour-signature}\vspace{-0.5em}}
 \subcaptionbox{\emph{reference}}
 {\includegraphics[width=0.16\linewidth]{isocontour/isocontour-groundtruth}\vspace{-0.5em}}
