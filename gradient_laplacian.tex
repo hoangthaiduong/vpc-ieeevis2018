@@ -101,16 +101,14 @@ minimizes the difference between the reconstructed and the original gradient fie
 data sets. In general, we observe the ordering of performance (from best to worst) as: \sgop, \sgsg,
 \sbit, \swav, \smag, \slvl. This ordering can also be seen in~\Cref{fig:gradient-rendering-diff},
 where the $x$-component of the gradient field for \emph{tuburlence} is rendered at 0.3 bps. Unlike
-the RMSE case, \sbit performs nearly the same as \swav.
-
-To investigate this difference, we extract a 1D line from the \emph{plasma} data set and reconstruct
-the function using \sbit and \swav at 0.6 bps (\Cref{fig:bit-plane-vs-wavelet-norm-gradient}).
-\swav's reconstruction is more accurate on average compared to \sbit, which captures well the
-function's shape (due to the presence of fine-scale bits), but not the function values (due to the
-lack of precision in the coarse-scale coefficients). Functions reconstructed with \sbit tend to be
-``shifted'' in the range domain, as seen in ~\Cref{fig:bit-plane-vs-wavelet-norm-gradient}. However,
-the gradient operator has the tendency to cancel the shifting effect, bringing the performance of
-\sbit closer to that of \swav.
+in the RMSE case, \sbit performs nearly the same as \swav. To investigate this difference, we
+extract a 1D line from the \emph{plasma} data set and reconstruct the function using \sbit and \swav
+at 0.6 bps (\Cref{fig:bit-plane-vs-wavelet-norm-gradient}). \swav's reconstruction is more accurate
+on average compared to \sbit, which captures well the function's shape (due to the presence of
+fine-scale bits), but not the function values (due to the lack of precision in the coarse-scale
+coefficients). Functions reconstructed with \sbit tend to be ``shifted'' in the range domain, as
+seen in ~\Cref{fig:bit-plane-vs-wavelet-norm-gradient}. However, the gradient operator has the
+tendency to cancel the shifting effect, bringing the performance of \sbit closer to that of \swav.
 
 \sgop again outperforms the rest of the streams. \slvl and \smag perform poorly for gradient
 computation, lacking the resolution to capture sharp features. \sgsg mostly closely follows \sbit in

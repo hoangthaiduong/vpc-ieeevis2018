@@ -1,17 +1,13 @@
 \section{Discussion and Future Work}
 
-We focus on one of the biggest contemporary challenges in visualization: management of the enormous
-amounts of data. This work addresses the trade-off between two prominent dimensions of data
-reduction, resolution and precision, with respect to common analysis and visualization tasks --- an
-issue rarely discussed in the literature. To keep the study tractable while not compromising the
-generalizability of results, this paper targets several fundamental analysis and visualization
-tasks, with an outlook that these can serve as building blocks for more complex and multiparameter
-tasks, such as volume rendering, in the future. Since the goal is to evaluate the suitability of
-data reduction schemes for analysis and visualization tasks, we use carefully chosen error metrics
-the paper. We have chosen error metrics carefully to measure data quality so that they can be good
-proxies for evaluating visualization outputs. Although the paper focuses on a small set of core
-tasks, the framework is generic and applies to any well-defined metric, and one future direction is
-to consider a broader set of tasks.
+This work addresses one of the biggest contemporary challenges in visualization: management of the
+enormous amounts of data. We focus on the trade-off between two prominent dimensions of data
+reduction, resolution and precision, with respect to common analysis and visualization tasks. To
+keep the study tractable while not compromising the generalizability of results, we target
+fundamental analysis and visualization tasks, with an outlook that these can serve as building
+blocks for more complex and multiparameter tasks in the future. Although the paper focuses on a
+small set of core tasks, the framework is generic and applies to any well-defined metric, and one
+future direction is to consider a broader set of tasks.
 
 We present the first empirical study to demonstrate that combining reduction in precision and
 resolution can lead to a significant improvement in data quality for the same data budget, and that
@@ -20,13 +16,12 @@ computing histograms requires high precision, computing derivatives benefits mor
 resolution, and function reconstruction and isosurface extraction require a suitable mix of the two
 (see~\Cref{fig:bit-distrib}). We also show that common reduction techniques, e.g., those based on
 \slvl and \smag, do not perform well when leading zero bits are removed (to simulate entropy
-compression). For each task, the relative ordering of the rate-distortion curves stays
-largely the same regardless of data sets, although the gaps among them vary depending on the
-smoothness and noisiness of the data. Compared to data-independent streams, signature-based streams
-often perform better because they are more adaptive to the data. They are also amenable for
-implementation (unlike \sopt), as a signature is negligibly small and thus can be precomputed and
-stored during preprocessing. It is also interesting to consider per-block signatures instead of a
-global one.
+compression). For each task, the relative ordering of the rate-distortion curves stays largely the
+same regardless of data sets, although the gaps among them vary depending on the smoothness and
+noisiness of the data. Compared to data-independent streams, signature-based streams often perform
+better because they can adapt to the data. They are also amenable for implementation (unlike \sopt),
+since a signature is negligibly small and thus can be precomputed and stored during preprocessing.
+It is also interesting to consider per-block signatures instead of a global one.
 
 An important question is whether task- and data-dependent streams provide sufficient advantages over
 purely data-independent streams. In practice, data would be used for multiple, and not necessarily
@@ -50,15 +45,15 @@ considered, such as disk block sizes, cache coherence, and compression. Furtherm
 should allow task-dependent data queries even though task-dependent formats will likely be
 restricted to very specific situations. 
 
-Another important consideration is that for fair comparisons, we always reconstruct the data at full
-resolution using wavelets. However, processing and memory costs are important, and it is likely that
-adaptive representations would be used in practice~\cite{gigavoxels,Gobbetti2008,vdb2013}. In these
-cases the error of a given approximation depends not only on the available information, but also on
-the data structure and algorithm being used. For example, trilinear interpolation on a coarse grid
-might produce different results than wavelet reconstruction on the original mesh. There exist
-solutions where both interpolations are equivalent~\cite{weiss}, but such solutions have not yet
-been implemented in standard tools. An important future research direction will be to understand the
-implications of the results presented here for existing toolchains such as VTK.
+Finally, for fair comparisons, we always reconstruct the data at full resolution using wavelets.
+However, processing and memory costs are important, and it is likely that adaptive representations
+would be used in practice~\cite{gigavoxels,Gobbetti2008,vdb2013}. In these cases the error of a
+given approximation depends not only on the available information, but also on the data structure
+and algorithm being used. For example, trilinear interpolation on a coarse grid might produce
+different results than wavelet reconstruction on the original mesh. There exist solutions where both
+interpolations are equivalent~\cite{weiss}, but such solutions have not yet been implemented in
+standard tools. An important future research direction will be to understand the implications of the
+results presented here for existing toolchains such as VTK.
 
 %%% Local Variables:
 %%% mode: latex

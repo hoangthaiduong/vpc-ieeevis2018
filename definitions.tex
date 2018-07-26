@@ -4,16 +4,15 @@ In order to systematically study the resolution-versus-precision trade-offs amon
 reduction schemes, it is important to perform fair and consistent comparisons. In this section, we
 develop such a consistent methodology by proposing to model different data reduction schemes as
 \emph{streams} of uniformly sized data \emph{packets}, where the original data contains all the
-packets, and any reduction step removes a set of packets (comparable amounts of data).
-
-These data streams are transmitted using a client-server model. At any point, the client is assumed
-to have received a subset of packets (in some predetermined sequential order or in some order
-requested by the client), which can be used to reconstruct an approximation to the original data.
-Therefore, to compare different streams, we reconstruct the original data using the \emph{same
-number} of packets from each stream and perform desired tasks on each of the (approximate)
-reconstructions. A stream is considered better suited for a given task if it produces results that
-are closer to the reference results computed from the original data. \Cref{fig:pipeline} gives a
-schematic view of our data streaming model.
+packets, and any reduction step removes a set of packets (comparable amounts of data). These data
+streams are transmitted using a client-server model. At any point, the client is assumed to have
+received a subset of packets (in some predetermined sequential order or in some order requested by
+the client), which can be used to reconstruct an approximation to the original data. Therefore, to
+compare different streams, we reconstruct the original data using the \emph{same number} of packets
+from each stream and perform desired tasks on each of the (approximate) reconstructions. A stream is
+considered better suited for a given task if it produces results that are closer to the reference
+results computed from the original data. \Cref{fig:pipeline} gives a schematic view of our data
+streaming model.
 
 \begin{figure}[!b]
 \vspace{-1em}
@@ -61,7 +60,7 @@ Symbol & Name & Data Dependent & Task Dependent \\
 \caption{We define various types of data streams, including data-independent, data-dependent,
 task-independent, and task-dependent streams. \stksg can be data dependent or task dependent,
 depending on the stream from which it is derived.\label{tbl:streams}}
-\vspace{-1.5em}
+\vspace{-2em}
 \end{table}
 
 \subsection{Decomposition of Data into Packets} \label{sec:data-streaming-framework}
@@ -244,23 +243,24 @@ observation) retaining the same quality for \sopt.
 \end{algorithm}
 
 \vspace{-0.5em}
-We note that for a more optimized implementation, the inverse wavelet transform on line 7 can be
-replaced by ``splatting'' coefficient $p_i$ onto the domain, due to the transform being linear and
-the fact that $p_i$ is the only coefficient changed in the current iteration.
+For a more optimized implementation, the inverse wavelet transform on line 7 can be replaced by
+``splatting'' coefficient $p_i$ onto the domain, due to the transform being linear and the fact that
+$p_i$ is the only coefficient changed in the current iteration. Since tt is almost never
+advantageous to stream bits belonging to one coefficient out-of-order, we also enforce that in the
+final stream, packets belonging to the same group follow the bit plane order (from $0$ to $B$).
 
 \subsection{Stream Signatures} \label{sec:stream-signature}
 
 Unlike data-independent streams, data-dependent streams do not impose a static ordering of packets.
 To concisely represent and characterize the dynamic ordering of data-dependent streams, we introduce
 the notion of a \emph{stream signature}. Any stream can be represented with respect to the
-two-dimensional space of resolution (subbands) and precision (bit
-planes), i.e., \mbox{$\Lspace_{L,B}=\{(l,b)\ |\ 0\leq l < L,\ 0\leq b \leq B\}$.}
-
-Given a stream, we define its signature $A$ as an $L \times (1+B)$ matrix, where each $(l,b)$
-element is associated with $P_{l,b}$, the set of packets belonging to subband $l$ and bit plane $b$.
-In particular, $A(l,b)$, i.e., the $(l,b)$ element of $A$, is an integer in the range $[0,
-(1+B)\times L)$, and indicates, on average, the position at which packets in $P_{l,b}$ appear in the
-given stream. For example, the signature $A=\bigl[ \begin{smallmatrix}0 & 1 & 4\\
+two-dimensional space of resolution (subbands) and precision (bit planes), i.e.,
+\mbox{$\Lspace_{L,B}=\{(l,b)\ |\ 0\leq l < L,\ 0\leq b \leq B\}$.} Given a stream, we define its
+signature $A$ as an $L \times (1+B)$ matrix, where each $(l,b)$ element is associated with
+$P_{l,b}$, the set of packets belonging to subband $l$ and bit plane $b$. In particular, $A(l,b)$,
+i.e., the $(l,b)$ element of $A$, is an integer in the range $[0, (1+B)\times L)$, and indicates, on
+average, the position at which packets in $P_{l,b}$ appear in the given stream. For example, the
+signature $A=\bigl[ \begin{smallmatrix}0 & 1 & 4\\
 2 & 3 & 5\end{smallmatrix}\bigr]$ indicates that the stream begins with packets that lie on the
 first bit plane of the first subband, as $A(0,0)=0$. Those are followed by packets on the second
 bit plane of the first subband ($A(0,1)=1$), and then the first bit plane of the second subband
@@ -282,7 +282,7 @@ $10\times 17$ image, corresponding to $10$ subbands (in 2D) and $17$ bit planes.
 is mapped to a white--blue color scale. \slvl streams bits by resolution (from top to bottom), \sbit
 streams by precision (from left to right), while \swav mixes precision and resolution.}
 \label{fig:example-signatures}
-\vspace{-1.5em}
+\vspace{-1.75em}
 \end{figure}
 
 To compute a stream signature, we partition the whole domain (not individual subbands) into several
@@ -292,6 +292,13 @@ the $\Lspace_{L,B}$ space becomes meaningful. For example, a packet at one corne
 be streamed before one at an opposite corner, but this fact contains no useful information. We
 define a region to be the spatial volume that is covered by a packet in the coarsest subband.
 Algorithm~\ref{alg:signature} lists the steps of our approach.
+
+Finally, a signature can be used to construct a stream denoted generically as $\ssig$. This
+construction is done by iterating through each element $A(l,b)$ in ascending order and adding to the
+end of \ssig all the packets in $P_{l,b}$. An \ssig captures the behavior (in the $\Lspace_{L,B}$
+space) of the stream it derives from, but it is stripped from any spatial adaptivity. Hence, when
+\ssig is derived from an \sopt, it can serve as a bridge when comparing the
+resolution-versus-precision trade-offs between data-independent and data-dependent streams.
 
 \vspace{-0.5em}
 \begin{algorithm}[h]
@@ -317,10 +324,3 @@ Algorithm~\ref{alg:signature} lists the steps of our approach.
 	\label{alg:signature}
 \end{algorithm}
 \vspace{-0.5em}
-
-Finally, a signature can be used to construct a stream denoted generically as $\ssig$. This
-construction is done by iterating through each element $A(l,b)$ in ascending order and adding to the
-end of \ssig all the packets in $P_{l,b}$. An \ssig captures the behavior (in the $\Lspace_{L,B}$
-space) of the stream it derives from, but it is stripped from any spatial adaptivity. Hence, when
-\ssig is derived from an \sopt, it can serve as a bridge when comparing the
-resolution-versus-precision trade-offs between data-independent and data-dependent streams.

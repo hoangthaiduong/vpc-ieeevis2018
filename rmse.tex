@@ -74,15 +74,13 @@ commonly used error metric in this case is the root-mean-square error
 (RMSE).~\Cref{fig:rmse-optimized} shows a comparison of the different streams for a variety of data
 sets. It can be noted that, in general, \srop (the stream optimized to minimize the RMSE) performs
 better than \srsg due to spatial adaptivity, whereas \srsg slightly outperforms \swav, followed by
-\sbit, \smag, and \slvl.
-
-In particular, \sbit outperforms \slvl (for \emph{kingsnake} and \emph{boiler}, it does so after
-approximately 1 bps), which can be attributed to the removal of leading-zero packets. Empirically,
-wavelet coefficients on finer scale subbands are much smaller in magnitude~\cite{spiht1996}. Such
-coefficients contain a majority of the leading-zero bits, whose removal benefits \sbit the most.
-\emph{diffusivity} and \emph{plasma} contain a significant amount of empty space, which translates
-to more leading-zero bits after the wavelet transform that \sbit can take advantage of, and thus,
-it outperforms \slvl immediately from the beginning.
+\sbit, \smag, and \slvl. In particular, \sbit outperforms \slvl (for \emph{kingsnake} and
+\emph{boiler}, it does so after approximately 1 bps), which can be attributed to the removal of
+leading-zero packets. Empirically, wavelet coefficients on finer scale subbands are much smaller in
+magnitude~\cite{spiht1996}. Such coefficients contain a majority of the leading-zero bits, whose
+removal benefits \sbit the most. \emph{diffusivity} and \emph{plasma} contain a significant amount
+of empty space, which translates to more leading-zero bits after the wavelet transform that \sbit
+can take advantage of, and thus, it outperforms \slvl immediately from the beginning.
 
 \smag underperforms for the same reason that \slvl does, but to a lesser extent, since \smag is
 adapted to the data. \swav outperforms both \slvl and \sbit, because it follows the optimal
