@@ -1,15 +1,17 @@
 % figure for function reconstruction result
 \begin{figure*}[t]
 \centering
- \subcaptionbox{\emph{boiler} $[2.351e-9, 0.138]$}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-boiler}\vspace{-0.5em}}}
- \subcaptionbox{\emph{diffusivity} $[-0.848, 0.711]$}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-diffusivity}\vspace{-0.5em}}}
+ \subcaptionbox{\emph{boiler} $[2.351e{-}9, 0.138]$}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-boiler}\vspace{-0.5em}}}
+ \subcaptionbox{\emph{diffusivity} $[{-}0.848, 0.711]$}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-diffusivity}\vspace{-0.5em}}}
  \subcaptionbox{\emph{plasma} $[0.024, 14.67]$}{ {\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-plasma}\vspace{-0.5em}}}
  \subcaptionbox{\emph{kingsnake} $[63, 185]$}{{\includegraphics[width=0.24\linewidth]{rmse/rmse-optimized-kingsnake}\vspace{-0.5em}}}
  \vspace{-0.5em}
 \caption{Root-mean-square error (RMSE) of reconstructed functions for different streams and data
 sets; lower RMSE is better. The streams are truncated at both ends to highlight the differences,
-without omitting important information. The general ordering of error, from lowest to highest, is
-$\sopt < \ssig < \swav < \sbit < \smag < \slvl$.}
+without omitting important information. The numbers in brackets are the ranges of original data
+samples. The general ordering of error, from lowest to highest, is $\sopt < \ssig < \swav < \sbit <
+\smag <
+\slvl$.}
 \label{fig:rmse-optimized}
 \vspace{1em}
 
