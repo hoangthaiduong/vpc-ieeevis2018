@@ -23,12 +23,14 @@
  \subcaptionbox{\label{fig:bit-distrib-laplacian-greedy-tile}$\slop$}[.24\linewidth]{{\includegraphics[width=0.24\linewidth]{bit-distrib-laplacian-greedy-tile}\vspace{-0.5em}}}
  \subcaptionbox{\label{fig:bit-distrib-histogram-tile}$\shsg$}[.24\linewidth]{{\includegraphics[width=0.24\linewidth]{bit-distrib-histogram-tile}\vspace{-0.5em}}}
  \vspace{-0.5em}
-\caption{(Top) Bit distribution across subbands at 1.9 bps for signature-based streams, and (bottom)
+\caption{(Top) Bit distribution across subbands at 1.6 bps for signature-based streams, and (bottom)
 corresponding stream signatures. The data is a 2D slice from \emph{diffusivity}. Subbands are
 separated by red lines. The color of each pixel indicates the bit plane at which the corresponding
 coefficient currently is. Brighter greens correspond to more precision. Both the top and the bottom
 rows show that \shsg allocates more bits to the lower subbands, while \slsg prefers to stream bits
-from higher subbands. \srsg is somewhere in the middle.}
+from higher subbands. \srsg is somewhere in the middle. Both \slsg and \slop share the same
+signature by definition but only \slop provides spatial adaptivity, seen as nonuniform colors in
+each subband.}
 \label{fig:bit-distrib}
 \vspace{-1.5em}
 \end{figure}
