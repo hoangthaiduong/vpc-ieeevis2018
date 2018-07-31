@@ -1,5 +1,5 @@
 \documentclass{article}
-
+\usepackage{url}
 \usepackage{booktabs}
 \usepackage[margin=0.2in]{geometry}
 \usepackage{graphicx}
@@ -11,8 +11,9 @@
 \begin{document}
 \maketitle
 
-
+\vspace{-3em}
 \begin{table}[ht]
+
         \caption{All data sets used in experiments. The resolution of data sets is $64^3$ and
         they are subsets of the original volumes (no downsampling performed).}
   \centering
@@ -20,21 +21,21 @@
   \toprule
   Name & Type & Data type \\
   \midrule
-  boiler & combustion simulation& float64\\
-  plasma & magnetic reconnection simulation& float32\\
-  diffusivity & hydrodynamics simulation& float64\\
-  pressure & hydrodynamics simulation& float64\\
-  turbulence & fluid dynamics simulation& float32\\
-  kingsnake & scan of a snake egg & uint8\\
-  flame & combustion simulation& float32\\
+  boiler~\cite{boiler} & combustion simulation& float64\\
+  plasma~\cite{magnetic} & magnetic reconnection simulation& float32\\
+  diffusivity~\cite{cook_cabot_miller_2004} & hydrodynamics simulation& float64\\
+  pressure~\cite{cook_cabot_miller_2004} & hydrodynamics simulation& float64\\
+  turbulence~\cite{turbulence} & fluid dynamics simulation& float32\\
+  kingsnake~\cite{kingsnake} & scan of a snake egg & uint8\\
+  flame~\cite{paul_arias} & combustion simulation& float32\\
   csafe & fluid dynamics simulation& uint8\\
-  enzo v & cosmology simulation& float32\\
+  enzo v~\cite{enzo} & cosmology simulation& float32\\
   brain & microscope image of a marmoset brain & uint8\\
-  foam & CT scan of an aluminum foam & uint16\\
+  foam~\cite{foam} & CT scan of an aluminum foam & uint16\\
   vismale & CT scan of a human & uint8 \\
-  karfs & combustion simulation& float32\\
-  aneurism      & scan of brain aneurism & uint8 \\
-  velocity z & hydrodynamics simulation& float64 \\
+  karfs~\cite{HERNANDEZPEREZ2018} & combustion simulation& float32\\
+  aneurysm      & scan of brain aneurysm & uint8 \\
+  velocity z~\cite{cook_cabot_miller_2004} & hydrodynamics simulation& float64 \\
   \bottomrule
   \end{tabular}\label{tbl:data-sets}
 \end{table}
@@ -67,7 +68,7 @@
                 \includegraphics[width=0.22\linewidth]{img/supplementary/vismale.png}}
         \subcaptionbox{\em karfs}[0.32\linewidth][c]{%
                 \includegraphics[width=0.22\linewidth]{img/supplementary/karfs.png}}
-        \subcaptionbox{\em aneurism}[0.32\linewidth][c]{%
+        \subcaptionbox{\em aneurysm}[0.32\linewidth][c]{%
                 \includegraphics[width=0.22\linewidth]{img/supplementary/aneurism.png}}
         \subcaptionbox{\em velocity z}[0.32\linewidth][c]{%
                 \includegraphics[width=0.22\linewidth]{img/supplementary/velocityz.png}}
@@ -103,7 +104,7 @@
                 \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-vismale}}
         \subcaptionbox{\em karfs}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-karfs}}
-        \subcaptionbox{\em aneurism}[0.32\linewidth][c]{%
+        \subcaptionbox{\em aneurysm}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-aneurism}}
         \subcaptionbox{\em velocity z}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/rmse-optimized-velocityz}}
@@ -139,7 +140,7 @@
                 \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-vismale}}
         \subcaptionbox{\em karfs}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-karfs}}
-        \subcaptionbox{\em aneurism}[0.32\linewidth][c]{%
+        \subcaptionbox{\em aneurysm}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-aneurism}}
         \subcaptionbox{\em velocity z}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/gradient-optimized-velocityz}}
@@ -175,7 +176,7 @@
                 \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-vismale}}
         \subcaptionbox{\em karfs}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-karfs}}
-        \subcaptionbox{\em aneurism}[0.32\linewidth][c]{%
+        \subcaptionbox{\em aneurysm}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-aneurism}}
         \subcaptionbox{\em velocity z}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/laplacian-optimized-velocityz}}
@@ -211,7 +212,7 @@
                 \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-vismale}}
         \subcaptionbox{\em karfs}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-karfs}}
-        \subcaptionbox{\em aneurism}[0.32\linewidth][c]{%
+        \subcaptionbox{\em aneurysm}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-aneurism}}
         \subcaptionbox{\em velocity z}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/histogram-optimized-velocityz}}
@@ -247,7 +248,7 @@
                 \includegraphics[width=0.22\linewidth]{img/supplementary/vismale-iso.png}}
         \subcaptionbox{\em karfs, isovalue=2.8}[0.32\linewidth][c]{%
                 \includegraphics[width=0.22\linewidth]{img/supplementary/karfs-iso.png}}
-        \subcaptionbox{\em aneurism, isovalue=127}[0.32\linewidth][c]{%
+        \subcaptionbox{\em aneurysm, isovalue=127}[0.32\linewidth][c]{%
                 \includegraphics[width=0.22\linewidth]{img/supplementary/aneurism-iso.png}}
         \subcaptionbox{\em velocity z, isovalue=-2}[0.32\linewidth][c]{%
                 \includegraphics[width=0.22\linewidth]{img/supplementary/velocityz-iso.png}}
@@ -283,12 +284,28 @@
                 \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-vismale}}
         \subcaptionbox{\em karfs}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-karfs}}
-        \subcaptionbox{\em aneurism}[0.32\linewidth][c]{%
+        \subcaptionbox{\em aneurysm}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-aneurism}}
         \subcaptionbox{\em velocity z}[0.32\linewidth][c]{%
                 \includegraphics[width=0.3\linewidth]{img/supplementary/isocontour-optimized-velocityz}}
         \caption{Isosurface}
 \end{figure}
 
-
+\vspace{-1em}
+\section{Acknowledgement}
+We thank all the researchers who kindly shared with us their data sets to use for experiments in
+this paper. In particular, Benjamin Isaac provides the \emph{boiler} and Kristoffer Matheson and
+Ashley Spear provides the \emph{foam} data sets. Hong Im and Paul Arias provide
+\emph{flame}~\cite{paul_arias}. The \emph{karfs}~\cite{HERNANDEZPEREZ2018} data set is kindly shared
+with us by Hong Im, Francisco Hernandez Perez, Ramanan Sankaran and Bok Jik Lee. We also thank
+Frederick Federer and Alessandra Angelucci for the \emph{brain} data set. \emph{csafe} is courtesy
+of the Center for the Simulation of Accidental Fires and Explosions (CSAFE) at the Scientific
+Computing and Imaging Institute (SCI), University of Utah.
+\emph{vismale} is courtesy of the U.S. National Library of Medicine. Finally, the \emph{aneurysm}
+data set is courtesy of Philips Research, Hamburg, Germany.
+\bibliographystyle{abbrv-doi}
+%\bibliographystyle{abbrv-doi-narrow}
+%\bibliographystyle{abbrv-doi-hyperref}
+%\bibliographystyle{abbrv-doi-hyperref-narrow}
+\bibliography{egbibsample}
 \end{document}
