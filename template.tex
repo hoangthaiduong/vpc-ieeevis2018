@@ -1,5 +1,5 @@
 %\documentclass[journal]{vgtc}                % final (journal style)
-\documentclass[preprint,journal]{vgtc}         % review (journal style)
+\documentclass[journal]{vgtc}         % review (journal style)
 %\documentclass[widereview]{vgtc}             % wide-spaced review
 %\documentclass[preprint,journal]{vgtc}       % preprint (journal style)
 
@@ -336,7 +336,7 @@
   \label{apd:norm-basis_funcs}
   \section{L2 Norms of CDF5/3 wavelet basis functions}
   The $\swav$ stream requires the norms of CDF5/3 wavelet basis functions, which the
-  following pseudocode computes.
+  following pseudocode computes (in 1D).
   \begin{Verbatim}[fontsize=\small]
 sca_weights = [1/2, 1, 1/2]
 wav_weights = [-1/8, -1/4, 3/4, -1/4, -1/8]
@@ -353,7 +353,8 @@ for (l = 0; l < n+1; l = l+1) {
 \texttt{convolve} function implements the convolution operation in 1D. When the loop ends, \texttt{sca\_norms[n]}
 stores the the norm of the basis functions in the coarsest subband (they all share the same norm),
 while \texttt{wav\_norms[n-1], wav\_norms[n-2]}, \dots store the norms of basis functions in
-subsequent subbands, from coarse to fine.
+subsequent subbands, from coarse to fine. Since we use tensor product wavelets, the norms of basis
+functions in higher dimensions are simply products of the 1D norms.
 
 %% if specified like this the section will be committed in review mode
 \acknowledgments{We thank the reviewers for their valueable comments. Some of the data sets are
